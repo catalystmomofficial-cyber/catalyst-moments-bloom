@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -54,18 +55,24 @@ export default {
 				},
 				// Custom colors
 				catalyst: {
-					purple: '#9b87f5',
+					copper: '#C17F45', 
+					brown: '#5D2906',
 					peach: '#FDE1D3',
-					blue: '#D3E4FD',
-					lightPurple: '#E5DEFF',
-					copper: '#C17F45', // Adding the copper color from your logo
-					brown: '#5D2906',  // Adding a dark brown from your logo
+					beige: '#F9F0E6',
+					cream: '#FFF8F0',
+					tan: '#E5D3B3',
+					sage: '#D4DBCA',
+					gold: '#D4A76A',
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			boxShadow: {
+				'soft': '0 4px 20px -2px rgba(0,0,0,0.06)',
+				'glow': '0 0 20px rgba(193, 127, 69, 0.2)',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -96,10 +103,20 @@ export default {
 				},
 				'pulse-soft': {
 					'0%, 100%': { 
-						transform: 'scale(1)' 
+						transform: 'scale(1)',
+						opacity: '0.8'
 					},
 					'50%': { 
-						transform: 'scale(1.05)' 
+						transform: 'scale(1.03)',
+						opacity: '1' 
+					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-5px)'
 					}
 				}
 			},
@@ -107,7 +124,8 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out',
-				'pulse-soft': 'pulse-soft 3s infinite ease-in-out'
+				'pulse-soft': 'pulse-soft 3s infinite ease-in-out',
+				'float': 'float 6s ease-in-out infinite'
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],

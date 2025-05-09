@@ -5,22 +5,22 @@
 
 @layer base {
   :root {
-    --background: 260 30% 99%;
-    --foreground: 30 30% 20%;
+    --background: 30 30% 99%;
+    --foreground: 20 30% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 30 30% 20%;
+    --card-foreground: 20 30% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 30 30% 20%;
+    --popover-foreground: 20 30% 20%;
 
-    --primary: 260 80% 75%;
+    --primary: 25 50% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 25 50% 55%;
+    --secondary: 25 70% 65%;
     --secondary-foreground: 25 30% 20%;
 
-    --muted: 240 10% 96%;
+    --muted: 30 10% 96%;
     --muted-foreground: 30 5% 50%;
 
     --accent: 25 100% 94%;
@@ -29,31 +29,31 @@
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 10% 90%;
-    --input: 240 10% 90%;
-    --ring: 25 50% 55%;
+    --border: 20 10% 90%;
+    --input: 20 10% 90%;
+    --ring: 25 50% 45%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 30 10% 10%;
+    --background: 20 10% 10%;
     --foreground: 0 0% 98%;
 
-    --card: 30 10% 12%;
+    --card: 20 10% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 30 10% 12%;
+    --popover: 20 10% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 260 80% 75%;
+    --primary: 25 50% 45%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 25 70% 45%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 30 10% 18%;
-    --muted-foreground: 30 5% 70%;
+    --muted: 20 10% 18%;
+    --muted-foreground: 20 5% 70%;
 
     --accent: 25 50% 30%;
     --accent-foreground: 0 0% 98%;
@@ -61,8 +61,8 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 30 10% 20%;
-    --input: 30 10% 20%;
+    --border: 20 10% 20%;
+    --input: 20 10% 20%;
     --ring: 25 60% 55%;
   }
 }
@@ -88,11 +88,11 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-secondary/50 rounded-full;
+    @apply bg-primary/30 rounded-full;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-secondary/80;
+    @apply bg-primary/50;
   }
 }
 
@@ -102,10 +102,22 @@
   }
   
   .hero-gradient {
-    @apply bg-gradient-to-br from-catalyst-lightPurple via-white to-catalyst-peach;
+    @apply bg-gradient-to-br from-catalyst-copper/10 via-white to-catalyst-peach/30;
   }
   
   .card-hover {
     @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  .glass-card {
+    @apply backdrop-blur-sm bg-white/80 dark:bg-black/20 border border-white/20 shadow-sm;
+  }
+  
+  .section-padding {
+    @apply py-16 md:py-20;
+  }
+  
+  .container-padding {
+    @apply px-4 md:px-6;
   }
 }
