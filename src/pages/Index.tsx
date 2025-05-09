@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +5,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import PageLayout from "@/components/layout/PageLayout";
 import { Link } from "react-router-dom";
 import { Activity, Baby, Calendar, Heart, Users, ArrowRight, Play, CheckCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Index = () => {
   return (
