@@ -20,7 +20,7 @@ const WorkoutDetail = () => {
     description: "Safe, effective exercises to rebuild core strength after childbirth. This workout focuses on rebuilding your deep core muscles with gentle, progressive movements that respect your body's healing process.",
     duration: "15 min",
     level: "Beginner",
-    image: "https://images.unsplash.com/photo-1518495973542-4542c06a5843",
+    image: "https://images.unsplash.com/photo-1571190264779-8fed513b7c91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
     category: "Postpartum",
     benefits: [
       "Safely rebuild core strength",
@@ -32,31 +32,31 @@ const WorkoutDetail = () => {
       {
         name: "Diaphragmatic Breathing",
         duration: "2 min",
-        image: "https://images.unsplash.com/photo-1548690312-e3b507d8c110",
+        image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
         description: "Focus on deep belly breathing to reconnect with your core."
       },
       {
         name: "Gentle Pelvic Tilts",
         duration: "3 min",
-        image: "https://images.unsplash.com/photo-1616699002801-9046117diaab",
+        image: "https://images.unsplash.com/photo-1530530824905-661c730c77e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHByZWduYW50JTIwc3RyZXRjaGluZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60",
         description: "Subtle movements to activate lower abdominals and pelvic floor."
       },
       {
         name: "Modified Side Planks",
         duration: "4 min",
-        image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b",
+        image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8eW9nYSUyMHBsYW5rfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60",
         description: "Controlled side support to engage obliques safely."
       },
       {
         name: "Heel Slides",
         duration: "3 min",
-        image: "https://images.unsplash.com/photo-1517130038641-a774d04fc158",
+        image: "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
         description: "Leg movements with core stabilization to build functional strength."
       },
       {
         name: "Gentle Bridge Lifts",
         duration: "3 min",
-        image: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5",
+        image: "https://images.unsplash.com/photo-1532384748853-8f54a8f476e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YnJpZGdlJTIwZXhlcmNpc2V8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60",
         description: "Controlled hip raises to strengthen posterior chain and core."
       }
     ]
