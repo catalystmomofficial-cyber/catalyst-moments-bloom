@@ -7,6 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
+import WorkoutDetail from "./pages/WorkoutDetail";
+import Recipes from "./pages/Recipes";
+import RecipeDetail from "./pages/RecipeDetail";
 import Wellness from "./pages/Wellness";
 import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
@@ -21,7 +24,6 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    {/* Ensure TooltipProvider is properly initialized */}
     <TooltipProvider>
       <AuthProvider>
         <BrowserRouter>
@@ -43,6 +45,21 @@ const App = () => (
             <Route path="/workouts" element={
               <PrivateRoute>
                 <Workouts />
+              </PrivateRoute>
+            } />
+            <Route path="/workouts/:slug" element={
+              <PrivateRoute>
+                <WorkoutDetail />
+              </PrivateRoute>
+            } />
+            <Route path="/recipes" element={
+              <PrivateRoute>
+                <Recipes />
+              </PrivateRoute>
+            } />
+            <Route path="/recipes/:slug" element={
+              <PrivateRoute>
+                <RecipeDetail />
               </PrivateRoute>
             } />
             <Route path="/wellness" element={
