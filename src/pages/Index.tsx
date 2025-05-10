@@ -43,7 +43,7 @@ const Index = () => {
                 <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
                   <AspectRatio ratio={4/5} className="bg-muted">
                     <img 
-                      src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" 
+                      src="https://images.unsplash.com/photo-1533640924469-f04e06f8898d" 
                       alt="Mom with baby using laptop" 
                       className="object-cover h-full w-full"
                       onError={(e) => {
@@ -175,7 +175,7 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={1/1}>
                       <img 
-                        src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+                        src="https://images.unsplash.com/photo-1492725764893-90b379c2b6e7" 
                         alt="Mother and baby"
                         className="object-cover h-full w-full"
                         onError={(e) => {
@@ -187,7 +187,7 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft translate-x-6">
                     <AspectRatio ratio={4/5}>
                       <img 
-                        src="https://images.unsplash.com/photo-1518770660439-4636190af475"
+                        src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b"
                         alt="Mother doing yoga"
                         className="object-cover h-full w-full"
                         onError={(e) => {
@@ -201,7 +201,7 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={4/5}>
                       <img 
-                        src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+                        src="https://images.unsplash.com/photo-1544650039-42d386480625"
                         alt="Pregnant woman stretching"
                         className="object-cover h-full w-full"
                         onError={(e) => {
@@ -213,7 +213,7 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={1/1}>
                       <img 
-                        src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+                        src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776"
                         alt="Family outdoors"
                         className="object-cover h-full w-full"
                         onError={(e) => {
