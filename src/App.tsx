@@ -21,6 +21,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    {/* Ensure TooltipProvider is properly initialized */}
     <TooltipProvider>
       <AuthProvider>
         <BrowserRouter>
