@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,9 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Play, Clock, Dumbbell, Calendar, CheckCircle } from "lucide-react";
+import { useState } from "react";
+import VideoModal from "@/components/ui/video-modal";
 
 const WorkoutDetail = () => {
   const { slug } = useParams();
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
   
   // In a real app, you would fetch workout data based on the slug
   // For now we'll use mock data
@@ -22,6 +24,7 @@ const WorkoutDetail = () => {
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1571190264779-8fed513b7c91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
     category: "Postpartum",
+    videoUrl: "https://www.youtube.com/embed/dJlFmxiL11s",
     benefits: [
       "Safely rebuild core strength",
       "Improve posture and reduce back pain",
@@ -89,7 +92,11 @@ const WorkoutDetail = () => {
             <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">{workout.title}</h1>
             <p className="text-white/80 max-w-3xl">{workout.description}</p>
           </div>
-          <Button size="lg" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bg-white text-black hover:bg-white/90 rounded-full w-16 h-16 flex items-center justify-center">
+          <Button 
+            size="lg" 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bg-white text-black hover:bg-white/90 rounded-full w-16 h-16 flex items-center justify-center"
+            onClick={() => setVideoModalOpen(true)}
+          >
             <Play className="h-8 w-8 ml-1" />
           </Button>
         </div>
@@ -245,6 +252,14 @@ const WorkoutDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Video Modal */}
+      <VideoModal 
+        isOpen={videoModalOpen}
+        onClose={() => setVideoModalOpen(false)}
+        videoUrl={workout.videoUrl}
+        title={workout.title}
+      />
     </PageLayout>
   );
 };

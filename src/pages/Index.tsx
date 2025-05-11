@@ -7,8 +7,20 @@ import PageLayout from "@/components/layout/PageLayout";
 import { Link } from "react-router-dom";
 import { Activity, Baby, Calendar, Heart, Users, ArrowRight, Play, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import VideoModal from "@/components/ui/video-modal";
 
 const Index = () => {
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoTitle, setVideoTitle] = useState("");
+
+  const openVideoModal = (url: string, title: string) => {
+    setVideoUrl(url);
+    setVideoTitle(title);
+    setVideoModalOpen(true);
+  };
+
   return (
     <PageLayout withPadding={false}>
       {/* Hero Section */}
@@ -53,7 +65,11 @@ const Index = () => {
                   </AspectRatio>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 flex items-center space-x-2">
-                    <Button size="icon" className="rounded-full bg-white/90 hover:bg-white text-catalyst-copper">
+                    <Button 
+                      size="icon" 
+                      className="rounded-full bg-white/90 hover:bg-white text-catalyst-copper"
+                      onClick={() => openVideoModal("https://www.youtube.com/embed/j7f75AzL9Hg", "Mom Fitness Journey")}
+                    >
                       <Play className="h-5 w-5 ml-0.5" />
                     </Button>
                     <span className="text-white text-sm font-medium drop-shadow-md">Watch Story</span>
@@ -280,15 +296,26 @@ const Index = () => {
             <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
               <Link to="/dashboard">Get Started Now</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5">
-              <Link to="/about">
-                <Play className="mr-2 h-4 w-4" />
-                Watch Demo
-              </Link>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5"
+              onClick={() => openVideoModal("https://www.youtube.com/embed/j7f75AzL9Hg", "Catalyst Mom Demo")}
+            >
+              <Play className="mr-2 h-4 w-4" />
+              Watch Demo
             </Button>
           </div>
         </div>
       </section>
+
+      {/* Video Modal */}
+      <VideoModal 
+        isOpen={videoModalOpen}
+        onClose={() => setVideoModalOpen(false)}
+        videoUrl={videoUrl}
+        title={videoTitle}
+      />
     </PageLayout>
   );
 };
