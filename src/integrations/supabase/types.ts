@@ -9,7 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      food_detection_logs: {
+        Row: {
+          calories: number | null
+          confidence: number | null
+          created_at: string | null
+          detected_food: string | null
+          id: string
+          image_path: string | null
+          user_id: string | null
+        }
+        Insert: {
+          calories?: number | null
+          confidence?: number | null
+          created_at?: string | null
+          detected_food?: string | null
+          id?: string
+          image_path?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          calories?: number | null
+          confidence?: number | null
+          created_at?: string | null
+          detected_food?: string | null
+          id?: string
+          image_path?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      food_items: {
+        Row: {
+          calories: number
+          carbs: number | null
+          created_at: string | null
+          fat: number | null
+          id: string
+          name: string
+          protein: number | null
+          serving_size: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          calories: number
+          carbs?: number | null
+          created_at?: string | null
+          fat?: number | null
+          id?: string
+          name: string
+          protein?: number | null
+          serving_size?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          calories?: number
+          carbs?: number | null
+          created_at?: string | null
+          fat?: number | null
+          id?: string
+          name?: string
+          protein?: number | null
+          serving_size?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -18,6 +18,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/auth/PrivateRoute";
+import FoodCalorieChecker from "./pages/FoodCalorieChecker";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/food-calories" element={<FoodCalorieChecker />} />
             
             {/* Protected Routes */}
             <Route path="/dashboard" element={

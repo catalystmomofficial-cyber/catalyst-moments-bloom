@@ -1,1 +1,5 @@
+
 project_id = "moxxceccaftkeuaowctw"
+
+[functions.detect-food]
+verify_jwt = false

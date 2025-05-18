@@ -7,6 +7,7 @@ import FeaturesSection from '@/components/home/FeaturesSection';
 import BenefitsSection from '@/components/home/BenefitsSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import CTASection from '@/components/home/CTASection';
+import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 
 const Index = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
@@ -23,6 +24,16 @@ const Index = () => {
     <PageLayout withPadding={false}>
       {/* Hero Section */}
       <HeroSection onWatchVideo={openVideoModal} />
+      
+      {/* Food Calorie Checker Feature */}
+      <div className="container mx-auto py-12">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          Try Our Latest Feature
+        </h2>
+        <div className="max-w-lg mx-auto">
+          <FoodCalorieCheckerCard />
+        </div>
+      </div>
       
       {/* Features Section */}
       <FeaturesSection />
