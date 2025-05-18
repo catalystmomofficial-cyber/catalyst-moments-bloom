@@ -467,7 +467,7 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
         </div>`,
         [
           { id: 'selfcare-wellness', text: 'More wellness ideas', action: () => window.location.href = '/wellness' },
-          { id: 'selfcare-thanks', text: 'I'll try these', action: () => addCoachMessage("Wonderful! Even these small moments of self-care add up. Remember that caring for yourself is part of caring for your family.") }
+          { id: 'selfcare-thanks', text: "I'll try these", action: () => addCoachMessage("Wonderful! Even these small moments of self-care add up. Remember that caring for yourself is part of caring for your family.") }
         ]
       );
     }, 1000);
