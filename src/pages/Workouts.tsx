@@ -154,7 +154,67 @@ const Workouts = () => {
         
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6">Workout Programs</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Featured Glow & Go Prenatal Program */}
+            <Card className="overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                <img 
+                  src="https://images.unsplash.com/photo-1584432743501-7d5c27a39189" 
+                  alt="Glow & Go Prenatal Program" 
+                  className="w-full h-48 object-cover"
+                />
+                <div className="absolute top-2 left-2 z-20">
+                  <Badge className="bg-primary hover:bg-primary text-white">✨ Featured</Badge>
+                </div>
+                <div className="absolute bottom-4 left-4 z-20">
+                  <Badge className="bg-background/80 backdrop-blur-sm text-foreground">All Trimesters</Badge>
+                </div>
+              </div>
+              <CardHeader>
+                <CardTitle className="text-primary">Glow & Go Prenatal Program</CardTitle>
+                <CardDescription>
+                  Train for birth. Strengthen safely. Protect your body. A physio-designed pregnancy fitness system built to support your body from bump to birth.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex items-center">
+                    <Baby className="h-4 w-4 mr-1 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">All Levels</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="h-4 w-4 mr-1 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">20-30 min/day</span>
+                  </div>
+                </div>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center text-sm">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
+                    <span>Prepare for labor & reduce tearing risk</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
+                    <span>Strengthen pelvic floor safely</span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
+                    <span>Trimester-specific guidance</span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="flex -space-x-2">
+                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs">+</div>
+                    <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-xs">+</div>
+                    <div className="w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-xs">+</div>
+                  </div>
+                  <span className="text-xs text-muted-foreground">182 expecting moms enrolled</span>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button className="w-full bg-primary hover:bg-primary/90">Start Prenatal Program</Button>
+              </CardFooter>
+            </Card>
             <Card className="overflow-hidden">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
