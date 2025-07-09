@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Baby, Clock } from 'lucide-react';
+import { Baby, Clock, Play } from 'lucide-react';
+import VideoModal from '@/components/ui/video-modal';
 
 // Real-looking diverse avatar URLs from randomuser.me with seed for consistency
 const AVATARS = [
@@ -88,6 +89,7 @@ const GlowAndGoPrenatalCard = () => {
   // Simulate dynamic enrollment count (could be fetched from backend)
   const [enrolledCount, setEnrolledCount] = useState(247);
   const [isHovered, setIsHovered] = useState(false);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   // Simulate gradual enrollment increase
   useEffect(() => {
@@ -128,6 +130,17 @@ const GlowAndGoPrenatalCard = () => {
             All Trimesters
           </Badge>
         </div>
+        {/* Play Button */}
+        <Button 
+          size="lg" 
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 
+                     bg-white/90 text-primary hover:bg-white rounded-full w-16 h-16 flex items-center justify-center
+                     backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:shadow-lg"
+          onClick={() => setVideoModalOpen(true)}
+        >
+          <Play className="h-8 w-8 ml-1" fill="currentColor" />
+        </Button>
+        
         {/* Subtle shimmer effect */}
         <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent
                         transition-transform duration-1000 ${isHovered ? 'translate-x-full' : '-translate-x-full'}`} />
@@ -200,6 +213,14 @@ const GlowAndGoPrenatalCard = () => {
                         translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
         </Button>
       </CardFooter>
+
+      {/* Video Modal */}
+      <VideoModal 
+        isOpen={videoModalOpen}
+        onClose={() => setVideoModalOpen(false)}
+        videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        title="Glow & Go Prenatal Program"
+      />
     </Card>
   );
 };
