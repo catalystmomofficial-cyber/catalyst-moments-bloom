@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Calendar } from "@/components/ui/calendar";
-import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users } from 'lucide-react';
+import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useWellnessData } from '@/hooks/useWellnessData';
+import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
+import { NutritionSection } from '@/components/dashboard/NutritionSection';
+import { WeeklyProgress } from '@/components/dashboard/WeeklyProgress';
 
 interface StatsCardProps {
   title: string;
@@ -18,6 +22,13 @@ interface StatsCardProps {
 
 const Dashboard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
+  
+  // Auto-refresh data every 30 seconds for real-time updates
+  useEffect(() => {
+    const interval = setInterval(refreshData, 30000);
+    return () => clearInterval(interval);
+  }, [refreshData]);
   
   return (
     <PageLayout>
@@ -38,23 +49,23 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatsCard
             title="Weekly Workouts"
-            value="3/5"
-            description="60% of your goal completed"
+            value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
+            description={`${weeklyWorkoutProgress.toFixed(0)}% of your goal completed`}
             icon={<Activity />}
             color="bg-primary/10"
           />
           <StatsCard
             title="Wellness Score"
-            value="76"
-            description="Improved 12% from last week"
+            value={wellnessScore || "—"}
+            description={wellnessScore ? "Based on recent check-ins" : "Complete a mood check-in"}
             icon={<Heart />}
             color="bg-red-100"
           />
           <StatsCard
-            title="Streak"
-            value="6"
-            description="Keep going! Your best is 12 days"
-            icon={<CheckCircle />}
+            title="This Week"
+            value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
+            description="Total workout minutes"
+            icon={<TrendingUp />}
             color="bg-green-100"
           />
         </div>
@@ -71,6 +82,10 @@ const Dashboard = () => {
               </div>
               
               <TabsContent value="today">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                  <WeeklyProgress />
+                  <MoodCheckIn />
+                </div>
                 <div className="space-y-4">
                   <PlanCard
                     title="10-Minute Core Workout"
@@ -83,30 +98,6 @@ const Dashboard = () => {
                     buttonText="Start Workout"
                     progress={0}
                     tags={["Postpartum", "Core", "Beginner"]}
-                  />
-                  <PlanCard
-                    title="Mood Check-In"
-                    category="Wellness"
-                    description="Track your daily mood and emotional wellbeing"
-                    completed={true}
-                    icon={<Smile className="h-5 w-5" />}
-                    time="2 mins"
-                    link="/wellness/mood"
-                    buttonText="Update"
-                    progress={100}
-                    tags={["Self-care", "Mental Health"]}
-                  />
-                  <PlanCard
-                    title="Nourishing Breakfast Ideas"
-                    category="Nutrition"
-                    description="Quick, nutritious breakfast recipes for busy mornings"
-                    completed={false}
-                    icon={<Baby className="h-5 w-5" />}
-                    time="5 mins"
-                    link="/nutrition/recipes/breakfast"
-                    buttonText="View Recipes"
-                    progress={0}
-                    tags={["Recipes", "Energy", "Quick"]}
                   />
                 </div>
               </TabsContent>
@@ -142,6 +133,8 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-6">
+            <NutritionSection />
+            
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
