@@ -1,526 +1,338 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Edit, Utensils, Dumbbell } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles, Lock, ArrowRight } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
-const questionnaireSchema = z.object({
-  fitnessGoal: z.string().min(1, "Please select a fitness goal"),
-  dietaryRestrictions: z.array(z.string()).optional(),
-  workoutDaysPerWeek: z.string().min(1, "Please select workout frequency"),
-  fitnessLevel: z.string().min(1, "Please select your fitness level"),
-  planType: z.string().min(1, "Please select plan type"),
-  mealPreferences: z.array(z.string()).optional(),
-  additionalNotes: z.string().optional(),
-});
-
-type QuestionnaireData = z.infer<typeof questionnaireSchema>;
-
-interface WorkoutPlan {
-  title: string;
-  description: string;
-  exercises: string[];
-  duration: string;
-  frequency: string;
+interface QuestionnaireState {
+  motherhoodStage: string;
+  fitnessGoal: string;
+  workoutDays: string;
+  dietaryPreferences: string[];
+  planType: string;
+  additionalNotes: string;
 }
 
-interface MealPlan {
-  title: string;
-  description: string;
-  meals: {
-    day: string;
-    breakfast: string;
-    lunch: string;
-    dinner: string;
-    snacks: string[];
-  }[];
-}
-
-const CustomizationQuestionnaire: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState<'questionnaire' | 'results'>('questionnaire');
-  const [generatedWorkoutPlan, setGeneratedWorkoutPlan] = useState<WorkoutPlan | null>(null);
-  const [generatedMealPlan, setGeneratedMealPlan] = useState<MealPlan | null>(null);
-  const [submittedData, setSubmittedData] = useState<QuestionnaireData | null>(null);
-
-  const form = useForm<QuestionnaireData>({
-    resolver: zodResolver(questionnaireSchema),
-    defaultValues: {
-      dietaryRestrictions: [],
-      mealPreferences: [],
-      additionalNotes: "",
-    },
+const CustomizationQuestionnaire = () => {
+  const { user } = useAuth();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [answers, setAnswers] = useState<QuestionnaireState>({
+    motherhoodStage: '',
+    fitnessGoal: '',
+    workoutDays: '',
+    dietaryPreferences: [],
+    planType: '',
+    additionalNotes: ''
   });
+  const [showPreview, setShowPreview] = useState(false);
 
-  const generateWorkoutPlan = (data: QuestionnaireData): WorkoutPlan => {
-    const workoutPlans = {
-      beginner: {
-        "lose weight": {
-          title: "Beginner Weight Loss Plan",
-          description: "A gentle introduction to fitness focused on burning calories and building healthy habits.",
-          exercises: ["20-minute walks", "Bodyweight squats", "Modified push-ups", "Planks (15-30 seconds)", "Stretching"],
-          duration: "30-45 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-        "build muscle": {
-          title: "Beginner Muscle Building Plan",
-          description: "Foundation exercises to start building strength and muscle mass safely.",
-          exercises: ["Bodyweight squats", "Wall push-ups", "Glute bridges", "Dead bugs", "Resistance band exercises"],
-          duration: "30-40 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-        "tone": {
-          title: "Beginner Toning Plan",
-          description: "Light exercises to improve muscle definition and overall fitness.",
-          exercises: ["Light weights", "Bodyweight movements", "Yoga poses", "Pilates exercises", "Cardio intervals"],
-          duration: "30-45 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-      },
-      intermediate: {
-        "lose weight": {
-          title: "Intermediate Fat Burn Plan",
-          description: "Challenging workouts combining cardio and strength training for effective weight loss.",
-          exercises: ["HIIT workouts", "Circuit training", "Strength training", "Running/cycling", "Core work"],
-          duration: "45-60 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-        "build muscle": {
-          title: "Intermediate Strength Plan",
-          description: "Progressive strength training to build lean muscle mass and increase power.",
-          exercises: ["Compound movements", "Progressive overload", "Split training", "Core strengthening", "Flexibility work"],
-          duration: "50-70 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-        "tone": {
-          title: "Intermediate Sculpting Plan",
-          description: "Targeted exercises to define muscles and improve overall body composition.",
-          exercises: ["Resistance training", "Functional movements", "Isolation exercises", "Cardio intervals", "Flexibility"],
-          duration: "45-60 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-      },
-      advanced: {
-        "lose weight": {
-          title: "Advanced Performance Plan",
-          description: "High-intensity training for experienced athletes focused on fat loss and performance.",
-          exercises: ["Advanced HIIT", "Olympic lifts", "Plyometrics", "Sport-specific training", "Recovery protocols"],
-          duration: "60-90 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-        "build muscle": {
-          title: "Advanced Muscle Building Plan",
-          description: "Sophisticated training protocols for maximizing muscle growth and strength gains.",
-          exercises: ["Heavy compound lifts", "Advanced techniques", "Periodization", "Accessory work", "Recovery focus"],
-          duration: "70-90 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-        "tone": {
-          title: "Advanced Body Sculpting Plan",
-          description: "Precision training for advanced muscle definition and athletic performance.",
-          exercises: ["Complex movements", "Supersets", "Drop sets", "Athletic conditioning", "Mobility work"],
-          duration: "60-80 minutes",
-          frequency: `${data.workoutDaysPerWeek} days per week`,
-        },
-      },
-    };
+  const totalSteps = 6;
 
-    return workoutPlans[data.fitnessLevel as keyof typeof workoutPlans]?.[data.fitnessGoal as keyof typeof workoutPlans.beginner] || workoutPlans.beginner["lose weight"];
+  const handleOptionSelect = (field: keyof QuestionnaireState, value: string | string[]) => {
+    setAnswers(prev => ({ ...prev, [field]: value }));
   };
 
-  const generateMealPlan = (data: QuestionnaireData): MealPlan => {
-    const isVegetarian = data.dietaryRestrictions?.includes('vegetarian');
-    const isGlutenFree = data.dietaryRestrictions?.includes('gluten-free');
-    const isQuickMeals = data.mealPreferences?.includes('quick-meals');
-
-    const mealPlan: MealPlan = {
-      title: `Personalized ${data.fitnessGoal} Meal Plan`,
-      description: `A 7-day meal plan tailored to your ${data.fitnessGoal} goals with your dietary preferences.`,
-      meals: [
-        {
-          day: "Monday",
-          breakfast: isVegetarian ? "Overnight oats with berries" : "Scrambled eggs with spinach",
-          lunch: isVegetarian ? "Quinoa Buddha bowl" : "Grilled chicken salad",
-          dinner: isVegetarian ? "Lentil curry with brown rice" : "Baked salmon with vegetables",
-          snacks: isGlutenFree ? ["Rice cakes with almond butter", "Greek yogurt"] : ["Whole grain crackers", "Mixed nuts"],
-        },
-        {
-          day: "Tuesday",
-          breakfast: isQuickMeals ? "Protein smoothie" : "Greek yogurt parfait",
-          lunch: isVegetarian ? "Black bean wrap" : "Turkey and avocado wrap",
-          dinner: isVegetarian ? "Stuffed bell peppers" : "Lean beef stir-fry",
-          snacks: ["Apple slices", "Hummus with vegetables"],
-        },
-        {
-          day: "Wednesday",
-          breakfast: isGlutenFree ? "Chia pudding" : "Whole grain toast with avocado",
-          lunch: isVegetarian ? "Chickpea salad" : "Tuna salad",
-          dinner: isVegetarian ? "Vegetable pasta" : "Grilled chicken breast",
-          snacks: ["Berries", "Protein bar"],
-        },
-        {
-          day: "Thursday",
-          breakfast: "Green smoothie bowl",
-          lunch: isVegetarian ? "Veggie burger" : "Salmon salad",
-          dinner: isVegetarian ? "Tofu stir-fry" : "Lean pork tenderloin",
-          snacks: ["Trail mix", "Cottage cheese"],
-        },
-        {
-          day: "Friday",
-          breakfast: isQuickMeals ? "Protein shake" : "Egg white omelet",
-          lunch: isVegetarian ? "Quinoa salad" : "Chicken wrap",
-          dinner: isVegetarian ? "Bean and vegetable soup" : "Baked cod with quinoa",
-          snacks: ["Dark chocolate", "Almonds"],
-        },
-        {
-          day: "Saturday",
-          breakfast: "Weekend pancakes (healthy version)",
-          lunch: isVegetarian ? "Caprese salad" : "Grilled chicken Caesar",
-          dinner: isVegetarian ? "Eggplant parmesan" : "Grass-fed steak",
-          snacks: ["Fresh fruit", "Yogurt"],
-        },
-        {
-          day: "Sunday",
-          breakfast: "Brunch bowl",
-          lunch: isVegetarian ? "Vegetable soup" : "Fish tacos",
-          dinner: isVegetarian ? "Mushroom risotto" : "Roasted chicken",
-          snacks: ["Smoothie", "Nuts and seeds"],
-        },
-      ],
-    };
-
-    return mealPlan;
+  const handleDietaryToggle = (preference: string) => {
+    setAnswers(prev => ({
+      ...prev,
+      dietaryPreferences: prev.dietaryPreferences.includes(preference)
+        ? prev.dietaryPreferences.filter(p => p !== preference)
+        : [...prev.dietaryPreferences, preference]
+    }));
   };
 
-  const onSubmit = (data: QuestionnaireData) => {
-    setSubmittedData(data);
-    
-    if (data.planType === 'workout' || data.planType === 'both') {
-      setGeneratedWorkoutPlan(generateWorkoutPlan(data));
+  const nextStep = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      setShowPreview(true);
     }
-    
-    if (data.planType === 'meal' || data.planType === 'both') {
-      setGeneratedMealPlan(generateMealPlan(data));
+  };
+
+  const prevStep = () => {
+    setCurrentStep(Math.max(0, currentStep - 1));
+  };
+
+  const canProceed = () => {
+    switch (currentStep) {
+      case 0: return answers.motherhoodStage !== '';
+      case 1: return answers.fitnessGoal !== '';
+      case 2: return answers.workoutDays !== '';
+      case 3: return true; // dietary preferences are optional
+      case 4: return answers.planType !== '';
+      case 5: return true; // notes are optional
+      default: return false;
     }
+  };
+
+  const generatePlanPreview = () => {
+    const goalText = {
+      'lose-baby-weight': 'gentle weight loss',
+      'build-strength': 'strength building',
+      'sculpt-tone': 'toning and sculpting',
+      'maintain-fitness': 'fitness maintenance',
+      'improve-stamina': 'stamina improvement',
+      'prepare-birth': 'birth preparation',
+      'recover-strength': 'postpartum recovery'
+    }[answers.fitnessGoal] || 'wellness';
+
+    const stageText = {
+      'ttc': 'fertility-focused',
+      'pregnant': 'pregnancy-safe',
+      'postpartum-0-3': 'gentle recovery',
+      'postpartum-3-12': 'rebuilding strength',
+      'general': 'mom-friendly'
+    }[answers.motherhoodStage] || 'personalized';
+
+    return {
+      workout: `${answers.workoutDays}-day ${stageText} workout plan focused on ${goalText}`,
+      meal: `7-day meal plan with ${answers.dietaryPreferences.length > 0 ? answers.dietaryPreferences.join(', ') + ' ' : ''}mom-friendly recipes`
+    };
+  };
+
+  if (showPreview) {
+    const preview = generatePlanPreview();
     
-    setCurrentStep('results');
-  };
-
-  const handleRevision = () => {
-    setCurrentStep('questionnaire');
-  };
-
-  if (currentStep === 'results') {
     return (
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold">Your Personalized Plans</h2>
-          <Button onClick={handleRevision} variant="outline">
-            <Edit className="w-4 h-4 mr-2" />
-            Revise Answers
-          </Button>
+      <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 p-4">
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <Sparkles className="w-16 h-16 text-primary mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-foreground mb-2">Your Plan is Ready!</h1>
+            <p className="text-muted-foreground text-sm">We've created something special just for you</p>
+          </div>
+
+          <Card className="relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 blur-sm"></div>
+            <CardContent className="relative p-6 space-y-4">
+              <div className="text-center mb-4">
+                <Badge className="mb-2">Personalized for You</Badge>
+                <h3 className="font-semibold text-lg">Your Custom Mom Plan</h3>
+              </div>
+
+              <div className="space-y-3 text-sm opacity-60">
+                {(answers.planType === 'workout' || answers.planType === 'both') && (
+                  <div className="p-3 bg-background/50 rounded-lg">
+                    <div className="font-medium mb-1">🏋️ Workout Plan</div>
+                    <div className="text-muted-foreground">{preview.workout}</div>
+                  </div>
+                )}
+                
+                {(answers.planType === 'meal' || answers.planType === 'both') && (
+                  <div className="p-3 bg-background/50 rounded-lg">
+                    <div className="font-medium mb-1">🍽️ Meal Plan</div>
+                    <div className="text-muted-foreground">{preview.meal}</div>
+                  </div>
+                )}
+
+                <div className="p-3 bg-background/50 rounded-lg">
+                  <div className="font-medium mb-1">📱 Mobile Access</div>
+                  <div className="text-muted-foreground">Track progress on-the-go</div>
+                </div>
+              </div>
+
+              <div className="absolute inset-0 bg-background/20 backdrop-blur-[1px] flex items-center justify-center">
+                <Lock className="w-8 h-8 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="mt-6 text-center">
+            <h3 className="font-semibold mb-2">Unlock Your Custom Plan Now</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Join thousands of moms who've transformed their wellness journey
+            </p>
+            
+            <Button className="w-full mb-3" size="lg">
+              Upgrade to Access
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              onClick={() => {
+                setShowPreview(false);
+                setCurrentStep(0);
+              }}
+              className="text-sm"
+            >
+              Start Over
+            </Button>
+          </div>
         </div>
-
-        {generatedWorkoutPlan && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Dumbbell className="w-5 h-5 mr-2" />
-                {generatedWorkoutPlan.title}
-              </CardTitle>
-              <CardDescription>{generatedWorkoutPlan.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                <div>
-                  <h4 className="font-semibold mb-2">Workout Details:</h4>
-                  <p><strong>Duration:</strong> {generatedWorkoutPlan.duration}</p>
-                  <p><strong>Frequency:</strong> {generatedWorkoutPlan.frequency}</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2">Exercise Types:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {generatedWorkoutPlan.exercises.map((exercise, index) => (
-                      <Badge key={index} variant="secondary">{exercise}</Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {generatedMealPlan && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Utensils className="w-5 h-5 mr-2" />
-                {generatedMealPlan.title}
-              </CardTitle>
-              <CardDescription>{generatedMealPlan.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4">
-                {generatedMealPlan.meals.map((dayMeal, index) => (
-                  <div key={index} className="border rounded-lg p-4">
-                    <h4 className="font-semibold mb-3">{dayMeal.day}</h4>
-                    <div className="grid md:grid-cols-3 gap-3">
-                      <div>
-                        <p className="font-medium text-sm">Breakfast</p>
-                        <p className="text-sm text-muted-foreground">{dayMeal.breakfast}</p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">Lunch</p>
-                        <p className="text-sm text-muted-foreground">{dayMeal.lunch}</p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">Dinner</p>
-                        <p className="text-sm text-muted-foreground">{dayMeal.dinner}</p>
-                      </div>
-                    </div>
-                    <div className="mt-2">
-                      <p className="font-medium text-sm">Snacks</p>
-                      <div className="flex flex-wrap gap-1">
-                        {dayMeal.snacks.map((snack, snackIndex) => (
-                          <Badge key={snackIndex} variant="outline" className="text-xs">{snack}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     );
   }
 
+  const questions = [
+    {
+      title: "What's your current stage?",
+      subtitle: "We'll tailor everything to where you are in your journey",
+      options: [
+        { value: 'ttc', label: 'Trying to Conceive', emoji: '💕' },
+        { value: 'pregnant', label: 'Currently Pregnant', emoji: '🤱' },
+        { value: 'postpartum-0-3', label: 'Postpartum (0-3 months)', emoji: '👶' },
+        { value: 'postpartum-3-12', label: 'Postpartum (3-12 months)', emoji: '🍼' },
+        { value: 'general', label: 'General Mom Wellness', emoji: '💪' }
+      ],
+      field: 'motherhoodStage' as keyof QuestionnaireState
+    },
+    {
+      title: "What's your main goal?",
+      subtitle: "Let's focus on what matters most to you right now",
+      options: [
+        { value: 'lose-baby-weight', label: 'Lose baby weight', emoji: '⚖️' },
+        { value: 'build-strength', label: 'Build strength', emoji: '💪' },
+        { value: 'sculpt-tone', label: 'Sculpt + tone', emoji: '✨' },
+        { value: 'maintain-fitness', label: 'Maintain fitness', emoji: '🎯' },
+        { value: 'improve-stamina', label: 'Improve stamina', emoji: '🔋' },
+        { value: 'prepare-birth', label: 'Prepare for birth', emoji: '🌸' },
+        { value: 'recover-strength', label: 'Recover + regain strength', emoji: '🌱' }
+      ],
+      field: 'fitnessGoal' as keyof QuestionnaireState
+    },
+    {
+      title: "How many days can you commit?",
+      subtitle: "Be honest - we'll make it work with your schedule",
+      options: [
+        { value: '2', label: '2 days', emoji: '🗓️' },
+        { value: '3-4', label: '3-4 days', emoji: '📅' },
+        { value: '5+', label: '5+ days', emoji: '🔥' },
+        { value: 'flexible', label: 'It depends', emoji: '🤷‍♀️' }
+      ],
+      field: 'workoutDays' as keyof QuestionnaireState
+    },
+    {
+      title: "Any dietary preferences?",
+      subtitle: "Select all that apply (or skip if none)",
+      options: [
+        { value: 'vegan', label: 'Vegan', emoji: '🌱' },
+        { value: 'vegetarian', label: 'Vegetarian', emoji: '🥗' },
+        { value: 'gluten-free', label: 'Gluten-Free', emoji: '🌾' },
+        { value: 'dairy-free', label: 'Dairy-Free', emoji: '🥛' },
+        { value: 'none', label: 'No preference', emoji: '🍽️' }
+      ],
+      field: 'dietaryPreferences' as keyof QuestionnaireState,
+      multiple: true
+    },
+    {
+      title: "What type of plan?",
+      subtitle: "Choose what you need most right now",
+      options: [
+        { value: 'workout', label: 'Workout plan only', emoji: '🏋️‍♀️' },
+        { value: 'meal', label: 'Meal plan only', emoji: '🍽️' },
+        { value: 'both', label: 'Both workout + meal plan', emoji: '💯' }
+      ],
+      field: 'planType' as keyof QuestionnaireState
+    },
+    {
+      title: "Anything else?",
+      subtitle: "Any special notes we should know about?",
+      isTextInput: true,
+      field: 'additionalNotes' as keyof QuestionnaireState
+    }
+  ];
+
+  const currentQuestion = questions[currentStep];
+
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Personalized Workout & Meal Plan Questionnaire</CardTitle>
-          <CardDescription>
-            Answer these questions to receive a customized plan tailored to your goals and preferences.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="fitnessGoal"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>What is your fitness goal?</FormLabel>
-                    <FormControl>
-                      <RadioGroup onValueChange={field.onChange} value={field.value}>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="lose weight" id="lose-weight" />
-                          <label htmlFor="lose-weight">Lose weight</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="build muscle" id="build-muscle" />
-                          <label htmlFor="build-muscle">Build muscle</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="tone" id="tone" />
-                          <label htmlFor="tone">Tone and sculpt</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="maintain" id="maintain" />
-                          <label htmlFor="maintain">Maintain current fitness</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="improve endurance" id="endurance" />
-                          <label htmlFor="endurance">Improve endurance</label>
-                        </div>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 p-4">
+      <div className="max-w-md mx-auto">
+        {/* Progress bar */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-muted-foreground">
+              Question {currentStep + 1} of {totalSteps}
+            </span>
+            <span className="text-sm text-muted-foreground">
+              {Math.round(((currentStep + 1) / totalSteps) * 100)}%
+            </span>
+          </div>
+          <div className="w-full bg-muted rounded-full h-2">
+            <div 
+              className="bg-primary h-2 rounded-full transition-all duration-300"
+              style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
+            />
+          </div>
+        </div>
 
-              <FormField
-                control={form.control}
-                name="dietaryRestrictions"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>Do you have any dietary preferences/restrictions?</FormLabel>
-                    <FormControl>
-                      <div className="grid grid-cols-2 gap-2">
-                        {['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'keto', 'paleo', 'low-carb', 'low-fat'].map((restriction) => (
-                          <div key={restriction} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={restriction}
-                              checked={form.watch('dietaryRestrictions')?.includes(restriction)}
-                              onCheckedChange={(checked) => {
-                                const current = form.getValues('dietaryRestrictions') || [];
-                                if (checked) {
-                                  form.setValue('dietaryRestrictions', [...current, restriction]);
-                                } else {
-                                  form.setValue('dietaryRestrictions', current.filter(r => r !== restriction));
-                                }
-                              }}
-                            />
-                            <label htmlFor={restriction} className="capitalize">{restriction.replace('-', ' ')}</label>
-                          </div>
-                        ))}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        {/* Question */}
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-foreground mb-2">
+            {currentQuestion.title}
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            {currentQuestion.subtitle}
+          </p>
+        </div>
 
-              <FormField
-                control={form.control}
-                name="workoutDaysPerWeek"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>How many days per week would you like to work out?</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select workout frequency" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="2-3">2-3 days</SelectItem>
-                        <SelectItem value="3-4">3-4 days</SelectItem>
-                        <SelectItem value="4-5">4-5 days</SelectItem>
-                        <SelectItem value="5-6">5-6 days</SelectItem>
-                        <SelectItem value="6-7">6-7 days</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="fitnessLevel"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>What is your current fitness level?</FormLabel>
-                    <FormControl>
-                      <RadioGroup onValueChange={field.onChange} value={field.value}>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="beginner" id="beginner" />
-                          <label htmlFor="beginner">Beginner (new to exercise)</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="intermediate" id="intermediate" />
-                          <label htmlFor="intermediate">Intermediate (exercise 2-3 times/week)</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="advanced" id="advanced" />
-                          <label htmlFor="advanced">Advanced (exercise 4+ times/week)</label>
-                        </div>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="planType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Do you want a workout plan, meal plan, or both?</FormLabel>
-                    <FormControl>
-                      <RadioGroup onValueChange={field.onChange} value={field.value}>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="workout" id="workout-only" />
-                          <label htmlFor="workout-only">Workout plan only</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="meal" id="meal-only" />
-                          <label htmlFor="meal-only">Meal plan only</label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="both" id="both-plans" />
-                          <label htmlFor="both-plans">Both workout and meal plan</label>
-                        </div>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {(form.watch('planType') === 'meal' || form.watch('planType') === 'both') && (
-                <FormField
-                  control={form.control}
-                  name="mealPreferences"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Meal plan preferences:</FormLabel>
-                      <FormControl>
-                        <div className="grid grid-cols-2 gap-2">
-                          {['quick-meals', 'prep-ahead', 'family-friendly', 'budget-friendly', 'gourmet', 'one-pot-meals'].map((preference) => (
-                            <div key={preference} className="flex items-center space-x-2">
-                              <Checkbox
-                                id={preference}
-                                checked={form.watch('mealPreferences')?.includes(preference)}
-                                onCheckedChange={(checked) => {
-                                  const current = form.getValues('mealPreferences') || [];
-                                  if (checked) {
-                                    form.setValue('mealPreferences', [...current, preference]);
-                                  } else {
-                                    form.setValue('mealPreferences', current.filter(p => p !== preference));
-                                  }
-                                }}
-                              />
-                              <label htmlFor={preference} className="capitalize">{preference.replace('-', ' ')}</label>
-                            </div>
-                          ))}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+        {/* Options */}
+        <div className="space-y-3 mb-8">
+          {currentQuestion.isTextInput ? (
+            <Card>
+              <CardContent className="p-4">
+                <textarea
+                  className="w-full p-3 border-none outline-none resize-none bg-transparent"
+                  rows={4}
+                  placeholder="Tell us anything that might help us create your perfect plan..."
+                  value={answers.additionalNotes}
+                  onChange={(e) => handleOptionSelect('additionalNotes', e.target.value)}
                 />
-              )}
+              </CardContent>
+            </Card>
+          ) : (
+            currentQuestion.options?.map((option) => (
+              <Card 
+                key={option.value}
+                className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                  currentQuestion.multiple 
+                    ? (answers[currentQuestion.field] as string[])?.includes(option.value)
+                      ? 'ring-2 ring-primary bg-primary/5'
+                      : 'hover:bg-muted/50'
+                    : answers[currentQuestion.field] === option.value
+                      ? 'ring-2 ring-primary bg-primary/5'
+                      : 'hover:bg-muted/50'
+                }`}
+                onClick={() => {
+                  if (currentQuestion.multiple) {
+                    handleDietaryToggle(option.value);
+                  } else {
+                    handleOptionSelect(currentQuestion.field, option.value);
+                  }
+                }}
+              >
+                <CardContent className="p-4 flex items-center">
+                  <span className="text-2xl mr-3">{option.emoji}</span>
+                  <span className="font-medium">{option.label}</span>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
 
-              <FormField
-                control={form.control}
-                name="additionalNotes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Additional notes or specific requirements (optional):</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Any injuries, time constraints, or specific preferences..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full">
-                Generate My Personalized Plan
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+        {/* Navigation */}
+        <div className="flex justify-between items-center">
+          <Button 
+            variant="ghost" 
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="flex items-center"
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Back
+          </Button>
+          
+          <Button 
+            onClick={nextStep}
+            disabled={!canProceed()}
+            className="flex items-center"
+          >
+            {currentStep === totalSteps - 1 ? 'Create Plan' : 'Next'}
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
