@@ -29,18 +29,64 @@ interface CoachOption {
   action: () => void;
 }
 
-// Mock coaching data
-const quickWorkouts = [
-  { id: '1', title: 'Gentle Postpartum Core', duration: '10 min', focus: 'Core' },
-  { id: '2', title: 'Energy Boost Routine', duration: '15 min', focus: 'Full Body' },
-  { id: '3', title: 'Pelvic Floor Strength', duration: '8 min', focus: 'Recovery' }
-];
+// Mock coaching data by stage
+const getWorkoutsByStage = (stage: string) => {
+  switch (stage) {
+    case 'ttc':
+      return [
+        { id: '1', title: 'Fertility-Supporting Yoga', duration: '15 min', focus: 'Reproductive Health' },
+        { id: '2', title: 'Stress-Relief Movement', duration: '12 min', focus: 'Mental Wellness' },
+        { id: '3', title: 'Core Strength for TTC', duration: '10 min', focus: 'Core Stability' }
+      ];
+    case 'pregnant':
+      return [
+        { id: '1', title: 'Prenatal Safe Cardio', duration: '15 min', focus: 'Cardiovascular Health' },
+        { id: '2', title: 'Pregnancy Core & Pelvic Floor', duration: '12 min', focus: 'Core Support' },
+        { id: '3', title: 'Gentle Prenatal Yoga', duration: '20 min', focus: 'Flexibility & Relaxation' }
+      ];
+    case 'postpartum':
+      return [
+        { id: '1', title: 'Gentle Postpartum Core', duration: '10 min', focus: 'Core Recovery' },
+        { id: '2', title: 'Energy Boost Routine', duration: '15 min', focus: 'Full Body' },
+        { id: '3', title: 'Pelvic Floor Strength', duration: '8 min', focus: 'Recovery' }
+      ];
+    default:
+      return [
+        { id: '1', title: 'Gentle Movement Flow', duration: '12 min', focus: 'Full Body' },
+        { id: '2', title: 'Stress-Relief Workout', duration: '10 min', focus: 'Mental Wellness' },
+        { id: '3', title: 'Energy Building Routine', duration: '15 min', focus: 'Strength' }
+      ];
+  }
+};
 
-const mealIdeas = [
-  { id: '1', meal: 'Breakfast', suggestion: 'Greek yogurt with berries and granola (350 cal)', benefits: 'Protein, calcium' },
-  { id: '2', meal: 'Lunch', suggestion: 'Avocado toast with eggs (450 cal)', benefits: 'Healthy fats, protein' },
-  { id: '3', meal: 'Dinner', suggestion: 'Sheet pan salmon with roasted vegetables (500 cal)', benefits: 'Omega-3s, vitamins' },
-];
+const getMealIdeasByStage = (stage: string) => {
+  switch (stage) {
+    case 'ttc':
+      return [
+        { id: '1', meal: 'Breakfast', suggestion: 'Spinach and feta omelet with whole grain toast (400 cal)', benefits: 'Folate, protein for fertility' },
+        { id: '2', meal: 'Lunch', suggestion: 'Quinoa bowl with avocado and seeds (450 cal)', benefits: 'Omega-3s, antioxidants' },
+        { id: '3', meal: 'Dinner', suggestion: 'Wild salmon with sweet potato (500 cal)', benefits: 'Omega-3s, vitamin D' },
+      ];
+    case 'pregnant':
+      return [
+        { id: '1', meal: 'Breakfast', suggestion: 'Fortified cereal with milk and berries (350 cal)', benefits: 'Folate, calcium for baby' },
+        { id: '2', meal: 'Lunch', suggestion: 'Lentil soup with whole grain bread (400 cal)', benefits: 'Iron, fiber, protein' },
+        { id: '3', meal: 'Dinner', suggestion: 'Lean beef with steamed broccoli and rice (550 cal)', benefits: 'Iron, vitamin C, B vitamins' },
+      ];
+    case 'postpartum':
+      return [
+        { id: '1', meal: 'Breakfast', suggestion: 'Greek yogurt with berries and granola (350 cal)', benefits: 'Protein, calcium for nursing' },
+        { id: '2', meal: 'Lunch', suggestion: 'Avocado toast with eggs (450 cal)', benefits: 'Healthy fats, protein for energy' },
+        { id: '3', meal: 'Dinner', suggestion: 'Sheet pan salmon with roasted vegetables (500 cal)', benefits: 'Omega-3s, vitamins for recovery' },
+      ];
+    default:
+      return [
+        { id: '1', meal: 'Breakfast', suggestion: 'Overnight oats with nuts and fruit (380 cal)', benefits: 'Sustained energy, fiber' },
+        { id: '2', meal: 'Lunch', suggestion: 'Mediterranean salad with chickpeas (420 cal)', benefits: 'Antioxidants, plant protein' },
+        { id: '3', meal: 'Dinner', suggestion: 'Grilled chicken with quinoa and vegetables (480 cal)', benefits: 'Complete protein, nutrients' },
+      ];
+  }
+};
 
 const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -221,13 +267,23 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
   };
 
   const suggestWorkouts = () => {
+    const stage = userProfile.motherhoodStage || 'postpartum';
+    const workouts = getWorkoutsByStage(stage);
+    
+    const stageMessages = {
+      ttc: "Here are some fertility-supporting workouts designed to reduce stress and support reproductive health:",
+      pregnant: "Here are some safe pregnancy workouts designed for you and your growing baby:",
+      postpartum: "Here are some postpartum-friendly workouts designed to support your recovery journey:",
+      general: "Here are some wellness-focused workouts designed to support your motherhood journey:"
+    };
+    
     addCoachMessage(
-      "Here are some postpartum-friendly workouts you might enjoy. These are all designed to be safe and effective for your recovery journey:",
+      stageMessages[stage as keyof typeof stageMessages] || stageMessages.general,
       []
     );
     
     setTimeout(() => {
-      const workoutList = quickWorkouts.map(workout => 
+      const workoutList = workouts.map(workout => 
         `${workout.title} (${workout.duration}) - Focus: ${workout.focus}`
       ).join('\n');
       
@@ -283,21 +339,38 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
   };
 
   const suggestMeals = () => {
+    const stage = userProfile.motherhoodStage || 'postpartum';
+    const meals = getMealIdeasByStage(stage);
+    
+    const stageMessages = {
+      ttc: "Here are some fertility-supporting meal ideas with nutrients that promote reproductive health:",
+      pregnant: "Here are some pregnancy-safe meal ideas that support you and your baby's development:",
+      postpartum: "Here are some nutritious meal ideas that are quick to prepare and support postpartum recovery:",
+      general: "Here are some nutritious meal ideas to support your wellness journey:"
+    };
+    
     addCoachMessage(
-      "Here are some nutritious meal ideas that are quick to prepare and support postpartum recovery:",
+      stageMessages[stage as keyof typeof stageMessages] || stageMessages.general,
       []
     );
     
     setTimeout(() => {
-      const mealList = mealIdeas.map(meal => 
+      const mealList = meals.map(meal => 
         `${meal.meal}: ${meal.suggestion} - Benefits: ${meal.benefits}`
       ).join('\n\n');
+      
+      const stageSpecificThanks = {
+        ttc: "I'm glad! Proper nutrition is crucial for fertility and overall health. If you have any dietary restrictions or specific fertility nutrition questions, just let me know.",
+        pregnant: "I'm glad! Proper nutrition is so important for you and your baby's health. If you have any dietary restrictions or pregnancy-specific nutrition questions, just let me know.",
+        postpartum: "I'm glad! Proper nutrition is so important during postpartum recovery. If you have any dietary restrictions or preferences, just let me know.",
+        general: "I'm glad! Proper nutrition supports your overall wellness journey. If you have any dietary restrictions or preferences, just let me know."
+      };
       
       addCoachMessage(
         `Here are some nutritious meal ideas:\n\n${mealList}`,
         [
           { id: 'meal-more', text: 'More meal ideas', action: () => window.location.href = '/recipes' },
-          { id: 'meal-thanks', text: 'This is helpful!', action: () => addCoachMessage("I'm glad! Proper nutrition is so important during postpartum recovery. If you have any dietary restrictions or preferences, just let me know.") }
+          { id: 'meal-thanks', text: 'This is helpful!', action: () => addCoachMessage(stageSpecificThanks[stage as keyof typeof stageSpecificThanks] || stageSpecificThanks.general) }
         ]
       );
     }, 1000);
@@ -325,28 +398,72 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
   };
 
   const suggestHydrationTips = () => {
+    const stage = userProfile.motherhoodStage || 'postpartum';
+    
+    const stageMessages = {
+      ttc: "Great question! Hydration is crucial for fertility, hormone balance, and overall health. Here are some hydration tips:",
+      pregnant: "Great question! Hydration is extra important during pregnancy for you and your baby's development. Here are some hydration tips:",
+      postpartum: "Great question! Hydration is extremely important for energy levels, milk production, and overall recovery. Here are some hydration tips:",
+      general: "Great question! Hydration is crucial for energy, health, and overall wellness. Here are some hydration tips:"
+    };
+    
+    const stageSpecificTips = {
+      ttc: `Here are some hydration tips:
+
+• Start your day with water - Add lemon for vitamin C and digestive support
+• Infused water options - Try cucumber + mint or berry blends for antioxidants
+• Hydrating foods - Watermelon, cucumber, oranges help with overall fluid intake`,
+      pregnant: `Here are some hydration tips:
+
+• Sip throughout the day - Don't wait until you're thirsty during pregnancy
+• Coconut water - Natural electrolytes can help with pregnancy fatigue
+• Herbal teas - Ginger tea for nausea, raspberry leaf tea in third trimester`,
+      postpartum: `Here are some hydration tips:
+
+• Drink when you breastfeed - Keep a water bottle at your feeding station
+• Infused water options - Try cucumber + mint or strawberry + basil for flavor
+• Hydrating foods - Watermelon, cucumber, oranges, and soup all contribute to hydration`,
+      general: `Here are some hydration tips:
+
+• Morning hydration ritual - Start with a glass of water upon waking
+• Flavor naturally - Add fruits, herbs, or cucumber for variety
+• Hydrating snacks - Choose water-rich foods like melons, soups, and smoothies`
+    };
+    
+    const stageSpecificAdvice = {
+      ttc: "Aim for 8-10 glasses of water daily. Proper hydration supports hormone production and overall fertility health.",
+      pregnant: "Aim for 10-12 glasses of water daily during pregnancy. Your body needs extra fluids to support your growing baby.",
+      postpartum: "Aim for about 3 liters of total fluids daily while breastfeeding. Your urine should be light yellow - that's a good indicator of proper hydration.",
+      general: "Aim for 8-10 glasses of water daily. Listen to your body and drink more during exercise or hot weather."
+    };
+    
     addCoachMessage(
-      "Great question! Hydration is extremely important for energy levels, milk production, and overall recovery. Here are some hydration tips:",
+      stageMessages[stage as keyof typeof stageMessages] || stageMessages.general,
       []
     );
     
     setTimeout(() => {
       addCoachMessage(
-        `Here are some hydration tips:
-
-• Drink when you breastfeed - Keep a water bottle at your feeding station
-• Infused water options - Try cucumber + mint or strawberry + basil for flavor
-• Hydrating foods - Watermelon, cucumber, oranges, and soup all contribute to hydration`,
+        stageSpecificTips[stage as keyof typeof stageSpecificTips] || stageSpecificTips.general,
         [
-          { id: 'hydration-thanks', text: 'Thank you!', action: () => addCoachMessage("You're welcome! Aim for about 3 liters of total fluids daily while breastfeeding. Your urine should be light yellow - that's a good indicator of proper hydration.") }
+          { id: 'hydration-thanks', text: 'Thank you!', action: () => addCoachMessage(stageSpecificAdvice[stage as keyof typeof stageSpecificAdvice] || stageSpecificAdvice.general) }
         ]
       );
     }, 1000);
   };
 
   const provideSupportiveResponse = () => {
+    const stage = userProfile.motherhoodStage || 'postpartum';
+    
+    const stageMessages = {
+      ttc: "It's completely normal to feel overwhelmed during your TTC journey. The emotional ups and downs are valid, and you're stronger than you know.",
+      pregnant: "It's completely normal to feel overwhelmed during pregnancy. Your body and emotions are going through so much - your feelings are valid.",
+      postpartum: "It's completely normal to feel overwhelmed as a new mom. Your feelings are valid, and you're doing better than you think.",
+      general: "It's completely normal to feel overwhelmed in motherhood. Your feelings are valid, and you're doing an amazing job."
+    };
+    
     addCoachMessage(
-      "It's completely normal to feel overwhelmed as a new mom. Your feelings are valid, and you're doing better than you think.",
+      stageMessages[stage as keyof typeof stageMessages] || stageMessages.general,
       []
     );
     
