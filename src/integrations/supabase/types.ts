@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "12.2.12 (cd3cf9e)"
   }
   public: {
     Tables: {
@@ -22,7 +22,7 @@ export type Database = {
           detected_food: string | null
           id: string
           image_path: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           calories?: number | null
@@ -31,7 +31,7 @@ export type Database = {
           detected_food?: string | null
           id?: string
           image_path?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           calories?: number | null
@@ -40,7 +40,7 @@ export type Database = {
           detected_food?: string | null
           id?: string
           image_path?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -77,6 +77,36 @@ export type Database = {
           protein?: number | null
           serving_size?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          motherhood_stage: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          motherhood_stage?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          motherhood_stage?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
