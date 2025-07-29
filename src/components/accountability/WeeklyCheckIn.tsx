@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Camera, Calendar, Target, Upload } from 'lucide-react';
+import { Camera, Calendar, Target, Upload, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,8 +15,18 @@ export const WeeklyCheckIn = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [progressImage, setProgressImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [progressPhotos, setProgressPhotos] = useState<{
+    front?: { file: File; url: string };
+    side?: { file: File; url: string };
+    back?: { file: File; url: string };
+  }>({});
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  
+  const photoTypes = [
+    { key: 'front', label: 'Front View', instruction: 'Stand straight, arms at sides' },
+    { key: 'side', label: 'Side View', instruction: 'Profile, natural posture' },
+    { key: 'back', label: 'Back View', instruction: 'Turn around, same position' }
+  ];
   
   const [checkInData, setCheckInData] = useState({
     weight: '',
@@ -30,31 +40,48 @@ export const WeeklyCheckIn = () => {
     notes: ''
   });
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, photoType: string) => {
     const file = e.target.files?.[0];
     if (file) {
-      setProgressImage(file);
       const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
+      setProgressPhotos(prev => ({
+        ...prev,
+        [photoType]: { file, url }
+      }));
     }
   };
 
-  const uploadProgressImage = async (file: File): Promise<string | null> => {
-    if (!user) return null;
+  const removePhoto = (photoType: string) => {
+    setProgressPhotos(prev => {
+      const updated = { ...prev };
+      delete updated[photoType as keyof typeof updated];
+      return updated;
+    });
+  };
+
+  const uploadProgressImages = async (): Promise<string[]> => {
+    if (!user) return [];
     
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+    const uploadPromises = Object.entries(progressPhotos).map(async ([type, photo]) => {
+      if (!photo) return null;
+      
+      const fileExt = photo.file.name.split('.').pop();
+      const fileName = `${user.id}/${type}/${Date.now()}.${fileExt}`;
+      
+      const { error } = await supabase.storage
+        .from('progress-photos')
+        .upload(fileName, photo.file);
+      
+      if (error) {
+        console.error('Upload error:', error);
+        return null;
+      }
+      
+      return fileName;
+    });
     
-    const { error } = await supabase.storage
-      .from('progress-photos')
-      .upload(fileName, file);
-    
-    if (error) {
-      console.error('Upload error:', error);
-      return null;
-    }
-    
-    return fileName;
+    const results = await Promise.all(uploadPromises);
+    return results.filter(url => url !== null) as string[];
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,14 +91,14 @@ export const WeeklyCheckIn = () => {
     setIsSubmitting(true);
     
     try {
-      let imageUrl = null;
+      let imageUrls: string[] = [];
       
-      if (progressImage) {
-        imageUrl = await uploadProgressImage(progressImage);
-        if (!imageUrl) {
+      if (Object.keys(progressPhotos).length > 0) {
+        imageUrls = await uploadProgressImages();
+        if (imageUrls.length === 0 && Object.keys(progressPhotos).length > 0) {
           toast({
             title: "Upload failed",
-            description: "Failed to upload progress photo",
+            description: "Failed to upload progress photos",
             variant: "destructive"
           });
           return;
@@ -90,7 +117,7 @@ export const WeeklyCheckIn = () => {
           waist_measurement: checkInData.waist ? parseFloat(checkInData.waist) : null,
           glute_measurement: checkInData.glute ? parseFloat(checkInData.glute) : null,
           thigh_measurement: checkInData.thigh ? parseFloat(checkInData.thigh) : null,
-          progress_image_url: imageUrl,
+          progress_image_url: imageUrls.length > 0 ? imageUrls[0] : null,
           description: checkInData.description || null,
           notes: checkInData.notes || null
         });
@@ -121,8 +148,8 @@ export const WeeklyCheckIn = () => {
         description: '',
         notes: ''
       });
-      setProgressImage(null);
-      setPreviewUrl(null);
+      setProgressPhotos({});
+      setCurrentPhotoIndex(0);
       
     } catch (error) {
       toast({
@@ -158,64 +185,102 @@ export const WeeklyCheckIn = () => {
               Upload Progress Pictures
             </Label>
             
-            {/* Professional Photo Guide */}
-            <div className="bg-muted/30 rounded-lg p-4 mb-4">
-              <h4 className="text-sm font-medium mb-3">Photo Pose Guide - Copy These Positions:</h4>
-              <div className="bg-card rounded-lg p-4 border">
-                <img
-                  src={progressPhotoGuide}
-                  alt="Progress photo pose guide showing front, side, and back view positions"
-                  className="w-full h-auto max-h-40 object-contain filter"
-                />
+            {/* Photo Carousel */}
+            <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
+              {/* Carousel Header */}
+              <div className="flex items-center justify-between p-4 border-b bg-muted/30">
+                <span className="text-sm font-medium">
+                  {photoTypes[currentPhotoIndex]?.label || 'Photo Guide'}
+                </span>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setCurrentPhotoIndex(Math.max(0, currentPhotoIndex - 1))}
+                    disabled={currentPhotoIndex === 0}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-xs text-muted-foreground">
+                    {currentPhotoIndex + 1} / {photoTypes.length}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setCurrentPhotoIndex(Math.min(photoTypes.length - 1, currentPhotoIndex + 1))}
+                    disabled={currentPhotoIndex === photoTypes.length - 1}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-              <p className="text-xs text-center text-muted-foreground mt-2">
-                Take photos from these three angles: Front • Side • Back
-              </p>
+
+              {/* Photo Content */}
+              <div className="p-4">
+                {(() => {
+                  const currentPhotoType = photoTypes[currentPhotoIndex];
+                  const hasPhoto = progressPhotos[currentPhotoType.key as keyof typeof progressPhotos];
+                  
+                  return (
+                    <div className="space-y-3">
+                      {hasPhoto ? (
+                        <div className="relative">
+                          <img
+                            src={hasPhoto.url}
+                            alt={`Progress photo - ${currentPhotoType.label}`}
+                            className="w-full h-48 object-cover rounded-lg"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            className="absolute top-2 right-2"
+                            onClick={() => removePhoto(currentPhotoType.key)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="space-y-3">
+                          {/* Clickable guide image */}
+                          <label className="cursor-pointer block">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleImageUpload(e, currentPhotoType.key)}
+                              className="hidden"
+                            />
+                            <div className="bg-muted/20 rounded-lg p-4 border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 transition-colors">
+                              <img
+                                src={progressPhotoGuide}
+                                alt="Click to upload progress photo"
+                                className="w-full h-32 object-contain opacity-60 hover:opacity-80 transition-opacity"
+                              />
+                              <div className="text-center mt-2">
+                                <Camera className="h-5 w-5 mx-auto mb-1 text-muted-foreground" />
+                                <p className="text-sm font-medium">Tap to Upload {currentPhotoType.label}</p>
+                                <p className="text-xs text-muted-foreground">{currentPhotoType.instruction}</p>
+                              </div>
+                            </div>
+                          </label>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
             </div>
 
-            <div className="text-xs text-muted-foreground mb-2 space-y-1 bg-blue-50 p-3 rounded-lg">
-              <p className="font-medium text-blue-900">📸 Photo Tips:</p>
+            {/* Photo Tips */}
+            <div className="text-xs text-muted-foreground space-y-1 bg-blue-50 dark:bg-blue-950/20 p-3 rounded-lg border">
+              <p className="font-medium text-blue-900 dark:text-blue-100">📸 Photo Tips:</p>
               <p>• Use good natural lighting (near a window)</p>
               <p>• Stand against a plain, light-colored wall</p>
               <p>• Wear fitted clothing or workout attire</p>
               <p>• Take photos at the same time of day</p>
               <p>• Keep the same distance from camera</p>
-            </div>
-            
-            <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
-              {previewUrl ? (
-                <div className="space-y-2">
-                  <img
-                    src={previewUrl}
-                    alt="Progress preview"
-                    className="w-full h-32 object-cover rounded-lg"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setProgressImage(null);
-                      setPreviewUrl(null);
-                    }}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              ) : (
-                <label className="cursor-pointer block">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Upload className="h-8 w-8" />
-                    <span className="text-sm">Upload Photo</span>
-                  </div>
-                </label>
-              )}
             </div>
           </div>
 
