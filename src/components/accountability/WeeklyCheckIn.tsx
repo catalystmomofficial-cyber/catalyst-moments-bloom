@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
-import progressPhotoGuide from '@/assets/progress-photo-guide.png';
+import progressPhotoGuide from '@/assets/progress-photo-guide-woman.png';
 
 export const WeeklyCheckIn = () => {
   const { toast } = useToast();
@@ -161,11 +161,11 @@ export const WeeklyCheckIn = () => {
             {/* Professional Photo Guide */}
             <div className="bg-muted/30 rounded-lg p-4 mb-4">
               <h4 className="text-sm font-medium mb-3">Photo Pose Guide - Copy These Positions:</h4>
-              <div className="bg-background rounded-lg p-3">
+              <div className="bg-card rounded-lg p-4 border">
                 <img
                   src={progressPhotoGuide}
                   alt="Progress photo pose guide showing front, side, and back view positions"
-                  className="w-full h-auto max-h-40 object-contain"
+                  className="w-full h-auto max-h-40 object-contain filter"
                 />
               </div>
               <p className="text-xs text-center text-muted-foreground mt-2">
