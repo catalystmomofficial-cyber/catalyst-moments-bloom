@@ -1,104 +1,50 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { X, Send, Heart, Video, Phone, Mic, MicOff } from "lucide-react";
+import { X, Send, Smile, Paperclip, Mic, Video, Phone, Camera } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWellnessData } from "@/hooks/useWellnessData";
 
 interface WellnessCoachModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Define message types
 interface Message {
   id: string;
   content: string;
   sender: 'coach' | 'user';
   timestamp: Date;
-  options?: CoachOption[];
+  type?: 'text' | 'audio' | 'image';
 }
 
-interface CoachOption {
+interface Coach {
   id: string;
-  text: string;
-  action: () => void;
+  name: string;
+  avatar: string;
+  specialty: string;
+  isOnline: boolean;
 }
 
-// Mock coaching data by stage
-const getWorkoutsByStage = (stage: string) => {
-  switch (stage) {
-    case 'ttc':
-      return [
-        { id: '1', title: 'Fertility-Supporting Yoga', duration: '15 min', focus: 'Reproductive Health' },
-        { id: '2', title: 'Stress-Relief Movement', duration: '12 min', focus: 'Mental Wellness' },
-        { id: '3', title: 'Core Strength for TTC', duration: '10 min', focus: 'Core Stability' }
-      ];
-    case 'pregnant':
-      return [
-        { id: '1', title: 'Prenatal Safe Cardio', duration: '15 min', focus: 'Cardiovascular Health' },
-        { id: '2', title: 'Pregnancy Core & Pelvic Floor', duration: '12 min', focus: 'Core Support' },
-        { id: '3', title: 'Gentle Prenatal Yoga', duration: '20 min', focus: 'Flexibility & Relaxation' }
-      ];
-    case 'postpartum':
-      return [
-        { id: '1', title: 'Gentle Postpartum Core', duration: '10 min', focus: 'Core Recovery' },
-        { id: '2', title: 'Energy Boost Routine', duration: '15 min', focus: 'Full Body' },
-        { id: '3', title: 'Pelvic Floor Strength', duration: '8 min', focus: 'Recovery' }
-      ];
-    default:
-      return [
-        { id: '1', title: 'Gentle Movement Flow', duration: '12 min', focus: 'Full Body' },
-        { id: '2', title: 'Stress-Relief Workout', duration: '10 min', focus: 'Mental Wellness' },
-        { id: '3', title: 'Energy Building Routine', duration: '15 min', focus: 'Strength' }
-      ];
-  }
-};
-
-const getMealIdeasByStage = (stage: string) => {
-  switch (stage) {
-    case 'ttc':
-      return [
-        { id: '1', meal: 'Breakfast', suggestion: 'Spinach and feta omelet with whole grain toast (400 cal)', benefits: 'Folate, protein for fertility' },
-        { id: '2', meal: 'Lunch', suggestion: 'Quinoa bowl with avocado and seeds (450 cal)', benefits: 'Omega-3s, antioxidants' },
-        { id: '3', meal: 'Dinner', suggestion: 'Wild salmon with sweet potato (500 cal)', benefits: 'Omega-3s, vitamin D' },
-      ];
-    case 'pregnant':
-      return [
-        { id: '1', meal: 'Breakfast', suggestion: 'Fortified cereal with milk and berries (350 cal)', benefits: 'Folate, calcium for baby' },
-        { id: '2', meal: 'Lunch', suggestion: 'Lentil soup with whole grain bread (400 cal)', benefits: 'Iron, fiber, protein' },
-        { id: '3', meal: 'Dinner', suggestion: 'Lean beef with steamed broccoli and rice (550 cal)', benefits: 'Iron, vitamin C, B vitamins' },
-      ];
-    case 'postpartum':
-      return [
-        { id: '1', meal: 'Breakfast', suggestion: 'Greek yogurt with berries and granola (350 cal)', benefits: 'Protein, calcium for nursing' },
-        { id: '2', meal: 'Lunch', suggestion: 'Avocado toast with eggs (450 cal)', benefits: 'Healthy fats, protein for energy' },
-        { id: '3', meal: 'Dinner', suggestion: 'Sheet pan salmon with roasted vegetables (500 cal)', benefits: 'Omega-3s, vitamins for recovery' },
-      ];
-    default:
-      return [
-        { id: '1', meal: 'Breakfast', suggestion: 'Overnight oats with nuts and fruit (380 cal)', benefits: 'Sustained energy, fiber' },
-        { id: '2', meal: 'Lunch', suggestion: 'Mediterranean salad with chickpeas (420 cal)', benefits: 'Antioxidants, plant protein' },
-        { id: '3', meal: 'Dinner', suggestion: 'Grilled chicken with quinoa and vegetables (480 cal)', benefits: 'Complete protein, nutrients' },
-      ];
-  }
-};
+const AVAILABLE_COACHES: Coach[] = [
+  { id: '1', name: 'Coach Nina', avatar: '👩🏻‍⚕️', specialty: 'Pregnancy & Prenatal', isOnline: true },
+  { id: '2', name: 'Coach Bella', avatar: '👩🏽‍⚕️', specialty: 'Postpartum Recovery', isOnline: true },
+  { id: '3', name: 'Coach Tia', avatar: '👩🏾‍⚕️', specialty: 'TTC & Fertility', isOnline: true },
+  { id: '4', name: 'Coach Sarah', avatar: '👩🏼‍⚕️', specialty: 'General Wellness', isOnline: true },
+];
 
 const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
+  const { user, profile } = useAuth();
+  const { wellnessEntries } = useWellnessData();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
-  const [userProfile, setUserProfile] = useState<{
-    name?: string;
-    weeksPostpartum?: number;
-    energyLevel?: 'low' | 'medium' | 'high';
-    goals?: string[];
-    onboarded: boolean;
-    motherhoodStage?: 'ttc' | 'pregnant' | 'postpartum' | 'general';
-  }>({ onboarded: false, motherhoodStage: 'postpartum' });
+  const [currentCoach, setCurrentCoach] = useState<Coach | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
@@ -108,65 +54,66 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
-  
-  // Initial welcome message
+
+  // Initialize coach and conversation when modal opens
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    if (isOpen && !currentCoach) {
+      setIsConnecting(true);
+      setMessages([]);
+      
+      // Simulate finding an available coach
       setTimeout(() => {
-        const stage = userProfile.motherhoodStage || 'postpartum';
-        const welcomeMessage = getWelcomeMessage(stage);
+        const availableCoaches = AVAILABLE_COACHES.filter(coach => coach.isOnline);
+        const selectedCoach = availableCoaches[Math.floor(Math.random() * availableCoaches.length)];
+        setCurrentCoach(selectedCoach);
+        setIsConnecting(false);
         
-        addCoachMessage(
-          welcomeMessage,
-          [
-            { 
-              id: 'feeling-good', 
-              text: "I'm feeling good today", 
-              action: () => handleFeelingResponse("good") 
-            },
-            { 
-              id: 'feeling-tired', 
-              text: "I'm feeling tired", 
-              action: () => handleFeelingResponse("tired") 
-            },
-            { 
-              id: 'feeling-overwhelmed', 
-              text: "I'm feeling overwhelmed", 
-              action: () => handleFeelingResponse("overwhelmed") 
-            },
-            { 
-              id: 'feeling-excited', 
-              text: "I'm feeling excited", 
-              action: () => handleFeelingResponse("excited") 
-            }
-          ]
-        );
-      }, 500);
+        // Start personalized conversation after coach is selected
+        setTimeout(() => {
+          startPersonalizedConversation(selectedCoach);
+        }, 1000);
+      }, 2000);
+    } else if (!isOpen) {
+      // Reset when modal closes
+      setCurrentCoach(null);
+      setMessages([]);
+      setIsConnecting(false);
     }
   }, [isOpen]);
 
-  const getWelcomeMessage = (stage: string) => {
-    switch (stage) {
-      case 'ttc':
-        return "Hi there! I'm your fertility wellness coach. I'm here to support you on your TTC journey with workouts, nutrition, and stress management. How are you feeling today?";
-      case 'pregnant':
-        return "Hi there! I'm your pregnancy wellness coach. I'm here to support you and your growing baby with safe workouts and nutrition. How are you feeling today?";
-      case 'postpartum':
-        return "Hi there! I'm your postpartum wellness coach. I'm here to support you on your recovery and wellness journey. How are you feeling today?";
-      default:
-        return "Hi there! I'm your wellness coach. I'm here to support you on your motherhood wellness journey. How are you feeling today?";
+  const startPersonalizedConversation = (coach: Coach) => {
+    const stage = profile?.motherhood_stage || 'general';
+    const displayName = profile?.display_name || user?.email?.split('@')[0] || 'there';
+    const latestEntry = wellnessEntries?.[0];
+    
+    let personalizedGreeting = `Hi ${displayName}! I'm ${coach.name}, your wellness coach.`;
+    
+    if (latestEntry) {
+      personalizedGreeting += ` I see you just completed your weekly check-in. Based on what you logged, how are you feeling today?`;
+    } else {
+      personalizedGreeting += ` Let's start by checking in - how are you feeling today?`;
     }
+    
+    // Add stage-specific context
+    if (stage === 'pregnant') {
+      personalizedGreeting += " I'm here to support you and your growing baby throughout this journey.";
+    } else if (stage === 'postpartum') {
+      personalizedGreeting += " I'm here to support your recovery and adjustment to motherhood.";
+    } else if (stage === 'ttc') {
+      personalizedGreeting += " I'm here to support you on your TTC journey with wellness guidance.";
+    }
+
+    addCoachMessage(personalizedGreeting);
   };
 
-  const addCoachMessage = (content: string, options: CoachOption[] = []) => {
+  const addCoachMessage = (content: string) => {
     setMessages(prev => [
       ...prev, 
       {
         id: Date.now().toString(),
         content,
         sender: 'coach',
-        timestamp: new Date(),
-        options
+        timestamp: new Date()
       }
     ]);
   };
@@ -184,484 +131,305 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
   };
 
   const handleSendMessage = () => {
-    if (inputMessage.trim() === '') return;
+    if (inputMessage.trim() === '' || !currentCoach) return;
     
-    addUserMessage(inputMessage);
+    const userMsg = inputMessage.trim();
+    addUserMessage(userMsg);
     setInputMessage('');
+    setIsLoading(true);
     
-    // Simple response logic
+    // Simulate intelligent response based on user's stage and recent check-in data
     setTimeout(() => {
-      if (inputMessage.toLowerCase().includes('workout') || inputMessage.toLowerCase().includes('exercise')) {
-        suggestWorkouts();
-      } else if (inputMessage.toLowerCase().includes('eat') || inputMessage.toLowerCase().includes('food') || inputMessage.toLowerCase().includes('meal')) {
-        suggestMeals();
-      } else if (inputMessage.toLowerCase().includes('stress') || inputMessage.toLowerCase().includes('anxiety') || inputMessage.toLowerCase().includes('overwhelm')) {
-        provideSupportiveResponse();
-      } else {
-        // General response
-        addCoachMessage(
-          "Thanks for sharing! How can I help you today?", 
-          [
-            { id: 'help-workout', text: 'Find a quick workout', action: suggestWorkouts },
-            { id: 'help-meal', text: 'Get meal ideas', action: suggestMeals },
-            { id: 'help-support', text: 'I need support', action: provideSupportiveResponse }
-          ]
-        );
-      }
-    }, 1000);
+      generateSmartResponse(userMsg);
+      setIsLoading(false);
+    }, 1500);
   };
 
-  const handleFeelingResponse = (feeling: string) => {
-    addUserMessage(`I'm feeling ${feeling} today`);
+  const generateSmartResponse = (userMessage: string) => {
+    const stage = profile?.motherhood_stage || 'general';
+    const latestEntry = wellnessEntries?.[0];
+    const lowerMsg = userMessage.toLowerCase();
     
-    setTimeout(() => {
-      const stage = userProfile.motherhoodStage || 'postpartum';
-      
-      if (feeling === "good") {
-        const message = stage === 'ttc' 
-          ? "That's wonderful to hear! Positive energy is great for fertility. Would you like to build on this with some fertility-supporting workouts or nutrition tips?"
-          : stage === 'pregnant'
-          ? "That's wonderful to hear! Let's keep this positive energy going with some safe pregnancy workouts or nutrition ideas for you and baby."
-          : "That's wonderful to hear! Would you like to build on this positive energy with a quick workout or some healthy meal ideas?";
-        
-        addCoachMessage(message, [
-          { id: 'good-workout', text: 'Show me workouts', action: suggestWorkouts },
-          { id: 'good-meal', text: 'Show me meal ideas', action: suggestMeals }
-        ]);
-      } else if (feeling === "tired") {
-        const message = stage === 'ttc' 
-          ? "I understand. TTC can be emotionally and physically draining. Would you like some gentle energy-boosting exercises or fertility-supporting nutrition tips?"
-          : stage === 'pregnant'
-          ? "Fatigue is so common during pregnancy! Would you like some gentle energy-boosting exercises safe for pregnancy or nutrition tips to help combat tiredness?"
-          : "I understand. Being a mom is demanding work. Would you like some gentle energy-boosting exercises or nutrition tips to help with fatigue?";
-        
-        addCoachMessage(message, [
-          { id: 'tired-workout', text: 'Energy-boosting exercises', action: suggestLowEnergyWorkouts },
-          { id: 'tired-meal', text: 'Energy-boosting foods', action: suggestEnergyMeals }
-        ]);
-      } else if (feeling === "overwhelmed") {
-        const message = stage === 'ttc' 
-          ? "I'm sorry you're feeling overwhelmed. The TTC journey can be emotionally challenging. Would you like some stress-relief techniques to support fertility or calming self-care ideas?"
-          : stage === 'pregnant'
-          ? "I'm sorry you're feeling overwhelmed. Pregnancy can bring many emotions. Would you like some safe stress-relief techniques or self-care ideas for expectant moms?"
-          : "I'm sorry you're feeling overwhelmed. That's completely normal as a new mom. Would you like me to suggest some quick stress-relief techniques or simple self-care ideas?";
-        
-        addCoachMessage(message, [
-          { id: 'overwhelmed-breathe', text: 'Stress-relief techniques', action: suggestBreathingExercise },
-          { id: 'overwhelmed-selfcare', text: 'Simple self-care ideas', action: suggestSelfCare }
-        ]);
-      } else if (feeling === "excited") {
-        const message = stage === 'ttc' 
-          ? "That's amazing! Excitement and positive emotions can be beneficial for fertility. How can I help channel this energy today?"
-          : stage === 'pregnant'
-          ? "That's wonderful! Pregnancy excitement is beautiful. How can I help you make the most of this positive energy today?"
-          : "That's amazing! I love seeing moms excited about their wellness journey. How can I help you make the most of this energy today?";
-        
-        addCoachMessage(message, [
-          { id: 'excited-workout', text: 'I want to move my body!', action: suggestWorkouts },
-            { id: 'excited-plan', text: 'Help me plan my day', action: () => addCoachMessage("Let me create a daily plan for you! Check out the Plan Creator for a personalized schedule.") },
-            { id: 'excited-learn', text: 'Teach me something new', action: () => addCoachMessage("Great! Visit our Video Library for expert courses on motherhood wellness.") }
-        ]);
-      }
-    }, 1000);
-  };
-
-  const suggestWorkouts = () => {
-    const stage = userProfile.motherhoodStage || 'postpartum';
-    const workouts = getWorkoutsByStage(stage);
-    
-    const stageMessages = {
-      ttc: "Here are some fertility-supporting workouts designed to reduce stress and support reproductive health:",
-      pregnant: "Here are some safe pregnancy workouts designed for you and your growing baby:",
-      postpartum: "Here are some postpartum-friendly workouts designed to support your recovery journey:",
-      general: "Here are some wellness-focused workouts designed to support your motherhood journey:"
-    };
-    
-    addCoachMessage(
-      stageMessages[stage as keyof typeof stageMessages] || stageMessages.general,
-      []
-    );
-    
-    setTimeout(() => {
-      const workoutList = workouts.map(workout => 
-        `${workout.title} (${workout.duration}) - Focus: ${workout.focus}`
-      ).join('\n');
-      
-      addCoachMessage(
-        `Here are some great workout options:\n\n${workoutList}`,
-        [
-          { id: 'workout-more', text: 'Show me more workouts', action: () => window.location.href = '/workouts' },
-          { id: 'workout-thanks', text: 'Thank you!', action: () => addCoachMessage("You're welcome! Let me know if you try any of these or need more suggestions.") }
-        ]
-      );
-    }, 1000);
-  };
-
-  const suggestLowEnergyWorkouts = () => {
-    addCoachMessage(
-      "When you're tired, gentle movement can actually help boost your energy. Here are some very light exercises that won't deplete you further:",
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        `Here are some gentle low-energy exercises:
-
-• Gentle Stretching Sequence (5 min) - Focus: Flexibility
-• Energy-Boosting Breathing (3 min) - Focus: Energy  
-• Seated Arm Movements (5 min) - Focus: Circulation`,
-        [
-          { id: 'energy-more', text: 'Show me more', action: () => window.location.href = '/workouts' },
-          { id: 'energy-rest', text: 'I think I need rest instead', action: suggestRestIdeas }
-        ]
-      );
-    }, 1000);
-  };
-
-  const suggestRestIdeas = () => {
-    addCoachMessage(
-      "You're absolutely right to listen to your body. Rest is crucial for recovery. Here are some restful self-care ideas that might help you recharge:",
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        `Here are some restful self-care ideas:
-
-• 10-Minute Power Nap - When baby sleeps, set a timer and close your eyes
-• Legs Up The Wall - A restorative yoga pose - just 5 minutes helps circulation  
-• Guided Relaxation - Try a 5-minute meditation focused on rest`,
-        [
-          { id: 'rest-thanks', text: 'Thank you, this helps', action: () => addCoachMessage("You're welcome! Remember, resting when you need it is a form of self-care, not laziness. Your body is still recovering.") }
-        ]
-      );
-    }, 1000);
-  };
-
-  const suggestMeals = () => {
-    const stage = userProfile.motherhoodStage || 'postpartum';
-    const meals = getMealIdeasByStage(stage);
-    
-    const stageMessages = {
-      ttc: "Here are some fertility-supporting meal ideas with nutrients that promote reproductive health:",
-      pregnant: "Here are some pregnancy-safe meal ideas that support you and your baby's development:",
-      postpartum: "Here are some nutritious meal ideas that are quick to prepare and support postpartum recovery:",
-      general: "Here are some nutritious meal ideas to support your wellness journey:"
-    };
-    
-    addCoachMessage(
-      stageMessages[stage as keyof typeof stageMessages] || stageMessages.general,
-      []
-    );
-    
-    setTimeout(() => {
-      const mealList = meals.map(meal => 
-        `${meal.meal}: ${meal.suggestion} - Benefits: ${meal.benefits}`
-      ).join('\n\n');
-      
-      const stageSpecificThanks = {
-        ttc: "I'm glad! Proper nutrition is crucial for fertility and overall health. If you have any dietary restrictions or specific fertility nutrition questions, just let me know.",
-        pregnant: "I'm glad! Proper nutrition is so important for you and your baby's health. If you have any dietary restrictions or pregnancy-specific nutrition questions, just let me know.",
-        postpartum: "I'm glad! Proper nutrition is so important during postpartum recovery. If you have any dietary restrictions or preferences, just let me know.",
-        general: "I'm glad! Proper nutrition supports your overall wellness journey. If you have any dietary restrictions or preferences, just let me know."
-      };
-      
-      addCoachMessage(
-        `Here are some nutritious meal ideas:\n\n${mealList}`,
-        [
-          { id: 'meal-more', text: 'More meal ideas', action: () => window.location.href = '/recipes' },
-          { id: 'meal-thanks', text: 'This is helpful!', action: () => addCoachMessage(stageSpecificThanks[stage as keyof typeof stageSpecificThanks] || stageSpecificThanks.general) }
-        ]
-      );
-    }, 1000);
-  };
-
-  const suggestEnergyMeals = () => {
-    addCoachMessage(
-      "When your energy is low, the right foods can help. Here are some quick energy-boosting snacks and meals:",
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        `Here are some quick energy-boosting options:
-
-• Banana with almond butter (200 cal) - Quick energy + sustained protein
-• Trail mix with nuts and dark chocolate (250 cal) - Healthy fats, protein, and a bit of caffeine
-• Oatmeal with berries and seeds (300 cal) - Sustained energy release + antioxidants`,
-        [
-          { id: 'energy-meal-more', text: 'More energy foods', action: () => window.location.href = '/recipes' },
-          { id: 'energy-meal-hydration', text: 'What about hydration?', action: suggestHydrationTips }
-        ]
-      );
-    }, 1000);
-  };
-
-  const suggestHydrationTips = () => {
-    const stage = userProfile.motherhoodStage || 'postpartum';
-    
-    const stageMessages = {
-      ttc: "Great question! Hydration is crucial for fertility, hormone balance, and overall health. Here are some hydration tips:",
-      pregnant: "Great question! Hydration is extra important during pregnancy for you and your baby's development. Here are some hydration tips:",
-      postpartum: "Great question! Hydration is extremely important for energy levels, milk production, and overall recovery. Here are some hydration tips:",
-      general: "Great question! Hydration is crucial for energy, health, and overall wellness. Here are some hydration tips:"
-    };
-    
-    const stageSpecificTips = {
-      ttc: `Here are some hydration tips:
-
-• Start your day with water - Add lemon for vitamin C and digestive support
-• Infused water options - Try cucumber + mint or berry blends for antioxidants
-• Hydrating foods - Watermelon, cucumber, oranges help with overall fluid intake`,
-      pregnant: `Here are some hydration tips:
-
-• Sip throughout the day - Don't wait until you're thirsty during pregnancy
-• Coconut water - Natural electrolytes can help with pregnancy fatigue
-• Herbal teas - Ginger tea for nausea, raspberry leaf tea in third trimester`,
-      postpartum: `Here are some hydration tips:
-
-• Drink when you breastfeed - Keep a water bottle at your feeding station
-• Infused water options - Try cucumber + mint or strawberry + basil for flavor
-• Hydrating foods - Watermelon, cucumber, oranges, and soup all contribute to hydration`,
-      general: `Here are some hydration tips:
-
-• Morning hydration ritual - Start with a glass of water upon waking
-• Flavor naturally - Add fruits, herbs, or cucumber for variety
-• Hydrating snacks - Choose water-rich foods like melons, soups, and smoothies`
-    };
-    
-    const stageSpecificAdvice = {
-      ttc: "Aim for 8-10 glasses of water daily. Proper hydration supports hormone production and overall fertility health.",
-      pregnant: "Aim for 10-12 glasses of water daily during pregnancy. Your body needs extra fluids to support your growing baby.",
-      postpartum: "Aim for about 3 liters of total fluids daily while breastfeeding. Your urine should be light yellow - that's a good indicator of proper hydration.",
-      general: "Aim for 8-10 glasses of water daily. Listen to your body and drink more during exercise or hot weather."
-    };
-    
-    addCoachMessage(
-      stageMessages[stage as keyof typeof stageMessages] || stageMessages.general,
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        stageSpecificTips[stage as keyof typeof stageSpecificTips] || stageSpecificTips.general,
-        [
-          { id: 'hydration-thanks', text: 'Thank you!', action: () => addCoachMessage(stageSpecificAdvice[stage as keyof typeof stageSpecificAdvice] || stageSpecificAdvice.general) }
-        ]
-      );
-    }, 1000);
-  };
-
-  const provideSupportiveResponse = () => {
-    const stage = userProfile.motherhoodStage || 'postpartum';
-    
-    const stageMessages = {
-      ttc: "It's completely normal to feel overwhelmed during your TTC journey. The emotional ups and downs are valid, and you're stronger than you know.",
-      pregnant: "It's completely normal to feel overwhelmed during pregnancy. Your body and emotions are going through so much - your feelings are valid.",
-      postpartum: "It's completely normal to feel overwhelmed as a new mom. Your feelings are valid, and you're doing better than you think.",
-      general: "It's completely normal to feel overwhelmed in motherhood. Your feelings are valid, and you're doing an amazing job."
-    };
-    
-    addCoachMessage(
-      stageMessages[stage as keyof typeof stageMessages] || stageMessages.general,
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        "Would you like some quick calming techniques or supportive resources?",
-        [
-          { id: 'support-breathe', text: 'Calming techniques', action: suggestBreathingExercise },
-          { id: 'support-talk', text: 'I just need to talk', action: offerSupportiveEar }
-        ]
-      );
-    }, 1000);
-  };
-
-  const suggestBreathingExercise = () => {
-    addCoachMessage(
-      "Let's try a simple breathing exercise together. This takes just 60 seconds and can help reduce stress immediately:",
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        `60-Second Box Breathing:
-
-1. Breathe in slowly for 4 counts
-2. Hold your breath for 4 counts
-3. Exhale slowly for 4 counts
-4. Hold for 4 counts before breathing in again
-5. Repeat 3-5 times`,
-        [
-          { id: 'breathing-done', text: 'I did it', action: () => addCoachMessage("Wonderful! How do you feel now? Remember you can use this technique anytime you feel stressed or overwhelmed. Even just one minute can make a difference.") },
-          { id: 'breathing-more', text: 'Show me more techniques', action: suggestMoreCalming }
-        ]
-      );
-    }, 1000);
-  };
-
-  const suggestMoreCalming = () => {
-    addCoachMessage(
-      "Here are more quick calming techniques you can try throughout your day:",
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        `Here are more calming techniques:
-
-• 5-4-3-2-1 Grounding - Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, and 1 you taste
-• Progressive Muscle Relaxation - Tense and release each muscle group for 5 seconds, starting from your toes
-• Hand on Heart - Place your hand on your heart, breathe deeply, and think of someone you love`,
-        [
-          { id: 'calming-wellness', text: 'Go to Wellness resources', action: () => window.location.href = '/wellness' },
-          { id: 'calming-thanks', text: 'Thank you', action: () => addCoachMessage("You're welcome! These techniques are always available to you, even during the busiest moments. Your mental health matters.") }
-        ]
-      );
-    }, 1000);
-  };
-
-  const offerSupportiveEar = () => {
-    addCoachMessage(
-      "I'm here to listen. Sometimes just expressing what you're going through can help lighten the mental load. What's been most challenging for you lately?",
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        "Remember, whatever you're experiencing is a normal part of the motherhood journey. You're not alone in these feelings.",
-        [
-          { id: 'talk-community', text: 'Connect with other moms', action: () => window.location.href = '/community' },
-          { id: 'talk-thanks', text: 'This helps, thank you', action: () => addCoachMessage("I'm glad I could help, even if just by listening. Remember to be as kind to yourself as you would be to a friend going through the same thing.") }
-        ]
-      );
-    }, 2000);
-  };
-
-  const suggestSelfCare = () => {
-    addCoachMessage(
-      "Self-care doesn't have to be time-consuming. Here are some very simple ideas you can fit into your day:",
-      []
-    );
-    
-    setTimeout(() => {
-      addCoachMessage(
-        `Here are simple self-care ideas:
-
-• 2-Minute Face Refresh - Splash cool water, apply moisturizer, take 3 deep breaths
-• One Song Dance Party - Play a favorite upbeat song and move freely - with or without baby
-• Sensory Reset - Apply a nice-smelling lotion, drink a warm beverage slowly, or step outside for fresh air`,
-        [
-          { id: 'selfcare-wellness', text: 'More wellness ideas', action: () => window.location.href = '/wellness' },
-          { id: 'selfcare-thanks', text: "I'll try these", action: () => addCoachMessage("Wonderful! Even these small moments of self-care add up. Remember that caring for yourself is part of caring for your family.") }
-        ]
-      );
-    }, 1000);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
+    if (lowerMsg.includes('workout') || lowerMsg.includes('exercise')) {
+      handleWorkoutRequest(stage);
+    } else if (lowerMsg.includes('food') || lowerMsg.includes('meal') || lowerMsg.includes('eat')) {
+      handleNutritionRequest(stage);
+    } else if (lowerMsg.includes('tired') || lowerMsg.includes('exhausted')) {
+      handleTirednessResponse(stage);
+    } else if (lowerMsg.includes('bloat') || lowerMsg.includes('bloating')) {
+      handleBloatingResponse(stage);
+    } else if (lowerMsg.includes('sleep') || lowerMsg.includes('sleeping')) {
+      handleSleepResponse(stage);
+    } else if (lowerMsg.includes('stress') || lowerMsg.includes('overwhelm')) {
+      handleStressResponse(stage);
+    } else {
+      handleGeneralResponse(stage, latestEntry);
     }
   };
 
+  const handleWorkoutRequest = (stage: string) => {
+    const responses = {
+      pregnant: "Great! Let's find you some safe pregnancy workouts. Based on your trimester, I recommend gentle movements that support your changing body.",
+      postpartum: "Perfect! Movement is so important for recovery. Let's start with gentle core work and gradually build your strength back.",
+      ttc: "Wonderful! Regular movement can help reduce stress and support fertility. Let's find some stress-relieving workouts for you.",
+      general: "Great choice! Let's find the perfect workout to match your energy level today."
+    };
+    
+    addCoachMessage(responses[stage as keyof typeof responses] || responses.general);
+  };
+
+  const handleNutritionRequest = (stage: string) => {
+    const responses = {
+      pregnant: "Nutrition is so important during pregnancy! Let's make sure you're getting all the nutrients you and baby need.",
+      postpartum: "Fueling your body well is crucial for recovery and energy, especially if you're breastfeeding. What are you in the mood for?",
+      ttc: "Great question! Proper nutrition can support your fertility journey. Let's focus on nutrient-rich foods.",
+      general: "Love that you're thinking about nutrition! What kind of meals are you looking for today?"
+    };
+    
+    addCoachMessage(responses[stage as keyof typeof responses] || responses.general);
+  };
+
+  const handleTirednessResponse = (stage: string) => {
+    const responses = {
+      pregnant: "Fatigue is so common during pregnancy, especially in the first and third trimesters. Your body is doing incredible work!",
+      postpartum: "I totally understand - sleep deprivation is real! Let's talk about gentle ways to boost your energy when you can.",
+      ttc: "TTC can be emotionally and physically draining. It's important to listen to your body and rest when you need it.",
+      general: "Being tired as a mom is completely normal. Let's find some gentle ways to support your energy levels."
+    };
+    
+    addCoachMessage(responses[stage as keyof typeof responses] || responses.general);
+  };
+
+  const handleBloatingResponse = (stage: string) => {
+    if (stage === 'postpartum') {
+      addCoachMessage("Postpartum bloating is so common! Let's look at your recent meals - what did you eat yesterday? Sometimes it's about gentle foods that support digestion during recovery.");
+    } else if (stage === 'pregnant') {
+      addCoachMessage("Bloating during pregnancy is very normal due to hormonal changes and your growing baby. Let's talk about foods that might help you feel more comfortable.");
+    } else {
+      addCoachMessage("Bloating can be uncomfortable. Let's look at what might be causing it and find some relief strategies.");
+    }
+  };
+
+  const handleSleepResponse = (stage: string) => {
+    const responses = {
+      pregnant: "Sleep can be challenging during pregnancy, especially as your belly grows. Let's talk about comfortable positions and sleep hygiene.",
+      postpartum: "Sleep is precious with a little one! Let's maximize the quality of rest you can get, even if it's not as much as before.",
+      ttc: "Good sleep is important for hormone regulation and stress management during TTC. How has your sleep been lately?",
+      general: "Quality sleep is so important for your overall wellness. What's been keeping you up?"
+    };
+    
+    addCoachMessage(responses[stage as keyof typeof responses] || responses.general);
+  };
+
+  const handleStressResponse = (stage: string) => {
+    const responses = {
+      pregnant: "Pregnancy can bring so many emotions and concerns. It's completely normal to feel overwhelmed sometimes.",
+      postpartum: "The postpartum period can be emotionally intense. You're not alone in feeling this way.",
+      ttc: "The TTC journey can be incredibly stressful. It's important to acknowledge these feelings and find healthy coping strategies.",
+      general: "Stress is a normal part of motherhood, but let's find some ways to help you manage it better."
+    };
+    
+    addCoachMessage(responses[stage as keyof typeof responses] || responses.general);
+  };
+
+  const handleGeneralResponse = (stage: string, latestEntry: any) => {
+    if (latestEntry && stage === 'pregnant') {
+      addCoachMessage("I see from your recent check-in that you're doing great! How are you feeling about your pregnancy journey today?");
+    } else if (latestEntry && stage === 'postpartum') {
+      addCoachMessage("Thanks for keeping up with your check-ins! Recovery looks different for everyone - how are you feeling about your progress?");
+    } else {
+      addCoachMessage("I'm here to support you in whatever way you need today. What's on your mind?");
+    }
+  };
+
+  const QUICK_SUGGESTIONS = [
+    "Ask about workouts",
+    "Ask about meals", 
+    "I'm feeling tired",
+    "Help with stress",
+    "Check my progress"
+  ];
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[500px] max-h-[80vh] flex flex-col p-0 gap-0">
-        <DialogHeader className="p-4 border-b flex-shrink-0">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md h-[80vh] flex flex-col p-0 gap-0">
+        {/* Header */}
+        <DialogHeader className="p-4 pb-3 border-b border-border/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src="/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png" alt="Maja Kay" />
-                <AvatarFallback className="bg-catalyst-copper text-white">MK</AvatarFallback>
-              </Avatar>
-              <div>
-                <DialogTitle className="text-lg">Maja Kay</DialogTitle>
-                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                  Online • Wellness Coach
-                </p>
-              </div>
+              {isConnecting ? (
+                <div className="flex items-center gap-2">
+                  <div className="h-3 w-3 bg-primary rounded-full animate-pulse"></div>
+                  <span className="text-sm text-muted-foreground">Searching for an available coach...</span>
+                </div>
+              ) : currentCoach ? (
+                <>
+                  <div className="relative">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-primary/10 text-primary text-lg">
+                        {currentCoach.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-background"></div>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground">{currentCoach.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="text-xs px-2 py-0">
+                        {currentCoach.specialty}
+                      </Badge>
+                      <span className="text-xs text-green-600 font-medium">Online</span>
+                    </div>
+                  </div>
+                </>
+              ) : null}
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                 <Video className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                 <Phone className="h-4 w-4" />
               </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={onClose}
-                className="h-8 w-8"
-              >
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}>
                 <X className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </DialogHeader>
-        
+
+        {/* Messages Area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message) => (
-            <div key={message.id}>
-              <div className="flex items-start gap-3">
-                {message.sender === 'coach' && (
-                  <Avatar className="h-8 w-8 mt-1 flex-shrink-0">
-                    <AvatarImage src="/placeholder.svg" alt="Wellness Coach" />
-                    <AvatarFallback className="bg-catalyst-copper text-white">WC</AvatarFallback>
-                  </Avatar>
-                )}
-                <Card className={cn(
-                  "p-3 max-w-[85%]",
-                  message.sender === 'coach' 
-                    ? "bg-muted border-none" 
-                    : "bg-primary text-primary-foreground ml-auto"
-                )}>
-                  <div className="text-sm whitespace-pre-line">
-                    {message.content}
-                  </div>
-                </Card>
+          {isConnecting ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center gap-1">
+                  <div className="h-2 w-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="h-2 w-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="h-2 w-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                </div>
+                <p className="text-sm text-muted-foreground">Finding the perfect coach for you...</p>
               </div>
-              {message.options && message.options.length > 0 && (
-                <div className="ml-11 mt-2 flex flex-wrap gap-2">
-                  {message.options.map(option => (
-                    <Button 
-                      key={option.id}
-                      variant="outline"
-                      size="sm"
-                      onClick={option.action}
-                      className="text-xs"
-                    >
-                      {option.text}
-                    </Button>
-                  ))}
+            </div>
+          ) : (
+            <>
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={cn(
+                    "flex gap-3 max-w-[85%]",
+                    message.sender === 'user' ? "ml-auto" : "mr-auto"
+                  )}
+                >
+                  {message.sender === 'coach' && currentCoach && (
+                    <Avatar className="h-8 w-8 flex-shrink-0">
+                      <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                        {currentCoach.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div
+                    className={cn(
+                      "rounded-2xl px-4 py-2 max-w-full",
+                      message.sender === 'user'
+                        ? "bg-primary text-primary-foreground rounded-br-md"
+                        : "bg-muted/50 text-foreground rounded-bl-md"
+                    )}
+                  >
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                    <div className="text-xs opacity-70 mt-1">
+                      {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </div>
+                  {message.sender === 'user' && (
+                    <Avatar className="h-8 w-8 flex-shrink-0">
+                      <AvatarFallback className="bg-secondary text-secondary-foreground">
+                        {profile?.display_name?.[0]?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                </div>
+              ))}
+              
+              {isLoading && (
+                <div className="flex gap-3 max-w-[85%] mr-auto">
+                  {currentCoach && (
+                    <Avatar className="h-8 w-8 flex-shrink-0">
+                      <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                        {currentCoach.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div className="bg-muted/50 rounded-2xl rounded-bl-md px-4 py-2">
+                    <div className="flex items-center gap-1">
+                      <div className="h-1.5 w-1.5 bg-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="h-1.5 w-1.5 bg-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="h-1.5 w-1.5 bg-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                  </div>
                 </div>
               )}
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
+              <div ref={messagesEndRef} />
+            </>
+          )}
         </div>
-        
-        <div className="p-4 border-t flex-shrink-0">
+
+        {/* Quick Suggestions */}
+        {currentCoach && messages.length === 1 && (
+          <div className="px-4 pb-2">
+            <div className="flex flex-wrap gap-2">
+              {QUICK_SUGGESTIONS.map((suggestion, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  className="text-xs h-7 rounded-full bg-background/50 border-border/50 hover:bg-muted/50"
+                  onClick={() => {
+                    setInputMessage(suggestion);
+                    setTimeout(() => handleSendMessage(), 100);
+                  }}
+                >
+                  {suggestion}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Input Area */}
+        <div className="p-4 pt-2 border-t border-border/50">
           <div className="flex items-center gap-2">
-            <Textarea
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Type your message..."
-              className="min-h-[44px] max-h-[120px]"
-              rows={1}
-            />
-            <Button 
-              size="icon" 
+            <div className="flex-1 relative">
+              <Input
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                placeholder={currentCoach ? "Type your message..." : "Connecting..."}
+                disabled={!currentCoach || isLoading}
+                className="pr-12 rounded-full bg-background/50 border-border/50 focus:border-primary/50"
+              />
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                  <Smile className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground">
+              <Paperclip className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground">
+              <Camera className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground">
+              <Mic className="h-4 w-4" />
+            </Button>
+            <Button
               onClick={handleSendMessage}
-              className="bg-primary h-[44px] w-[44px] rounded-full flex-shrink-0"
-              disabled={inputMessage.trim() === ''}
+              disabled={!inputMessage.trim() || !currentCoach || isLoading}
+              size="icon"
+              className="h-9 w-9 rounded-full bg-primary hover:bg-primary/90 disabled:opacity-50"
             >
-              <Send className="h-5 w-5" />
+              <Send className="h-4 w-4 text-primary-foreground" />
             </Button>
           </div>
         </div>
