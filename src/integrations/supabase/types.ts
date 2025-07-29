@@ -114,39 +114,51 @@ export type Database = {
         Row: {
           chest_measurement: number | null
           created_at: string
+          description: string | null
+          glute_measurement: number | null
           hip_measurement: number | null
           id: string
           notes: string | null
           progress_image_url: string | null
+          thigh_measurement: number | null
           updated_at: string
           upper_arm_measurement: number | null
           user_id: string
+          waist_measurement: number | null
           week_date: string
           weight: number | null
         }
         Insert: {
           chest_measurement?: number | null
           created_at?: string
+          description?: string | null
+          glute_measurement?: number | null
           hip_measurement?: number | null
           id?: string
           notes?: string | null
           progress_image_url?: string | null
+          thigh_measurement?: number | null
           updated_at?: string
           upper_arm_measurement?: number | null
           user_id: string
+          waist_measurement?: number | null
           week_date: string
           weight?: number | null
         }
         Update: {
           chest_measurement?: number | null
           created_at?: string
+          description?: string | null
+          glute_measurement?: number | null
           hip_measurement?: number | null
           id?: string
           notes?: string | null
           progress_image_url?: string | null
+          thigh_measurement?: number | null
           updated_at?: string
           upper_arm_measurement?: number | null
           user_id?: string
+          waist_measurement?: number | null
           week_date?: string
           weight?: number | null
         }

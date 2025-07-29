@@ -22,6 +22,10 @@ export const WeeklyCheckIn = () => {
     chest: '',
     upperArm: '',
     hip: '',
+    waist: '',
+    glute: '',
+    thigh: '',
+    description: '',
     notes: ''
   });
 
@@ -82,7 +86,11 @@ export const WeeklyCheckIn = () => {
           chest_measurement: checkInData.chest ? parseFloat(checkInData.chest) : null,
           upper_arm_measurement: checkInData.upperArm ? parseFloat(checkInData.upperArm) : null,
           hip_measurement: checkInData.hip ? parseFloat(checkInData.hip) : null,
+          waist_measurement: checkInData.waist ? parseFloat(checkInData.waist) : null,
+          glute_measurement: checkInData.glute ? parseFloat(checkInData.glute) : null,
+          thigh_measurement: checkInData.thigh ? parseFloat(checkInData.thigh) : null,
           progress_image_url: imageUrl,
+          description: checkInData.description || null,
           notes: checkInData.notes || null
         });
       
@@ -106,6 +114,10 @@ export const WeeklyCheckIn = () => {
         chest: '',
         upperArm: '',
         hip: '',
+        waist: '',
+        glute: '',
+        thigh: '',
+        description: '',
         notes: ''
       });
       setProgressImage(null);
@@ -144,6 +156,12 @@ export const WeeklyCheckIn = () => {
               <Camera className="h-4 w-4" />
               Upload Progress Pictures
             </Label>
+            <div className="text-xs text-muted-foreground mb-2 space-y-1">
+              <p>• Take photos in good lighting</p>
+              <p>• Stand straight against a plain background</p>
+              <p>• Take front and side view photos</p>
+              <p>• Wear fitted clothing for accurate tracking</p>
+            </div>
             <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
               {previewUrl ? (
                 <div className="space-y-2">
@@ -248,6 +266,66 @@ export const WeeklyCheckIn = () => {
                 <span className="text-sm text-muted-foreground min-w-[2rem]">cm</span>
               </div>
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="waist" className="text-sm">Waist</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="waist"
+                  type="number"
+                  step="0.1"
+                  placeholder="0.0"
+                  value={checkInData.waist}
+                  onChange={(e) => setCheckInData(prev => ({ ...prev, waist: e.target.value }))}
+                  className="flex-1"
+                />
+                <span className="text-sm text-muted-foreground min-w-[2rem]">cm</span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="glute" className="text-sm">Glute</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="glute"
+                  type="number"
+                  step="0.1"
+                  placeholder="0.0"
+                  value={checkInData.glute}
+                  onChange={(e) => setCheckInData(prev => ({ ...prev, glute: e.target.value }))}
+                  className="flex-1"
+                />
+                <span className="text-sm text-muted-foreground min-w-[2rem]">cm</span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="thigh" className="text-sm">Thigh</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="thigh"
+                  type="number"
+                  step="0.1"
+                  placeholder="0.0"
+                  value={checkInData.thigh}
+                  onChange={(e) => setCheckInData(prev => ({ ...prev, thigh: e.target.value }))}
+                  className="flex-1"
+                />
+                <span className="text-sm text-muted-foreground min-w-[2rem]">cm</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              placeholder="How do you feel about your progress? Any changes you've noticed?"
+              value={checkInData.description}
+              onChange={(e) => setCheckInData(prev => ({ ...prev, description: e.target.value }))}
+              rows={3}
+            />
           </div>
 
           {/* Notes */}

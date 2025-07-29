@@ -12,6 +12,7 @@ import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
 import { WeeklyProgress } from '@/components/dashboard/WeeklyProgress';
 import { WeeklyCheckIn } from '@/components/accountability/WeeklyCheckIn';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
 import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
@@ -27,6 +28,7 @@ interface StatsCardProps {
 
 const Dashboard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isCheckInOpen, setIsCheckInOpen] = useState(false);
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
   const { user, profile } = useAuth();
   
@@ -97,7 +99,24 @@ const Dashboard = () => {
               
               <TabsContent value="today">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                  {isTTC ? <TTCTracker /> : <WeeklyCheckIn />}
+                  {isTTC ? <TTCTracker /> : (
+                    <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
+                      <DialogTrigger asChild>
+                        <Card className="p-6 cursor-pointer hover:shadow-md transition-shadow border-dashed border-2">
+                          <div className="flex flex-col items-center justify-center space-y-4 h-full min-h-[120px]">
+                            <CheckCircle className="h-8 w-8 text-primary" />
+                            <div className="text-center">
+                              <h3 className="font-semibold">Weekly Check-In</h3>
+                              <p className="text-sm text-muted-foreground">Track your progress</p>
+                            </div>
+                          </div>
+                        </Card>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                        <WeeklyCheckIn />
+                      </DialogContent>
+                    </Dialog>
+                  )}
                   <MoodCheckIn />
                 </div>
                 <div className="space-y-4">
