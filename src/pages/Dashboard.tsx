@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
 import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
+import { TTCEducationalResources } from '@/components/ttc/TTCEducationalResources';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface StatsCardProps {

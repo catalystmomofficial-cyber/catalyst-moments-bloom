@@ -206,6 +206,49 @@ export const CycleCalendar = () => {
                   </div>
                 )}
                 
+                {/* Actionable Insights */}
+                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <h4 className="text-sm font-medium text-blue-800 mb-2">Today's Recommendations</h4>
+                  <div className="space-y-2 text-sm">
+                    {selectedDay.phase === 'fertile' && (
+                      <>
+                        <div className="flex items-center space-x-2">
+                          <span>🍯</span>
+                          <span>Try fertility smoothie: spinach, berries, Greek yogurt</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span>🧘‍♀️</span>
+                          <span>10-minute fertility yoga session</span>
+                        </div>
+                      </>
+                    )}
+                    {selectedDay.phase === 'luteal' && (
+                      <>
+                        <div className="flex items-center space-x-2">
+                          <span>🚶‍♀️</span>
+                          <span>Gentle 15-minute walk</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span>🛁</span>
+                          <span>Relaxing evening bath with Epsom salts</span>
+                        </div>
+                      </>
+                    )}
+                    {selectedDay.phase === 'menstrual' && (
+                      <>
+                        <div className="flex items-center space-x-2">
+                          <span>🍵</span>
+                          <span>Herbal tea: ginger or chamomile</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span>🌿</span>
+                          <span>Light stretching or restorative yoga</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+                
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline">Edit Day</Button>
                   <Button size="sm" variant="outline">Add Symptoms</Button>
