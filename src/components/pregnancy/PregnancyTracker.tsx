@@ -25,10 +25,10 @@ export const PregnancyTracker = () => {
     week: 21,
     trimester: 2,
     dueDate: '2024-08-15',
-    symptoms: ['Back pain', 'Cravings'],
-    mood: 8,
+    symptoms: ['Lower back pain', 'Round ligament pain', 'Sciatica', 'Heartburn', 'Frequent urination'],
+    mood: 7,
     energy: 6,
-    sleep: 7,
+    sleep: 6,
     weight: 145
   });
 
@@ -48,20 +48,26 @@ export const PregnancyTracker = () => {
   const getPersonalizedTip = () => {
     const { symptoms, mood, energy, sleep } = pregnancyData;
     
-    if (symptoms.includes('Back pain')) {
-      return "Try gentle prenatal yoga or swimming to ease back discomfort. A warm bath might also help!";
+    if (symptoms.includes('Sciatica')) {
+      return "Sciatica pain is common in pregnancy. Try gentle stretches, warm compresses, and consider prenatal massage. Rest when you can!";
+    }
+    if (symptoms.includes('Lower back pain') || symptoms.includes('Round ligament pain')) {
+      return "Back pain is so common right now. Try prenatal yoga, a warm bath, or ask your partner for a gentle massage.";
+    }
+    if (symptoms.includes('Heartburn')) {
+      return "Heartburn bothering you? Try eating smaller meals, avoid spicy foods, and sleep with your head elevated.";
     }
     if (energy < 5) {
-      return "Feeling tired is so normal! Try short walks, protein snacks, and don't hesitate to rest when needed.";
+      return "Second trimester fatigue is real! Try protein-rich snacks, short walks, and don't hesitate to rest when needed.";
     }
     if (sleep < 6) {
-      return "Sleep troubles? Try a pregnancy pillow, limit caffeine after 2pm, and create a calming bedtime routine.";
+      return "Sleep getting tough? A pregnancy pillow can be a game-changer. Also try a relaxing bedtime routine.";
     }
     if (mood < 6) {
-      return "It's okay to have tough days. Consider journaling, calling a friend, or doing something small that brings you joy.";
+      return "It's totally okay to have tough days. Consider journaling, calling a friend, or doing something small that brings you joy.";
     }
     
-    return "You're doing amazing! Keep up the great work with your self-care routine.";
+    return "You're doing such an amazing job! Your body is working hard to grow your little one. Keep being gentle with yourself.";
   };
 
   const handleLogSymptom = (symptom: string) => {
@@ -168,7 +174,7 @@ export const PregnancyTracker = () => {
             <div className="space-y-2">
               <h4 className="font-medium text-sm">Quick Log</h4>
               <div className="grid grid-cols-2 gap-2">
-                {['Nausea', 'Heartburn', 'Fatigue', 'Swelling', 'Kicks felt', 'Braxton Hicks'].map((symptom) => (
+                {['Sciatica', 'Hip pain', 'Heartburn', 'Swelling', 'Baby kicks', 'Braxton Hicks', 'Shortness of breath', 'Restless legs', 'Constipation', 'Mood swings'].map((symptom) => (
                   <Button
                     key={symptom}
                     variant="outline"

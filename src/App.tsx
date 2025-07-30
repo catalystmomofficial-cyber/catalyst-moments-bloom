@@ -20,6 +20,8 @@ import Profile from "./pages/Profile";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import FoodCalorieChecker from "./pages/FoodCalorieChecker";
 import Questionnaire from "./pages/Questionnaire";
+import MealPlan from "./pages/MealPlan";
+import WorkoutPlan from "./pages/WorkoutPlan";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -83,6 +85,16 @@ const App = () => (
             <Route path="/questionnaire" element={
               <PrivateRoute>
                 <Questionnaire />
+              </PrivateRoute>
+            } />
+            <Route path="/meal-plan" element={
+              <PrivateRoute>
+                <MealPlan />
+              </PrivateRoute>
+            } />
+            <Route path="/workout-plan" element={
+              <PrivateRoute>
+                <WorkoutPlan />
               </PrivateRoute>
             } />
             
