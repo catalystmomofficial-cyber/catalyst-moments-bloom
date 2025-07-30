@@ -17,6 +17,11 @@ import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
 import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
 import { TTCEducationalResources } from '@/components/ttc/TTCEducationalResources';
+import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
+import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
+import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
+import { PostpartumPrepGuide } from '@/components/pregnancy/PostpartumPrepGuide';
+import { PregnancyCommunity } from '@/components/pregnancy/PregnancyCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface StatsCardProps {
@@ -34,6 +39,7 @@ const Dashboard = () => {
   const { user, profile } = useAuth();
   
   const isTTC = profile?.motherhood_stage === 'ttc';
+  const isPregnant = profile?.motherhood_stage === 'pregnant';
   
   // Auto-refresh data every 30 seconds for real-time updates
   useEffect(() => {
@@ -48,7 +54,9 @@ const Dashboard = () => {
           <div>
             <h1 className="text-3xl font-bold mb-1">Welcome back, {profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}!</h1>
             <p className="text-muted-foreground">
-              {isTTC ? 'Your TTC journey tracker and support center' : 'Here\'s your wellness overview for today'}
+              {isTTC ? 'Your TTC journey tracker and support center' : 
+               isPregnant ? 'Your pregnancy companion and wellness guide' :
+               'Here\'s your wellness overview for today'}
             </p>
           </div>
           <div className="mt-4 md:mt-0 flex items-center space-x-2">
@@ -100,7 +108,8 @@ const Dashboard = () => {
               
               <TabsContent value="today">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                  {isTTC ? <TTCTracker /> : (
+                  {isTTC ? <TTCTracker /> : 
+                   isPregnant ? <PregnancyTracker /> : (
                     <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
                       <DialogTrigger asChild>
                         <Card className="p-6 cursor-pointer hover:shadow-md transition-shadow border-dashed border-2">
@@ -118,21 +127,28 @@ const Dashboard = () => {
                       </DialogContent>
                     </Dialog>
                   )}
-                  <MoodCheckIn />
+                  {isPregnant ? <PregnancyWellnessDigest /> : <MoodCheckIn />}
                 </div>
                 <div className="space-y-4">
-                  <PlanCard
-                    title={isTTC ? "Fertility Flow Yoga" : "10-Minute Core Workout"}
-                    category="Workout"
-                    description={isTTC ? "Gentle yoga to support reproductive health and reduce stress" : "Gentle core strengthening for postpartum recovery"}
-                    completed={false}
-                    icon={<Activity className="h-5 w-5" />}
-                    time={isTTC ? "20 mins" : "10 mins"}
-                    link={isTTC ? "/workouts/fertility-flow-yoga" : "/workouts/postpartum-core"}
-                    buttonText="Start Workout"
-                    progress={0}
-                    tags={isTTC ? ["TTC", "Fertility", "Gentle"] : ["Postpartum", "Core", "Beginner"]}
-                  />
+                  {isPregnant ? (
+                    <div className="grid grid-cols-1 gap-4">
+                      <PregnancyJournal />
+                      <PostpartumPrepGuide />
+                    </div>
+                  ) : (
+                    <PlanCard
+                      title={isTTC ? "Fertility Flow Yoga" : "10-Minute Core Workout"}
+                      category="Workout"
+                      description={isTTC ? "Gentle yoga to support reproductive health and reduce stress" : "Gentle core strengthening for postpartum recovery"}
+                      completed={false}
+                      icon={<Activity className="h-5 w-5" />}
+                      time={isTTC ? "20 mins" : "10 mins"}
+                      link={isTTC ? "/workouts/fertility-flow-yoga" : "/workouts/postpartum-core"}
+                      buttonText="Start Workout"
+                      progress={0}
+                      tags={isTTC ? ["TTC", "Fertility", "Gentle"] : ["Postpartum", "Core", "Beginner"]}
+                    />
+                  )}
                 </div>
               </TabsContent>
               
@@ -167,7 +183,9 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-6">
-            {isTTC ? <TTCNutritionSection /> : <NutritionSection />}
+            {isTTC ? <TTCNutritionSection /> : 
+             isPregnant ? <PregnancyCommunity /> : 
+             <NutritionSection />}
             
             <Card>
               <CardHeader>
@@ -191,9 +209,9 @@ const Dashboard = () => {
               </CardFooter>
             </Card>
             
-{isTTC ? (
+            {isTTC ? (
               <TTCCommunitySection />
-            ) : (
+            ) : !isPregnant ? (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
@@ -227,7 +245,7 @@ const Dashboard = () => {
                   </Button>
                 </CardFooter>
               </Card>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
