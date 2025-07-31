@@ -142,21 +142,113 @@ export const WELLNESS_KNOWLEDGE_BASE: WellnessIssue[] = [
   }
 ];
 
+const analyzeUserMessage = (message: string, stage: MotherhoodStage | null) => {
+  const lowerMessage = message.toLowerCase();
+  
+  // Check for specific issues first
+  const matchingIssues = WELLNESS_KNOWLEDGE_BASE.filter(issue => 
+    issue.keywords.some(keyword => lowerMessage.includes(keyword)) &&
+    (!stage || issue.stages.includes(stage))
+  );
+  
+  // Detect question types
+  const isQuestionAboutPain = /pain|hurt|ache|sore|discomfort/.test(lowerMessage);
+  const isQuestionAboutExercise = /workout|exercise|move|activity|fitness/.test(lowerMessage);
+  const isQuestionAboutNutrition = /eat|food|diet|nutrition|meal|vitamin/.test(lowerMessage);
+  const isQuestionAboutMood = /feel|mood|sad|happy|anxious|depressed|stress/.test(lowerMessage);
+  const isQuestionAboutSleep = /sleep|tired|fatigue|rest|energy/.test(lowerMessage);
+  
+  return {
+    matchingIssues,
+    categories: {
+      pain: isQuestionAboutPain,
+      exercise: isQuestionAboutExercise,
+      nutrition: isQuestionAboutNutrition,
+      mood: isQuestionAboutMood,
+      sleep: isQuestionAboutSleep
+    },
+    isVague: message.trim().length < 10 || 
+             /^(hi|hello|hey|help|what|how|can you)/.test(lowerMessage.trim())
+  };
+};
+
+const askClarifyingQuestions = (message: string, stage: MotherhoodStage | null) => {
+  const analysis = analyzeUserMessage(message, stage);
+  
+  if (analysis.isVague) {
+    const stageSpecificQuestions = getStageSpecificQuestions(stage);
+    return `I'd love to help you! To give you the best advice, could you tell me more about what you're experiencing? Here are some areas I can help with:\n\n${stageSpecificQuestions.join('\n')}\n\nWhat would you like to focus on today?`;
+  }
+  
+  if (analysis.categories.pain) {
+    return `I understand you're experiencing some discomfort. To help you better, could you tell me:\n\n• Where exactly are you feeling pain?\n• When did it start?\n• What makes it better or worse?\n• How would you rate the pain (1-10)?\n\nThis will help me give you more targeted advice.`;
+  }
+  
+  if (analysis.categories.exercise) {
+    return `Great question about exercise! To give you the best recommendations, could you share:\n\n• What type of activities are you currently doing?\n• Are you experiencing any limitations or concerns?\n• What are your fitness goals right now?\n• How much time do you have for workouts?\n\nThis will help me suggest the perfect program for you.`;
+  }
+  
+  if (analysis.categories.nutrition) {
+    return `Nutrition is so important! To provide the most helpful guidance, could you tell me:\n\n• Are you dealing with any specific symptoms (nausea, cravings, etc.)?\n• Do you have any dietary restrictions or preferences?\n• What's your biggest nutrition challenge right now?\n• Are you taking any supplements?\n\nThis will help me give you personalized nutrition advice.`;
+  }
+  
+  if (analysis.categories.mood) {
+    return `Thank you for sharing how you're feeling. Your mental wellness is just as important as your physical health. To better support you, could you tell me:\n\n• How long have you been feeling this way?\n• Are there specific triggers or times when you feel worse?\n• What usually helps you feel better?\n• Do you have support from family/friends?\n\nRemember, it's completely normal to have ups and downs during this journey.`;
+  }
+  
+  if (analysis.categories.sleep) {
+    return `Sleep challenges are so common! To help you get better rest, could you share:\n\n• What's making it hard to sleep?\n• How many hours are you currently getting?\n• Do you have a bedtime routine?\n• Are you comfortable physically when trying to sleep?\n\nLet's work together to improve your sleep quality.`;
+  }
+  
+  return `I want to make sure I understand your concern correctly. Could you tell me a bit more about what you're experiencing? The more details you can share, the better I can help you find the right solution.`;
+};
+
+const getStageSpecificQuestions = (stage: MotherhoodStage | null): string[] => {
+  if (stage === 'pregnant') {
+    return [
+      '• Physical discomfort or pain management',
+      '• Safe exercise and movement modifications', 
+      '• Pregnancy nutrition and supplements',
+      '• Managing pregnancy symptoms',
+      '• Preparing your body for birth'
+    ];
+  } else if (stage === 'postpartum') {
+    return [
+      '• Postpartum recovery and healing',
+      '• Core and pelvic floor rehabilitation',
+      '• Managing postpartum mood changes',
+      '• Returning to exercise safely',
+      '• Breastfeeding and nutrition support'
+    ];
+  } else if (stage === 'ttc') {
+    return [
+      '• Fertility-supporting nutrition',
+      '• Exercise recommendations while TTC',
+      '• Managing TTC stress and emotions',
+      '• Cycle tracking and optimization',
+      '• Preparing your body for pregnancy'
+    ];
+  }
+  
+  return [
+    '• Exercise and movement guidance',
+    '• Nutrition and meal planning',
+    '• Managing physical discomfort',
+    '• Sleep and energy optimization',
+    '• Mental wellness support'
+  ];
+};
+
 export const generateWellnessResponse = (
   message: string, 
   stage: MotherhoodStage | null,
   userProfile: any
 ): string => {
-  const lowerMessage = message.toLowerCase();
+  const analysis = analyzeUserMessage(message, stage);
   
-  // Find matching issues
-  const matchingIssues = WELLNESS_KNOWLEDGE_BASE.filter(issue => 
-    issue.keywords.some(keyword => lowerMessage.includes(keyword)) &&
-    (!stage || issue.stages.includes(stage))
-  );
-
-  if (matchingIssues.length > 0) {
-    const issue = matchingIssues[0];
+  // If we have specific matches, provide targeted advice
+  if (analysis.matchingIssues.length > 0) {
+    const issue = analysis.matchingIssues[0];
     let response = `${issue.responses.explanation}\n\n`;
     
     response += "Here's what I recommend:\n";
@@ -182,19 +274,17 @@ export const generateWellnessResponse = (
       response += `\n⚠️ Important: ${issue.responses.warning}`;
     }
     
+    response += `\n\nIs there anything specific about this you'd like me to explain further?`;
     return response;
   }
   
-  // General responses based on stage
-  if (stage === 'pregnant') {
-    return "During pregnancy, it's important to listen to your body and modify activities as needed. Focus on gentle movements, proper hydration, and getting adequate rest. Our prenatal programs are designed specifically for your changing body. What specific concern would you like to discuss?";
-  } else if (stage === 'postpartum') {
-    return "Postpartum recovery is a journey that takes time. Be patient with yourself as your body heals and adjusts. Focus on gentle core recovery, adequate nutrition, and rest when possible. Our postpartum programs can guide you through safe, effective recovery. What area would you like support with?";
-  } else if (stage === 'ttc') {
-    return "While trying to conceive, focus on overall wellness - balanced nutrition, regular moderate exercise, stress management, and good sleep. These foundations support reproductive health. Our TTC programs include fertility-supporting workouts and nutrition guidance. What aspect of your TTC journey can I help with?";
+  // If message is unclear or too vague, ask clarifying questions
+  if (analysis.isVague || (!Object.values(analysis.categories).some(Boolean))) {
+    return askClarifyingQuestions(message, stage);
   }
   
-  return "I'm here to provide personalized wellness guidance based on your motherhood stage and specific needs. Whether you're dealing with physical discomfort, need exercise modifications, or want nutrition advice, I can help you find the right approach. What's on your mind today?";
+  // Provide category-specific guidance with follow-up questions
+  return askClarifyingQuestions(message, stage);
 };
 
 export const getQuickSuggestions = (stage: MotherhoodStage | null): string[] => {
