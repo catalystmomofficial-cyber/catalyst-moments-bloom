@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWellnessData } from "@/hooks/useWellnessData";
+import { generateWellnessResponse, getQuickSuggestions } from './WellnessCoachIntelligence';
 
 interface WellnessCoachModalProps {
   isOpen: boolean;
@@ -146,25 +147,8 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
   };
 
   const generateSmartResponse = (userMessage: string) => {
-    const stage = profile?.motherhood_stage || 'general';
-    const latestEntry = wellnessEntries?.[0];
-    const lowerMsg = userMessage.toLowerCase();
-    
-    if (lowerMsg.includes('workout') || lowerMsg.includes('exercise')) {
-      handleWorkoutRequest(stage);
-    } else if (lowerMsg.includes('food') || lowerMsg.includes('meal') || lowerMsg.includes('eat')) {
-      handleNutritionRequest(stage);
-    } else if (lowerMsg.includes('tired') || lowerMsg.includes('exhausted')) {
-      handleTirednessResponse(stage);
-    } else if (lowerMsg.includes('bloat') || lowerMsg.includes('bloating')) {
-      handleBloatingResponse(stage);
-    } else if (lowerMsg.includes('sleep') || lowerMsg.includes('sleeping')) {
-      handleSleepResponse(stage);
-    } else if (lowerMsg.includes('stress') || lowerMsg.includes('overwhelm')) {
-      handleStressResponse(stage);
-    } else {
-      handleGeneralResponse(stage, latestEntry);
-    }
+    const response = generateWellnessResponse(userMessage, profile?.motherhood_stage as any || null, profile);
+    addCoachMessage(response);
   };
 
   const handleWorkoutRequest = (stage: string) => {
@@ -242,13 +226,7 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     }
   };
 
-  const QUICK_SUGGESTIONS = [
-    "Ask about workouts",
-    "Ask about meals", 
-    "I'm feeling tired",
-    "Help with stress",
-    "Check my progress"
-  ];
+  const QUICK_SUGGESTIONS = getQuickSuggestions(profile?.motherhood_stage as any || null);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
