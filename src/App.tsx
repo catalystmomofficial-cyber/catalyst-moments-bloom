@@ -22,6 +22,12 @@ import FoodCalorieChecker from "./pages/FoodCalorieChecker";
 import Questionnaire from "./pages/Questionnaire";
 import MealPlan from "./pages/MealPlan";
 import WorkoutPlan from "./pages/WorkoutPlan";
+import Blog from "./pages/Blog";
+import Experts from "./pages/Experts";
+import Research from "./pages/Research";
+import FAQ from "./pages/FAQ";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -40,6 +46,12 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/food-calories" element={<FoodCalorieChecker />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/experts" element={<Experts />} />
+            <Route path="/research" element={<Research />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             
             {/* Protected Routes */}
             <Route path="/dashboard" element={
