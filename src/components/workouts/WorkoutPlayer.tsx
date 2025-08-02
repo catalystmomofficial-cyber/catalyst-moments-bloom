@@ -25,6 +25,8 @@ interface WorkoutPlayerProps {
 
 // Sample workout data for the 30-day challenge
 const getWorkoutData = (week: number, day: number): Exercise[] => {
+  console.log('Getting workout data for week:', week, 'day:', day);
+  
   const workouts: Record<string, Exercise[]> = {
     "1-1": [
       {
@@ -34,7 +36,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         description: "Start your journey with gentle movements",
         instructions: [
           "Begin with deep breathing exercises",
-          "Gentle neck and shoulder rolls",
+          "Gentle neck and shoulder rolls", 
           "Light arm circles",
           "Pelvic tilts"
         ],
@@ -56,7 +58,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
       },
       {
         id: "relaxation",
-        name: "Relaxation & Stretching",
+        name: "Relaxation & Stretching", 
         duration: 300, // 5 minutes
         description: "End with calming stretches",
         instructions: [
@@ -77,7 +79,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         instructions: [
           "Cat-cow stretches",
           "Modified sun salutations",
-          "Hip circles",
+          "Hip circles", 
           "Ankle pumps"
         ],
         completed: false
@@ -110,11 +112,10 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         completed: false
       }
     ]
-    // Add more days as needed...
   };
 
   const key = `${week}-${day}`;
-  return workouts[key] || [
+  const result = workouts[key] || [
     {
       id: "placeholder",
       name: `Week ${week} Day ${day} Workout`,
@@ -129,6 +130,9 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
       completed: false
     }
   ];
+  
+  console.log('Returning workout data:', result);
+  return result;
 };
 
 export default function WorkoutPlayer({ week, day, onComplete, onBack }: WorkoutPlayerProps) {
@@ -145,6 +149,7 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
 
   useEffect(() => {
     const workoutData = getWorkoutData(week, day);
+    console.log('Setting workout data:', workoutData);
     setExercises(workoutData);
     setTimeRemaining(workoutData[0]?.duration || 0);
     setTotalWorkoutTime(workoutData.reduce((total, ex) => total + ex.duration, 0));
@@ -219,13 +224,31 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
   const workoutProgress = (completedExercises / exercises.length) * 100;
   const allExercisesComplete = completedExercises === exercises.length;
 
-  if (!currentExercise) {
+  console.log('Current exercise:', currentExercise);
+  console.log('Exercises array:', exercises);
+
+  if (!currentExercise || exercises.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your workout...</p>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Button variant="ghost" onClick={onBack}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Course
+          </Button>
+          <Badge variant="outline" className="bg-purple-50 text-purple-700">
+            Week {week} • Day {day}
+          </Badge>
         </div>
+        
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading your workout...</p>
+              <p className="text-xs text-muted-foreground mt-2">Week {week}, Day {day}</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -321,7 +344,7 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
             <ul className="space-y-2">
               {currentExercise.instructions.map((instruction, index) => (
                 <li key={index} className="flex items-start gap-3 text-sm">
-                  <span className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium mt-0.5">
+                  <span className="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium mt-0.5 flex-shrink-0">
                     {index + 1}
                   </span>
                   <span>{instruction}</span>
