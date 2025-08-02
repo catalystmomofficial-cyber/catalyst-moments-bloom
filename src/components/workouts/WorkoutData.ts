@@ -2,12 +2,12 @@ import { Exercise } from './types';
 
 // Construct Supabase storage URL for videos
 const getVideoUrl = (week: number, day: number): string | null => {
-  // Week 1 uses capitalized abbreviations, Week 2+ uses lowercase
-  const dayNamesCapitalized = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  // Week 1 uses full day names, Week 2+ uses lowercase abbreviations
+  const dayNamesFull = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const dayNamesLowercase = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   
-  const dayNames = week === 1 ? dayNamesCapitalized : dayNamesLowercase;
-  const dayName = dayNames[day - 1]; // Convert day number to correct case abbreviated day name
+  const dayNames = week === 1 ? dayNamesFull : dayNamesLowercase;
+  const dayName = dayNames[day - 1]; // Convert day number to correct format day name
   
   if (!dayName) {
     console.warn('Invalid day number:', day);
