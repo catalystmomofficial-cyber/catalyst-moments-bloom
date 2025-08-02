@@ -35,7 +35,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         name: "Gentle Warm-up",
         duration: 300, // 5 minutes
         description: "Start your journey with gentle movements",
-        videoUrl: "https://www.youtube.com/embed/3vQC7vMUIWA", // Prenatal yoga warm-up
+        videoUrl: "https://www.youtube.com/embed/KpVOLszdl7Y", // 10 min prenatal yoga
         instructions: [
           "Begin with deep breathing exercises",
           "Gentle neck and shoulder rolls", 
