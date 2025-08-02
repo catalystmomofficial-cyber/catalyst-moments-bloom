@@ -427,7 +427,10 @@ export default function CourseDetail() {
                                 userProgress.current_week > week.week_number || 
                                 (userProgress.current_week === week.week_number && userProgress.current_day > dayNumber)
                               );
-                              const isAccessible = !userProgress || userProgress.current_week >= week.week_number;
+                              const isAccessible = !userProgress || 
+                                userProgress.current_week > week.week_number || 
+                                userProgress.current_week === week.week_number ||
+                                (userProgress.current_week === week.week_number - 1 && userProgress.current_day === 7);
 
                               return (
                                 <Button
