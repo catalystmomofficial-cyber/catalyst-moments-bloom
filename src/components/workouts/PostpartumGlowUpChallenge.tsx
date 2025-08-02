@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, Clock, Star, Play, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import glowUpCover from "@/assets/30-days-glow-up-cover.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -144,9 +145,9 @@ export default function PostpartumGlowUpChallenge() {
     <Card className="overflow-hidden border-primary/20 shadow-lg">
       <div className="relative h-48 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400">
         <img 
-          src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-          alt="Woman doing postpartum workout"
-          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay"
+          src={glowUpCover}
+          alt="30 Days Glow Up Challenge - Empowering postpartum fitness journey"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute top-4 left-4">
