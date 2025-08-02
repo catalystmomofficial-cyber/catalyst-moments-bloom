@@ -29,6 +29,7 @@ import Research from "./pages/Research";
 import FAQ from "./pages/FAQ";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Courses from "./pages/Courses";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -109,6 +110,11 @@ const App = () => (
             <Route path="/workout-plan" element={
               <PrivateRoute>
                 <WorkoutPlan />
+              </PrivateRoute>
+            } />
+            <Route path="/courses" element={
+              <PrivateRoute>
+                <Courses />
               </PrivateRoute>
             } />
             

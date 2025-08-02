@@ -14,6 +14,151 @@ export type Database = {
   }
   public: {
     Tables: {
+      course_content: {
+        Row: {
+          calories_target: number | null
+          content_type: string
+          created_at: string
+          day_number: number
+          description: string | null
+          difficulty_level: string | null
+          duration_minutes: number | null
+          equipment_needed: string[] | null
+          id: string
+          image_url: string | null
+          instructions: string | null
+          is_premium: boolean
+          order_index: number
+          title: string
+          updated_at: string
+          video_url: string | null
+          week_id: string
+        }
+        Insert: {
+          calories_target?: number | null
+          content_type?: string
+          created_at?: string
+          day_number: number
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number | null
+          equipment_needed?: string[] | null
+          id?: string
+          image_url?: string | null
+          instructions?: string | null
+          is_premium?: boolean
+          order_index?: number
+          title: string
+          updated_at?: string
+          video_url?: string | null
+          week_id: string
+        }
+        Update: {
+          calories_target?: number | null
+          content_type?: string
+          created_at?: string
+          day_number?: number
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number | null
+          equipment_needed?: string[] | null
+          id?: string
+          image_url?: string | null
+          instructions?: string | null
+          is_premium?: boolean
+          order_index?: number
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+          week_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_content_week_id_fkey"
+            columns: ["week_id"]
+            isOneToOne: false
+            referencedRelation: "course_weeks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_weeks: {
+        Row: {
+          course_id: string
+          created_at: string
+          description: string | null
+          focus_areas: string[] | null
+          id: string
+          title: string
+          updated_at: string
+          week_number: number
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          description?: string | null
+          focus_areas?: string[] | null
+          id?: string
+          title: string
+          updated_at?: string
+          week_number: number
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          focus_areas?: string[] | null
+          id?: string
+          title?: string
+          updated_at?: string
+          week_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_weeks_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          difficulty_level: string
+          duration_weeks: number
+          id: string
+          is_active: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string
+          duration_weeks?: number
+          id?: string
+          is_active?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string
+          duration_weeks?: number
+          id?: string
+          is_active?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       food_detection_logs: {
         Row: {
           calories: number | null
@@ -133,6 +278,91 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_content_completion: {
+        Row: {
+          completed_at: string
+          content_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          rating: number | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          content_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          rating?: number | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          content_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          rating?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_content_completion_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "course_content"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_course_progress: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          current_day: number
+          current_week: number
+          id: string
+          is_active: boolean
+          started_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          current_day?: number
+          current_week?: number
+          id?: string
+          is_active?: boolean
+          started_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          current_day?: number
+          current_week?: number
+          id?: string
+          is_active?: boolean
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_course_progress_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       weekly_checkins: {
         Row: {
