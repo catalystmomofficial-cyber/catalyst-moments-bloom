@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import glowUpCover from "@/assets/30-days-glow-up-cover.jpg";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -297,9 +298,9 @@ export default function CourseDetail() {
             <div className="relative">
               <div className="h-64 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                  alt="Woman doing postpartum workout"
-                  className="absolute inset-0 w-full h-full object-cover mix-blend-overlay"
+                  src={glowUpCover}
+                  alt="30 Days Glow Up Challenge - Transform your postpartum journey"
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/20"></div>
                 <div className="absolute bottom-6 left-6 text-white">
