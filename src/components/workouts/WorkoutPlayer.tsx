@@ -227,6 +227,7 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
   const allExercisesComplete = completedExercises === exercises.length;
 
   console.log('Current exercise:', currentExercise);
+  console.log('Current exercise videoUrl:', currentExercise?.videoUrl);
   console.log('Exercises array:', exercises);
 
   if (!currentExercise || exercises.length === 0) {
