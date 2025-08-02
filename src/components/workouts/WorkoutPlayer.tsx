@@ -30,7 +30,15 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
   
   // Construct Supabase storage URL for videos
   const getVideoUrl = (week: number, day: number) => {
-    const url = `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30 days glow up/week ${week}/day${day}.mp4`;
+    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const dayName = dayNames[day - 1]; // Convert day number to day name
+    
+    if (!dayName) {
+      console.warn('Invalid day number:', day);
+      return null;
+    }
+    
+    const url = `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30%20days%20glow%20up/week%20${week}/Week%20${week}%20-%20${dayName}.mp4`;
     console.log('Constructed video URL:', url);
     return url;
   };
