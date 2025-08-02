@@ -115,9 +115,16 @@ export default function CourseDetail() {
       return;
     }
 
+    // Debug logging
+    console.log('Starting day:', weekNumber, dayNumber);
+    console.log('User:', user);
+    console.log('Course:', course);
+
     // Launch workout player immediately
     setActiveWorkout({ week: weekNumber, day: dayNumber });
     setIsWorkoutActive(true);
+    
+    console.log('Set workout active:', { week: weekNumber, day: dayNumber });
 
     try {
       if (!userProgress) {
@@ -259,6 +266,11 @@ export default function CourseDetail() {
   return (
     <PageLayout>
       <div className="container mx-auto py-8 space-y-8">
+        {/* Debug info */}
+        <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
+          Debug: isWorkoutActive={isWorkoutActive ? 'true' : 'false'}, activeWorkout={JSON.stringify(activeWorkout)}
+        </div>
+        
         {/* Show Workout Player when active */}
         {isWorkoutActive && activeWorkout ? (
           <WorkoutPlayer
@@ -266,6 +278,7 @@ export default function CourseDetail() {
             day={activeWorkout.day}
             onComplete={completeWorkout}
             onBack={() => {
+              console.log('Back button clicked');
               setIsWorkoutActive(false);
               setActiveWorkout(null);
             }}
@@ -283,6 +296,11 @@ export default function CourseDetail() {
             {/* Course Hero */}
             <div className="relative">
               <div className="h-64 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                  alt="Woman doing postpartum workout"
+                  className="absolute inset-0 w-full h-full object-cover mix-blend-overlay"
+                />
                 <div className="absolute inset-0 bg-black/20"></div>
                 <div className="absolute bottom-6 left-6 text-white">
                   <h1 className="text-4xl font-bold mb-2">{course.title}</h1>

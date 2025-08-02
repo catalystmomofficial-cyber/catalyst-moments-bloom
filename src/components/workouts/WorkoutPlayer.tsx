@@ -139,6 +139,10 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
 
+  // Debug logging
+  console.log('WorkoutPlayer props:', { week, day });
+  console.log('WorkoutPlayer state:', { exercises, currentExerciseIndex, isPlaying, timeRemaining });
+
   useEffect(() => {
     const workoutData = getWorkoutData(week, day);
     setExercises(workoutData);

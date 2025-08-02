@@ -143,6 +143,11 @@ export default function PostpartumGlowUpChallenge() {
   return (
     <Card className="overflow-hidden border-primary/20 shadow-lg">
       <div className="relative h-48 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400">
+        <img 
+          src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+          alt="Woman doing postpartum workout"
+          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay"
+        />
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute top-4 left-4">
           <Badge className="bg-white/20 text-white border-white/30">
