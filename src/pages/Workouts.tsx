@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
 import PostpartumRecoveryCard from '@/components/workouts/PostpartumRecoveryCard';
+import PostpartumGlowUpChallenge from '@/components/workouts/PostpartumGlowUpChallenge';
 import EnergyStrengthCard from '@/components/workouts/EnergyStrengthCard';
 import BirthBallGuideCard from '@/components/workouts/BirthBallGuideCard';
 import { TTCWorkoutCard } from '@/components/ttc/TTCWorkoutCard';
@@ -395,6 +396,7 @@ const Workouts = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
+              {isPostpartum && <PostpartumGlowUpChallenge />}
               {isPostpartum && <PostpartumRecoveryCard />}
               {(isPostpartum || isToddler) && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && (
