@@ -30,7 +30,9 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
   
   // Construct Supabase storage URL for videos
   const getVideoUrl = (week: number, day: number) => {
-    return `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30 days glow up/week ${week}/day${day}.mp4`;
+    const url = `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30 days glow up/week ${week}/day${day}.mp4`;
+    console.log('Constructed video URL:', url);
+    return url;
   };
   
   const workouts: Record<string, Exercise[]> = {
