@@ -296,24 +296,30 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
           <p className="text-muted-foreground">{currentExercise.description}</p>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Video Player */}
+          {/* Video Player - Should show immediately */}
           {(() => {
             console.log('Video URL check:', currentExercise.videoUrl);
+            console.log('Should show video:', !!currentExercise.videoUrl);
             return currentExercise.videoUrl ? (
-              <div className="aspect-video bg-black rounded-lg overflow-hidden mb-4">
-                <p className="text-white p-4 text-sm">Video URL: {currentExercise.videoUrl}</p>
-                <iframe
-                  src={currentExercise.videoUrl}
-                  title={currentExercise.name}
-                  className="w-full h-full"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+              <div className="w-full mb-6">
+                <h4 className="font-medium mb-2">Exercise Video:</h4>
+                <div className="aspect-video bg-black rounded-lg overflow-hidden">
+                  <iframe
+                    src={currentExercise.videoUrl}
+                    title={currentExercise.name}
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
               </div>
             ) : (
-              <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                <p className="text-gray-500">No video available for this exercise</p>
+              <div className="w-full mb-6">
+                <h4 className="font-medium mb-2">Exercise Video:</h4>
+                <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+                  <p className="text-gray-500">No video available for this exercise</p>
+                </div>
               </div>
             );
           })()}
