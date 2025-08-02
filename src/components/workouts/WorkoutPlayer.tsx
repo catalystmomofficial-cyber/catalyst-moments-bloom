@@ -13,6 +13,7 @@ interface Exercise {
   reps?: string;
   description: string;
   instructions: string[];
+  videoUrl?: string;
   completed: boolean;
 }
 
@@ -28,12 +29,13 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
   console.log('Getting workout data for week:', week, 'day:', day);
   
   const workouts: Record<string, Exercise[]> = {
-    "1-1": [
+        "1-1": [
       {
         id: "warm-up",
         name: "Gentle Warm-up",
         duration: 300, // 5 minutes
         description: "Start your journey with gentle movements",
+        videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         instructions: [
           "Begin with deep breathing exercises",
           "Gentle neck and shoulder rolls", 
@@ -293,6 +295,20 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
           <p className="text-muted-foreground">{currentExercise.description}</p>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Video Player */}
+          {currentExercise.videoUrl && (
+            <div className="aspect-video bg-black rounded-lg overflow-hidden">
+              <iframe
+                src={currentExercise.videoUrl}
+                title={currentExercise.name}
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          )}
+
           {/* Timer */}
           <div className="text-center">
             <div className="text-6xl font-bold text-primary mb-2">
