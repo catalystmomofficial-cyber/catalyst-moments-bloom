@@ -44,7 +44,8 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
   };
   
   const workouts: Record<string, Exercise[]> = {
-        "1-1": [
+    // Week 1 - Foundation Week
+    "1-1": [
       {
         id: "warm-up",
         name: "Gentle Warm-up",
@@ -60,76 +61,102 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         completed: false
       },
       {
-        id: "core-activation",
-        name: "Core Activation",
-        duration: 600, // 10 minutes
-        reps: "3 sets of 10",
-        description: "Gentle core awakening exercises",
+        id: "main-workout",
+        name: "Foundation Workout",
+        duration: 900, // 15 minutes
+        description: "Building your fitness foundation",
         videoUrl: getVideoUrl(week, day),
         instructions: [
-          "Lie on your back with knees bent",
-          "Place hands on lower ribs",
-          "Breathe in, feel ribs expand",
-          "Breathe out, gently draw belly button to spine"
+          "Follow along with the video",
+          "Focus on proper form",
+          "Listen to your body",
+          "Take breaks as needed"
         ],
         completed: false
       },
       {
-        id: "relaxation",
-        name: "Relaxation & Stretching", 
+        id: "cool-down",
+        name: "Cool Down & Stretch",
         duration: 300, // 5 minutes
         description: "End with calming stretches",
         videoUrl: getVideoUrl(week, day),
         instructions: [
-          "Child's pose for 1 minute",
-          "Gentle spinal twists",
+          "Gentle stretching sequence",
           "Deep breathing exercises",
-          "Set intention for your journey"
+          "Relaxation and recovery"
         ],
         completed: false
       }
     ],
     "1-2": [
       {
-        id: "movement-prep",
-        name: "Movement Preparation",
-        duration: 360, // 6 minutes
-        description: "Prepare your body for gentle movement",
+        id: "warm-up",
+        name: "Tuesday Warm-up",
+        duration: 300,
+        description: "Prepare your body for movement",
         videoUrl: getVideoUrl(week, day),
         instructions: [
-          "Cat-cow stretches",
-          "Modified sun salutations",
-          "Hip circles", 
-          "Ankle pumps"
+          "Dynamic warm-up movements",
+          "Joint mobility exercises",
+          "Activation drills"
         ],
         completed: false
       },
       {
-        id: "strength-intro",
-        name: "Introduction to Strength",
-        duration: 480, // 8 minutes
-        reps: "2 sets of 8",
-        description: "Basic strength building exercises",
+        id: "main-workout",
+        name: "Foundation Building",
+        duration: 900,
+        description: "Continue building your foundation",
         videoUrl: getVideoUrl(week, day),
         instructions: [
-          "Wall push-ups",
-          "Supported squats using chair",
-          "Standing marches",
-          "Modified planks on knees"
+          "Follow the Tuesday workout video",
+          "Maintain proper form",
+          "Progress at your own pace"
         ],
         completed: false
-      },
+      }
+    ],
+    "1-3": [
       {
-        id: "mindfulness",
-        name: "Mindfulness Moment",
-        duration: 240, // 4 minutes
-        description: "Connect with your body and goals",
+        id: "main-workout",
+        name: "Wednesday Foundation",
+        duration: 1200, // 20 minutes
+        description: "Mid-week strength building",
         videoUrl: getVideoUrl(week, day),
         instructions: [
-          "Seated meditation",
-          "Body scan relaxation",
-          "Gratitude practice",
-          "Visualize your goals"
+          "Follow the Wednesday workout video",
+          "Focus on strength movements",
+          "Take rest breaks as needed"
+        ],
+        completed: false
+      }
+    ],
+    "1-4": [
+      {
+        id: "main-workout",
+        name: "Thursday Flow",
+        duration: 1200,
+        description: "Active recovery and movement",
+        videoUrl: getVideoUrl(week, day),
+        instructions: [
+          "Follow the Thursday workout video",
+          "Focus on flow and movement",
+          "Listen to your body"
+        ],
+        completed: false
+      }
+    ],
+    "1-5": [
+      {
+        id: "main-workout",
+        name: "Friday Finish Strong",
+        duration: 1500, // 25 minutes
+        description: "End the week with energy",
+        videoUrl: getVideoUrl(week, day),
+        instructions: [
+          "Follow the Friday workout video",
+          "Give your best effort",
+          "Celebrate the week's progress"
         ],
         completed: false
       }
