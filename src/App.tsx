@@ -30,6 +30,7 @@ import FAQ from "./pages/FAQ";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Courses from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -115,6 +116,11 @@ const App = () => (
             <Route path="/courses" element={
               <PrivateRoute>
                 <Courses />
+              </PrivateRoute>
+            } />
+            <Route path="/course/:id" element={
+              <PrivateRoute>
+                <CourseDetail />
               </PrivateRoute>
             } />
             
