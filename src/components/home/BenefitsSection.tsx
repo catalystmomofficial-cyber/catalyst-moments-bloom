@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,7 @@ const BenefitsSection = () => {
             
             <div className="space-y-4">
               <div className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-catalyst-copper mr-3 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-6 w-6 text-primary mr-3 mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Expert-Backed Content</h4>
                   <p className="text-sm text-muted-foreground">All programs developed by certified pre/postnatal specialists</p>
@@ -30,7 +29,7 @@ const BenefitsSection = () => {
               </div>
               
               <div className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-catalyst-copper mr-3 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-6 w-6 text-primary mr-3 mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Flexible & Adaptable</h4>
                   <p className="text-sm text-muted-foreground">Workouts and programs that adjust to your changing needs and time constraints</p>
@@ -38,7 +37,7 @@ const BenefitsSection = () => {
               </div>
               
               <div className="flex items-start">
-                <CheckCircle className="h-6 w-6 text-catalyst-copper mr-3 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-6 w-6 text-primary mr-3 mt-0.5 flex-shrink-0" />
                 <div>
                   <h4 className="font-medium">Holistic Approach</h4>
                   <p className="text-sm text-muted-foreground">We address physical, mental and emotional wellbeing together</p>
@@ -46,14 +45,14 @@ const BenefitsSection = () => {
               </div>
             </div>
             
-            <Button asChild className="mt-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
+            <Button asChild className="mt-8">
               <Link to="/about">Learn Our Story</Link>
             </Button>
           </div>
           
           <div className="relative">
-            <div className="absolute -z-10 top-10 -left-10 w-64 h-64 bg-catalyst-copper/5 rounded-full"></div>
-            <div className="absolute -z-10 bottom-10 -right-10 w-48 h-48 bg-catalyst-peach/20 rounded-full"></div>
+            <div className="absolute -z-10 top-10 -left-10 w-64 h-64 bg-primary/5 rounded-full"></div>
+            <div className="absolute -z-10 bottom-10 -right-10 w-48 h-48 bg-accent/20 rounded-full"></div>
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
