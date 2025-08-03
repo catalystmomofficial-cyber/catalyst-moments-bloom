@@ -15,7 +15,7 @@ export default function VideoPlayer({ videoUrl, title }: VideoPlayerProps) {
   return (
     <div className="w-full mb-6">
       <h4 className="font-medium mb-2">Exercise Video:</h4>
-      <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+      <div className="aspect-video bg-black rounded-lg overflow-hidden">
         <iframe
           src={videoUrl}
           title={title}
