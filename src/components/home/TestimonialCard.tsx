@@ -22,18 +22,18 @@ const TestimonialCard = ({
     <Card 
       className={cn(
         "border-0 shadow-soft overflow-hidden card-hover rounded-2xl", 
-        featured ? "bg-catalyst-copper/5" : "bg-card"
+        featured ? "bg-accent/20" : "bg-card"
       )}
     >
       <CardContent className="p-7">
         <div className="mb-5 flex">
           {"★".repeat(5).split("").map((star, i) => (
-            <span key={i} className="text-catalyst-copper">★</span>
+            <span key={i} className="text-primary">★</span>
           ))}
         </div>
         <p className="mb-6 text-foreground/90 italic leading-relaxed">{`"${quote}"`}</p>
         <div className="flex items-center">
-          <div className="h-12 w-12 rounded-full overflow-hidden mr-4 border-2 border-catalyst-copper/20">
+          <div className="h-12 w-12 rounded-full overflow-hidden mr-4 border-2 border-primary/20">
             <img 
               src={image} 
               alt={name} 
