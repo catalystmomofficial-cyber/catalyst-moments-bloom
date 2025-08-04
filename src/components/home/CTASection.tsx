@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Play } from "lucide-react";
 import WellnessCoachButton from "@/components/wellness-coach/WellnessCoachButton";
+import SubscriptionButton from "@/components/subscription/SubscriptionButton";
 
 interface CTASectionProps {
   onWatchDemo: (url: string, title: string) => void;
@@ -25,6 +26,11 @@ const CTASection = ({ onWatchDemo }: CTASectionProps) => {
           <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
             <Link to="/dashboard">Get Started Now</Link>
           </Button>
+          <SubscriptionButton 
+            variant="secondary" 
+            size="lg" 
+            className="rounded-full"
+          />
           <Button 
             variant="outline" 
             size="lg" 

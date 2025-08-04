@@ -25,6 +25,8 @@ import { PregnancyCommunity } from '@/components/pregnancy/PregnancyCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter } from '@/hooks/useContentFilter';
 import JourneySelector from '@/components/onboarding/JourneySelector';
+import SubscriptionStatus from '@/components/subscription/SubscriptionStatus';
+import SubscriptionButton from '@/components/subscription/SubscriptionButton';
 
 interface StatsCardProps {
   title: string;
@@ -39,7 +41,7 @@ const Dashboard = () => {
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
-  const { user, profile } = useAuth();
+  const { user, profile, subscribed } = useAuth();
   const { stageInfo, hasJourney } = useContentFilter();
   
   const isTTC = stageInfo?.journey === 'ttc';

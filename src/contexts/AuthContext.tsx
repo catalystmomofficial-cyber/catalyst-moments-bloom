@@ -21,10 +21,14 @@ interface AuthContextType {
   session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  subscribed: boolean;
+  subscriptionTier: string | null;
+  subscriptionEnd: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string, stage: MotherhoodStage) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: { display_name?: string; motherhood_stage?: string; bio?: string }) => Promise<void>;
+  checkSubscription: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,6 +38,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [subscribed, setSubscribed] = useState<boolean>(false);
+  const [subscriptionTier, setSubscriptionTier] = useState<string | null>(null);
+  const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
 
   // Fetch user profile from the profiles table
   const fetchProfile = async (userId: string) => {
@@ -67,13 +74,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // Defer profile fetching to avoid potential deadlocks
           setTimeout(() => {
             fetchProfile(session.user.id);
+            checkSubscription();
           }, 0);
         } else {
           setProfile(null);
+          setSubscribed(false);
+          setSubscriptionTier(null);
+          setSubscriptionEnd(null);
         }
         
         if (event === 'SIGNED_OUT') {
           setProfile(null);
+          setSubscribed(false);
+          setSubscriptionTier(null);
+          setSubscriptionEnd(null);
         }
       }
     );
@@ -85,6 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (session?.user) {
         fetchProfile(session.user.id);
+        checkSubscription();
       }
       
       setIsLoading(false);
@@ -107,6 +122,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       toast.success("Logged in successfully!");
+      // Check subscription after login
+      checkSubscription();
     } catch (error) {
       console.error('Login error:', error);
       toast.error(error instanceof Error ? error.message : "Login failed");
@@ -195,16 +212,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const checkSubscription = async () => {
+    if (!session) return;
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('check-subscription');
+      
+      if (error) {
+        console.error('Error checking subscription:', error);
+        return;
+      }
+      
+      setSubscribed(data.subscribed || false);
+      setSubscriptionTier(data.subscription_tier || null);
+      setSubscriptionEnd(data.subscription_end || null);
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+    }
+  };
+
   const contextValue: AuthContextType = {
     user,
     profile,
     session,
     isLoading,
     isAuthenticated: !!session?.user,
+    subscribed,
+    subscriptionTier,
+    subscriptionEnd,
     login,
     register,
     logout,
-    updateProfile
+    updateProfile,
+    checkSubscription
   };
 
   return (
