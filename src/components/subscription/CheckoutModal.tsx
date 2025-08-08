@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +12,13 @@ interface CheckoutModalProps {
 }
 
 const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
+  const navigate = useNavigate();
+
+  const handleContinueBrowsing = () => {
+    onClose();
+    navigate('/');
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md mx-auto">
@@ -73,7 +81,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
             
             <Button 
               variant="ghost" 
-              onClick={onClose}
+              onClick={handleContinueBrowsing}
               className="w-full mt-3"
             >
               Continue browsing
