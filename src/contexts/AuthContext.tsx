@@ -77,12 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // Defer profile fetching to avoid potential deadlocks
           setTimeout(() => {
             fetchProfile(session.user.id);
-            checkSubscription().then(() => {
-              // Show checkout modal for new users who aren't subscribed
-              if (event === 'SIGNED_IN' && session?.user && !subscribed) {
-                setShowCheckoutModal(true);
-              }
-            });
+            checkSubscription();
           }, 0);
         } else {
           setProfile(null);
