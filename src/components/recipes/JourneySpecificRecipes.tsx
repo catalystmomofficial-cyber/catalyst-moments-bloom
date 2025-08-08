@@ -15,19 +15,35 @@ interface Recipe extends ContentItem {
 
 interface JourneySpecificRecipesProps {
   recipes: Recipe[];
+  overrideJourney?: 'ttc' | 'pregnant' | 'postpartum' | 'toddler';
+  overrideStage?: string | null;
 }
 
-const JourneySpecificRecipes = ({ recipes }: JourneySpecificRecipesProps) => {
+const JourneySpecificRecipes = ({ recipes, overrideJourney, overrideStage }: JourneySpecificRecipesProps) => {
   const { filterContent, stageInfo } = useContentFilter();
   
-  const filteredRecipes = filterContent(recipes) as Recipe[];
+  const filterByOverride = (items: Recipe[]) => {
+    if (!overrideJourney) return items;
+    return items.filter(item => {
+      const journeyMatch = item.journey.includes(overrideJourney) || item.journey.includes('all');
+      if (overrideStage && item.stage && item.stage.length > 0) {
+        const stageMatch = item.stage.includes(overrideStage) || item.stage.some(s => (overrideStage ?? '').includes(s));
+        return journeyMatch && stageMatch;
+      }
+      return journeyMatch;
+    });
+  };
+  
+  const filteredRecipes = overrideJourney ? filterByOverride(recipes) : (filterContent(recipes) as Recipe[]);
 
-  if (!stageInfo) {
+  if (!overrideJourney && !stageInfo) {
     return null;
   }
 
+  const effectiveJourney = overrideJourney ?? stageInfo?.journey;
+
   const getJourneyTitle = () => {
-    switch (stageInfo.journey) {
+    switch (effectiveJourney) {
       case 'ttc':
         return 'Fertility-Boosting Recipes';
       case 'pregnant':
@@ -42,7 +58,7 @@ const JourneySpecificRecipes = ({ recipes }: JourneySpecificRecipesProps) => {
   };
 
   const getJourneyDescription = () => {
-    switch (stageInfo.journey) {
+    switch (effectiveJourney) {
       case 'ttc':
         return 'Nutrient-dense recipes designed to support fertility and hormone balance';
       case 'pregnant':
@@ -56,13 +72,17 @@ const JourneySpecificRecipes = ({ recipes }: JourneySpecificRecipesProps) => {
     }
   };
 
+  const badgeLabel = overrideJourney
+    ? (overrideStage ? overrideStage : (overrideJourney === 'pregnant' ? 'All Trimesters' : getJourneyTitle()))
+    : stageInfo?.phase;
+
   return (
     <div>
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">{getJourneyTitle()}</h2>
         <p className="text-muted-foreground">{getJourneyDescription()}</p>
         <Badge variant="outline" className="mt-2">
-          {stageInfo.phase}
+          {badgeLabel}
         </Badge>
       </div>
 

@@ -14,19 +14,35 @@ interface MealPlan extends ContentItem {
 
 interface JourneySpecificMealPlansProps {
   mealPlans: MealPlan[];
+  overrideJourney?: 'ttc' | 'pregnant' | 'postpartum' | 'toddler';
+  overrideStage?: string | null;
 }
 
-const JourneySpecificMealPlans = ({ mealPlans }: JourneySpecificMealPlansProps) => {
+const JourneySpecificMealPlans = ({ mealPlans, overrideJourney, overrideStage }: JourneySpecificMealPlansProps) => {
   const { filterContent, stageInfo } = useContentFilter();
   
-  const filteredMealPlans = filterContent(mealPlans) as MealPlan[];
+  const filterByOverride = (items: MealPlan[]) => {
+    if (!overrideJourney) return items;
+    return items.filter(item => {
+      const journeyMatch = item.journey.includes(overrideJourney) || item.journey.includes('all');
+      if (overrideStage && item.stage && item.stage.length > 0) {
+        const stageMatch = item.stage.includes(overrideStage) || item.stage.some(s => (overrideStage ?? '').includes(s));
+        return journeyMatch && stageMatch;
+      }
+      return journeyMatch;
+    });
+  };
+  
+  const filteredMealPlans = overrideJourney ? filterByOverride(mealPlans) : (filterContent(mealPlans) as MealPlan[]);
 
-  if (!stageInfo) {
+  if (!overrideJourney && !stageInfo) {
     return null;
   }
 
+  const effectiveJourney = overrideJourney ?? stageInfo?.journey;
+
   const getJourneyTitle = () => {
-    switch (stageInfo.journey) {
+    switch (effectiveJourney) {
       case 'ttc':
         return 'Fertility-Focused Meal Plans';
       case 'pregnant':
@@ -40,12 +56,16 @@ const JourneySpecificMealPlans = ({ mealPlans }: JourneySpecificMealPlansProps) 
     }
   };
 
+  const badgeLabel = overrideJourney
+    ? (overrideStage ? overrideStage : (overrideJourney === 'pregnant' ? 'All Trimesters' : getJourneyTitle()))
+    : stageInfo?.phase;
+
   return (
     <div>
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">{getJourneyTitle()}</h2>
         <Badge variant="outline">
-          {stageInfo.phase}
+          {badgeLabel}
         </Badge>
       </div>
 

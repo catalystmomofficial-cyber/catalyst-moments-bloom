@@ -110,6 +110,17 @@ const Recipes = () => {
         <div className="mb-8">
           <JourneySpecificMealPlans mealPlans={mealPlans} />
         </div>
+
+        {stageInfo?.journey !== 'pregnant' && (
+          <div className="space-y-6">
+            <div className="mt-2">
+              <h2 className="text-2xl font-bold mb-2">Pregnancy Spotlight</h2>
+              <p className="text-muted-foreground">Explore pregnancy-safe recipes and nutrition plans.</p>
+            </div>
+            <JourneySpecificRecipes recipes={recipes} overrideJourney="pregnant" />
+            <JourneySpecificMealPlans mealPlans={mealPlans} overrideJourney="pregnant" />
+          </div>
+        )}
       </div>
     </PageLayout>
   );
