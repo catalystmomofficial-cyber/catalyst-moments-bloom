@@ -70,6 +70,71 @@ export const recipes: Recipe[] = [
     servings: 1,
     difficulty: 'Easy'
   },
+  {
+    id: 'pregnancy-protein-omelet',
+    title: 'Protein-Packed Veggie Omelet',
+    description: 'Fluffy omelet with spinach, bell peppers, and cheese to support steady energy',
+    prepTime: '12 min',
+    image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141',
+    category: 'Breakfast',
+    tags: ['Protein', 'Energy', 'Easy'],
+    journey: ['pregnant'],
+    stage: ['pregnant-1st-trimester', 'pregnant-2nd-trimester'],
+    servings: 1,
+    difficulty: 'Easy'
+  },
+  {
+    id: 'pregnancy-iron-boost-bowl',
+    title: 'Iron-Boost Quinoa Bowl',
+    description: 'Quinoa, lentils, and roasted veggies with vitamin C lemon-tahini dressing',
+    prepTime: '25 min',
+    image: 'https://images.unsplash.com/photo-1505577058444-a3dab90d4253',
+    category: 'Lunch',
+    tags: ['Iron', 'Fiber', 'Vegan'],
+    journey: ['pregnant'],
+    stage: ['pregnant-2nd-trimester', 'pregnant-3rd-trimester'],
+    servings: 2,
+    difficulty: 'Medium'
+  },
+  {
+    id: 'pregnancy-omega-salmon',
+    title: 'Omega-3 Baked Salmon with Greens',
+    description: 'Simple baked salmon served with sautéed greens and sweet potato',
+    prepTime: '30 min',
+    image: 'https://images.unsplash.com/photo-1476127390620-9731f2a46f44',
+    category: 'Dinner',
+    tags: ['Omega-3', 'Brain Development', 'Protein'],
+    journey: ['pregnant'],
+    stage: ['pregnant-2nd-trimester', 'pregnant-3rd-trimester'],
+    servings: 2,
+    difficulty: 'Easy'
+  },
+  {
+    id: 'pregnancy-overnight-oats',
+    title: 'Fiber-Rich Overnight Oats',
+    description: 'Creamy oats with chia, berries, and almond butter to support digestion',
+    prepTime: '5 min (+overnight)',
+    image: 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea',
+    category: 'Breakfast',
+    tags: ['Fiber', 'Make Ahead', 'Gut Health'],
+    journey: ['pregnant'],
+    stage: ['pregnant-1st-trimester', 'pregnant-2nd-trimester', 'pregnant-3rd-trimester'],
+    servings: 1,
+    difficulty: 'Easy'
+  },
+  {
+    id: 'pregnancy-snack-box',
+    title: 'Prenatal Snack Box',
+    description: 'Balanced snack with Greek yogurt, walnuts, and fresh fruit for stable blood sugar',
+    prepTime: '5 min',
+    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
+    category: 'Snacks',
+    tags: ['Balanced', 'Quick', 'No Cook'],
+    journey: ['pregnant'],
+    stage: ['pregnant-1st-trimester', 'pregnant-2nd-trimester', 'pregnant-3rd-trimester'],
+    servings: 1,
+    difficulty: 'Easy'
+  },
   
   // Postpartum Recipes
   {
@@ -168,6 +233,32 @@ export const mealPlans: MealPlan[] = [
     image: 'https://images.unsplash.com/photo-1616685803520-e1bb4aa5f8e4',
     category: 'Pregnancy',
     tags: ['Baby Development', 'Calcium Rich', 'Iron'],
+    journey: ['pregnant'],
+    stage: ['pregnant-2nd-trimester', 'pregnant-3rd-trimester']
+  },
+  {
+    id: 'pregnancy-third-trimester-comfort',
+    title: 'Third Trimester Comfort Plan',
+    description: 'Heartburn-friendly, magnesium-rich meals to support sleep and comfort',
+    duration: '3 Week Plan',
+    recipeCount: 21,
+    avgPrepTime: '20-30 min/meal',
+    image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0',
+    category: 'Pregnancy',
+    tags: ['Heartburn Friendly', 'Magnesium', 'Sleep Support'],
+    journey: ['pregnant'],
+    stage: ['pregnant-3rd-trimester']
+  },
+  {
+    id: 'gestational-diabetes-support',
+    title: 'Gestational Diabetes Support Plan',
+    description: 'Balanced, low glycemic meals to stabilize blood sugar during pregnancy',
+    duration: '4 Week Plan',
+    recipeCount: 28,
+    avgPrepTime: '20-30 min/meal',
+    image: 'https://images.unsplash.com/photo-1526312426976-593c017fcf2c',
+    category: 'Pregnancy',
+    tags: ['Low GI', 'Balanced Carbs', 'Protein Focus'],
     journey: ['pregnant'],
     stage: ['pregnant-2nd-trimester', 'pregnant-3rd-trimester']
   },
