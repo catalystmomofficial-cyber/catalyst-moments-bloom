@@ -8,7 +8,7 @@ interface SubscriptionGuardProps {
 }
 
 const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
-  const { subscribed, setShowCheckoutModal } = useAuth();
+  const { subscribed } = useAuth();
   const bypass = useDevBypass();
   
   if (bypass) {
@@ -20,9 +20,8 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
       return <>{fallback}</>;
     }
     
-    // Show checkout modal immediately for premium content
-    setShowCheckoutModal(true);
-    return null;
+    // Checkout temporarily disabled in editor: allow access
+    return <>{children}</>;
   }
   
   return <>{children}</>;
