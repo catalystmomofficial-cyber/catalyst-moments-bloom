@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Search, Clock, Dumbbell, Filter, Baby, Heart, Activity, Settings } from 'lucide-react';
+import { Search, Clock, Dumbbell, Filter, Baby, Heart, Activity, Settings, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
@@ -18,7 +18,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter, ContentItem } from '@/hooks/useContentFilter';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import JourneySelector from '@/components/onboarding/JourneySelector';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 interface WorkoutCardProps {
   title: string;
@@ -29,6 +29,8 @@ interface WorkoutCardProps {
   category: string;
   tags: string[];
   featured?: boolean;
+  locked?: boolean;
+  onComplete?: () => void;
 }
 
 // Sample workout content with journey tagging
@@ -140,7 +142,7 @@ const allWorkouts: (ContentItem & WorkoutCardProps)[] = [
     category: "Postpartum",
     tags: ["Recovery", "Strength"],
     journey: ['postpartum'],
-    stage: ['postpartum_6-12', 'postpartum_3-6m', 'postpartum_6-12m', 'postpartum_12m+']
+    stage: ['postpartum_0-6', 'postpartum_6-12', 'postpartum_3-6m', 'postpartum_6-12m', 'postpartum_12m+']
   },
   {
     id: 'baby-and-me',
@@ -183,10 +185,40 @@ const allWorkouts: (ContentItem & WorkoutCardProps)[] = [
 
 const Workouts = () => {
   const { user, profile } = useAuth();
-  const { filterContent, stageInfo, hasJourney } = useContentFilter();
+  const { filterContent, stageInfo, hasJourney, currentStage } = useContentFilter();
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   
   const filteredWorkouts = filterContent(allWorkouts);
+
+  const levelOrder: Record<string, number> = { 'Beginner': 0, 'All Levels': 1, 'Intermediate': 2, 'Advanced': 3 };
+
+  const sortedWorkouts = useMemo(() => {
+    const cs = currentStage || '';
+    return [...filteredWorkouts].sort((a, b) => {
+      const aStageMatch = Array.isArray(a.stage) && (a.stage.includes(cs) || a.stage.some(s => cs.includes(s)));
+      const bStageMatch = Array.isArray(b.stage) && (b.stage.includes(cs) || b.stage.some(s => cs.includes(s)));
+      if (aStageMatch !== bStageMatch) return aStageMatch ? -1 : 1;
+      const aLevel = levelOrder[a.level] ?? 99;
+      const bLevel = levelOrder[b.level] ?? 99;
+      return aLevel - bLevel;
+    });
+  }, [filteredWorkouts, currentStage]);
+
+  const progressKey = `workoutProgress:${currentStage || 'default'}`;
+  const [progressIndex, setProgressIndex] = useState<number>(0);
+  useEffect(() => {
+    const saved = localStorage.getItem(progressKey);
+    setProgressIndex(saved ? parseInt(saved) || 0 : 0);
+  }, [progressKey]);
+
+  const handleComplete = (idx: number) => {
+    setProgressIndex(prev => {
+      const next = Math.max(prev, idx) + 1;
+      localStorage.setItem(progressKey, String(next));
+      return next;
+    });
+  };
+
   const isTTC = stageInfo?.journey === 'ttc';
   const isPregnant = stageInfo?.journey === 'pregnant';
   const isPostpartum = stageInfo?.journey === 'postpartum';
@@ -265,7 +297,7 @@ const Workouts = () => {
             <TabsContent value="recommended" className="mt-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {isTTC && <TTCWorkoutCard />}
-                {filteredWorkouts.slice(0, 5).map((workout) => (
+                {sortedWorkouts.slice(0, 5).map((workout, idx) => (
                   <WorkoutCard 
                     key={workout.id}
                     title={workout.title}
@@ -276,6 +308,8 @@ const Workouts = () => {
                     category={workout.category}
                     tags={workout.tags}
                     featured={workout.featured}
+                    locked={idx > progressIndex}
+                    onComplete={() => handleComplete(idx)}
                   />
                 ))}
                 <Card className="border border-dashed flex flex-col items-center justify-center p-6 h-full">
@@ -285,8 +319,8 @@ const Workouts = () => {
                     </div>
                     <h3 className="font-medium mb-2">Discover More Workouts</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      {filteredWorkouts.length > 5 
-                        ? `${filteredWorkouts.length - 5} more workouts available for your ${stageInfo?.phase?.toLowerCase()} stage`
+                      {sortedWorkouts.length > 5 
+                        ? `${sortedWorkouts.length - 5} more workouts available for your ${stageInfo?.phase?.toLowerCase()} stage`
                         : `Specialized workouts designed for your ${stageInfo?.phase?.toLowerCase()} journey`
                       }
                     </p>
@@ -431,10 +465,21 @@ const WorkoutCard = ({
   image,
   category,
   tags,
-  featured = false
+  featured = false,
+  locked = false,
+  onComplete,
 }: WorkoutCardProps) => {
   return (
-    <Card className={`overflow-hidden ${featured ? 'ring-2 ring-primary/50' : ''}`}>
+    <Card className={`overflow-hidden ${featured ? 'ring-2 ring-primary/50' : ''} relative`}>
+      {locked && (
+        <div className="absolute inset-0 bg-background/60 backdrop-blur-sm flex items-center justify-center z-10">
+          <div className="text-center">
+            <Lock className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
+            <Badge variant="secondary">Locked</Badge>
+            <p className="text-xs text-muted-foreground mt-1">Complete previous workout to unlock</p>
+          </div>
+        </div>
+      )}
       <div className="relative">
         <img 
           src={image} 
@@ -478,12 +523,25 @@ const WorkoutCard = ({
           ))}
         </div>
       </CardContent>
-      <CardFooter>
-        <Button asChild className="w-full">
-          <Link to={`/workouts/${title.toLowerCase().replace(/\s+/g, '-')}`}>
-            Start Workout
-          </Link>
-        </Button>
+      <CardFooter className="space-x-2">
+        {locked ? (
+          <Button className="w-full" disabled>
+            Locked
+          </Button>
+        ) : (
+          <>
+            <Button asChild className="w-full">
+              <Link to={`/workouts/${title.toLowerCase().replace(/\s+/g, '-')}`}>
+                Start Workout
+              </Link>
+            </Button>
+            {onComplete && (
+              <Button variant="outline" className="w-full" onClick={onComplete}>
+                Mark as done
+              </Button>
+            )}
+          </>
+        )}
       </CardFooter>
     </Card>
   );
