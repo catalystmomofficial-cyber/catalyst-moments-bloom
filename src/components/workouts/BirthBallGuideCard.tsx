@@ -6,6 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Play, Star, Users } from 'lucide-react';
 import VideoModal from '@/components/ui/video-modal';
 
+const BIRTHBALL_GUIDE_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Ultimate%20birth%20ball%20guide/The%20Ultimate%20Birth%20Ball%20Guide%20Safe%20&%20Effective%20Exercises%20for%20Every%20Trimester.pdf";
+
 const AVATARS = [
   "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150&h=150&fit=crop&crop=face",
   "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
@@ -182,9 +184,16 @@ const BirthBallGuideCard = () => {
             </div>
           </div>
 
-          <Button className="w-full" size="lg">
-            Start Ball Workouts
-          </Button>
+          <div className="grid grid-cols-1 gap-2">
+            <Button className="w-full" size="lg" onClick={() => setShowVideoModal(true)}>
+              Start Ball Workouts
+            </Button>
+            <Button variant="outline" className="w-full" asChild>
+              <a href={BIRTHBALL_GUIDE_URL} target="_blank" rel="noopener noreferrer">
+                View Guide (PDF)
+              </a>
+            </Button>
+          </div>
         </div>
       </Card>
 

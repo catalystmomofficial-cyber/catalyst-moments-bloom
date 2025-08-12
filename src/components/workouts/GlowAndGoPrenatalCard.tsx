@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Baby, Clock, Play } from 'lucide-react';
 import VideoModal from '@/components/ui/video-modal';
 
+const GLOW_VIDEO_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/glow%20and%20go/Intro.mp4";
+
 // Real-looking diverse avatar URLs from randomuser.me with seed for consistency
 const AVATARS = [
   'https://randomuser.me/api/portraits/women/1.jpg',
@@ -218,7 +220,7 @@ const GlowAndGoPrenatalCard = () => {
       <VideoModal 
         isOpen={videoModalOpen}
         onClose={() => setVideoModalOpen(false)}
-        videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        videoUrl={GLOW_VIDEO_URL}
         title="Glow & Go Prenatal Program"
       />
     </Card>

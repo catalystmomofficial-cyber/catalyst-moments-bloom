@@ -13,6 +13,8 @@ interface VideoModalProps {
 }
 
 const VideoModal = ({ isOpen, onClose, videoUrl, title }: VideoModalProps) => {
+  const isMp4 = /\.mp4($|[?])/i.test(videoUrl);
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-4xl p-0 overflow-hidden bg-black border-0">
@@ -26,13 +28,24 @@ const VideoModal = ({ isOpen, onClose, videoUrl, title }: VideoModalProps) => {
             <X className="h-4 w-4" />
           </Button>
           <AspectRatio ratio={16 / 9}>
-            <iframe
-              src={`${videoUrl}?autoplay=1`}
-              title={title || "Video"}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
+            {isMp4 ? (
+              <video
+                src={videoUrl}
+                controls
+                autoPlay
+                playsInline
+                className="w-full h-full"
+                title={title || "Video"}
+              />
+            ) : (
+              <iframe
+                src={`${videoUrl}?autoplay=1`}
+                title={title || "Video"}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            )}
           </AspectRatio>
         </div>
       </DialogContent>
