@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import VideoModal from "@/components/ui/video-modal";
-import { Play } from "lucide-react";
+import { Play, Clock } from "lucide-react";
 import { GLOW_AND_GO_VIDEOS } from "@/data/glowAndGoVideos";
 
 const GlowAndGo = () => {
@@ -54,6 +54,12 @@ const GlowAndGo = () => {
                   <CardTitle className="text-base">{v.title}</CardTitle>
                   {v.description && (
                     <CardDescription>{v.description}</CardDescription>
+                  )}
+                  {v.duration && (
+                    <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock className="h-4 w-4" />
+                      <span>{v.duration}</span>
+                    </div>
                   )}
                 </CardHeader>
                 <CardContent className="pt-0">
