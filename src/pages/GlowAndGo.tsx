@@ -95,14 +95,22 @@ const GlowAndGo = () => {
             <Badge variant="secondary">Physio-Designed</Badge>
             <Badge variant="outline">Pelvic Floor Safe</Badge>
           </div>
-          <div className="mt-6 max-w-xl">
-            <div className="mb-2 flex justify-between text-sm text-muted-foreground">
+        </header>
+
+        {/* Progress Bar Section */}
+        <section className="mb-8 max-w-4xl">
+          <div className="bg-card rounded-lg p-6 border">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold">Your Progress</h2>
+              <p className="text-sm text-muted-foreground">Track your journey through the Glow & Go program</p>
+            </div>
+            <div className="mb-3 flex justify-between text-sm text-muted-foreground">
               <span>Program progress</span>
               <span>{watchedCount}/{totalVideos} videos • {progressPercent}%</span>
             </div>
-            <Progress value={progressPercent} />
+            <Progress value={progressPercent} className="h-3" />
           </div>
-        </header>
+        </section>
 
         <section aria-labelledby="features-heading" className="mb-10">
           <h2 id="features-heading" className="sr-only">Program Features</h2>
