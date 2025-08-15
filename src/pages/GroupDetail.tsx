@@ -91,7 +91,7 @@ const GroupDetail = () => {
             <Card>
               <CardContent className="p-6">
                 <h2 className="text-xl font-semibold mb-4">Group Feed</h2>
-                <DynamicCommunityFeed isTTC={isTTCGroup} />
+                <DynamicCommunityFeed groupSlug={group.slug} isTTC={isTTCGroup} />
               </CardContent>
             </Card>
           </div>
