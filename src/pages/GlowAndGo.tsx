@@ -8,6 +8,7 @@ import { Play, Clock, ShieldCheck, Heart, Dumbbell, Sparkles, Leaf } from "lucid
 import { GLOW_AND_GO_VIDEOS } from "@/data/glowAndGoVideos";
 import FeatureCard from "@/components/home/FeatureCard";
 import { Progress } from "@/components/ui/progress";
+import glowMainCover from "@/assets/glow-and-go-main-cover.png";
 
 const GlowAndGo = () => {
   const [open, setOpen] = useState(false);
@@ -85,17 +86,28 @@ const GlowAndGo = () => {
   return (
     <PageLayout>
       <main className="container px-4 mx-auto">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold">Glow & Go Prenatal Program</h1>
-          <p className="text-muted-foreground mt-2 max-w-2xl">
-            Train for birth. Strengthen safely. A physio-designed pregnancy fitness system for all trimesters.
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <Badge>All Trimesters</Badge>
-            <Badge variant="secondary">Physio-Designed</Badge>
-            <Badge variant="outline">Pelvic Floor Safe</Badge>
+        {/* Hero Section with Main Cover */}
+        <section className="mb-12">
+          <div className="relative aspect-[16/9] lg:aspect-[21/9] rounded-2xl overflow-hidden mb-6">
+            <img 
+              src={glowMainCover} 
+              alt="Glow & Go Prenatal Program - Physio-designed fitness for all trimesters"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div className="absolute bottom-8 left-8 text-white">
+              <h1 className="text-4xl lg:text-5xl font-bold mb-4">Glow & Go Prenatal Program</h1>
+              <p className="text-lg lg:text-xl mb-6 max-w-2xl opacity-90">
+                Train for birth. Strengthen safely. A physio-designed pregnancy fitness system for all trimesters.
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30">All Trimesters</Badge>
+                <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30">Physio-Designed</Badge>
+                <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30">Pelvic Floor Safe</Badge>
+              </div>
+            </div>
           </div>
-        </header>
+        </section>
 
         {/* Progress Bar Section */}
         <section className="mb-8 max-w-4xl">
