@@ -118,13 +118,13 @@ export const groups: CommunityGroup[] = [
     badge: 'NF'
   },
   {
-    slug: 'sleep-training-help',
-    name: 'Sleep Training Resources',
-    description: 'Gentle methods, schedules, and real stories to help your little one sleep. Specialized resource hub with expert-backed techniques.',
-    journey: 'general',
-    memberCount: 1_389,
-    coverImage: 'https://images.unsplash.com/photo-1522335789203-9b74779a0527',
-    badge: 'ST'
+    slug: 'birth-prep',
+    name: 'Birth Preparation',
+    description: 'Get ready for labor and delivery with birth plans, breathing techniques, and expert guidance. Weekly childbirth classes and birth story sharing.',
+    journey: 'pregnant',
+    memberCount: 892,
+    coverImage: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b',
+    badge: 'BP'
   }
 ];
 
