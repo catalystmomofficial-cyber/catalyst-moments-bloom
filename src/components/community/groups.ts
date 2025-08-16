@@ -129,8 +129,6 @@ export const groups: CommunityGroup[] = [
 ];
 
 export function getGroupsForStage(stage?: string) {
-  if (stage === 'ttc') return groups.filter(g => g.journey === 'ttc' || g.journey === 'general');
-  if (stage === 'pregnant') return groups.filter(g => g.journey === 'pregnant' || g.journey === 'general');
-  // default to postpartum groups if not TTC or pregnant
-  return groups.filter(g => g.journey === 'postpartum' || g.journey === 'general');
+  // Always show all groups regardless of stage so users can see all available communities
+  return groups;
 }

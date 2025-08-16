@@ -7,6 +7,7 @@ import { Baby, Clock, Play } from 'lucide-react';
 import VideoModal from '@/components/ui/video-modal';
 import { useNavigate } from 'react-router-dom';
 import { GLOW_AND_GO_VIDEOS } from '@/data/glowAndGoVideos';
+import professionalCover from '@/assets/glow-and-go-professional-cover.jpg';
 
 const GLOW_VIDEO_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/glow%20and%20go/Intro.mp4";
 
@@ -134,7 +135,7 @@ const GlowAndGoPrenatalCard = () => {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
         <img 
-          src="https://images.unsplash.com/photo-1584432743501-7d5c27a39189" 
+          src={professionalCover} 
           alt="Glow & Go Prenatal Program" 
           className={`w-full h-48 object-cover transition-transform duration-700 
                      ${isHovered ? 'scale-110' : 'scale-100'}`}
