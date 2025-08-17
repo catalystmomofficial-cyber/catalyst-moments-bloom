@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Play, Clock, ChevronRight } from 'lucide-react';
-import VideoModal from '@/components/ui/video-modal';
+import InlineVideoPlayer from '@/components/ui/inline-video-player';
 
 const AVATARS = [
   "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face",
@@ -71,7 +71,9 @@ const UserAvatars = ({ enrolledCount }: { enrolledCount: number }) => {
 const CoreRestoreCard = () => {
   const [enrolledCount, setEnrolledCount] = useState(183);
   const [isHovered, setIsHovered] = useState(false);
-  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [showInlinePlayer, setShowInlinePlayer] = useState(false);
+  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
+  const [hasStartedProgram, setHasStartedProgram] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -95,15 +97,17 @@ const CoreRestoreCard = () => {
         />
         
         {/* Play Button */}
-        <button 
-          onClick={() => setVideoModalOpen(true)}
-          className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 
-                     group-hover:opacity-100 transition-all duration-300"
-        >
-          <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 hover:bg-white transition-colors">
-            <Play className="h-6 w-6 text-primary ml-1" fill="currentColor" />
-          </div>
-        </button>
+        {hasStartedProgram && (
+          <button 
+            onClick={() => setShowInlinePlayer(true)}
+            className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 
+                       group-hover:opacity-100 transition-all duration-300"
+          >
+            <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 hover:bg-white transition-colors">
+              <Play className="h-6 w-6 text-primary ml-1" fill="currentColor" />
+            </div>
+          </button>
+        )}
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex gap-2">
@@ -164,19 +168,25 @@ const CoreRestoreCard = () => {
                      transform transition-all duration-200 hover:scale-105"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          onClick={() => {
+            setHasStartedProgram(true);
+            setShowInlinePlayer(true);
+          }}
         >
-          Start Program
+          {hasStartedProgram ? 'Continue Program' : 'Start Program'}
           <ChevronRight className={`ml-2 h-4 w-4 transition-transform duration-200 ${
             isHovered ? 'translate-x-1' : ''
           }`} />
         </Button>
       </div>
 
-      <VideoModal 
-        isOpen={videoModalOpen}
-        onClose={() => setVideoModalOpen(false)}
+      <InlineVideoPlayer
+        isOpen={showInlinePlayer}
+        onClose={() => setShowInlinePlayer(false)}
         videoUrl="https://www.youtube.com/embed/ScNNfyq3d_w"
         title="Core Restore: 21-Day Ab Rehab for Moms"
+        isMinimized={isPlayerMinimized}
+        onToggleMinimize={() => setIsPlayerMinimized(!isPlayerMinimized)}
       />
     </Card>
   );

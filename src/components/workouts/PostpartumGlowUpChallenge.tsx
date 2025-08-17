@@ -4,10 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, Clock, Star, Play, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
-import glowUpCover from "@/assets/30-days-glow-up-cover.jpg";
+import glowUpCover from "@/assets/30-days-glow-up-professional-cover.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import InlineVideoPlayer from '@/components/ui/inline-video-player';
 
 // Real-looking diverse avatar URLs for postpartum moms
 const AVATARS = [
@@ -101,6 +102,9 @@ export default function PostpartumGlowUpChallenge() {
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [enrolledCount, setEnrolledCount] = useState(245);
+  const [showInlinePlayer, setShowInlinePlayer] = useState(false);
+  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
+  const [hasStartedProgram, setHasStartedProgram] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -187,6 +191,8 @@ export default function PostpartumGlowUpChallenge() {
         description: "You've successfully joined the 30 Days Glow Up Challenge",
       });
 
+      setHasStartedProgram(true);
+      setShowInlinePlayer(true);
       fetchUserProgress();
     } catch (error) {
       console.error('Error enrolling in challenge:', error);
@@ -195,6 +201,15 @@ export default function PostpartumGlowUpChallenge() {
         description: "Failed to join the challenge. Please try again.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleStartProgram = () => {
+    if (isEnrolled) {
+      setShowInlinePlayer(true);
+      setHasStartedProgram(true);
+    } else {
+      enrollInChallenge();
     }
   };
 
@@ -343,7 +358,7 @@ export default function PostpartumGlowUpChallenge() {
         </div>
 
         <Button 
-          onClick={isEnrolled ? () => window.location.href = '/courses' : enrollInChallenge}
+          onClick={handleStartProgram}
           className="w-full"
           size="lg"
         >
@@ -352,7 +367,7 @@ export default function PostpartumGlowUpChallenge() {
               <Star className="h-4 w-4 mr-2" />
               Review Challenge
             </>
-          ) : isEnrolled ? (
+          ) : hasStartedProgram || isEnrolled ? (
             <>
               <Play className="h-4 w-4 mr-2" />
               Continue Challenge
@@ -365,6 +380,15 @@ export default function PostpartumGlowUpChallenge() {
           )}
         </Button>
       </CardContent>
+      
+      <InlineVideoPlayer
+        isOpen={showInlinePlayer}
+        onClose={() => setShowInlinePlayer(false)}
+        videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        title="30 Days Glow Up Challenge - Day 1"
+        isMinimized={isPlayerMinimized}
+        onToggleMinimize={() => setIsPlayerMinimized(!isPlayerMinimized)}
+      />
     </Card>
   );
 }

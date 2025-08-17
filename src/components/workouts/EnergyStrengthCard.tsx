@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dumbbell, Clock, Play } from 'lucide-react';
-import VideoModal from '@/components/ui/video-modal';
+import InlineVideoPlayer from '@/components/ui/inline-video-player';
 
 // Real-looking diverse avatar URLs for active moms
 const AVATARS = [
@@ -87,7 +87,9 @@ const UserAvatars = ({ enrolledCount }: { enrolledCount: number }) => {
 const EnergyStrengthCard = () => {
   const [enrolledCount, setEnrolledCount] = useState(189);
   const [isHovered, setIsHovered] = useState(false);
-  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [showInlinePlayer, setShowInlinePlayer] = useState(false);
+  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
+  const [hasStartedProgram, setHasStartedProgram] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -122,15 +124,17 @@ const EnergyStrengthCard = () => {
           </Badge>
         </div>
         {/* Play Button */}
-        <Button 
-          size="lg" 
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 
-                     bg-white/90 text-accent-foreground hover:bg-white rounded-full w-16 h-16 flex items-center justify-center
-                     backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:shadow-lg"
-          onClick={() => setVideoModalOpen(true)}
-        >
-          <Play className="h-8 w-8 ml-1" fill="currentColor" />
-        </Button>
+        {hasStartedProgram && (
+          <Button 
+            size="lg" 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 
+                       bg-white/90 text-accent-foreground hover:bg-white rounded-full w-16 h-16 flex items-center justify-center
+                       backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:shadow-lg"
+            onClick={() => setShowInlinePlayer(true)}
+          >
+            <Play className="h-8 w-8 ml-1" fill="currentColor" />
+          </Button>
+        )}
         
         <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent
                         transition-transform duration-1000 ${isHovered ? 'translate-x-full' : '-translate-x-full'}`} />
@@ -197,19 +201,25 @@ const EnergyStrengthCard = () => {
           className="w-full bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300
                    hover:shadow-lg hover:shadow-accent/20 hover:scale-[1.02]
                    group relative overflow-hidden"
+          onClick={() => {
+            setHasStartedProgram(true);
+            setShowInlinePlayer(true);
+          }}
         >
-          <span className="relative z-10">Start Program</span>
+          <span className="relative z-10">{hasStartedProgram ? 'Continue Program' : 'Start Program'}</span>
           <div className="absolute inset-0 bg-gradient-to-r from-accent/0 via-white/20 to-accent/0
                         translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
         </Button>
       </CardFooter>
 
-      {/* Video Modal */}
-      <VideoModal 
-        isOpen={videoModalOpen}
-        onClose={() => setVideoModalOpen(false)}
+      {/* Inline Video Player */}
+      <InlineVideoPlayer
+        isOpen={showInlinePlayer}
+        onClose={() => setShowInlinePlayer(false)}
         videoUrl="https://www.youtube.com/embed/UItWltVZZmE"
         title="Energy & Strength for Moms"
+        isMinimized={isPlayerMinimized}
+        onToggleMinimize={() => setIsPlayerMinimized(!isPlayerMinimized)}
       />
     </Card>
   );

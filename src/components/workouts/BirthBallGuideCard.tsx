@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Play, Star, Users } from 'lucide-react';
-import VideoModal from '@/components/ui/video-modal';
+import InlineVideoPlayer from '@/components/ui/inline-video-player';
+import professionalCover from '@/assets/birth-ball-guide-professional-cover.jpg';
 
 const BIRTHBALL_GUIDE_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Ultimate%20birth%20ball%20guide/The%20Ultimate%20Birth%20Ball%20Guide%20Safe%20&%20Effective%20Exercises%20for%20Every%20Trimester.pdf";
 
@@ -76,7 +77,9 @@ const UserAvatars = ({ enrolledCount }: UserAvatarsProps) => {
 const BirthBallGuideCard = () => {
   const [enrolledCount, setEnrolledCount] = useState(1247);
   const [isHovered, setIsHovered] = useState(false);
-  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showInlinePlayer, setShowInlinePlayer] = useState(false);
+  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
+  const [hasStartedProgram, setHasStartedProgram] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -95,11 +98,10 @@ const BirthBallGuideCard = () => {
       >
         <div className="relative h-64 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30">
           {/* Background Image */}
-          <div 
-            className="absolute inset-0 bg-cover bg-center opacity-80"
-            style={{
-              backgroundImage: "url('https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&h=600&fit=crop')"
-            }}
+          <img 
+            src={professionalCover}
+            alt="Ultimate Birth Ball Guide"
+            className="absolute inset-0 w-full h-full object-cover opacity-80"
           />
           
           {/* Overlay Gradient */}
@@ -116,16 +118,18 @@ const BirthBallGuideCard = () => {
           </div>
 
           {/* Play Button */}
-          <div 
-            className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
-              isHovered ? 'opacity-100' : 'opacity-0'
-            }`}
-            onClick={() => setShowVideoModal(true)}
-          >
-            <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors cursor-pointer">
-              <Play className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" />
+          {hasStartedProgram && (
+            <div 
+              className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
+                isHovered ? 'opacity-100' : 'opacity-0'
+              }`}
+              onClick={() => setShowInlinePlayer(true)}
+            >
+              <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors cursor-pointer">
+                <Play className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" />
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Rating */}
           <div className="absolute top-4 right-4 flex items-center gap-1 bg-black/40 rounded-full px-2 py-1">
@@ -185,8 +189,15 @@ const BirthBallGuideCard = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-2">
-            <Button className="w-full" size="lg" onClick={() => setShowVideoModal(true)}>
-              Start Ball Workouts
+            <Button 
+              className="w-full" 
+              size="lg" 
+              onClick={() => {
+                setHasStartedProgram(true);
+                setShowInlinePlayer(true);
+              }}
+            >
+              {hasStartedProgram ? 'Continue Ball Workouts' : 'Start Ball Workouts'}
             </Button>
             <Button variant="outline" className="w-full" asChild>
               <a href={BIRTHBALL_GUIDE_URL} target="_blank" rel="noopener noreferrer">
@@ -197,11 +208,13 @@ const BirthBallGuideCard = () => {
         </div>
       </Card>
 
-      <VideoModal
-        isOpen={showVideoModal}
-        onClose={() => setShowVideoModal(false)}
+      <InlineVideoPlayer
+        isOpen={showInlinePlayer}
+        onClose={() => setShowInlinePlayer(false)}
         videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
-        title="Ultimate Birth Ball Guide Preview"
+        title="Ultimate Birth Ball Guide"
+        isMinimized={isPlayerMinimized}
+        onToggleMinimize={() => setIsPlayerMinimized(!isPlayerMinimized)}
       />
     </>
   );
