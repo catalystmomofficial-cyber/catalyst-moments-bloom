@@ -31,15 +31,13 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.from('affiliate_applications').insert({
-        user_id: user.id,
-        full_name: formData.fullName,
-        social_media_handles: formData.socialMediaHandles,
-        audience_size: formData.audienceSize,
-        experience: formData.experience,
-        motivation: formData.motivation,
-        status: 'pending',
-        email: user.email
+      const { error } = await supabase.rpc('create_affiliate_application', {
+        full_name_param: formData.fullName,
+        social_media_param: formData.socialMediaHandles,
+        audience_size_param: formData.audienceSize,
+        experience_param: formData.experience,
+        motivation_param: formData.motivation,
+        email_param: user.email
       });
 
       if (error) throw error;

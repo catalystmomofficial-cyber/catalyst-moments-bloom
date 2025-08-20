@@ -29,16 +29,13 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
   const checkAffiliateStatus = async () => {
     try {
       const { data, error } = await supabase
-        .from('affiliate_applications')
-        .select('status')
-        .eq('user_id', user?.id)
-        .single();
+        .rpc('get_affiliate_status', { user_id_param: user?.id });
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         console.error('Error checking affiliate status:', error);
         setAffiliateStatus('none');
-      } else if (data) {
-        setAffiliateStatus(data.status);
+      } else if (data && data.length > 0) {
+        setAffiliateStatus(data[0].status);
       } else {
         setAffiliateStatus('none');
       }
