@@ -28,7 +28,7 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
 
   const checkAffiliateStatus = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .rpc('get_affiliate_status', { user_id_param: user?.id });
 
       if (error) {

@@ -27,6 +27,7 @@ import { useContentFilter } from '@/hooks/useContentFilter';
 import JourneySelector from '@/components/onboarding/JourneySelector';
 import SubscriptionStatus from '@/components/subscription/SubscriptionStatus';
 import SubscriptionButton from '@/components/subscription/SubscriptionButton';
+import AffiliateButton from '@/components/affiliate/AffiliateButton';
 
 interface StatsCardProps {
   title: string;
@@ -79,6 +80,7 @@ const Dashboard = () => {
                 </p>
               </div>
               <div className="mt-4 md:mt-0 flex items-center space-x-2">
+                <AffiliateButton variant="outline" size="sm" />
                 <span className="text-sm text-muted-foreground">Current stage:</span>
                 <Dialog open={isJourneySelectorOpen} onOpenChange={setIsJourneySelectorOpen}>
                   <DialogTrigger asChild>

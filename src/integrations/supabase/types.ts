@@ -501,7 +501,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_affiliate_application: {
+        Args: {
+          audience_size_param: string
+          email_param: string
+          experience_param: string
+          full_name_param: string
+          motivation_param: string
+          social_media_param: string
+        }
+        Returns: undefined
+      }
+      get_affiliate_status: {
+        Args: { user_id_param: string }
+        Returns: {
+          status: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

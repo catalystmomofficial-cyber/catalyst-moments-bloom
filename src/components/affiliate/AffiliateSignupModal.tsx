@@ -31,7 +31,7 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.rpc('create_affiliate_application', {
+      const { error } = await (supabase as any).rpc('create_affiliate_application', {
         full_name_param: formData.fullName,
         social_media_param: formData.socialMediaHandles,
         audience_size_param: formData.audienceSize,
