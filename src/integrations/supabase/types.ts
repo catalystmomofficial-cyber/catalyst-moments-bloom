@@ -7,13 +7,55 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.12 (cd3cf9e)"
   }
   public: {
     Tables: {
+      affiliate_applications: {
+        Row: {
+          audience_size: string | null
+          created_at: string
+          email: string
+          experience: string | null
+          full_name: string
+          id: string
+          motivation: string
+          social_media_handles: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          audience_size?: string | null
+          created_at?: string
+          email: string
+          experience?: string | null
+          full_name: string
+          id?: string
+          motivation: string
+          social_media_handles?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          audience_size?: string | null
+          created_at?: string
+          email?: string
+          experience?: string | null
+          full_name?: string
+          id?: string
+          motivation?: string
+          social_media_handles?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       course_content: {
         Row: {
           calories_target: number | null
