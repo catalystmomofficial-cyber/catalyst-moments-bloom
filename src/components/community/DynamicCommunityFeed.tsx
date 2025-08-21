@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Heart, MessageCircle, Share2, Trophy, Star, Flame, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
-import { usePointsSystem } from '@/hooks/usePointsSystem';
 import { groupDiscussions, moderationPrompts, activityMessages, type CommunityPost } from './GroupDiscussions';
 
 interface DynamicCommunityFeedProps {
@@ -166,7 +165,6 @@ const CommunityPost = ({ post }: { post: CommunityPost }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [localLikes, setLocalLikes] = useState(post.likes);
   const { subscribed, setShowCheckoutModal } = useAuth();
-  const { awardPoints } = usePointsSystem();
 
   const handleLike = () => {
     if (!subscribed) {
@@ -175,11 +173,6 @@ const CommunityPost = ({ post }: { post: CommunityPost }) => {
     }
     setIsLiked(!isLiked);
     setLocalLikes(prev => isLiked ? prev - 1 : prev + 1);
-    
-    // Award points for liking a post
-    if (!isLiked) {
-      awardPoints(5, 'like_post', 'Liked a community post');
-    }
   };
 
   const handleComment = () => {
@@ -187,8 +180,6 @@ const CommunityPost = ({ post }: { post: CommunityPost }) => {
       setShowCheckoutModal(true);
       return;
     }
-    // Award points for commenting
-    awardPoints(5, 'comment_post', 'Commented on a community post');
     // Comment functionality would go here
   };
 

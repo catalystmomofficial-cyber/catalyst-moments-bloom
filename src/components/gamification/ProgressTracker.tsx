@@ -3,8 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Star, Target, Flame, Award, Zap } from 'lucide-react';
-import { PointsDisplay } from '@/components/points/PointsDisplay';
-import { usePointsSystem } from '@/hooks/usePointsSystem';
 
 interface Achievement {
   id: string;
@@ -22,8 +20,10 @@ interface ProgressTrackerProps {
 }
 
 export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
+  const [totalPoints, setTotalPoints] = useState(125);
   const [streak, setStreak] = useState(5);
-  const { userPoints, awardPoints } = usePointsSystem();
+  const [level, setLevel] = useState(2);
+  const [nextLevelPoints, setNextLevelPoints] = useState(200);
 
   const achievements: Achievement[] = [
     {
@@ -117,14 +117,32 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
     return titles[Math.min(level - 1, titles.length - 1)] || 'Wellness Legend';
   };
 
+  const progressToNextLevel = (totalPoints / nextLevelPoints) * 100;
+
   return (
     <div className="space-y-6">
-      {/* Use the new PointsDisplay component */}
-      <PointsDisplay />
-      
-      {/* Streak Card */}
-      <Card>
-        <CardContent className="p-4">
+      {/* Level & Points Overview */}
+      <Card className="bg-gradient-to-r from-primary/10 to-accent/10">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-primary" />
+              <span>Level {level} - {getLevelTitle(level)}</span>
+            </div>
+            <Badge variant="secondary" className="bg-primary/20">
+              {totalPoints} points
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <div className="flex justify-between text-sm mb-2">
+              <span>Progress to Level {level + 1}</span>
+              <span>{totalPoints}/{nextLevelPoints} points</span>
+            </div>
+            <Progress value={progressToNextLevel} className="h-3" />
+          </div>
+          
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Flame className="w-4 h-4 text-orange-500" />
@@ -227,38 +245,26 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3">
-            <button 
-              onClick={() => awardPoints(5, 'mood_log', 'Logged daily mood')}
-              className="p-3 bg-muted/30 rounded-lg text-center hover:bg-muted/50 transition-colors"
-            >
+            <div className="p-3 bg-muted/30 rounded-lg text-center">
               <div className="text-2xl mb-1">📝</div>
               <div className="text-xs font-medium">Log Today's Mood</div>
               <div className="text-xs text-muted-foreground">+5 points</div>
-            </button>
-            <button 
-              onClick={() => awardPoints(10, 'community_post', 'Shared experience with community')}
-              className="p-3 bg-muted/30 rounded-lg text-center hover:bg-muted/50 transition-colors"
-            >
+            </div>
+            <div className="p-3 bg-muted/30 rounded-lg text-center">
               <div className="text-2xl mb-1">💬</div>
               <div className="text-xs font-medium">Share Experience</div>
               <div className="text-xs text-muted-foreground">+10 points</div>
-            </button>
-            <button 
-              onClick={() => awardPoints(15, 'workout_complete', 'Completed workout session')}
-              className="p-3 bg-muted/30 rounded-lg text-center hover:bg-muted/50 transition-colors"
-            >
+            </div>
+            <div className="p-3 bg-muted/30 rounded-lg text-center">
               <div className="text-2xl mb-1">🏃‍♀️</div>
               <div className="text-xs font-medium">Complete Workout</div>
               <div className="text-xs text-muted-foreground">+15 points</div>
-            </button>
-            <button 
-              onClick={() => awardPoints(20, 'help_community', 'Helped another mom')}
-              className="p-3 bg-muted/30 rounded-lg text-center hover:bg-muted/50 transition-colors"
-            >
+            </div>
+            <div className="p-3 bg-muted/30 rounded-lg text-center">
               <div className="text-2xl mb-1">👥</div>
               <div className="text-xs font-medium">Help Another Mom</div>
               <div className="text-xs text-muted-foreground">+20 points</div>
-            </button>
+            </div>
           </div>
         </CardContent>
       </Card>
