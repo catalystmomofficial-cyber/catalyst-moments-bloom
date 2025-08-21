@@ -291,6 +291,72 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          action_url: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          title: string
+          type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      points_transactions: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          points: number
+          source: string
+          transaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          points: number
+          source: string
+          transaction_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          points?: number
+          source?: string
+          transaction_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           bio: string | null
@@ -316,6 +382,36 @@ export type Database = {
           display_name?: string | null
           id?: string
           motherhood_stage?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth_key: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auth_key: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auth_key?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh_key?: string
           updated_at?: string
           user_id?: string
         }
@@ -442,6 +538,33 @@ export type Database = {
           },
         ]
       }
+      user_points: {
+        Row: {
+          created_at: string
+          id: string
+          level: number
+          total_points: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          level?: number
+          total_points?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          level?: number
+          total_points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       weekly_checkins: {
         Row: {
           chest_measurement: number | null
@@ -501,6 +624,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_user_points: {
+        Args: {
+          p_description?: string
+          p_points: number
+          p_source: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       create_affiliate_application: {
         Args: {
           audience_size_param: string
@@ -516,6 +648,18 @@ export type Database = {
         Args: { user_id_param: string }
         Returns: {
           status: string
+        }[]
+      }
+      redeem_points_for_discount: {
+        Args: {
+          p_description?: string
+          p_points_to_redeem: number
+          p_user_id: string
+        }
+        Returns: {
+          discount_percentage: number
+          remaining_points: number
+          success: boolean
         }[]
       }
     }
