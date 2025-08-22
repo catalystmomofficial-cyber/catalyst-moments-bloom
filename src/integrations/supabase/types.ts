@@ -662,6 +662,10 @@ export type Database = {
           success: boolean
         }[]
       }
+      user_has_active_subscription: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
