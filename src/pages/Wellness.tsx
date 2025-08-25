@@ -130,10 +130,17 @@ const Wellness = () => {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold">Journey-Specific Resources</h2>
-                    <Badge variant="outline" className="flex items-center gap-1">
-                      <Sparkles className="h-3 w-3" />
-                      {currentJourney || 'General'} - {currentStage || 'All Stages'}
-                    </Badge>
+                    <div className="flex items-center gap-3">
+                      <Badge variant="outline" className="flex items-center gap-1">
+                        <Sparkles className="h-3 w-3" />
+                        {currentJourney || 'General'} - {currentStage || 'All Stages'}
+                      </Badge>
+                      <Link to="/wellness/resources">
+                        <Button variant="outline" size="sm">
+                          View All Resources
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
