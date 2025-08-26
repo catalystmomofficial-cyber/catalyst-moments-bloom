@@ -30,7 +30,7 @@ const CTASection = ({ onWatchDemo }: CTASectionProps) => {
             variant="outline" 
             size="lg" 
             className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5"
-            onClick={() => onWatchDemo("https://www.youtube.com/embed/j7f75AzL9Hg", "Catalyst Mom Demo")}
+            onClick={() => onWatchDemo("/demo-video.mp4", "Catalyst Mom Demo")}
           >
             <Play className="mr-2 h-4 w-4" />
             Watch Demo
