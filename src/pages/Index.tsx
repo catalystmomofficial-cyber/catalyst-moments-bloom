@@ -8,7 +8,7 @@ import BenefitsSection from '@/components/home/BenefitsSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import CTASection from '@/components/home/CTASection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
-import DemoVideoPlayer from '@/components/ui/demo-video-player';
+
 
 const Index = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
@@ -26,20 +26,6 @@ const Index = () => {
       {/* Hero Section */}
       <HeroSection onWatchVideo={openVideoModal} />
       
-      {/* Demo Video Section */}
-      <section className="py-20 bg-gradient-to-br from-background to-muted">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
-              See CatalystMom in Action
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Watch how our platform transforms your wellness journey with personalized coaching and AI-powered insights.
-            </p>
-          </div>
-          <DemoVideoPlayer />
-        </div>
-      </section>
 
       {/* Food Calorie Checker Feature */}
       <div className="container mx-auto py-12">
