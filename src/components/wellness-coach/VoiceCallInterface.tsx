@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Phone, PhoneCall, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
@@ -19,8 +19,13 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
   
   const [callState, setCallState] = useState<'idle' | 'connecting' | 'connected' | 'ended'>('idle');
   const [isMuted, setIsMuted] = useState(false);
-  const [callId, setCallId] = useState<string | null>(null);
   const [callDuration, setCallDuration] = useState(0);
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const [isCoachSpeaking, setIsCoachSpeaking] = useState(false);
+  
+  const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -38,37 +43,70 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Initialize Web Speech API
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
+        }
+        if (finalTranscript) {
+          setTranscript(finalTranscript);
+          handleUserSpeech(finalTranscript);
+        }
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
+
   const startVoiceCall = async () => {
     try {
       setCallState('connecting');
       
-      // Gather user context for personalized conversation
-      const userContext = {
-        display_name: profile?.display_name || user?.email?.split('@')[0],
-        motherhood_stage: profile?.motherhood_stage,
-        latestMoodScore: wellnessEntries?.[0]?.mood_score,
-        latestEnergyLevel: wellnessEntries?.[0]?.energy_level,
-        sleepQuality: wellnessEntries?.[0]?.mood_score, // Using mood_score as fallback
-        stressLevel: wellnessEntries?.[0]?.stress_level
-      };
-
-      const { data, error } = await supabase.functions.invoke('bland-voice-agent', {
-        body: {
-          action: 'start_call',
-          userProfile: userContext,
-          wellnessData: {
-            latestMoodScore: wellnessEntries?.[0]?.mood_score,
-            latestEnergyLevel: wellnessEntries?.[0]?.energy_level,
-            recentEntries: wellnessEntries?.slice(0, 3)
-          }
-        }
-      });
-
-      if (error) throw error;
-
-      setCallId(data.call_id);
+      // Check for microphone permission
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      
       setCallState('connected');
       setCallDuration(0);
+      
+      // Start with a personalized greeting
+      const displayName = profile?.display_name || user?.email?.split('@')[0] || 'there';
+      const stage = profile?.motherhood_stage || 'general';
+      
+      let greeting = `Hi ${displayName}! I'm Dr. Maya, your wellness coach. `;
+      
+      if (stage === 'pregnant') {
+        greeting += "How are you feeling with your pregnancy today?";
+      } else if (stage.includes('postpartum')) {
+        greeting += "How are you adjusting to life with your little one?";
+      } else if (stage === 'ttc') {
+        greeting += "How are you feeling about your TTC journey today?";
+      } else {
+        greeting += "How can I support your wellness today?";
+      }
+      
+      // Start listening for speech
+      setTimeout(() => {
+        speakMessage(greeting);
+        startListening();
+      }, 1000);
       
       toast({
         title: "Voice Call Started",
@@ -79,41 +117,116 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       setCallState('idle');
       toast({
         title: "Call Failed",
-        description: "Unable to start voice call. Please try again.",
+        description: "Please allow microphone access to start the call.",
         variant: "destructive",
       });
     }
   };
 
-  const endVoiceCall = async () => {
+  const handleUserSpeech = async (speechText: string) => {
+    if (!speechText.trim()) return;
+    
+    setTranscript('');
+    stopListening();
+    
     try {
-      if (callId) {
-        await supabase.functions.invoke('bland-voice-agent', {
-          body: {
-            action: 'end_call',
-            callId
-          }
-        });
-      }
-      
-      setCallState('ended');
-      setTimeout(() => {
-        setCallState('idle');
-        setCallId(null);
-        setCallDuration(0);
-        onClose();
-      }, 2000);
-      
-      toast({
-        title: "Call Ended",
-        description: "Thank you for talking with Dr. Maya!",
+      // Generate AI response
+      const userContext = {
+        display_name: profile?.display_name || user?.email?.split('@')[0],
+        motherhood_stage: profile?.motherhood_stage,
+        wellnessEntries: wellnessEntries?.slice(0, 5)
+      };
+
+      const { data, error } = await supabase.functions.invoke('ai-wellness-chat', {
+        body: {
+          message: speechText,
+          userContext,
+          conversationHistory: []
+        }
       });
+
+      if (error) throw error;
+      
+      // Speak the AI response
+      speakMessage(data.response);
+      
     } catch (error) {
-      console.error('Error ending call:', error);
-      setCallState('idle');
-      setCallId(null);
-      onClose();
+      console.error('Error generating response:', error);
+      speakMessage("I'm sorry, I didn't catch that. Could you please try again?");
     }
+  };
+
+  const speakMessage = (text: string) => {
+    if ('speechSynthesis' in window) {
+      setIsCoachSpeaking(true);
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1.1;
+      utterance.volume = 1;
+      
+      // Try to use a female voice
+      const voices = speechSynthesis.getVoices();
+      const femaleVoice = voices.find(voice => 
+        voice.name.includes('Female') || 
+        voice.name.includes('Samantha') ||
+        voice.name.includes('Victoria') ||
+        voice.name.includes('Karen')
+      );
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+      }
+
+      utterance.onend = () => {
+        setIsCoachSpeaking(false);
+        // Resume listening after coach finishes speaking
+        setTimeout(() => {
+          if (callState === 'connected') {
+            startListening();
+          }
+        }, 500);
+      };
+
+      speechSynthesis.speak(utterance);
+      synthRef.current = utterance;
+    }
+  };
+
+  const startListening = () => {
+    if (recognitionRef.current && !isListening && !isCoachSpeaking) {
+      setIsListening(true);
+      recognitionRef.current.start();
+    }
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current && isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  };
+
+  const endVoiceCall = () => {
+    // Stop all speech and recognition
+    stopListening();
+    if (synthRef.current) {
+      speechSynthesis.cancel();
+    }
+    
+    setCallState('ended');
+    setIsCoachSpeaking(false);
+    setTranscript('');
+    
+    setTimeout(() => {
+      setCallState('idle');
+      setCallDuration(0);
+      onClose();
+    }, 2000);
+    
+    toast({
+      title: "Call Ended",
+      description: "Thank you for talking with Dr. Maya!",
+    });
   };
 
   if (!isOpen) return null;
@@ -159,9 +272,28 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
                 <div className="space-y-2">
                   <p className="text-sm text-green-600 font-medium">Connected</p>
                   <p className="text-lg font-mono">{formatDuration(callDuration)}</p>
-                  <div className="flex justify-center">
-                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                  <div className="flex justify-center items-center gap-2">
+                    {isCoachSpeaking ? (
+                      <div className="flex items-center gap-1">
+                        <div className="w-1 h-4 bg-blue-500 rounded-full animate-pulse" />
+                        <div className="w-1 h-6 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
+                        <div className="w-1 h-5 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                        <span className="text-xs text-blue-600 ml-2">Dr. Maya speaking...</span>
+                      </div>
+                    ) : isListening ? (
+                      <div className="flex items-center gap-1">
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                        <span className="text-xs text-red-600">Listening...</span>
+                      </div>
+                    ) : (
+                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                    )}
                   </div>
+                  {transcript && (
+                    <div className="text-xs text-muted-foreground italic">
+                      "{transcript}"
+                    </div>
+                  )}
                 </div>
               )}
               
@@ -197,10 +329,17 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
                   <Button
                     variant="outline"
                     size="lg"
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="rounded-full w-12 h-12"
+                    onClick={() => {
+                      if (isListening) {
+                        stopListening();
+                      } else {
+                        startListening();
+                      }
+                      setIsMuted(!isMuted);
+                    }}
+                    className={`rounded-full w-12 h-12 ${isListening ? 'bg-red-100 border-red-300' : ''}`}
                   >
-                    {isMuted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                    {isListening ? <Mic className="h-5 w-5 text-red-600" /> : <MicOff className="h-5 w-5" />}
                   </Button>
                   
                   <Button
@@ -232,8 +371,14 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
             )}
 
             {callState === 'connected' && (
-              <div className="text-xs text-muted-foreground">
-                <p>Dr. Maya can hear you clearly. Speak naturally!</p>
+              <div className="text-xs text-muted-foreground space-y-1">
+                {isCoachSpeaking ? (
+                  <p>Dr. Maya is speaking... Please listen.</p>
+                ) : isListening ? (
+                  <p>Dr. Maya is listening. Speak naturally!</p>
+                ) : (
+                  <p>Tap the microphone to speak with Dr. Maya</p>
+                )}
               </div>
             )}
           </div>
