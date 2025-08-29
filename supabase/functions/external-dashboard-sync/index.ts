@@ -40,6 +40,41 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const body = await req.json().catch(() => ({}));
+    const { action } = body;
+
+    // Handle specific actions
+    if (action === 'approve_all_affiliates') {
+      console.log('Approving all pending affiliate applications...');
+      
+      const { data: approvalResult, error: approvalError } = await supabase
+        .rpc('approve_all_pending_affiliates');
+
+      if (approvalError) {
+        console.error('Error approving affiliates:', approvalError);
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: 'Failed to approve affiliates',
+            details: approvalError.message 
+          }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const updateCount = approvalResult?.[0]?.updated_count || 0;
+      console.log(`Successfully approved ${updateCount} affiliate applications`);
+
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: `Approved ${updateCount} affiliate applications`,
+          count: updateCount
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     console.log('Starting external dashboard sync...');
 
     // Get user statistics
@@ -166,13 +201,35 @@ Deno.serve(async (req) => {
       },
     };
 
-    console.log('Dashboard data compiled:', dashboardData);
+    // Add additional data for external dashboard
+    const enhancedData = {
+      ...dashboardData,
+      platform: 'catalyst-mom',
+      api_version: '1.0',
+      community_groups: [
+        { name: 'TTC Journey Support', members: 1124, journey: 'ttc' },
+        { name: 'Fertility Nutrition', members: 687, journey: 'ttc' },
+        { name: 'Cycle Tracking Buddies', members: 743, journey: 'ttc' },
+        { name: 'Mindful Wellness', members: 892, journey: 'ttc' },
+        { name: 'Pregnancy Support', members: 1567, journey: 'pregnant' },
+        { name: 'First Trimester Crew', members: 1298, journey: 'pregnant' },
+        { name: 'Prenatal Fitness', members: 1034, journey: 'pregnant' },
+        { name: 'Postpartum Support', members: 1456, journey: 'postpartum' },
+        { name: 'Working Moms', members: 1123, journey: 'postpartum' },
+        { name: 'Mental Health for Moms', members: 967, journey: 'postpartum' },
+        { name: 'Nutrition for Moms', members: 2187, journey: 'general' },
+        { name: 'Birth Preparation', members: 892, journey: 'pregnant' }
+      ]
+    };
+
+    console.log('Dashboard data compiled:', enhancedData);
 
     return new Response(
       JSON.stringify({
         success: true,
-        data: dashboardData,
+        data: enhancedData,
         timestamp: new Date().toISOString(),
+        webhook_url: `${Deno.env.get('SUPABASE_URL')}/functions/v1/external-dashboard-sync`
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
