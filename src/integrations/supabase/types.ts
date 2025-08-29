@@ -725,12 +725,6 @@ export type Database = {
         }
         Returns: undefined
       }
-      approve_all_pending_affiliates: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          updated_count: number
-        }[]
-      }
       create_affiliate_application: {
         Args: {
           audience_size_param: string
