@@ -25,6 +25,13 @@ const PremiumGuard = ({ children, fallback }: PremiumGuardProps) => {
         return;
       }
 
+      // Allow admin user (you) to access everything
+      if (user.email === 'catalystmom@outlook.com') {
+        setIsPremium(true);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error } = await supabase
           .from('premium_users')
