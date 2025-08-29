@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWellnessData } from "@/hooks/useWellnessData";
 import { generateWellnessResponse, getQuickSuggestions } from './WellnessCoachIntelligence';
+import VoiceCallInterface from './VoiceCallInterface';
+import { supabase } from '@/integrations/supabase/client';
 
 interface WellnessCoachModalProps {
   isOpen: boolean;
@@ -46,6 +48,7 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
   const [currentCoach, setCurrentCoach] = useState<Coach | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [showVoiceInterface, setShowVoiceInterface] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
@@ -158,14 +161,41 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     }, 500);
   };
 
-  const generateSmartResponse = (userMessage: string) => {
+  const generateSmartResponse = async (userMessage: string) => {
     const displayName = profile?.display_name || user?.email?.split('@')[0] || 'there';
-    const response = generateWellnessResponse(userMessage, profile?.motherhood_stage as any || null, { 
-      ...profile, 
+    
+    // Enhanced user context for AI
+    const userContext = {
+      ...profile,
       displayName,
-      wellnessEntries 
-    });
-    addCoachMessage(response);
+      wellnessEntries,
+      recentMoods: wellnessEntries?.slice(0, 5)?.map(e => e.mood_score),
+      avgEnergyLevel: wellnessEntries?.slice(0, 7)?.reduce((sum, e) => sum + (e.energy_level || 0), 0) / Math.max(wellnessEntries?.slice(0, 7)?.length || 1, 1),
+      sleepPatterns: wellnessEntries?.slice(0, 7)?.map(e => e.mood_score), // Using mood_score as fallback
+      stressLevels: wellnessEntries?.slice(0, 7)?.map(e => e.energy_level), // Using energy_level as fallback
+      commonConcerns: wellnessEntries?.slice(0, 10)?.map(e => e.notes).filter(Boolean),
+      conversationHistory: messages.slice(-5) // Last 5 messages for context
+    };
+
+    try {
+      // Use AI-powered response generation
+      const { data, error } = await supabase.functions.invoke('ai-wellness-chat', {
+        body: {
+          message: userMessage,
+          userContext,
+          conversationHistory: messages.slice(-10)
+        }
+      });
+
+      if (error) throw error;
+      
+      addCoachMessage(data.response);
+    } catch (error) {
+      console.error('Error generating AI response:', error);
+      // Fallback to local intelligence
+      const response = generateWellnessResponse(userMessage, profile?.motherhood_stage as any || null, userContext);
+      addCoachMessage(response);
+    }
   };
 
   const handleWorkoutRequest = (stage: string) => {
@@ -283,7 +313,12 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
               <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                 <Video className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowVoiceInterface(true)}
+              >
                 <Phone className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onClose}>
@@ -429,6 +464,12 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
           </div>
         </div>
       </DialogContent>
+      
+      {/* Voice Call Interface */}
+      <VoiceCallInterface 
+        isOpen={showVoiceInterface} 
+        onClose={() => setShowVoiceInterface(false)} 
+      />
     </Dialog>
   );
 };

@@ -17,11 +17,34 @@ serve(async (req) => {
       throw new Error('BLAND_API_KEY not configured');
     }
 
-    const { action, phone_number, callId } = await req.json();
+    const { action, callId, userProfile, wellnessData } = await req.json();
 
     switch (action) {
       case 'start_call':
-        // Start a new call
+        // Create personalized task based on user profile and wellness data
+        let personalizedTask = "You are Dr. Maya, a warm and empathetic wellness coach specializing in maternal health. ";
+        
+        if (userProfile?.motherhood_stage === 'pregnant') {
+          personalizedTask += "The user is currently pregnant. Focus on pregnancy wellness, safe exercises, nutrition during pregnancy, and emotional support. ";
+        } else if (userProfile?.motherhood_stage === 'postpartum') {
+          personalizedTask += "The user is in the postpartum period. Focus on recovery, postpartum wellness, managing fatigue, and adjusting to life with a new baby. ";
+        } else if (userProfile?.motherhood_stage === 'ttc') {
+          personalizedTask += "The user is trying to conceive. Focus on fertility wellness, stress management, nutrition for fertility, and emotional support during the TTC journey. ";
+        } else {
+          personalizedTask += "Focus on general maternal wellness, stress management, nutrition, and fitness. ";
+        }
+
+        if (wellnessData?.latestMoodScore && wellnessData.latestMoodScore < 5) {
+          personalizedTask += "The user has reported low mood recently - be extra supportive and ask about their emotional wellbeing. ";
+        }
+        
+        if (wellnessData?.latestEnergyLevel && wellnessData.latestEnergyLevel < 5) {
+          personalizedTask += "The user has reported low energy levels - discuss ways to boost energy naturally. ";
+        }
+
+        personalizedTask += `The user's name is ${userProfile?.display_name || 'there'}. Be encouraging, ask follow-up questions, and provide actionable wellness advice. Keep the conversation natural and flowing. Don't mention this is an AI call.`;
+
+        // Start a new call without requiring phone number
         const callResponse = await fetch('https://api.bland.ai/v1/calls', {
           method: 'POST',
           headers: {
@@ -29,15 +52,17 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            phone_number: phone_number,
-            task: "You are Dr. Maya, a warm and empathetic wellness coach specializing in maternal health. Provide personalized wellness guidance, be encouraging and supportive. Ask about their wellness goals and current challenges. Keep the conversation natural and flowing.",
+            phone_number: null, // Start web-based call
+            task: personalizedTask,
             voice: "maya",
             model: "enhanced",
-            max_duration: 10,
+            max_duration: 15,
             answered_by_enabled: true,
-            wait_for_greeting: true,
+            wait_for_greeting: false,
             record: true,
-            language: "en"
+            language: "en",
+            reduce_latency: true,
+            start_time: new Date().toISOString()
           }),
         });
 
