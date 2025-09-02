@@ -142,11 +142,7 @@ const Community = () => {
                     </CardHeader>
                   </Card>
                 ) : (
-                  <SubscriptionPrompt 
-                    title="Join the Conversation"
-                    description="Subscribe to post and interact with our amazing community of moms."
-                    action="Subscribe to Post"
-                  />
+                  <SubscriptionPrompt />
                 )}
                 
                 <div className="flex space-x-2 overflow-x-auto pb-2">

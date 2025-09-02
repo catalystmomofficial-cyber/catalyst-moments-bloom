@@ -25,7 +25,7 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    const stripeKey = Deno.env.get("Strip key");
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
       logStep("ERROR: STRIPE_SECRET_KEY not found");
       throw new Error("STRIPE_SECRET_KEY is not configured");
@@ -54,7 +54,14 @@ serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: [
         {
-          price: "price_1Rt3QMCNwyQa1NiQDwHF5QDw",
+          price_data: {
+            currency: "usd",
+            product_data: { 
+              name: "Premium Access - Catalyst Mom Wellness" 
+            },
+            unit_amount: 4999, // $49.99
+            recurring: { interval: "month" },
+          },
           quantity: 1,
         },
       ],
