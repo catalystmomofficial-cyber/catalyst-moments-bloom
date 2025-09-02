@@ -34,7 +34,7 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
           <SubscriptionPrompt 
             title="Premium Access Required"
             description="Upgrade to premium to access this feature and unlock all content."
-            action="Start Free Trial"
+            action="Subscribe Now"
           />
         </div>
       </div>

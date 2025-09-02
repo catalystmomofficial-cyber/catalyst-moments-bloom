@@ -79,7 +79,6 @@ serve(async (req) => {
       success_url: `${req.headers.get("origin")}/dashboard?success=true`,
       cancel_url: `${req.headers.get("origin")}/dashboard?canceled=true`,
       allow_promotion_codes: true,
-      trial_period_days: 7, // 7-day free trial
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
