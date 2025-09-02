@@ -32,62 +32,62 @@ const SubscriptionPrompt = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background to-muted/20">
-      <Card className="w-full max-w-md">
-        <CardContent className="p-8 text-center">
-          <div className="mb-6">
-            <Crown className="h-16 w-16 mx-auto text-primary mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Complete Your Journey</h2>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <Card className="w-full max-w-lg border-0 shadow-none">
+        <CardContent className="p-8 text-center space-y-6">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-semibold text-foreground">Complete Your Journey</h1>
             <p className="text-muted-foreground">
               Unlock full access to all programs and features
             </p>
           </div>
 
-          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6 mb-6">
-            <div className="flex items-center justify-center mb-4">
-              <Crown className="h-6 w-6 text-primary mr-2" />
-              <h3 className="text-xl font-semibold">Premium Access</h3>
-            </div>
-            
-            <div className="text-3xl font-bold mb-4">$49.99/month</div>
-            
-            <div className="space-y-3 text-left">
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                <span className="text-sm">All workout programs & courses</span>
+          <Card className="border border-border/50">
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Crown className="h-5 w-5 text-primary" />
+                <h3 className="font-medium">Premium Access</h3>
               </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                <span className="text-sm">Personalized nutrition plans</span>
+              
+              <div className="text-3xl font-bold">$49.99/month</div>
+              
+              <div className="space-y-2 text-sm text-left">
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>All workout programs & courses</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Personalized nutrition plans</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Access to dedicated Wellness Coach</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Progress tracking & analytics</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Community support</span>
+                </div>
               </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                <span className="text-sm">Access to dedicated Wellness Coach</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                <span className="text-sm">Progress tracking & analytics</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                <span className="text-sm">Community support</span>
-              </div>
-            </div>
-          </div>
 
-          <Button 
-            onClick={handleSubscribe}
-            size="lg" 
-            className="w-full mb-4 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
-          >
-            <Crown className="h-5 w-5 mr-2" />
-            Join 1,000+ moms on their wellness journey
-          </Button>
+              <Button 
+                onClick={handleSubscribe}
+                className="w-full mt-4"
+                size="lg"
+              >
+                Join 1,000+ moms on their wellness journey
+              </Button>
+            </CardContent>
+          </Card>
 
           <Button 
             onClick={handleContinueBrowsing}
             variant="ghost" 
-            className="w-full text-muted-foreground"
+            className="text-muted-foreground hover:text-foreground"
           >
             Continue browsing
           </Button>
