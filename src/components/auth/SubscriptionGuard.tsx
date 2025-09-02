@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDevBypass } from "@/hooks/useDevBypass";
+import SubscriptionPrompt from "@/components/subscription/SubscriptionPrompt";
 
 interface SubscriptionGuardProps {
   children: ReactNode;
@@ -25,9 +26,19 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
       return <>{fallback}</>;
     }
     
-    console.log('[SUBSCRIPTION_GUARD] No fallback, returning null');
-    // Subscription required for access
-    return null;
+    console.log('[SUBSCRIPTION_GUARD] No fallback, showing subscription prompt');
+    // Show subscription prompt instead of blank screen
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          <SubscriptionPrompt 
+            title="Premium Access Required"
+            description="Upgrade to premium to access this feature and unlock all content."
+            action="Start Free Trial"
+          />
+        </div>
+      </div>
+    );
   }
   
   console.log('[SUBSCRIPTION_GUARD] Subscribed, allowing access');
