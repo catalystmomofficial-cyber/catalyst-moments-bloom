@@ -20,8 +20,8 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
       return <>{fallback}</>;
     }
     
-    // Checkout temporarily disabled in editor: allow access
-    return <>{children}</>;
+    // Subscription required for access
+    return null;
   }
   
   return <>{children}</>;
