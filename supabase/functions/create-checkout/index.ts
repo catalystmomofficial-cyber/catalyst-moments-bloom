@@ -25,6 +25,9 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
+    // Get request body for plan type
+    const { plan } = await req.json().catch(() => ({ plan: 'monthly' }));
+
     const stripeKey = Deno.env.get("Strip key");
     if (!stripeKey) {
       logStep("ERROR: Strip key not found");
@@ -49,12 +52,19 @@ serve(async (req) => {
       logStep("No existing customer found");
     }
 
+    // Select price based on plan type
+    const priceId = plan === 'yearly' 
+      ? "price_1S37l4CNwyQa1NiQ8VJgSwzB"  // Yearly price
+      : "price_1S37f0CNwyQa1NiQGrIsA3fg"; // Monthly price (default)
+    
+    logStep("Selected price", { plan, priceId });
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [
         {
-          price: "price_1S37f0CNwyQa1NiQGrIsA3fg",
+          price: priceId,
           quantity: 1,
         },
       ],

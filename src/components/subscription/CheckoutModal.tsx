@@ -77,6 +77,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 variant="default" 
                 size="lg" 
                 className="w-full rounded-full"
+                plan="monthly"
               />
             </CardContent>
           </Card>
@@ -123,6 +124,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 variant="default" 
                 size="lg" 
                 className="w-full rounded-full bg-green-600 hover:bg-green-700"
+                plan="yearly"
               />
             </CardContent>
           </Card>

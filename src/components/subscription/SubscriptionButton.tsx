@@ -9,13 +9,15 @@ interface SubscriptionButtonProps {
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
   children?: React.ReactNode;
+  plan?: 'monthly' | 'yearly';
 }
 
 const SubscriptionButton = ({ 
   variant = "default", 
   size = "default", 
   className,
-  children = "Subscribe Now"
+  children = "Subscribe Now",
+  plan = "monthly"
 }: SubscriptionButtonProps) => {
   const { user } = useAuth();
 
@@ -26,7 +28,9 @@ const SubscriptionButton = ({
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke('create-checkout');
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { plan }
+      });
       
       if (error) {
         console.error('Checkout error:', error);
