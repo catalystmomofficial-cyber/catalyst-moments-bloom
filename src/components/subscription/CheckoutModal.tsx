@@ -61,7 +61,15 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Community access</span>
+                  <span className="text-sm">Calorie checker</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="h-4 w-4 text-green-500 mr-3" />
+                  <span className="text-sm">Personalized nutrition plans</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="h-4 w-4 text-green-500 mr-3" />
+                  <span className="text-sm">Community support</span>
                 </div>
               </div>
               
@@ -99,7 +107,15 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Community access</span>
+                  <span className="text-sm">Calorie checker</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="h-4 w-4 text-green-500 mr-3" />
+                  <span className="text-sm">Personalized nutrition plans</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="h-4 w-4 text-green-500 mr-3" />
+                  <span className="text-sm">Community support</span>
                 </div>
               </div>
               
