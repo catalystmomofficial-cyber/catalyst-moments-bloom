@@ -3,11 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Check, Crown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-const SubscriptionPrompt = () => {
-  const navigate = useNavigate();
+interface SubscriptionPromptProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
+const SubscriptionPrompt = ({ isOpen, onClose }: SubscriptionPromptProps) => {
   const handleSubscribe = async () => {
     try {
       const { data, error } = await supabase.functions.invoke('create-checkout');
@@ -27,20 +30,17 @@ const SubscriptionPrompt = () => {
     }
   };
 
-  const handleContinueBrowsing = () => {
-    navigate('/');
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-lg border-0 shadow-none">
-        <CardContent className="p-8 text-center space-y-6">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold text-foreground">Complete Your Journey</h1>
-            <p className="text-muted-foreground">
-              Unlock full access to all programs and features
-            </p>
-          </div>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="text-center">Complete Your Journey</DialogTitle>
+        </DialogHeader>
+        
+        <div className="space-y-6">
+          <p className="text-muted-foreground text-center">
+            Unlock full access to all programs and features
+          </p>
 
           <Card className="border border-border/50">
             <CardContent className="p-6 space-y-4">
@@ -49,9 +49,9 @@ const SubscriptionPrompt = () => {
                 <h3 className="font-medium">Premium Access</h3>
               </div>
               
-              <div className="text-3xl font-bold">$49.99/month</div>
+              <div className="text-3xl font-bold text-center">$49.99/month</div>
               
-              <div className="space-y-2 text-sm text-left">
+              <div className="space-y-2 text-sm">
                 <div className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
                   <span>All workout programs & courses</span>
@@ -85,15 +85,15 @@ const SubscriptionPrompt = () => {
           </Card>
 
           <Button 
-            onClick={handleContinueBrowsing}
+            onClick={onClose}
             variant="ghost" 
-            className="text-muted-foreground hover:text-foreground"
+            className="w-full text-muted-foreground hover:text-foreground"
           >
             Continue browsing
           </Button>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

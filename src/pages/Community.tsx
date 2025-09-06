@@ -20,6 +20,7 @@ import EnhancedEventsList from '@/components/community/EnhancedEventsList';
 
 const Community = () => {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
   const { user, profile, subscribed } = useAuth();
   
   const isTTC = profile?.motherhood_stage === 'ttc';
@@ -142,8 +143,20 @@ const Community = () => {
                     </CardHeader>
                   </Card>
                 ) : (
-                  <SubscriptionPrompt />
+                  <Card className="text-center p-8">
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">Join our community to share and connect with other moms</p>
+                      <Button onClick={() => setShowSubscriptionPrompt(true)}>
+                        Unlock Community Access
+                      </Button>
+                    </CardContent>
+                  </Card>
                 )}
+                
+                <SubscriptionPrompt 
+                  isOpen={showSubscriptionPrompt} 
+                  onClose={() => setShowSubscriptionPrompt(false)} 
+                />
                 
                 <div className="flex space-x-2 overflow-x-auto pb-2">
                   {(isTTC ? 
