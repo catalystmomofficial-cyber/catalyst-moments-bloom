@@ -209,35 +209,51 @@ const Community = () => {
           </TabsContent>
           
           <TabsContent value="groups">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              {stageGroups.map((g) => (
-                <Card key={g.slug} className="overflow-hidden transition hover:shadow-md hover-scale">
-                  <div className="h-32 w-full overflow-hidden">
-                    <img
-                      src={g.coverImage}
-                      alt={`${g.name} cover`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1503264116251-35a269479413'; }}
-                    />
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold leading-tight">{g.name}</h3>
-                      <Badge variant="secondary" className="text-xs capitalize">{g.badge || g.journey}</Badge>
+            {subscribed ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                {stageGroups.map((g) => (
+                  <Card key={g.slug} className="overflow-hidden transition hover:shadow-md hover-scale">
+                    <div className="h-32 w-full overflow-hidden">
+                      <img
+                        src={g.coverImage}
+                        alt={`${g.name} cover`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1503264116251-35a269479413'; }}
+                      />
                     </div>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{g.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        <Users className="h-3 w-3 inline mr-1" /> {g.memberCount.toLocaleString()} members
-                      </span>
-                      <Button asChild size="sm" variant="outline">
-                        <Link to={`/community/groups/${g.slug}`}>View Group</Link>
-                      </Button>
-                    </div>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-semibold leading-tight">{g.name}</h3>
+                        <Badge variant="secondary" className="text-xs capitalize">{g.badge || g.journey}</Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{g.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">
+                          <Users className="h-3 w-3 inline mr-1" /> {g.memberCount.toLocaleString()} members
+                        </span>
+                        <Button asChild size="sm" variant="outline">
+                          <Link to={`/community/groups/${g.slug}`}>View Group</Link>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Card className="max-w-md mx-auto">
+                  <CardContent className="p-8">
+                    <h3 className="text-lg font-semibold mb-2">Access Premium Groups</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Join our exclusive community groups to connect with other moms on similar journeys
+                    </p>
+                    <Button onClick={() => setShowSubscriptionPrompt(true)}>
+                      Unlock Groups
+                    </Button>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+              </div>
+            )}
           </TabsContent>
           
           <TabsContent value="events">
