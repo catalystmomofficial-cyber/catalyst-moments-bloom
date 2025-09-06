@@ -31,10 +31,14 @@ export const AffiliateApplicationManager: React.FC = () => {
 
   const fetchApplications = async () => {
     try {
+      console.log('[ADMIN] Fetching affiliate applications...');
       const { data, error } = await supabase.rpc('get_all_affiliate_applications');
+      
+      console.log('[ADMIN] RPC response:', { data, error });
       
       if (error) throw error;
       
+      console.log('[ADMIN] Applications loaded:', data?.length || 0);
       setApplications(data || []);
     } catch (error) {
       console.error('Error fetching applications:', error);
