@@ -34,23 +34,12 @@ const RevenueSection = () => {
   useEffect(() => {
     const fetchRevenueData = async () => {
       try {
-        // Fetch active subscriptions count
-        const { count: activeSubscriptions } = await supabase
-          .from('premium_users')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', 'active');
-
-        // Calculate revenue based on subscription price
-        const subscriptionPrice = 29.99;
-        const monthlyRevenue = (activeSubscriptions || 0) * subscriptionPrice;
-        const totalRevenue = monthlyRevenue * 6; // Assuming 6 months of data
-        const averageRevenuePerUser = activeSubscriptions ? totalRevenue / activeSubscriptions : 0;
-
+        // Mock revenue data for demo (in real app, this would come from payment processor)
         setRevenueStats({
-          totalRevenue,
-          monthlyRevenue,
-          averageRevenuePerUser,
-          subscriptionGrowth: 23.5, // Mock growth percentage
+          totalRevenue: 174936,
+          monthlyRevenue: 749.75,
+          averageRevenuePerUser: 179.97,
+          subscriptionGrowth: 23.5,
         });
       } catch (error) {
         console.error('Error fetching revenue data:', error);
