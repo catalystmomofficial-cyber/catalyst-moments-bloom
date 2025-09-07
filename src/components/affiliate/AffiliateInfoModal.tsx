@@ -15,48 +15,18 @@ const AffiliateInfoModal = ({ isOpen, onClose, onApply }: AffiliateInfoModalProp
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            Join Our Affiliate Program
+          <DialogTitle className="text-2xl font-bold text-center">
+            Join Catalyst Moms—Empower Moms, <span className="text-2xl font-bold" style={{fontSize: '24px'}}>Earn $35 Per Sale!</span>
           </DialogTitle>
-          <p className="text-center text-muted-foreground text-lg mt-2">
-            Earn while empowering other moms on their wellness journey
-          </p>
         </DialogHeader>
         
         <div className="space-y-6 mt-6">
-          <h3 className="text-xl font-semibold text-center">Why Become an Affiliate?</h3>
+          <p className="text-center text-muted-foreground">
+            Why Join? Help moms glow up, share real stories, and earn a flat $35 every time someone signs up or buys—subscription, course, or meal plan. Get templates, reels, and links to make it easy.
+          </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <DollarSign className="h-12 w-12 mx-auto text-primary mb-3" />
-                <h4 className="font-semibold mb-2">Earn Up to 30%</h4>
-                <p className="text-sm text-muted-foreground">Commission on all referrals</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <Heart className="h-12 w-12 mx-auto text-primary mb-3" />
-                <h4 className="font-semibold mb-2">Help Other Moms</h4>
-                <p className="text-sm text-muted-foreground">Support their wellness journey</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center">
-              <CardContent className="pt-6">
-                <FileText className="h-12 w-12 mx-auto text-primary mb-3" />
-                <h4 className="font-semibold mb-2">Marketing Support</h4>
-                <p className="text-sm text-muted-foreground">Templates and resources provided</p>
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-              Maybe Later
-            </Button>
-            <Button onClick={onApply} className="flex-1">
+          <div className="flex justify-center pt-4">
+            <Button onClick={onApply} className="w-full max-w-md">
               Apply to Become an Affiliate
             </Button>
           </div>

@@ -84,37 +84,15 @@ export default function Affiliate() {
       <PageLayout>
         <div className="container mx-auto py-8 space-y-8">
           <div className="text-center space-y-6 max-w-2xl mx-auto">
-            <h1 className="text-4xl font-bold">Join Our Affiliate Program</h1>
-            <p className="text-xl text-muted-foreground">
-              Earn while empowering other moms on their wellness journey
-            </p>
+            <h1 className="text-2xl font-bold">
+              Join Catalyst Moms—Empower Moms, <span className="text-2xl font-bold" style={{fontSize: '24px'}}>Earn $35 Per Sale!</span>
+            </h1>
             
             <Card className="p-8">
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold">Why Become an Affiliate?</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center space-y-2">
-                    <div className="p-3 bg-green-500/10 rounded-full w-fit mx-auto">
-                      <DollarSign className="h-6 w-6 text-green-600" />
-                    </div>
-                    <h3 className="font-semibold">Earn $35-per sale, every time</h3>
-                    <p className="text-sm text-muted-foreground">Commission on all referrals</p>
-                  </div>
-                  <div className="text-center space-y-2">
-                    <div className="p-3 bg-blue-500/10 rounded-full w-fit mx-auto">
-                      <Users className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <h3 className="font-semibold">Help Other Moms</h3>
-                    <p className="text-sm text-muted-foreground">Support their wellness journey</p>
-                  </div>
-                  <div className="text-center space-y-2">
-                    <div className="p-3 bg-purple-500/10 rounded-full w-fit mx-auto">
-                      <Star className="h-6 w-6 text-purple-600" />
-                    </div>
-                    <h3 className="font-semibold">Marketing Support</h3>
-                    <p className="text-sm text-muted-foreground">Templates and resources provided</p>
-                  </div>
-                </div>
+                <p className="text-center text-muted-foreground">
+                  Why Join? Help moms glow up, share real stories, and earn a flat $35 every time someone signs up or buys—subscription, course, or meal plan. Get templates, reels, and links to make it easy.
+                </p>
                 
                 <Button 
                   size="lg" 
