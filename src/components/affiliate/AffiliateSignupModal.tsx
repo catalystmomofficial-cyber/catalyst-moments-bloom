@@ -27,7 +27,16 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    
+    if (!user) {
+      toast({
+        title: "Please sign up first",
+        description: "You need to create an account before applying for the affiliate program.",
+        variant: "destructive",
+        duration: 5000,
+      });
+      return;
+    }
 
     setIsLoading(true);
     try {

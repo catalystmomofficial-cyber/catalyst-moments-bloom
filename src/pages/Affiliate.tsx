@@ -28,10 +28,20 @@ export default function Affiliate() {
   useEffect(() => {
     if (user) {
       checkAffiliateStatus();
+    } else {
+      // For guest users, set status to 'none' to show signup form
+      setAffiliateStatus('none');
+      setIsLoading(false);
     }
   }, [user]);
 
   const checkAffiliateStatus = async () => {
+    if (!user) {
+      setAffiliateStatus('none');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await (supabase as any)
         .rpc('get_affiliate_status', { user_id_param: user?.id });
