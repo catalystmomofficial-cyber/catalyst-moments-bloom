@@ -52,22 +52,35 @@ serve(async (req) => {
       logStep("No existing customer found");
     }
 
-    // Select price based on plan type
-    const priceId = plan === 'yearly' 
-      ? "price_1S37l4CNwyQa1NiQ8VJgSwzB"  // Yearly price
-      : "price_1S37f0CNwyQa1NiQGrIsA3fg"; // Monthly price (default)
+    // Create line items with dynamic pricing (works in both test and live mode)
+    const lineItems = plan === 'yearly' ? [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: { name: "Premium Subscription - Yearly" },
+          unit_amount: 11999, // $119.99 in cents
+          recurring: { interval: "year" },
+        },
+        quantity: 1,
+      }
+    ] : [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: { name: "Premium Subscription - Monthly" },
+          unit_amount: 1499, // $14.99 in cents
+          recurring: { interval: "month" },
+        },
+        quantity: 1,
+      }
+    ];
     
-    logStep("Selected price", { plan, priceId });
+    logStep("Created line items", { plan, amount: plan === 'yearly' ? 11999 : 1499 });
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items: lineItems,
       mode: "subscription",
       success_url: `${req.headers.get("origin")}/dashboard?success=true`,
       cancel_url: `${req.headers.get("origin")}/dashboard?cancelled=true`,
