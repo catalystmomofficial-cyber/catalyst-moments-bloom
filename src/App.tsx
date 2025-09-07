@@ -43,6 +43,7 @@ import Affiliate from "./pages/Affiliate";
 import Admin from "./pages/Admin";
 import SelfCareGuide from "./pages/wellness/SelfCareGuide";
 import WellnessResources from "./pages/wellness/WellnessResources";
+import WellnessArticle from "./pages/wellness/WellnessArticle";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -170,6 +171,11 @@ function AppContent() {
         <Route path="/wellness/resources" element={
           <PrivateRoute>
             <WellnessResources />
+          </PrivateRoute>
+        } />
+        <Route path="/wellness/article/:id" element={
+          <PrivateRoute>
+            <WellnessArticle />
           </PrivateRoute>
         } />
         

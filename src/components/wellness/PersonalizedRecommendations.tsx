@@ -155,7 +155,11 @@ export const PersonalizedRecommendations = () => {
                       ? `Mood tracker noticed something - ${insight.toLowerCase()}, here's what might help!`
                       : insight.includes('energy')
                       ? `Energy levels looking ${insight.includes('high') ? 'amazing' : 'low'} - ${insight.toLowerCase()}, let's boost it!`
-                      : insight}
+                      : insight.includes('stress')
+                      ? `Stress hitting ${insight.includes('high') ? 'hard' : 'light'} today - ${insight.toLowerCase()}, quick fix coming up!`
+                      : insight.includes('sleep')
+                      ? `Sleep game ${insight.includes('good') ? 'strong' : 'needs work'} - ${insight.toLowerCase()}, let's optimize!`
+                      : `${insight} - let's make it happen, +points incoming!`}
                   </p>
                 </div>
               ))}

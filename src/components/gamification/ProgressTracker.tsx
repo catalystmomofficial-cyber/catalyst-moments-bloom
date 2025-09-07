@@ -26,6 +26,22 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
   });
   const [streak, setStreak] = useState(() => {
     const saved = localStorage.getItem('userStreak');
+    const lastActive = localStorage.getItem('lastActiveDate');
+    const today = new Date().toDateString();
+    
+    // Check if user skipped a day - if so, reset streak
+    if (lastActive && lastActive !== today) {
+      const lastActiveDate = new Date(lastActive);
+      const todayDate = new Date(today);
+      const daysDiff = Math.floor((todayDate.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysDiff > 1) {
+        // Skipped a day, reset streak
+        localStorage.setItem('userStreak', '0');
+        return 0;
+      }
+    }
+    
     return saved ? parseInt(saved) : 0;
   });
   const [level, setLevel] = useState(() => {
@@ -187,7 +203,9 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
             <div className="flex items-center gap-2">
               <Flame className={`w-4 h-4 ${streak > 0 ? 'text-orange-500' : 'text-gray-400'}`} />
               <span className="text-sm font-medium">{streak} day streak</span>
-              {streak > 0 && <span>🔥</span>}
+              {streak > 0 && (
+                <span style={{ fontSize: `${Math.min(12 + streak * 2, 24)}px` }}>🔥</span>
+              )}
             </div>
             <Badge variant="outline" className="text-xs">
               Keep it up! 💪
