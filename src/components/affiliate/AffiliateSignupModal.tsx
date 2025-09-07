@@ -28,16 +28,6 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user) {
-      toast({
-        title: "Please sign up first",
-        description: "You need to create an account before applying for the affiliate program.",
-        variant: "destructive",
-        duration: 5000,
-      });
-      return;
-    }
-
     setIsLoading(true);
     try {
       const { error } = await (supabase as any).rpc('create_affiliate_application', {
@@ -46,7 +36,7 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
         audience_size_param: formData.audienceSize,
         experience_param: formData.experience,
         motivation_param: formData.motivation,
-        email_param: user.email
+        email_param: user?.email || 'guest@example.com'
       });
 
       if (error) throw error;
@@ -152,11 +142,8 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
             />
           </div>
           
-          <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading} className="flex-1">
+          <div className="pt-4">
+            <Button type="submit" disabled={isLoading} className="w-full">
               {isLoading ? 'Submitting...' : 'Submit Application'}
             </Button>
           </div>
@@ -167,7 +154,7 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
           <ul className="space-y-1">
             <li>• We'll review your application within 24 hours</li>
             <li>• If approved, you'll receive an email with your affiliate dashboard access</li>
-            <li>• Start earning up to 30% commission on referrals!</li>
+            <li>• Start earning <span className="font-bold text-lg">$35 per sale</span> for every subscription, course, or meal plan!</li>
           </ul>
         </div>
       </DialogContent>
