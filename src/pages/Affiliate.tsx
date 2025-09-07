@@ -195,7 +195,7 @@ export default function Affiliate() {
       <div className="container mx-auto py-8 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-2xl font-bold" style={{fontSize: '24px'}}>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-catalyst-copper to-catalyst-gold bg-clip-text text-transparent drop-shadow-sm" style={{fontSize: '24px'}}>
             Earn $35 Per Sale—Every Subscription, Course, or Meal Plan!
           </h1>
         </div>
