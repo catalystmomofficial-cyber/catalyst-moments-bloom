@@ -1,7 +1,8 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDevBypass } from "@/hooks/useDevBypass";
 import CheckoutModal from "@/components/subscription/CheckoutModal";
+import { useSearchParams } from "react-router-dom";
 
 interface SubscriptionGuardProps {
   children: ReactNode;
@@ -9,9 +10,18 @@ interface SubscriptionGuardProps {
 }
 
 const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
-  const { subscribed } = useAuth();
+  const { subscribed, checkSubscription } = useAuth();
   const bypass = useDevBypass();
   const [showModal, setShowModal] = useState(false);
+  const [searchParams] = useSearchParams();
+  
+  // Check if user just completed a successful payment
+  useEffect(() => {
+    if (searchParams.get('success') === 'true') {
+      console.log('[SUBSCRIPTION_GUARD] Success redirect detected, refreshing subscription status');
+      checkSubscription();
+    }
+  }, [searchParams, checkSubscription]);
   
   console.log('[SUBSCRIPTION_GUARD] Subscription state:', { subscribed, bypass });
   
