@@ -78,9 +78,6 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
           <DialogTitle className="text-2xl font-bold text-center">
             Join Catalyst Moms—Empower Moms, <span className="text-2xl font-bold">Earn $35 Per Sale!</span>
           </DialogTitle>
-          <DialogDescription className="text-center">
-            Join our affiliate program and earn while empowering other moms on their wellness journey.
-          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
