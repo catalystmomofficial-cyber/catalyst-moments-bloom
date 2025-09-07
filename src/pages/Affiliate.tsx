@@ -17,7 +17,12 @@ import { DashboardCard } from "@/components/admin/DashboardCard";
 export default function Affiliate() {
   const { toast } = useToast();
   const { user } = useAuth();
-  const [referralCode] = useState("GLOW2024USER123");
+  const [referralCode] = useState(() => {
+    // Generate unique referral code: MOM + username/email prefix + 35, max 12 chars
+    const userId = user?.email?.split('@')[0] || user?.id?.slice(0, 4) || 'USER';
+    const prefix = userId.toUpperCase().slice(0, 5);
+    return `MOM${prefix}35`.slice(0, 12);
+  });
   const [earnings] = useState(8547.50);
   const [referrals] = useState(187);
   const [conversionRate] = useState(24.8);
@@ -71,7 +76,7 @@ export default function Affiliate() {
   };
 
   const copyReferralLink = () => {
-    const link = `https://glowandgo.app/signup?ref=${referralCode}`;
+    const link = `https://catalystmom.lovable.app/signup?ref=${referralCode}`;
     navigator.clipboard.writeText(link);
     toast({
       title: "Copied!",
@@ -190,16 +195,13 @@ export default function Affiliate() {
       <div className="container mx-auto py-8 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            Affiliate Dashboard
+          <h1 className="text-2xl font-bold" style={{fontSize: '24px'}}>
+            Earn $35 Per Sale—Every Subscription, Course, or Meal Plan!
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Earn while empowering others on their wellness journey
-          </p>
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <DashboardCard
             title="Total Earnings"
             value={`$${earnings.toLocaleString()}`}
@@ -218,16 +220,6 @@ export default function Affiliate() {
             delay={0.2}
           >
             <Users className="h-8 w-8 text-blue-500" />
-          </DashboardCard>
-          
-          <DashboardCard
-            title="Conversion Rate"
-            value={`${conversionRate}%`}
-            subtitle="Referral to sale rate"
-            colors={["#8B5CF6", "#A78BFA", "#C4B5FD"]}
-            delay={0.3}
-          >
-            <TrendingUp className="h-8 w-8 text-purple-500" />
           </DashboardCard>
         </div>
 
@@ -260,7 +252,7 @@ export default function Affiliate() {
                 </div>
                 <div className="flex gap-2">
                   <Input 
-                    value={`https://glowandgo.app/signup?ref=${referralCode}`} 
+                    value={`https://catalystmom.lovable.app/signup?ref=${referralCode}`} 
                     readOnly 
                     className="font-mono text-sm"
                   />
