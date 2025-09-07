@@ -76,10 +76,10 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-            Become an Affiliate
+          <DialogTitle className="text-2xl font-bold text-center">
+            Join Catalyst Moms—Empower Moms, <span className="text-2xl font-bold">Earn $35 Per Sale!</span>
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-center">
             Join our affiliate program and earn while empowering other moms on their wellness journey.
           </DialogDescription>
         </DialogHeader>
@@ -131,7 +131,7 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
           </div>
           
           <div>
-            <Label htmlFor="motivation">Why do you want to be a Catalyst Mom affiliate? *</Label>
+            <Label htmlFor="motivation">Which moms do you want to help first? *</Label>
             <Textarea
               id="motivation"
               placeholder="Share your story and why you're passionate about helping other moms..."

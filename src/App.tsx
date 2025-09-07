@@ -153,11 +153,7 @@ function AppContent() {
             <GlowAndGo />
           </PrivateRoute>
         } />
-        <Route path="/affiliate" element={
-          <PrivateRoute>
-            <Affiliate />
-          </PrivateRoute>
-        } />
+        <Route path="/affiliate" element={<Affiliate />} />
         <Route path="/admin" element={
           <PrivateRoute>
             <Admin />
