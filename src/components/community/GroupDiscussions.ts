@@ -21,11 +21,11 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Emma Rodriguez',
       badge: 'TTC 8 months',
       time: '2 hours ago',
-      content: 'Just got back from my fertility specialist appointment and feeling hopeful! She said my blood work looks great and recommended some lifestyle tweaks. Taking this one day at a time. Anyone else have good experiences with their fertility team?',
-      likes: 34,
-      comments: 18,
-      tags: ['TTC Support', 'Fertility Specialist', 'Hope'],
-      achievement: 'Community Helper'
+      content: 'Hey beautiful souls 💫 Just finished my morning yoga flow and honestly, starting my day with intention has been a game-changer for my TTC journey. Some days are harder than others, but I\'m learning to honor wherever I am in this process. Anyone else finding peace in morning rituals? Would love to hear what centering practices are helping you! ✨',
+      likes: 0,
+      comments: 0,
+      tags: ['TTC Support', 'Morning Rituals', 'Mindfulness'],
+      achievement: ''
     },
     {
       id: '2',
@@ -33,10 +33,10 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Sofia Lopez',
       badge: 'TTC 4 months',
       time: '5 hours ago',
-      content: 'Update: CD1 again today 😔 But trying to stay positive! Started the meditation series recommended here and it\'s helping with the emotional ups and downs. This community keeps me sane honestly. Love you all ❤️',
-      likes: 67,
-      comments: 23,
-      tags: ['TTC Journey', 'Self Care', 'Community Love'],
+      content: 'Authenticity moment: CD1 hit me hard today and I spent a good 20 minutes crying in my car after work 😢 But then I remembered something my therapist said - every emotion is valid and deserves space. Making myself chamomile tea and running a warm bath tonight. Sometimes the best thing we can do is just be gentle with ourselves. Sending love to anyone else having a tough day 💕',
+      likes: 0,
+      comments: 0,
+      tags: ['TTC Journey', 'Self Compassion', 'Real Talk'],
       isNew: true
     },
     {
@@ -45,12 +45,12 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Maya Kumar',
       badge: 'TTC Graduate',
       time: '1 day ago',
-      content: 'Wanted to share some hope with this beautiful community! After 14 months TTC, I got my BFP last week! 💕 Thank you all for the support - the cycle tracking tips and nutrition advice from here made such a difference. Baby dust to everyone! ✨',
+      content: 'I keep staring at this positive test in disbelief! After 14 months of hoping, charting, and so many disappointments, it finally happened 🌟 This community held me through the darkest moments when I wanted to give up. Your stories, your wisdom, your virtual hugs - they all mattered. To everyone still in the trenches: your time will come. I believe it with my whole heart ✨',
       image: 'https://images.unsplash.com/photo-1493217465235-252dd9c0d632',
-      likes: 189,
-      comments: 47,
-      tags: ['BFP', 'Success Story', 'Gratitude'],
-      achievement: 'Success Story'
+      likes: 0,
+      comments: 0,
+      tags: ['BFP', 'Success Story', 'Community Love'],
+      achievement: ''
     }
   ],
 
@@ -138,10 +138,10 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Jessica Smith',
       badge: '3 months postpartum',
       time: '2 hours ago',
-      content: 'Can we talk about how HARD breastfeeding is?? 😭 Everyone said it would be "natural" but we\'re still figuring it out. Seeing a lactation consultant tomorrow. Anyone else struggle with this? Need some mama solidarity right now.',
-      likes: 156,
-      comments: 42,
-      tags: ['Breastfeeding', 'Lactation Support', 'Real Talk'],
+      content: 'Raw honesty time: I\'m sitting here at 3 AM after another challenging feeding session, feeling like I\'m failing at this whole breastfeeding thing 😢 Everyone made it sound so natural and beautiful, but nobody warned me about the pain, the exhaustion, or feeling like my body isn\'t my own. My little one finally latched properly for 5 minutes today and I literally cried tears of joy. To any mama struggling - you\'re not alone. We\'re all figuring this out together 💗',
+      likes: 0,
+      comments: 0,
+      tags: ['Breastfeeding Struggles', 'Real Talk', 'Mama Support'],
       isNew: true
     },
     {
@@ -150,11 +150,11 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Maria Bonilla',
       badge: '8 months postpartum',
       time: '5 hours ago',
-      content: 'Postpartum recovery is NOT linear! Some days I feel like superwoman, others I can barely shower. Today was a shower day and I\'m celebrating! 🎉 Remember: healing takes time and that\'s perfectly normal.',
-      likes: 234,
-      comments: 58,
-      tags: ['Recovery', 'Healing Journey', 'Self Care'],
-      achievement: 'Recovery Warrior'
+      content: 'PSA for all the mamas: I managed to shower AND wash my hair today - practically felt like I won the lottery! 🎉 Some days my biggest accomplishment is keeping my little one fed and happy. Other days I tackle laundry, make dinner, and feel unstoppable. Both types of days are equally valid. Recovery isn\'t about bouncing back - it\'s about moving forward with grace and patience for yourself ✨',
+      likes: 0,
+      comments: 0,
+      tags: ['Self Care Wins', 'Recovery Reality', 'Small Victories'],
+      achievement: ''
     },
     {
       id: '3',
@@ -162,11 +162,11 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Tanya Kim',
       badge: '5 months postpartum',
       time: '1 day ago',
-      content: 'Finally did my first "real" workout yesterday - 20 minutes of gentle movement and stretching. My core is slowly coming back! Taking it one day at a time. Shoutout to the amazing physio resources in this community! 💪',
+      content: 'Movement milestone! Did 20 minutes of gentle stretching while baby napped and my body actually felt... good? 😍 For months I wondered if I\'d ever feel strong again. My core is slowly remembering what it\'s supposed to do, my back pain is lessening, and I\'m sleeping better. To any mama wondering if you\'ll ever feel like yourself - you will, just in a new way. Progress isn\'t always visible, but it\'s happening 💪',
       image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b',
-      likes: 89,
-      comments: 23,
-      tags: ['Postpartum Fitness', 'Core Recovery', 'Progress']
+      likes: 0,
+      comments: 0,
+      tags: ['Postpartum Movement', 'Body Recovery', 'Self Discovery']
     }
   ],
 
@@ -177,10 +177,10 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Amanda Miller',
       badge: 'Marketing Manager',
       time: '3 hours ago',
-      content: 'Pumping in the supply closet because the "lactation room" is actually just a bathroom with a chair 🙄 Anyone else dealing with less-than-ideal work conditions? We deserve better! Planning to talk to HR this week.',
-      likes: 178,
-      comments: 67,
-      tags: ['Pumping at Work', 'Workplace Rights', 'Advocacy'],
+      content: 'Currently pumping in my car because the "lactation room" at work is literally a storage closet with a folding chair 😤 I\'m done settling for spaces that make us feel like we\'re asking for too much. Tomorrow I\'m having a conversation with leadership about creating an actual supportive environment for nursing moms. We shouldn\'t have to choose between our careers and feeding our babies properly. Who else is ready to advocate for the workplace changes we deserve? 💪',
+      likes: 0,
+      comments: 0,
+      tags: ['Workplace Advocacy', 'Pumping Reality', 'Change Makers'],
       isNew: true
     },
     {
@@ -189,11 +189,11 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Carmen Lopez',
       badge: 'Teacher & Mom',
       time: '6 hours ago',
-      content: 'Sunday meal prep DONE! ✅ 4 hours of cooking but we\'re set for the week. Crockpot meals are my lifesaver - throw everything in before work, come home to dinner ready. Sharing my favorite recipes below! 👇',
+      content: 'Sunday ritual complete! 🙌 Spent 4 hours prepping meals for the week while my little ones "helped" (aka taste-tested everything). My crockpot is my MVP - throw in ingredients before school, come home to the smell of dinner ready. It\'s not always Instagram-perfect, but it\'s real life and it works. Sharing my go-to recipes that have saved my sanity on countless crazy weekdays! 👨‍🍳',
       image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136',
-      likes: 145,
-      comments: 34,
-      tags: ['Meal Prep', 'Time Management', 'Working Mom Hacks']
+      likes: 0,
+      comments: 0,
+      tags: ['Meal Prep Reality', 'Working Mom Life', 'Family Meals']
     },
     {
       id: '3',
@@ -201,11 +201,11 @@ export const groupDiscussions: Record<string, CommunityPost[]> = {
       name: 'Sarah Kim',
       badge: 'Software Engineer',
       time: '1 day ago',
-      content: 'Negotiated flexible hours with my manager today! 🎉 Will be working 7-3 instead of 9-5 so I can pick up my daughter from daycare. Sometimes you just have to ask. Don\'t be afraid to advocate for what you need!',
-      likes: 267,
-      comments: 45,
-      tags: ['Work Flexibility', 'Advocacy', 'Mom Wins'],
-      achievement: 'Work-Life Balance Champion'
+      content: 'Victory moment! After months of feeling torn between work deadlines and daycare pickup times, I finally asked my manager about flexible hours. Turns out, she was a working mom too and totally understood! Starting next week: 7 AM - 3 PM so I can pick up my daughter without that daily sprint across town 🏃‍♀️ Sometimes the answer is yes, but you have to be brave enough to ask the question first ✨',
+      likes: 0,
+      comments: 0,
+      tags: ['Work Life Balance', 'Flexible Hours', 'Mama Wins'],
+      achievement: ''
     }
   ],
 
@@ -298,51 +298,51 @@ export const moderationPrompts = [
 
 export const activityMessages = {
   'ttc-journey-support': [
-    '🎉 Maya just shared her BFP story - spreading hope!',
-    '💕 Emma completed her first fertility yoga session',
-    '🌟 New member Sofia joined our TTC support circle',
-    '❤️ 23 members loved Rachel\'s meditation tip',
-    '🔥 Weekly Q&A with fertility specialist starts in 1 hour!',
-    '⭐ 5 members earned their "Hope Keeper" badge today'
+    '🌟 Emma just started her mindful morning routine journey',
+    '💕 Sofia shared her authentic emotions about CD1 - so brave!',
+    '✨ Maya\'s BFP announcement brought tears of joy to our community',
+    '🧘‍♀️ 12 members joined today\'s fertility meditation circle',
+    '🌸 New member just joined our TTC support family',
+    '💫 Weekly hope and healing circle starting soon'
   ],
   'mental-health': [
-    '🌈 Kelly shared her breakthrough moment - so brave!',
-    '💪 Dr. Lisa is hosting a live support session tonight',
-    '✨ Nicole connected with a local therapist through our resources',
-    '❤️ 34 members joined today\'s mindfulness check-in',
-    '🤝 Virtual support circle starting in 30 minutes',
-    '🌟 Sarah earned her "Wellness Warrior" badge'
+    '🌈 Someone took their first brave step toward therapy today',
+    '💪 Virtual support session happening now - all welcome',
+    '✨ Beautiful breakthrough shared in our safe space',
+    '❤️ Mindfulness check-in bringing mamas together',
+    '🤝 Peer support circle creating real connections',
+    '🌟 Mental health resources helping families thrive'
   ],
   'postpartum-support': [
-    '🎉 Jessica celebrated her first full night of sleep!',
-    '💪 Maria completed her 4th week of gentle movement',
-    '🌟 Tanya shared her core recovery progress photos',
-    '❤️ 45 members loved today\'s breastfeeding support thread',
-    '🔥 Lactation consultant Q&A session tomorrow at 2 PM',
-    '⭐ 8 new moms joined our recovery support group'
+    '🎉 Jessica celebrated a successful breastfeeding session!',
+    '💪 Maria honored her body\'s healing journey today',
+    '🌟 Tanya shared her gentle movement progress',
+    '❤️ Breastfeeding support thread offering real help',
+    '🤱 Lactation support meeting tomorrow - join us!',
+    '⭐ New postpartum mamas finding their village here'
   ],
   'working-moms': [
-    '🎉 Amanda successfully advocated for a proper lactation room!',
-    '💪 Carmen shared her weekly meal prep masterclass',
-    '🌟 Sarah negotiated flexible work hours - inspiring!',
-    '❤️ 67 members loved today\'s childcare resource thread',
-    '🔥 Work-life balance workshop starts in 2 hours',
-    '⭐ Michelle earned her "Advocacy Champion" badge'
+    '🎉 Amanda is advocating for better workplace conditions!',
+    '💪 Carmen\'s meal prep wisdom helping busy families',
+    '🌟 Sarah secured flexible hours - showing it\'s possible!',
+    '❤️ Working mama support thread building community',
+    '🔥 Work-life balance strategies being shared now',
+    '⭐ Professional moms lifting each other up daily'
   ],
   'pregnancy-support': [
-    '🎉 Grace completed her hospital bag checklist!',
-    '💪 Emily started her third trimester birth prep class',
-    '🌟 Dr. Wong shared weekly pregnancy wellness tips',
-    '❤️ 28 members joined today\'s movement and stretch session',
-    '🔥 Birth preparation workshop this Saturday at 10 AM',
-    '⭐ 12 expecting moms joined our birth support group'
+    '🎉 Third trimester mama completed birth prep today!',
+    '💪 Pregnancy wellness tips being shared with love',
+    '🌟 Hospital bag wisdom from experienced mamas',
+    '❤️ Movement session bringing expecting moms together',
+    '🔥 Birth preparation class starts this weekend',
+    '⭐ Pregnant mamas finding community and support here'
   ],
   'nutrition-for-moms': [
-    '🎉 Rachel shared her famous smoothie pack recipe!',
-    '💪 Lauren\'s energy ball tutorial was a huge hit',
-    '🌟 Jennifer\'s "fed is best" post resonated with 445 moms',
-    '❤️ 67 members loved today\'s meal planning session',
-    '🔥 Family nutrition workshop starts in 1 hour',
-    '⭐ Amy earned her "Nutrition Champion" badge'
+    '🎉 Healthy family meal ideas shared with love!',
+    '💪 Real nutrition tips for busy mama life',
+    '🌟 "Fed is best" wisdom resonating with families',
+    '❤️ Meal planning session helping real families',
+    '🔥 Family nutrition workshop starting soon',
+    '⭐ Nutrition support helping mamas thrive daily'
   ]
 };

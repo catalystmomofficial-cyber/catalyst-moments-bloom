@@ -74,9 +74,9 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'First Steps',
       description: 'Complete your first workout',
       icon: <Zap className="w-4 h-4" />,
-      progress: 1,
+      progress: 0,
       maxProgress: 1,
-      completed: true,
+      completed: false,
       points: 10
     },
     {
@@ -84,7 +84,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Consistency Champion',
       description: 'Complete 7 days in a row',
       icon: <Flame className="w-4 h-4" />,
-      progress: 5,
+      progress: 0,
       maxProgress: 7,
       completed: false,
       points: 25
@@ -94,7 +94,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Community Helper',
       description: 'Help 5 other moms with advice',
       icon: <Star className="w-4 h-4" />,
-      progress: 3,
+      progress: 0,
       maxProgress: 5,
       completed: false,
       points: 20
@@ -104,7 +104,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Nutrition Guru',
       description: 'Log meals for 14 days',
       icon: <Target className="w-4 h-4" />,
-      progress: 8,
+      progress: 0,
       maxProgress: 14,
       completed: false,
       points: 30
@@ -114,7 +114,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Wellness Warrior',
       description: 'Complete 30 wellness activities',
       icon: <Award className="w-4 h-4" />,
-      progress: 12,
+      progress: 0,
       maxProgress: 30,
       completed: false,
       points: 50
@@ -124,28 +124,28 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
   const weeklyGoals = [
     {
       title: 'Complete 3 workouts',
-      progress: 2,
+      progress: 0,
       maxProgress: 3,
       icon: '💪',
       points: 20
     },
     {
       title: 'Log meals daily',
-      progress: 5,
+      progress: 0,
       maxProgress: 7,
       icon: '🍎',
       points: 25
     },
     {
       title: 'Track mood 5 times',
-      progress: 3,
+      progress: 0,
       maxProgress: 5,
       icon: '😊',
       points: 15
     },
     {
       title: 'Connect with community',
-      progress: 1,
+      progress: 0,
       maxProgress: 3,
       icon: '💬',
       points: 20
