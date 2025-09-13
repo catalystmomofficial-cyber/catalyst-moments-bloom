@@ -501,6 +501,18 @@ export type Database = {
         }
         Relationships: []
       }
+      "Strip balance": {
+        Row: {
+          attrs: Json | null
+        }
+        Insert: {
+          attrs?: Json | null
+        }
+        Update: {
+          attrs?: Json | null
+        }
+        Relationships: []
+      }
       subscribers: {
         Row: {
           created_at: string
@@ -645,6 +657,30 @@ export type Database = {
           level?: number
           total_points?: number
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      verification_codes: {
+        Row: {
+          code: string
+          created_at: string
+          expires_at: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expires_at: string
+          id?: never
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: never
           user_id?: string
         }
         Relationships: []
