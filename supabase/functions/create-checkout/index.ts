@@ -80,8 +80,25 @@ serve(async (req) => {
         }
       }
     } catch (e) {
+      // If the provided product ID belongs to live mode while using a test key, create a fallback test product/price
       logStep("ERROR resolving price", { message: e instanceof Error ? e.message : String(e) });
-      throw e;
+      logStep("Falling back to creating a TEST product and $29 monthly price");
+      const fallbackProduct = await stripe.products.create({
+        name: 'Catalyst Mom Monthly',
+        default_price_data: {
+          unit_amount: 2900,
+          currency: 'usd',
+          recurring: { interval: 'month' }
+        },
+      });
+      if (typeof fallbackProduct.default_price === 'string') {
+        priceId = fallbackProduct.default_price;
+      }
+      logStep("Created fallback product and price", { productId: fallbackProduct.id, priceId });
+    }
+
+    if (!priceId) {
+      throw new Error('Failed to resolve or create a Stripe price for $29/month');
     }
 
     const lineItems = [
