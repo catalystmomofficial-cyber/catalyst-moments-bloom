@@ -37,63 +37,29 @@ const Recipes = () => {
           </div>
         </div>
         
-        <Tabs defaultValue="journey" className="mb-8">
+        <Tabs defaultValue="plans" className="mb-8">
           <TabsList>
-            <TabsTrigger value="journey">Your Journey</TabsTrigger>
-            <TabsTrigger value="breakfast">Breakfast</TabsTrigger>
-            <TabsTrigger value="lunch">Lunch</TabsTrigger>
-            <TabsTrigger value="dinner">Dinner</TabsTrigger>
-            <TabsTrigger value="snacks">Snacks</TabsTrigger>
+            <TabsTrigger value="plans">Meal Plans</TabsTrigger>
             <TabsTrigger value="favorites">Favorites</TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="journey" className="mt-6">
-            <JourneySpecificRecipes recipes={recipes} />
+
+          <TabsContent value="plans" className="mt-6">
+            <JourneySpecificMealPlans mealPlans={mealPlans} />
           </TabsContent>
-          
-          <TabsContent value="breakfast">
-            <JourneySpecificRecipes 
-              recipes={recipes.filter(r => r.category === 'Breakfast')} 
-              overrideJourney={stageInfo?.journey as any}
-            />
-          </TabsContent>
-          
-          <TabsContent value="lunch">
-            <JourneySpecificRecipes 
-              recipes={recipes.filter(r => r.category === 'Lunch')} 
-              overrideJourney={stageInfo?.journey as any}
-            />
-          </TabsContent>
-          
-          <TabsContent value="dinner">
-            <JourneySpecificRecipes 
-              recipes={recipes.filter(r => r.category === 'Dinner')} 
-              overrideJourney={stageInfo?.journey as any}
-            />
-          </TabsContent>
-          
-          <TabsContent value="snacks">
-            <JourneySpecificRecipes 
-              recipes={recipes.filter(r => r.category === 'Snacks')} 
-              overrideJourney={stageInfo?.journey as any}
-            />
-          </TabsContent>
-          
+
           <TabsContent value="favorites">
             <div className="text-center py-8 border rounded-lg bg-muted/30">
               <Heart className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
               <h3 className="font-medium mb-1">Your Favorite Recipes</h3>
               <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                Save your favorite recipes for easy access. They'll appear here.
+                Save your favorite recipes to see them here.
               </p>
-              <Button>Browse All Recipes</Button>
+              <Button asChild>
+                <a href="/recipes">Browse Meal Plans</a>
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
-        
-        <div className="mb-8">
-          <JourneySpecificMealPlans mealPlans={mealPlans} />
-        </div>
 
       </div>
     </PageLayout>
