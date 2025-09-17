@@ -1,5 +1,4 @@
-
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,8 +7,6 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import PageLayout from "@/components/layout/PageLayout";
 import { LogIn, Loader2 } from "lucide-react";
-import Captcha, { CaptchaHandle } from "@/components/auth/Captcha";
-import { CAPTCHA_PROVIDER, CAPTCHA_SITE_KEY } from "@/config/captcha";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,20 +14,16 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const captchaRef = useRef<CaptchaHandle | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     
     try {
-      const captchaToken = captchaRef.current?.getToken() || undefined;
-      await login(email, password, captchaToken);
+      await login(email, password);
       navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to login");
-      // Reset captcha on error
-      captchaRef.current?.reset();
     }
   };
 
@@ -94,9 +87,6 @@ const Login = () => {
                     </>
                   )}
                 </Button>
-                <div className="mt-4">
-                  <Captcha ref={captchaRef} provider={CAPTCHA_PROVIDER} siteKey={CAPTCHA_SITE_KEY} />
-                </div>
               </div>
             </form>
           </CardContent>

@@ -26,8 +26,8 @@ interface AuthContextType {
   subscriptionEnd: string | null;
   showCheckoutModal: boolean;
   setShowCheckoutModal: (show: boolean) => void;
-  login: (email: string, password: string, captchaToken?: string) => Promise<void>;
-  register: (name: string, email: string, password: string, stage: MotherhoodStage, captchaToken?: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string, stage: MotherhoodStage) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: { display_name?: string; motherhood_stage?: string; bio?: string }) => Promise<void>;
   checkSubscription: () => Promise<void>;
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string, captchaToken?: string) => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
     
     try {
@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string, stage: MotherhoodStage, captchaToken?: string) => {
+  const register = async (name: string, email: string, password: string, stage: MotherhoodStage) => {
     setIsLoading(true);
     
     try {
@@ -152,7 +152,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
         options: {
           emailRedirectTo: redirectUrl,
-          // captchaToken, // Temporarily disabled for live deployment
           data: {
             name: name,
             full_name: name,
