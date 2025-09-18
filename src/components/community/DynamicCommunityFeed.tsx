@@ -177,27 +177,15 @@ const CommunityPost = ({ post }: { post: CommunityPost }) => {
   const { subscribed, setShowCheckoutModal } = useAuth();
 
   const handleLike = () => {
-    if (!subscribed) {
-      setShowCheckoutModal(true);
-      return;
-    }
     setIsLiked(!isLiked);
     setLocalLikes(prev => isLiked ? prev - 1 : prev + 1);
   };
 
   const handleComment = () => {
-    if (!subscribed) {
-      setShowCheckoutModal(true);
-      return;
-    }
     // Comment functionality would go here
   };
 
   const handleShare = () => {
-    if (!subscribed) {
-      setShowCheckoutModal(true);
-      return;
-    }
     // Share functionality would go here
   };
 

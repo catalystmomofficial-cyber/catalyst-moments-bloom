@@ -121,8 +121,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
-        // Temporarily disabled captcha for live deployment
-        // options: captchaToken ? { captchaToken } : undefined,
       });
 
       if (error) {

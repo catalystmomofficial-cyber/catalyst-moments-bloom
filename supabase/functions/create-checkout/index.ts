@@ -52,9 +52,9 @@ serve(async (req) => {
       logStep("No existing customer found");
     }
 
-    // Use existing live price ID for production
-    const priceId = "price_1S7xeRCNwyQa1NiQbqju7ts7"; // $29/month live price
-    logStep("Using live price", { priceId });
+    // Use the first available price from our list  
+    const priceId = "price_1S7xeRCNwyQa1NiQbqju7ts7"; // $29/month
+    logStep("Using price", { priceId });
 
     if (!priceId) {
       throw new Error('Failed to resolve or create a Stripe price for $29/month');
