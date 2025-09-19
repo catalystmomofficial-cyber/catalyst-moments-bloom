@@ -42,7 +42,7 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
+    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
@@ -80,7 +80,7 @@ serve(async (req) => {
       line_items: lineItems,
       mode: "subscription",
       success_url: `${origin}/dashboard?success=true`,
-      cancel_url: `${origin}/cancel`,
+      cancel_url: `${origin}/`,
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
