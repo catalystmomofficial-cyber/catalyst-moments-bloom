@@ -43,21 +43,23 @@ serve(async (req) => {
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
+    
+    // Check for existing customer
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
       logStep("Existing customer found", { customerId });
     } else {
-      logStep("No existing customer found");
+      logStep("No existing customer found, will create during checkout");
     }
 
-    // Use the first available price from our list  
+    // Use the price ID from your Stripe account
     const priceId = "price_1S7xeRCNwyQa1NiQbqju7ts7"; // $29/month
     logStep("Using price", { priceId });
 
     if (!priceId) {
-      throw new Error('Failed to resolve or create a Stripe price for $29/month');
+      throw new Error('Failed to resolve Stripe price ID');
     }
 
     const lineItems = [
