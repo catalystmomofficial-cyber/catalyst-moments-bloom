@@ -25,8 +25,8 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    // Get request body for price IDs (monthly and yearly)
-    const { monthly_price_id, yearly_price_id } = await req.json().catch(() => ({}));
+    // Get request body (kept for compatibility but not required)
+    await req.json().catch(() => ({}));
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
@@ -54,36 +54,15 @@ serve(async (req) => {
       logStep("No existing customer found, will create during checkout");
     }
 
-    // Build line items with both monthly and yearly options if provided
-    const lineItems = [];
+    // Use the $29/month price ID
+    const priceId = "price_1S7xeRCNwyQa1NiQbqju7ts7";
+    logStep("Using monthly price", { priceId });
+
+    const lineItems = [
+      { price: priceId, quantity: 1 }
+    ];
     
-    if (monthly_price_id) {
-      lineItems.push({ price: monthly_price_id, quantity: 1 });
-      logStep("Added monthly price", { monthly_price_id });
-    }
-    
-    if (yearly_price_id) {
-      lineItems.push({ price: yearly_price_id, quantity: 1 });
-      logStep("Added yearly price", { yearly_price_id });
-    }
-    
-    // Fallback: if no prices provided, use env or find first active recurring price
-    if (lineItems.length === 0) {
-      const fallbackPriceId = Deno.env.get('STRIPE_PRICE_ID');
-      if (fallbackPriceId) {
-        lineItems.push({ price: fallbackPriceId, quantity: 1 });
-        logStep("Using fallback price from env", { fallbackPriceId });
-      } else {
-        const prices = await stripe.prices.list({ active: true, type: 'recurring', limit: 1 });
-        if (prices.data.length === 0) {
-          throw new Error('No active recurring Stripe prices found. Pass monthly_price_id and yearly_price_id or set STRIPE_PRICE_ID');
-        }
-        lineItems.push({ price: prices.data[0].id, quantity: 1 });
-        logStep("Using first active recurring price", { priceId: prices.data[0].id });
-      }
-    }
-    
-    logStep("Created line items", { count: lineItems.length });
+    logStep("Created line items");
 
     // Build a reliable base URL for redirects
     const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
