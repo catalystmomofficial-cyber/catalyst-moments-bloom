@@ -8,6 +8,7 @@ import BenefitsSection from '@/components/home/BenefitsSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import CTASection from '@/components/home/CTASection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
+import SEO from '@/components/seo/SEO';
 
 
 const Index = () => {
@@ -23,6 +24,10 @@ const Index = () => {
 
   return (
     <PageLayout withPadding={false}>
+      <SEO 
+        title="Catalyst Mom – Wellness, Fitness & Nutrition for Moms"
+        description="Personalized workouts, meal plans, and community support for every stage of motherhood."
+      />
       {/* Hero Section */}
       <HeroSection onWatchVideo={openVideoModal} />
       
