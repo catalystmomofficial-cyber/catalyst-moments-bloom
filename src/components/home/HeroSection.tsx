@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link } from "react-router-dom";
 import { ArrowRight, Play } from "lucide-react";
-import WellnessCoachButton from "@/components/wellness-coach/WellnessCoachButton";
+import HomeWellnessCoachButton from "@/components/wellness-coach/HomeWellnessCoachButton";
 
 interface HeroSectionProps {
   onWatchVideo: (url: string, title: string) => void;
@@ -36,7 +36,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
                 </Link>
               </Button>
             </div>
-            <WellnessCoachButton variant="secondary" size="lg" className="mt-2" />
+            <HomeWellnessCoachButton variant="secondary" size="lg" className="mt-2" />
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="relative">

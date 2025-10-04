@@ -31,9 +31,9 @@ const Community = () => {
   const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
   
   const handleInteractionClick = (action: string) => {
-    if (!subscribed) {
-      setShowSubscriptionPrompt(true);
-    }
+    // Community is now open to all users - no subscription required for basic interactions
+    // Premium features are still gated
+    return;
   };
   
   return (
@@ -157,7 +157,6 @@ const Community = () => {
                     <Input 
                       placeholder="Share something with other moms..." 
                       onClick={() => handleInteractionClick('post')}
-                      readOnly={!subscribed}
                     />
                     <Button size="sm" onClick={() => handleInteractionClick('post')}>Post</Button>
                   </CardHeader>
