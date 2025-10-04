@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/common/ScrollToTop";
 import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
 import Index from "./pages/Index";
@@ -51,18 +51,17 @@ const queryClient = new QueryClient();
 
 function AppContent() {
   const { showCheckoutModal, setShowCheckoutModal } = useAuth();
-  const location = useLocation();
   
   return (
     <BrowserRouter>
       <Helmet>
         <title>Catalyst Mom | Wellness, Fitness & Nutrition</title>
         <meta name="description" content="Personalized wellness, fitness, and nutrition for moms. Join our community for workouts, meal plans, and support." />
-        <link rel="canonical" href={`${window.location.origin}${location.pathname}`} />
+        <link rel="canonical" href={window.location.href} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Catalyst Mom | Wellness, Fitness & Nutrition" />
         <meta property="og:description" content="Personalized wellness, fitness, and nutrition for moms." />
-        <meta property="og:url" content={`${window.location.origin}${location.pathname}`} />
+        <meta property="og:url" content={window.location.href} />
       </Helmet>
       <ScrollToTop />
       <Toaster />
