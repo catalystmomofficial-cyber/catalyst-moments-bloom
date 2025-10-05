@@ -41,10 +41,6 @@ const GroupDetail = () => {
   const isTTCGroup = group.journey === 'ttc';
 
   const handleJoin = () => {
-    if (!subscribed) {
-      setShowCheckoutModal(true);
-      return;
-    }
     setJoined((prev) => !prev);
     toast({
       title: joined ? 'Left group' : 'Joined group',

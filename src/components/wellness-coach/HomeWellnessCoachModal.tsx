@@ -2,13 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, Send, Sparkles } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { X, Send } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import coachPortrait from '@/assets/wellness-coach-portrait.jpg';
 
 interface HomeWellnessCoachModalProps {
   isOpen: boolean;
@@ -22,6 +23,8 @@ interface Message {
   timestamp: Date;
 }
 
+type ConversationState = 'initial' | 'awaiting_stage' | 'offering_resources' | 'general';
+
 const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -29,6 +32,9 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationState, setConversationState] = useState<ConversationState>('initial');
+  const [userStage, setUserStage] = useState<string>('');
+  const [userWeeks, setUserWeeks] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,23 +47,23 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
     if (isOpen && messages.length === 0) {
       setTimeout(() => {
         addCoachMessage(
-          "Hi there! 👋 I'm your Catalyst Mom wellness advisor!\n\n" +
-          "We support women through EVERY stage of motherhood:\n\n" +
-          "🌸 **TTC** - Fertility support & cycle tracking\n" +
-          "🤰 **Pregnancy** - Safe workouts & birth prep\n" +
-          "💪 **Postpartum** - Recovery & core rehab\n" +
-          "👶 **Toddler Moms** - Staying healthy & strong\n\n" +
-          "**What Makes Us Unique:**\n" +
-          "• Video courses from certified professionals\n" +
-          "• Evidence-based safe birth strategies\n" +
-          "• Stage-specific nutrition & fitness plans\n" +
-          "• Supportive community of moms\n" +
-          "• Expert-backed guidance\n\n" +
-          "What would you like to learn about? Ask me anything!"
+          "Hey girl! 💕\n\n" +
+          "It's like 2am and we're just chatting, no pressure! I'm here to help you figure out what you need.\n\n" +
+          "First things first - where are you at in your journey?\n\n" +
+          "Are you:\n" +
+          "• Trying to conceive (TTC)?\n" +
+          "• Pregnant?\n" +
+          "• Postpartum/new mom?\n" +
+          "• Already chasing a toddler around?\n\n" +
+          "Just tell me what stage you're in!"
         );
+        setConversationState('awaiting_stage');
       }, 500);
     } else if (!isOpen) {
       setMessages([]);
+      setConversationState('initial');
+      setUserStage('');
+      setUserWeeks('');
     }
   }, [isOpen]);
 
@@ -89,258 +95,114 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
     ]);
   };
 
-  const generateResponse = (userMessage: string) => {
-    const lowerMsg = userMessage.toLowerCase();
-
-    // TTC (Trying to Conceive) related
-    if (lowerMsg.includes('ttc') || lowerMsg.includes('trying to conceive') || lowerMsg.includes('fertility') || lowerMsg.includes('conceive') || lowerMsg.includes('ovulation')) {
-      return "Yes! We have comprehensive TTC support! 🌸\n\n" +
-        "**TTC Features:**\n" +
-        "• Cycle tracking and ovulation prediction\n" +
-        "• Fertility-supporting nutrition plans\n" +
-        "• TTC-safe workout routines\n" +
-        "• Stress management techniques\n" +
-        "• Community support from other women TTC\n" +
-        "• Educational resources on fertility optimization\n\n" +
-        "💚 FREE: Basic cycle tracking, community access, recipes\n" +
-        "💎 Premium: Personalized fertility plans, advanced analytics, expert consultations\n\n" +
-        "Ready to start your TTC journey with us?";
+  const getStageResponse = (stage: string, weeks: string) => {
+    const lowerStage = stage.toLowerCase();
+    
+    if (lowerStage.includes('ttc') || lowerStage.includes('trying') || lowerStage.includes('conceive')) {
+      return "Okay sis, TTC can be such a rollercoaster! 💕\n\n" +
+        "Here's what you might be dealing with:\n" +
+        "• The anxiety of timing everything perfectly\n" +
+        "• Wondering if you're doing enough for your fertility\n" +
+        "• That emotional TWW (two week wait)\n" +
+        "• Wanting to optimize your health but not sure where to start\n\n" +
+        "**Good news!** We have some FREE resources perfect for you:\n\n" +
+        "✨ Cycle tracking tools\n" +
+        "✨ Fertility-friendly recipes\n" +
+        "✨ TTC workout videos\n" +
+        "✨ Supportive community of women TTC\n\n" +
+        "Want to check these out? You'll need to sign up (it's FREE!) to access them inside the app! 💚";
     }
-
-    // Pregnancy related
-    if (lowerMsg.includes('pregnan') || lowerMsg.includes('trimester') || lowerMsg.includes('birth') || lowerMsg.includes('labor')) {
-      return "Absolutely! Pregnancy is our specialty! 🤰\n\n" +
-        "**Pregnancy Support:**\n" +
-        "• Safe exercises for all trimesters\n" +
-        "• Birth preparation strategies (including our unique Birth Ball Guide)\n" +
-        "• Pregnancy nutrition and meal plans\n" +
-        "• Symptom management (sciatica, fatigue, etc.)\n" +
-        "• Contraction tracker and kick counter\n" +
-        "• Video courses on labor preparation\n" +
-        "• Expert guidance from healthcare professionals\n\n" +
-        "We help women have safe, empowered births through evidence-based fitness and wellness strategies!\n\n" +
-        "Want to explore our pregnancy programs?";
-    }
-
-    // Postpartum related
-    if (lowerMsg.includes('postpartum') || lowerMsg.includes('after birth') || lowerMsg.includes('recovery') || lowerMsg.includes('new mom')) {
-      return "We've got your postpartum journey covered! 💪\n\n" +
-        "**Postpartum Features:**\n" +
-        "• Core & pelvic floor rehabilitation\n" +
-        "• Safe return-to-exercise programs\n" +
-        "• Postpartum nutrition support\n" +
-        "• Mental wellness resources\n" +
-        "• Sleep tracking and optimization\n" +
-        "• Breastfeeding support\n" +
-        "• Video courses on recovery\n" +
-        "• Community of postpartum moms\n\n" +
-        "Our professionals guide you through safe, effective recovery at your own pace!\n\n" +
-        "Ready to heal and thrive postpartum?";
-    }
-
-    // Workout/Fitness related
-    if (lowerMsg.includes('workout') || lowerMsg.includes('fitness') || lowerMsg.includes('exercise') || lowerMsg.includes('video')) {
-      return "Our workout programs are designed by professionals! 💪\n\n" +
-        "**What We Offer:**\n" +
-        "• Stage-specific programs (TTC, pregnancy, postpartum)\n" +
-        "• Video courses with professional guidance\n" +
-        "• Birth Ball Guide for labor prep\n" +
-        "• Prenatal & postpartum workouts\n" +
-        "• Safe modifications for every level\n" +
-        "• Progress tracking features\n\n" +
-        "**FREE Access:**\n" +
-        "✓ Beginner workout videos\n" +
-        "✓ Basic fitness guides\n\n" +
-        "**Premium Access:**\n" +
-        "✓ Full video course library\n" +
-        "✓ Personalized workout plans\n" +
-        "✓ Advanced programs\n\n" +
-        "Want to start moving safely today?";
-    }
-
-    // Nutrition/Meal related
-    if (lowerMsg.includes('nutrition') || lowerMsg.includes('meal') || lowerMsg.includes('food') || lowerMsg.includes('recipe') || lowerMsg.includes('diet')) {
-      return "Nutrition is crucial at every stage! 🥗\n\n" +
-        "**Nutrition Support:**\n" +
-        "• Stage-specific meal plans (TTC, pregnancy, postpartum)\n" +
-        "• Healthy recipes with calorie tracking\n" +
-        "• Food safety guides for pregnancy\n" +
-        "• Fertility-supporting nutrition\n" +
-        "• Breastfeeding nutrition plans\n" +
-        "• Professional nutritionist insights\n\n" +
-        "**FREE Features:**\n" +
-        "✓ Recipe library access\n" +
-        "✓ Basic meal planning tools\n" +
-        "✓ Calorie checker\n\n" +
-        "**Premium Features:**\n" +
-        "✓ Personalized meal plans\n" +
-        "✓ Custom nutrition tracking\n" +
-        "✓ Expert consultations\n\n" +
-        "Ready to fuel your body right?";
-    }
-
-    // Professional/Expert related
-    if (lowerMsg.includes('professional') || lowerMsg.includes('expert') || lowerMsg.includes('doctor') || lowerMsg.includes('specialist')) {
-      return "Yes! We work with certified professionals! 👩‍⚕️\n\n" +
-        "**Our Expert Team:**\n" +
-        "• Certified fitness trainers\n" +
-        "• Registered nutritionists\n" +
-        "• Pelvic floor specialists\n" +
-        "• Mental health professionals\n" +
-        "• Birth educators\n\n" +
-        "All our programs are developed with professional guidance to ensure safety and effectiveness at every stage of motherhood!\n\n" +
-        "Want to learn more about our expert-backed approach?";
-    }
-
-    // Courses/Guides related
-    if (lowerMsg.includes('course') || lowerMsg.includes('guide') || lowerMsg.includes('learn') || lowerMsg.includes('education')) {
-      return "We have extensive educational resources! 📚\n\n" +
-        "**Video Courses & Guides:**\n" +
-        "• Birth Ball Guide (labor preparation)\n" +
-        "• Prenatal fitness video series\n" +
-        "• Postpartum recovery courses\n" +
-        "• Nutrition education modules\n" +
-        "• Mental wellness workshops\n" +
-        "• Safe exercise technique videos\n\n" +
-        "**FREE Content:**\n" +
-        "✓ Beginner guides\n" +
-        "✓ Selected video courses\n\n" +
-        "**Premium Content:**\n" +
-        "✓ Full course library\n" +
-        "✓ Expert-led workshops\n" +
-        "✓ Downloadable resources\n\n" +
-        "Ready to start learning?";
-    }
-
-    // Community/Support related
-    if (lowerMsg.includes('community') || lowerMsg.includes('support') || lowerMsg.includes('connect') || lowerMsg.includes('group') || lowerMsg.includes('mom')) {
-      return "Our community is the heart of Catalyst Mom! 👥\n\n" +
-        "**Community Features:**\n" +
-        "• Stage-specific groups (TTC, pregnancy, postpartum, toddler)\n" +
-        "• Shared experiences and support\n" +
-        "• Challenges and events\n" +
-        "• Comment and engage on all posts\n" +
-        "• Make lasting friendships\n" +
-        "• 24/7 peer support\n\n" +
-        "The community is FREE and open to everyone! Connect with thousands of moms at the same stage as you.\n\n" +
-        "Want to join our supportive community?";
-    }
-
-    // Features/App capabilities
-    if (lowerMsg.includes('feature') || lowerMsg.includes('app') || lowerMsg.includes('what can') || lowerMsg.includes('capabilities')) {
-      return "Here's what Catalyst Mom offers by stage:\n\n" +
-        "**TTC Stage:**\n" +
-        "✓ Cycle tracking\n" +
-        "✓ Fertility nutrition plans\n" +
-        "✓ TTC-safe workouts\n" +
-        "✓ Stress management tools\n\n" +
-        "**Pregnancy:**\n" +
-        "✓ Trimester-specific workouts\n" +
-        "✓ Birth prep strategies\n" +
-        "✓ Contraction tracker\n" +
-        "✓ Kick counter\n" +
-        "✓ Safe nutrition guides\n\n" +
-        "**Postpartum:**\n" +
-        "✓ Recovery programs\n" +
-        "✓ Core rehabilitation\n" +
-        "✓ Mental wellness support\n" +
-        "✓ Sleep tracking\n\n" +
-        "**All Stages:**\n" +
-        "✓ Video courses\n" +
-        "✓ Community access\n" +
-        "✓ Expert guidance\n" +
-        "✓ Progress tracking\n\n" +
-        "Which stage are you interested in?";
-    }
-
-    // Pricing/Premium features
-    if (lowerMsg.includes('price') || lowerMsg.includes('cost') || lowerMsg.includes('premium') || lowerMsg.includes('subscription') || lowerMsg.includes('pay')) {
-      if (!user) {
-        return "Here's our pricing structure:\n\n" +
-          "**FREE Forever:**\n" +
-          "✓ Community access & commenting\n" +
-          "✓ Basic workout videos\n" +
-          "✓ Recipe library\n" +
-          "✓ Wellness tracking\n" +
-          "✓ Educational content\n\n" +
-          "**Premium Membership:**\n" +
-          "✓ Full video course library\n" +
-          "✓ Personalized meal & workout plans\n" +
-          "✓ Advanced AI wellness coach\n" +
-          "✓ Expert Q&A sessions\n" +
-          "✓ Advanced tracking & analytics\n" +
-          "✓ All professional guides\n\n" +
-          "Start with our FREE features, upgrade anytime for full access!\n\n" +
-          "Ready to create your free account?";
-      } else {
-        return "Upgrade to Premium for full access:\n\n" +
-          "**Premium Benefits:**\n" +
-          "• Fully personalized AI coaching\n" +
-          "• Custom meal & workout plans\n" +
-          "• Complete video course library\n" +
-          "• Expert consultations\n" +
-          "• Advanced features\n\n" +
-          "Visit your dashboard to see pricing and upgrade!";
+    
+    if (lowerStage.includes('pregn')) {
+      let trimesterInfo = '';
+      const weeksNum = parseInt(weeks);
+      
+      if (weeksNum > 0 && weeksNum <= 13) {
+        trimesterInfo = "\n\nFirst trimester! Girl, I know - the nausea, the fatigue, trying to keep it secret... it's A LOT.\n\n" +
+          "**Your challenges right now:**\n" +
+          "• Morning sickness that's really all-day sickness\n" +
+          "• Exhaustion like you've never felt\n" +
+          "• Anxiety about the first scan\n" +
+          "• Not knowing what's safe to eat or do";
+      } else if (weeksNum > 13 && weeksNum <= 27) {
+        trimesterInfo = "\n\nSecond trimester - the 'honeymoon phase' they say! But you're probably dealing with:\n\n" +
+          "**Your challenges:**\n" +
+          "• Growing bump and changing body\n" +
+          "• Wondering about safe exercises\n" +
+          "• Starting to think about birth (maybe getting nervous?)\n" +
+          "• Sciatica or back pain kicking in";
+      } else if (weeksNum > 27) {
+        trimesterInfo = "\n\nThird trimester! Almost there mama! But these last weeks are HARD:\n\n" +
+          "**What you're dealing with:**\n" +
+          "• Can't sleep, can't breathe, can't see your feet\n" +
+          "• Birth anxiety getting real\n" +
+          "• Wanting to prepare but feeling overwhelmed\n" +
+          "• Physical discomfort everywhere";
       }
+      
+      return `Pregnancy! Beautiful journey, but real talk - it's not always easy. ${trimesterInfo}\n\n` +
+        "**We've got FREE resources for you:**\n\n" +
+        "✨ Safe pregnancy workouts (all trimesters)\n" +
+        "✨ Our unique Birth Ball Guide\n" +
+        "✨ Pregnancy nutrition plans\n" +
+        "✨ Community of pregnant mamas\n" +
+        "✨ Symptom management tips\n\n" +
+        "These are all waiting for you in the app! Just need to sign up (FREE!) to access them 💚";
     }
-
-    // Safe birth strategies
-    if (lowerMsg.includes('safe birth') || lowerMsg.includes('birth plan') || lowerMsg.includes('labor') || lowerMsg.includes('delivery')) {
-      return "Safe birth preparation is our specialty! 🌟\n\n" +
-        "**Our Unique Strategies:**\n" +
-        "• Birth Ball Guide - Professional video course\n" +
-        "• Evidence-based labor positions\n" +
-        "• Breathing techniques\n" +
-        "• Partner support training\n" +
-        "• Pain management strategies\n" +
-        "• Pelvic floor preparation\n" +
-        "• Mental preparation techniques\n\n" +
-        "Developed with healthcare professionals to help you have an empowered, safe birth experience!\n\n" +
-        "Want to explore our birth prep programs?";
-    }
-
-    // Getting started/sign up
-    if (lowerMsg.includes('sign up') || lowerMsg.includes('start') || lowerMsg.includes('join') || lowerMsg.includes('account') || lowerMsg.includes('register')) {
-      if (!user) {
-        return "Let's get you started! 🎉\n\n" +
-          "**Getting Started:**\n" +
-          "1️⃣ Create your FREE account\n" +
-          "2️⃣ Tell us your motherhood stage\n" +
-          "3️⃣ Access free workouts, recipes & community\n" +
-          "4️⃣ Upgrade to Premium anytime for full features\n\n" +
-          "**You'll Immediately Access:**\n" +
-          "✓ Community groups\n" +
-          "✓ Basic workout videos\n" +
-          "✓ Recipe library\n" +
-          "✓ Wellness tracking tools\n\n" +
-          "Ready to join thousands of moms? Click below to sign up!";
-      } else {
-        return "You're already part of the Catalyst Mom family! 🎉\n\n" +
-          "**Next Steps:**\n" +
-          "• Complete your wellness profile\n" +
-          "• Join community groups\n" +
-          "• Start a workout program\n" +
-          "• Explore recipes\n" +
-          "• Upgrade to Premium for personalized AI coaching\n\n" +
-          "Head to your dashboard to get started!";
+    
+    if (lowerStage.includes('postpart') || lowerStage.includes('new mom') || lowerStage.includes('after birth')) {
+      let timeInfo = '';
+      const monthsNum = parseInt(weeks);
+      
+      if (monthsNum > 0 && monthsNum <= 3) {
+        timeInfo = "\n\nThose first few months postpartum are NO JOKE:\n\n" +
+          "**What you're going through:**\n" +
+          "• Sleep deprivation like a zombie\n" +
+          "• Body recovery and wondering when you'll feel 'normal'\n" +
+          "• Maybe struggling with breastfeeding\n" +
+          "• Emotional ups and downs\n" +
+          "• Not knowing what exercise is safe yet";
+      } else if (monthsNum > 3) {
+        timeInfo = "\n\nA few months in and you're probably:\n\n" +
+          "**Your challenges:**\n" +
+          "• Wanting your body back but feeling guilty\n" +
+          "• Dealing with core/pelvic floor issues\n" +
+          "• Trying to find time for yourself (what's that?)\n" +
+          "• Wanting to workout but not sure what's safe";
       }
+      
+      return `Postpartum mama! First - you're doing amazing! ${timeInfo}\n\n` +
+        "**FREE resources we have for you:**\n\n" +
+        "✨ Safe postpartum recovery workouts\n" +
+        "✨ Core & pelvic floor rehab guides\n" +
+        "✨ Nutrition for healing & energy\n" +
+        "✨ Community of postpartum moms who GET IT\n" +
+        "✨ Self-care strategies (yes, you deserve it!)\n\n" +
+        "Sign up FREE to access everything in the app! 💚";
     }
-
-    // General/Default response
-    return "I'm here to help you understand everything Catalyst Mom offers! 💚\n\n" +
-      "**We Support Every Stage:**\n" +
-      "🌸 TTC (Trying to Conceive)\n" +
-      "🤰 Pregnancy (all trimesters)\n" +
-      "💪 Postpartum Recovery\n" +
-      "👶 Toddler Moms\n\n" +
-      "**What We Provide:**\n" +
-      "• Video courses & professional guides\n" +
+    
+    if (lowerStage.includes('toddler') || lowerStage.includes('mom')) {
+      return "Toddler mom life! Chasing them around all day is a WORKOUT! 😅\n\n" +
+        "**What you're probably dealing with:**\n" +
+        "• No time for yourself\n" +
+        "• Wanting to get back in shape\n" +
+        "• Trying to eat healthy while feeding picky eaters\n" +
+        "• Feeling touched out and overwhelmed\n\n" +
+        "**FREE resources for you:**\n\n" +
+        "✨ Quick workouts for busy moms\n" +
+        "✨ Family-friendly healthy recipes\n" +
+        "✨ Community of moms in the same boat\n" +
+        "✨ Self-care tips you can actually do\n\n" +
+        "Access it all FREE in the app - just sign up! 💚";
+    }
+    
+    return "Thanks for sharing where you're at! 💕\n\n" +
+      "We have resources for every stage of motherhood:\n" +
+      "• Video courses from professionals\n" +
       "• Stage-specific workouts\n" +
       "• Nutrition plans & recipes\n" +
-      "• Safe birth strategies\n" +
-      "• Community support\n" +
-      "• Expert guidance\n\n" +
-      "What would you like to know more about?";
+      "• Supportive community\n\n" +
+      "Sign up FREE to explore what we have for you! 💚";
   };
 
   const handleSendMessage = () => {
@@ -351,39 +213,113 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
     setInputMessage('');
 
     setTimeout(() => {
-      const response = generateResponse(userMsg);
-      addCoachMessage(response);
-
-      // If message mentions sign up and user is not logged in, show CTA after response
-      if (!user && (userMsg.toLowerCase().includes('sign up') || userMsg.toLowerCase().includes('join') || userMsg.toLowerCase().includes('start'))) {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
+      if (conversationState === 'awaiting_stage') {
+        setUserStage(userMsg);
+        
+        const numberMatch = userMsg.match(/\d+/);
+        if (numberMatch) {
+          setUserWeeks(numberMatch[0]);
+          const response = getStageResponse(userMsg, numberMatch[0]);
+          addCoachMessage(response);
+          setConversationState('offering_resources');
+        } else {
+          const lowerMsg = userMsg.toLowerCase();
+          if (lowerMsg.includes('pregn')) {
+            addCoachMessage("Perfect! How many weeks pregnant are you? 🤰");
+          } else if (lowerMsg.includes('postpart') || lowerMsg.includes('new mom')) {
+            addCoachMessage("Got it! How many months postpartum are you? 💕");
+          } else {
+            const response = getStageResponse(userMsg, '0');
+            addCoachMessage(response);
+            setConversationState('offering_resources');
+          }
+        }
+      } else if (conversationState === 'initial' && userStage === '' && userMsg.match(/\d+/)) {
+        setUserWeeks(userMsg);
+        addCoachMessage("Thanks! And which stage are you in? (TTC, pregnant, postpartum, or toddler mom?)");
+      } else if (userStage !== '' && userWeeks === '' && userMsg.match(/\d+/)) {
+        setUserWeeks(userMsg);
+        const response = getStageResponse(userStage, userMsg);
+        addCoachMessage(response);
+        setConversationState('offering_resources');
+      } else {
+        const lowerMsg = userMsg.toLowerCase();
+        
+        if (lowerMsg.includes('sign up') || lowerMsg.includes('register') || lowerMsg.includes('join') || lowerMsg.includes('access')) {
+          if (!user) {
+            addCoachMessage(
+              "Perfect! Click the button below to create your account.\n\n" +
+              "Once you're in, you'll have immediate access to:\n" +
+              "✓ Free workouts\n" +
+              "✓ Free recipes\n" +
+              "✓ Community access\n" +
+              "✓ Basic tracking tools\n\n" +
+              "And if you want the FULL experience with personalized plans, all courses, and AI coaching - you can upgrade to Premium for $29/month anytime! 💎"
+            );
+          } else {
+            addCoachMessage(
+              "You're already signed up! 🎉\n\n" +
+              "Want the full Catalyst Mom experience?\n\n" +
+              "**Premium gives you:**\n" +
+              "• All video courses\n" +
+              "• Personalized meal & workout plans\n" +
+              "• AI wellness coaching\n" +
+              "• Advanced tracking\n" +
+              "• Expert consultations\n\n" +
+              "Only $29/month - click below to upgrade!"
+            );
+          }
+        } else if (lowerMsg.includes('premium') || lowerMsg.includes('upgrade') || lowerMsg.includes('price') || lowerMsg.includes('cost')) {
+          addCoachMessage(
+            "Great question! Here's the breakdown:\n\n" +
+            "**FREE Forever:**\n" +
+            "✓ Community access\n" +
+            "✓ Basic workout videos\n" +
+            "✓ Recipe library\n" +
+            "✓ Wellness tracking\n\n" +
+            "**Premium - $29/month:**\n" +
+            "✓ ALL video courses\n" +
+            "✓ Personalized plans\n" +
+            "✓ AI coaching\n" +
+            "✓ Advanced features\n" +
+            "✓ Expert access\n\n" +
+            "Most moms start FREE and upgrade when they're ready! 💚"
+          );
+        } else {
+          addCoachMessage(
+            "I'm here to help you understand what Catalyst Mom can do for you! 💕\n\n" +
+            "Want to tell me where you're at in your motherhood journey so I can show you what we have for your specific stage?"
+          );
+        }
+        setConversationState('general');
       }
     }, 500);
   };
 
-  const handleSignUp = () => {
+  const handleViewResources = () => {
+    if (!user) {
+      toast({
+        title: "Sign up to access resources",
+        description: "Create your free account to view our resources!",
+      });
+      setTimeout(() => {
+        onClose();
+        navigate('/auth/register');
+      }, 1000);
+    } else {
+      navigate('/dashboard');
+      onClose();
+    }
+  };
+
+  const handleUpgradeToPremium = () => {
+    navigate('/dashboard');
     onClose();
-    navigate('/auth/register');
     toast({
-      title: "Let's get started!",
-      description: "Create your free account to access all features.",
+      title: "Ready to upgrade?",
+      description: "Check out Premium features on your dashboard!",
     });
   };
-
-  const handleGoToDashboard = () => {
-    onClose();
-    navigate('/dashboard');
-  };
-
-  const QUICK_SUGGESTIONS = [
-    "Do you have TTC stuff?",
-    "Tell me about pregnancy support",
-    "How do you help with safe birth?",
-    "What features do you have?",
-    "What's included for free?"
-  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -392,17 +328,18 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-lg">
-                    💚
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={coachPortrait} alt="Wellness Coach" />
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground">
+                    CM
                   </AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-background"></div>
               </div>
               <div>
-                <DialogTitle className="font-semibold text-foreground">Catalyst Mom Coach</DialogTitle>
+                <DialogTitle className="font-semibold text-foreground">Your Big Sis Coach</DialogTitle>
                 <Badge variant="secondary" className="text-xs px-2 py-0">
-                  Wellness Advisor
+                  Here to help 💕
                 </Badge>
               </div>
             </div>
@@ -423,8 +360,9 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
             >
               {message.sender === 'coach' && (
                 <Avatar className="h-8 w-8 flex-shrink-0">
+                  <AvatarImage src={coachPortrait} alt="Coach" />
                   <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-sm">
-                    💚
+                    CM
                   </AvatarFallback>
                 </Avatar>
               )}
@@ -454,8 +392,9 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
           {isLoading && (
             <div className="flex gap-3 max-w-[85%] mr-auto">
               <Avatar className="h-8 w-8 flex-shrink-0">
+                <AvatarImage src={coachPortrait} alt="Coach" />
                 <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground text-sm">
-                  💚
+                  CM
                 </AvatarFallback>
               </Avatar>
               <div className="bg-muted/50 rounded-2xl rounded-bl-md px-4 py-2">
@@ -471,47 +410,25 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
           <div ref={messagesEndRef} />
         </div>
 
-        {messages.length === 0 && (
-          <div className="px-4 pb-2">
-            <p className="text-xs text-muted-foreground mb-2">Quick questions:</p>
-            <div className="flex flex-wrap gap-2">
-              {QUICK_SUGGESTIONS.slice(0, 3).map((suggestion, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  size="sm"
-                  className="text-xs h-auto py-1.5 px-3"
-                  onClick={() => {
-                    setInputMessage(suggestion);
-                    setTimeout(() => handleSendMessage(), 100);
-                  }}
-                >
-                  <Sparkles className="h-3 w-3 mr-1" />
-                  {suggestion}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {!user && messages.length > 2 && (
+        {conversationState === 'offering_resources' && (
           <div className="px-4 pb-2">
             <Button
               className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
-              onClick={handleSignUp}
+              onClick={handleViewResources}
             >
-              Get Started Free
+              {user ? 'View Free Resources' : 'Sign Up Free to Access'}
             </Button>
           </div>
         )}
 
-        {user && messages.length > 2 && (
+        {user && messages.length > 3 && (
           <div className="px-4 pb-2">
             <Button
-              className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
-              onClick={handleGoToDashboard}
+              variant="outline"
+              className="w-full"
+              onClick={handleUpgradeToPremium}
             >
-              Go to Dashboard
+              Unlock Full Access - $29/month
             </Button>
           </div>
         )}
@@ -522,7 +439,7 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="Ask me anything..."
+              placeholder="Type your message..."
               className="flex-1"
             />
             <Button size="icon" onClick={handleSendMessage} disabled={!inputMessage.trim()}>
@@ -530,7 +447,7 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
             </Button>
           </div>
           <p className="text-xs text-muted-foreground mt-2 text-center">
-            {!user ? "Sign up for free to unlock full features!" : "Upgrade to Premium for AI-powered coaching"}
+            {!user ? "Free resources waiting for you!" : "Upgrade for full AI coaching"}
           </p>
         </div>
       </DialogContent>

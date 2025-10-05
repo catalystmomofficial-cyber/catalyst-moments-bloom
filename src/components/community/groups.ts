@@ -142,6 +142,10 @@ export const groups: CommunityGroup[] = [
 ];
 
 export function getGroupsForStage(stage?: string) {
-  // Always show all groups regardless of stage so users can see all available communities
-  return groups;
+  if (!stage) {
+    return groups.filter(g => g.journey === 'general');
+  }
+  
+  // Return groups for specific stage + general groups
+  return groups.filter(g => g.journey === stage || g.journey === 'general');
 }
