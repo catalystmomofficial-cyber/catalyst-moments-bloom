@@ -80,95 +80,131 @@ function AppContent() {
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         
-        {/* Protected Routes */}
+        {/* Protected Routes - Require Login and Subscription */}
         <Route path="/dashboard" element={
           <PrivateRoute>
-            <Dashboard />
+            <SubscriptionGuard>
+              <Dashboard />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/workouts" element={
           <PrivateRoute>
-            <Workouts />
+            <SubscriptionGuard>
+              <Workouts />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/workouts/:slug" element={
           <PrivateRoute>
-            <WorkoutDetail />
+            <SubscriptionGuard>
+              <WorkoutDetail />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/recipes" element={
           <PrivateRoute>
-            <Recipes />
+            <SubscriptionGuard>
+              <Recipes />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/recipes/:slug" element={
           <PrivateRoute>
-            <RecipeDetail />
+            <SubscriptionGuard>
+              <RecipeDetail />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/wellness" element={
           <PrivateRoute>
-            <Wellness />
+            <SubscriptionGuard>
+              <Wellness />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/community" element={
           <PrivateRoute>
-            <Community />
+            <SubscriptionGuard>
+              <Community />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/community/groups/:slug" element={
           <PrivateRoute>
-            <GroupDetail />
+            <SubscriptionGuard>
+              <GroupDetail />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/profile" element={
           <PrivateRoute>
-            <Profile />
+            <SubscriptionGuard>
+              <Profile />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/questionnaire" element={
           <PrivateRoute>
-            <Questionnaire />
+            <SubscriptionGuard>
+              <Questionnaire />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/meal-plan" element={
           <PrivateRoute>
-            <MealPlan />
+            <SubscriptionGuard>
+              <MealPlan />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/meal-plan/:slug" element={
           <PrivateRoute>
-            <MealPlanDetail />
+            <SubscriptionGuard>
+              <MealPlanDetail />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/workout-plan" element={
           <PrivateRoute>
-            <WorkoutPlan />
+            <SubscriptionGuard>
+              <WorkoutPlan />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/saved-workout-plans" element={
           <PrivateRoute>
-            <SavedWorkoutPlans />
+            <SubscriptionGuard>
+              <SavedWorkoutPlans />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/saved-workout-plans/:planId" element={
           <PrivateRoute>
-            <WorkoutPlanDetail />
+            <SubscriptionGuard>
+              <WorkoutPlanDetail />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/courses" element={
           <PrivateRoute>
-            <Courses />
+            <SubscriptionGuard>
+              <Courses />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/course/:id" element={
           <PrivateRoute>
-            <CourseDetail />
+            <SubscriptionGuard>
+              <CourseDetail />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/programs/glow-and-go" element={
           <PrivateRoute>
-            <GlowAndGo />
+            <SubscriptionGuard>
+              <GlowAndGo />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/affiliate" element={<Affiliate />} />
@@ -179,17 +215,23 @@ function AppContent() {
         } />
         <Route path="/wellness/self-care" element={
           <PrivateRoute>
-            <SelfCareGuide />
+            <SubscriptionGuard>
+              <SelfCareGuide />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/wellness/resources" element={
           <PrivateRoute>
-            <WellnessResources />
+            <SubscriptionGuard>
+              <WellnessResources />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/wellness/article/:id" element={
           <PrivateRoute>
-            <WellnessArticle />
+            <SubscriptionGuard>
+              <WellnessArticle />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,13 +11,16 @@ import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFee
 import { groups } from '@/components/community/groups';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const GroupDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const { subscribed, setShowCheckoutModal } = useAuth();
+  const { user } = useAuth();
   const group = useMemo(() => groups.find(g => g.slug === slug), [slug]);
-  const [joined, setJoined] = useState(false);
+  const [isMember, setIsMember] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
 
   useEffect(() => {
     if (group) {
@@ -41,12 +44,22 @@ const GroupDetail = () => {
   const isTTCGroup = group.journey === 'ttc';
 
   const handleJoin = () => {
-    setJoined((prev) => !prev);
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to join groups",
+        variant: "destructive",
+      });
+      navigate('/login');
+      return;
+    }
+
+    setIsMember(!isMember);
     toast({
-      title: joined ? 'Left group' : 'Joined group',
-      description: joined
+      title: isMember ? 'Left group' : 'Welcome!',
+      description: isMember
         ? `You will no longer receive updates from ${group.name}.`
-        : `Welcome! You're now a member of ${group.name}.`
+        : `You've joined ${group.name}`,
     });
   };
 
@@ -81,7 +94,9 @@ const GroupDetail = () => {
                 <Button variant="outline" asChild size="sm">
                   <Link to="/community?tab=groups"><ArrowLeft className="h-4 w-4 mr-1" /> Back</Link>
                 </Button>
-                <Button onClick={handleJoin} size="sm">{joined ? 'Leave Group' : 'Join Group'}</Button>
+                <Button onClick={handleJoin} size="sm">
+                  {isMember ? 'Joined' : 'Join Group'}
+                </Button>
               </div>
             </div>
           </div>
@@ -113,8 +128,8 @@ const GroupDetail = () => {
                   <span>Be kind. Share support. No medical advice.</span>
                 </div>
                 <Separator className="my-4" />
-                <Button onClick={handleJoin} className="w-full" variant={joined ? 'secondary' : 'default'}>
-                  {joined ? 'Joined' : 'Join Group'}
+                <Button onClick={handleJoin} className="w-full" variant={isMember ? 'secondary' : 'default'}>
+                  {isMember ? 'Joined' : 'Join Group'}
                 </Button>
               </CardContent>
             </Card>
