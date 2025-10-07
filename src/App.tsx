@@ -125,16 +125,12 @@ function AppContent() {
         } />
         <Route path="/community" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <Community />
-            </SubscriptionGuard>
+            <Community />
           </PrivateRoute>
         } />
         <Route path="/community/groups/:slug" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <GroupDetail />
-            </SubscriptionGuard>
+            <GroupDetail />
           </PrivateRoute>
         } />
         <Route path="/profile" element={

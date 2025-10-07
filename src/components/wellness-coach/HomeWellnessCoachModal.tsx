@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import coachPortrait from '@/assets/wellness-coach-portrait.jpg';
+import { supabase } from '@/integrations/supabase/client';
 
 interface HomeWellnessCoachModalProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ interface Message {
   timestamp: Date;
 }
 
-type ConversationState = 'initial' | 'awaiting_stage' | 'offering_resources' | 'general';
+type ConversationState = 'initial' | 'awaiting_stage' | 'offering_resources' | 'general' | 'asked_stage' | 'shared_challenges' | 'ready_for_resources' | 'showing_resources';
 
 const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps) => {
   const { user } = useAuth();
@@ -205,95 +206,83 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
       "Sign up FREE to explore what we have for you! 💚";
   };
 
-  const handleSendMessage = () => {
-    if (inputMessage.trim() === '') return;
+  const handleSendMessage = async () => {
+    if (inputMessage.trim() === '' || isLoading) return;
 
     const userMsg = inputMessage.trim();
     addUserMessage(userMsg);
     setInputMessage('');
+    setIsLoading(true);
 
-    setTimeout(() => {
-      if (conversationState === 'awaiting_stage') {
-        setUserStage(userMsg);
-        
-        const numberMatch = userMsg.match(/\d+/);
-        if (numberMatch) {
-          setUserWeeks(numberMatch[0]);
-          const response = getStageResponse(userMsg, numberMatch[0]);
-          addCoachMessage(response);
-          setConversationState('offering_resources');
-        } else {
-          const lowerMsg = userMsg.toLowerCase();
-          if (lowerMsg.includes('pregn')) {
-            addCoachMessage("Perfect! How many weeks pregnant are you? 🤰");
-          } else if (lowerMsg.includes('postpart') || lowerMsg.includes('new mom')) {
-            addCoachMessage("Got it! How many months postpartum are you? 💕");
-          } else {
-            const response = getStageResponse(userMsg, '0');
-            addCoachMessage(response);
-            setConversationState('offering_resources');
-          }
+    try {
+      // Call AI edge function with conversation history
+      const { data, error } = await supabase.functions.invoke('wellness-coach-chat', {
+        body: { 
+          messages: [
+            ...messages.map(m => ({
+              role: m.sender === 'coach' ? 'assistant' : 'user',
+              content: m.content
+            })),
+            { role: 'user', content: userMsg }
+          ]
         }
-      } else if (conversationState === 'initial' && userStage === '' && userMsg.match(/\d+/)) {
-        setUserWeeks(userMsg);
-        addCoachMessage("Thanks! And which stage are you in? (TTC, pregnant, postpartum, or toddler mom?)");
-      } else if (userStage !== '' && userWeeks === '' && userMsg.match(/\d+/)) {
-        setUserWeeks(userMsg);
-        const response = getStageResponse(userStage, userMsg);
-        addCoachMessage(response);
-        setConversationState('offering_resources');
-      } else {
-        const lowerMsg = userMsg.toLowerCase();
-        
-        if (lowerMsg.includes('sign up') || lowerMsg.includes('register') || lowerMsg.includes('join') || lowerMsg.includes('access')) {
-          if (!user) {
-            addCoachMessage(
-              "Perfect! Click the button below to create your account.\n\n" +
-              "Once you're in, you'll have immediate access to:\n" +
-              "✓ Free workouts\n" +
-              "✓ Free recipes\n" +
-              "✓ Community access\n" +
-              "✓ Basic tracking tools\n\n" +
-              "And if you want the FULL experience with personalized plans, all courses, and AI coaching - you can upgrade to Premium for $29/month anytime! 💎"
-            );
-          } else {
-            addCoachMessage(
-              "You're already signed up! 🎉\n\n" +
-              "Want the full Catalyst Mom experience?\n\n" +
-              "**Premium gives you:**\n" +
-              "• All video courses\n" +
-              "• Personalized meal & workout plans\n" +
-              "• AI wellness coaching\n" +
-              "• Advanced tracking\n" +
-              "• Expert consultations\n\n" +
-              "Only $29/month - click below to upgrade!"
-            );
-          }
-        } else if (lowerMsg.includes('premium') || lowerMsg.includes('upgrade') || lowerMsg.includes('price') || lowerMsg.includes('cost')) {
-          addCoachMessage(
-            "Great question! Here's the breakdown:\n\n" +
-            "**FREE Forever:**\n" +
-            "✓ Community access\n" +
-            "✓ Basic workout videos\n" +
-            "✓ Recipe library\n" +
-            "✓ Wellness tracking\n\n" +
-            "**Premium - $29/month:**\n" +
-            "✓ ALL video courses\n" +
-            "✓ Personalized plans\n" +
-            "✓ AI coaching\n" +
-            "✓ Advanced features\n" +
-            "✓ Expert access\n\n" +
-            "Most moms start FREE and upgrade when they're ready! 💚"
-          );
-        } else {
-          addCoachMessage(
-            "I'm here to help you understand what Catalyst Mom can do for you! 💕\n\n" +
-            "Want to tell me where you're at in your motherhood journey so I can show you what we have for your specific stage?"
-          );
-        }
-        setConversationState('general');
+      });
+
+      if (error) {
+        console.error('[WELLNESS_COACH] Error calling edge function:', error);
+        throw error;
       }
-    }, 500);
+
+      const aiResponse = data.response;
+      
+      // Add AI response as coach message
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            content: aiResponse,
+            sender: 'coach',
+            timestamp: new Date()
+          }
+        ]);
+        setIsLoading(false);
+      }, 800);
+
+      // Update conversation state based on context
+      const lowerMsg = userMsg.toLowerCase();
+      if (conversationState === 'awaiting_stage' || conversationState === 'initial') {
+        if (lowerMsg.includes('ttc') || lowerMsg.includes('pregnan') || lowerMsg.includes('postpartum') || lowerMsg.match(/\d+\s*(week|month)/)) {
+          setConversationState('asked_stage');
+          setUserStage(userMsg);
+          const numberMatch = userMsg.match(/\d+/);
+          if (numberMatch) setUserWeeks(numberMatch[0]);
+        }
+      } else if (conversationState === 'asked_stage') {
+        setConversationState('shared_challenges');
+      } else if (conversationState === 'shared_challenges') {
+        setConversationState('ready_for_resources');
+      }
+      
+      // Handle sign up / access requests
+      if (lowerMsg.includes('sign up') || lowerMsg.includes('register') || lowerMsg.includes('join') || lowerMsg.includes('access')) {
+        setConversationState('showing_resources');
+      }
+    } catch (error) {
+      console.error('[WELLNESS_COACH] Error:', error);
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            content: "I'm having a little trouble right now, but I'm here for you! Try sending your message again. 💕",
+            sender: 'coach',
+            timestamp: new Date()
+          }
+        ]);
+        setIsLoading(false);
+      }, 800);
+    }
   };
 
   const handleViewResources = () => {

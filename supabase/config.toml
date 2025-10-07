@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.bland-voice-agent]
 verify_jwt = false
+
+[functions.wellness-coach-chat]
+verify_jwt = false

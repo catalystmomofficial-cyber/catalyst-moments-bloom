@@ -31,9 +31,17 @@ const Community = () => {
   const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
   
   const handleInteractionClick = (action: string) => {
-    // Community is now open to all users - no subscription required for basic interactions
-    // Premium features are still gated
-    return;
+    if (!user) {
+      console.log('[COMMUNITY] User not logged in, redirecting to login');
+      window.location.href = '/login';
+      return;
+    }
+    
+    if (!subscribed) {
+      console.log('[COMMUNITY] User not subscribed, showing payment wall');
+      setShowSubscriptionPrompt(true);
+      return;
+    }
   };
   
   return (

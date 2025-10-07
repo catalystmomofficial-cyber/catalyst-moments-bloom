@@ -12,15 +12,17 @@ import { groups } from '@/components/community/groups';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import CheckoutModal from '@/components/subscription/CheckoutModal';
 
 const GroupDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, subscribed } = useAuth();
   const group = useMemo(() => groups.find(g => g.slug === slug), [slug]);
   const [isMember, setIsMember] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
+  const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
 
   useEffect(() => {
     if (group) {
@@ -51,6 +53,12 @@ const GroupDetail = () => {
         variant: "destructive",
       });
       navigate('/login');
+      return;
+    }
+
+    if (!subscribed) {
+      console.log('[GROUP_DETAIL] User not subscribed, showing payment wall');
+      setShowSubscriptionPrompt(true);
       return;
     }
 
@@ -111,6 +119,11 @@ const GroupDetail = () => {
                 <DynamicCommunityFeed groupSlug={group.slug} isTTC={isTTCGroup} />
               </CardContent>
             </Card>
+            
+            <CheckoutModal 
+              isOpen={showSubscriptionPrompt} 
+              onClose={() => setShowSubscriptionPrompt(false)} 
+            />
           </div>
 
           {/* Sidebar */}
