@@ -15,10 +15,17 @@ const Index = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
+  const [isWelcomeVideo, setIsWelcomeVideo] = useState(false);
 
   const openVideoModal = (url: string, title: string) => {
     setVideoUrl(url);
     setVideoTitle(title);
+    setIsWelcomeVideo(false);
+    setVideoModalOpen(true);
+  };
+
+  const openWelcomeVideo = () => {
+    setIsWelcomeVideo(true);
     setVideoModalOpen(true);
   };
 
@@ -29,7 +36,7 @@ const Index = () => {
         description="Personalized workouts, meal plans, and community support for every stage of motherhood."
       />
       {/* Hero Section */}
-      <HeroSection onWatchVideo={openVideoModal} />
+      <HeroSection onWatchVideo={openWelcomeVideo} />
       
 
       {/* Food Calorie Checker Feature */}
@@ -52,7 +59,7 @@ const Index = () => {
       <TestimonialsSection />
       
       {/* CTA Section */}
-      <CTASection onWatchDemo={openVideoModal} />
+      <CTASection onWatchDemo={openWelcomeVideo} />
 
       {/* Video Modal */}
       <VideoModal 
@@ -60,6 +67,7 @@ const Index = () => {
         onClose={() => setVideoModalOpen(false)}
         videoUrl={videoUrl}
         title={videoTitle}
+        isWelcomeVideo={isWelcomeVideo}
       />
     </PageLayout>
   );

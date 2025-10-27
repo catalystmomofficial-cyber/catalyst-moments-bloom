@@ -4,15 +4,17 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { X } from "lucide-react";
 import { Button } from "./button";
+import WelcomeVideoGenerator from "@/components/video/WelcomeVideoGenerator";
 
 interface VideoModalProps {
   isOpen: boolean;
   onClose: () => void;
   videoUrl: string;
   title?: string;
+  isWelcomeVideo?: boolean;
 }
 
-const VideoModal = ({ isOpen, onClose, videoUrl, title }: VideoModalProps) => {
+const VideoModal = ({ isOpen, onClose, videoUrl, title, isWelcomeVideo = false }: VideoModalProps) => {
   const isMp4 = /\.mp4($|[?])/i.test(videoUrl);
 
   return (
@@ -27,26 +29,30 @@ const VideoModal = ({ isOpen, onClose, videoUrl, title }: VideoModalProps) => {
           >
             <X className="h-4 w-4" />
           </Button>
-          <AspectRatio ratio={16 / 9}>
-            {isMp4 ? (
-              <video
-                src={videoUrl}
-                controls
-                autoPlay
-                playsInline
-                className="w-full h-full"
-                title={title || "Video"}
-              />
-            ) : (
-              <iframe
-                src={`${videoUrl}?autoplay=1`}
-                title={title || "Video"}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
-            )}
-          </AspectRatio>
+          {isWelcomeVideo ? (
+            <WelcomeVideoGenerator onComplete={onClose} />
+          ) : (
+            <AspectRatio ratio={16 / 9}>
+              {isMp4 ? (
+                <video
+                  src={videoUrl}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="w-full h-full"
+                  title={title || "Video"}
+                />
+              ) : (
+                <iframe
+                  src={`${videoUrl}?autoplay=1`}
+                  title={title || "Video"}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              )}
+            </AspectRatio>
+          )}
         </div>
       </DialogContent>
     </Dialog>
