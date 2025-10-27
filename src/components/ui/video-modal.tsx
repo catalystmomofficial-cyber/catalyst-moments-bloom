@@ -4,7 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { X } from "lucide-react";
 import { Button } from "./button";
-import WelcomeVideoGenerator from "@/components/video/WelcomeVideoGenerator";
+import StaticWelcomeVideo from "@/components/video/StaticWelcomeVideo";
 
 interface VideoModalProps {
   isOpen: boolean;
@@ -30,7 +30,7 @@ const VideoModal = ({ isOpen, onClose, videoUrl, title, isWelcomeVideo = false }
             <X className="h-4 w-4" />
           </Button>
           {isWelcomeVideo ? (
-            <WelcomeVideoGenerator onComplete={onClose} />
+            <StaticWelcomeVideo onComplete={onClose} />
           ) : (
             <AspectRatio ratio={16 / 9}>
               {isMp4 ? (
