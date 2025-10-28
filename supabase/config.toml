@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.wellness-coach-chat]
 verify_jwt = false
+
+[functions.blog-webhook]
+verify_jwt = false

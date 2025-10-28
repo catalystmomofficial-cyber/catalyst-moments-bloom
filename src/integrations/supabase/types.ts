@@ -107,6 +107,51 @@ export type Database = {
         }
         Relationships: []
       }
+      blogs: {
+        Row: {
+          author: string | null
+          content: string
+          created_at: string
+          excerpt: string | null
+          featured_image_url: string | null
+          id: string
+          published_at: string | null
+          slug: string | null
+          status: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          content: string
+          created_at?: string
+          excerpt?: string | null
+          featured_image_url?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string | null
+          status?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          featured_image_url?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string | null
+          status?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       course_content: {
         Row: {
           calories_target: number | null
@@ -804,15 +849,12 @@ export type Database = {
         Returns: undefined
       }
       approve_all_pending_affiliates: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           updated_count: number
         }[]
       }
-      approve_user: {
-        Args: { user_id_param: string }
-        Returns: undefined
-      }
+      approve_user: { Args: { user_id_param: string }; Returns: undefined }
       create_affiliate_application: {
         Args: {
           audience_size_param: string
@@ -831,7 +873,7 @@ export type Database = {
         }[]
       }
       get_all_affiliate_applications: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           audience_size: string
           created_at: string
@@ -847,7 +889,7 @@ export type Database = {
         }[]
       }
       get_all_users_with_points: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           created_at: string
           display_name: string
@@ -858,7 +900,7 @@ export type Database = {
         }[]
       }
       get_pending_users: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           created_at: string
           display_name: string
@@ -867,14 +909,8 @@ export type Database = {
           user_id: string
         }[]
       }
-      is_admin: {
-        Args: { user_id_param: string }
-        Returns: boolean
-      }
-      is_premium_user: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      is_admin: { Args: { user_id_param: string }; Returns: boolean }
+      is_premium_user: { Args: never; Returns: boolean }
       log_admin_action: {
         Args: {
           action_details?: string
@@ -899,10 +935,7 @@ export type Database = {
         Args: { application_id: string; new_status: string }
         Returns: undefined
       }
-      user_has_active_subscription: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      user_has_active_subscription: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
