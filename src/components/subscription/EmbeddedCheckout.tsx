@@ -11,6 +11,12 @@ interface EmbeddedCheckoutProps {
 declare global {
   interface Window {
     Stripe: any;
+    __STRIPE_EMBEDDED__?: {
+      checkout: any | null;
+      clientSecret: string | null;
+      ownerId: symbol | null;
+      isInitializing: boolean;
+    };
   }
 }
 
@@ -18,6 +24,7 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const checkoutRef = useRef<HTMLDivElement>(null);
   const stripeCheckoutRef = useRef<any>(null);
   const currentClientSecretRef = useRef<string | null>(null);
+  const instanceIdRef = useRef(Symbol('embeddedCheckoutInstance'));
   const isInitializingRef = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,20 +34,28 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
 
     const initializeCheckout = async () => {
       try {
-        if (isInitializingRef.current) return;
+        if (isInitializingRef.current || (window as any).__STRIPE_EMBEDDED__?.isInitializing) return;
         isInitializingRef.current = true;
         setIsLoading(true);
         setError(null);
 
-        // Clean up any existing checkout instance
-        if (stripeCheckoutRef.current) {
-          try {
-            stripeCheckoutRef.current.unmount();
-          } catch (e) {
-            console.log('Cleanup error:', e);
-          }
-          stripeCheckoutRef.current = null;
-        }
+// Clean up any existing checkout instance (global + local)
+const g = (window as any).__STRIPE_EMBEDDED__ || ((window as any).__STRIPE_EMBEDDED__ = { checkout: null, clientSecret: null, ownerId: null, isInitializing: false });
+try {
+  if (g.checkout) {
+    try { g.checkout.unmount(); } catch (e) { console.log('Global cleanup error:', e); }
+    g.checkout = null;
+    g.clientSecret = null;
+    g.ownerId = null;
+    await new Promise((r) => setTimeout(r, 50));
+  }
+  if (stripeCheckoutRef.current) {
+    try { stripeCheckoutRef.current.unmount(); } catch (e) { console.log('Local cleanup error:', e); }
+    stripeCheckoutRef.current = null;
+    await new Promise((r) => setTimeout(r, 10));
+  }
+} catch (_) {}
+
 
         // Get client secret from edge function
         const { data, error: invokeError } = await supabase.functions.invoke('create-checkout', {
@@ -70,28 +85,40 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
 
         const stripe = window.Stripe('pk_live_51S4sMACNwyQa1NiQmZrjG7oSMVWDUNPdqMWKbGmkk1f8KXcnqXQITGVP2XsI9aXLMxMOQSX8CtU2nEAoNSmrCdGN00aIWz1BSl');
 
-        if (!mounted) return;
+if (!mounted) return;
 
-        // Mount embedded checkout
-        const checkout = await stripe.initEmbeddedCheckout({
-          clientSecret: clientSecret,
-        });
+// mark global initializing
+const gState = (window as any).__STRIPE_EMBEDDED__ || ((window as any).__STRIPE_EMBEDDED__ = { checkout: null, clientSecret: null, ownerId: null, isInitializing: false });
+gState.isInitializing = true;
+
+// Mount embedded checkout
+const checkout = await stripe.initEmbeddedCheckout({
+  clientSecret: clientSecret,
+});
 
         if (!mounted) {
           checkout.unmount();
           return;
         }
 
-        stripeCheckoutRef.current = checkout;
+stripeCheckoutRef.current = checkout;
 
-        if (checkoutRef.current) {
-          checkoutRef.current.innerHTML = '';
-          checkout.mount(checkoutRef.current);
-        }
+if (checkoutRef.current) {
+  checkoutRef.current.innerHTML = '';
+  checkout.mount(checkoutRef.current);
+}
 
-        currentClientSecretRef.current = clientSecret;
-        setIsLoading(false);
-        isInitializingRef.current = false;
+currentClientSecretRef.current = clientSecret;
+
+// update global singleton
+const gFinal = (window as any).__STRIPE_EMBEDDED__ || ((window as any).__STRIPE_EMBEDDED__ = { checkout: null, clientSecret: null, ownerId: null, isInitializing: false });
+gFinal.checkout = checkout;
+gFinal.clientSecret = clientSecret;
+gFinal.ownerId = instanceIdRef.current;
+gFinal.isInitializing = false;
+
+setIsLoading(false);
+isInitializingRef.current = false;
       } catch (err) {
         console.error('Checkout initialization error:', err);
         const errorMessage = err instanceof Error ? err.message : 'Failed to initialize checkout';
@@ -99,6 +126,8 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
         toast.error(errorMessage);
         setIsLoading(false);
         isInitializingRef.current = false;
+        const gErr = (window as any).__STRIPE_EMBEDDED__;
+        if (gErr) gErr.isInitializing = false;
       }
     };
 
@@ -107,6 +136,18 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
     return () => {
       mounted = false;
       // Properly unmount the checkout on cleanup
+      const g = (window as any).__STRIPE_EMBEDDED__;
+      if (g?.ownerId === instanceIdRef.current && g.checkout) {
+        try {
+          g.checkout.unmount();
+        } catch (e) {
+          console.log('Global cleanup error:', e);
+        }
+        g.checkout = null;
+        g.clientSecret = null;
+        g.ownerId = null;
+        g.isInitializing = false;
+      }
       if (stripeCheckoutRef.current) {
         try {
           stripeCheckoutRef.current.unmount();
