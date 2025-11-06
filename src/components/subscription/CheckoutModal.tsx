@@ -53,7 +53,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
             <>
               <PricingToggle 
                 onSelectPlan={handleSelectPlan}
-                yearlyPriceId={undefined} // Set to live price ID when available
+                yearlyPriceId="price_1S54B1CNwyQa1NiQGKx1Ps0r"
               />
               <Button
                 variant="ghost"
