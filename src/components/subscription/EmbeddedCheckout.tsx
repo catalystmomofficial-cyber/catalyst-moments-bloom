@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface EmbeddedCheckoutProps {
   priceId: string;
@@ -30,6 +31,7 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const hasRetriedRef = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -69,8 +71,14 @@ try {
         }
 
         const clientSecret = data?.clientSecret || data?.client_secret;
+        const sessionUrl = data?.url;
         if (!clientSecret) {
           throw new Error('No client secret received');
+        }
+        
+        // Store the hosted checkout URL as fallback
+        if (sessionUrl) {
+          setCheckoutUrl(sessionUrl);
         }
 
         // Prevent duplicate init with the same session
@@ -195,12 +203,22 @@ isInitializingRef.current = false;
     return (
       <div className="text-center py-8">
         <p className="text-destructive mb-4">{error}</p>
-        <button 
-          onClick={() => window.location.reload()}
-          className="text-primary hover:underline"
-        >
-          Try again
-        </button>
+        <div className="flex flex-col gap-3 items-center">
+          {checkoutUrl && (
+            <Button
+              onClick={() => window.open(checkoutUrl, '_blank')}
+              size="lg"
+            >
+              Open secure checkout in a new tab
+            </Button>
+          )}
+          <button 
+            onClick={() => window.location.reload()}
+            className="text-primary hover:underline text-sm"
+          >
+            Try again
+          </button>
+        </div>
       </div>
     );
   }

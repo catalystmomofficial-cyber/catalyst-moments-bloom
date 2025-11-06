@@ -81,7 +81,10 @@ serve(async (req) => {
 
     logStep("Checkout session created", { sessionId: session.id, clientSecret: session.client_secret });
 
-    return new Response(JSON.stringify({ clientSecret: session.client_secret }), {
+    return new Response(JSON.stringify({ 
+      clientSecret: session.client_secret,
+      url: session.url 
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
