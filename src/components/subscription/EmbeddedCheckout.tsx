@@ -30,7 +30,8 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const isInitializingRef = useRef(false);
   const hasRetriedRef = useRef(false);
   const retryCountRef = useRef(0);
-  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const initTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
@@ -39,6 +40,7 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
 
   const MAX_RETRIES = 2;
   const BASE_DELAY = 500; // 500ms base delay
+  const INIT_TIMEOUT_MS = 7000;
 
   const handleRefresh = () => {
     retryCountRef.current = 0;
@@ -46,6 +48,25 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
     setRefreshKey(prev => prev + 1);
     setError(null);
     hasRetriedRef.current = false;
+  };
+
+  const createHostedFallback = async () => {
+    try {
+      console.log('[CHECKOUT] Falling back to hosted checkout...');
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { priceId, uiMode: 'hosted' }
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, '_blank');
+        toast.message('Opened secure checkout in a new tab');
+      } else {
+        throw new Error('Hosted checkout URL not available');
+      }
+    } catch (e) {
+      console.error('[CHECKOUT] Hosted fallback failed:', e);
+      setError('Unable to load checkout. Please try again later.');
+    }
   };
 
   useEffect(() => {
@@ -109,6 +130,15 @@ try {
           return;
         }
 
+        // Set initialization timeout fallback to hosted checkout
+        if (initTimeoutRef.current) clearTimeout(initTimeoutRef.current);
+        initTimeoutRef.current = setTimeout(() => {
+          if (mounted && !stripeCheckoutRef.current) {
+            console.log('[CHECKOUT] Init timeout reached, falling back to hosted checkout');
+            createHostedFallback();
+          }
+        }, INIT_TIMEOUT_MS);
+
         // Initialize Stripe (singleton)
         if (!window.Stripe) {
           console.error('[CHECKOUT] Stripe.js not loaded');
@@ -143,6 +173,7 @@ if (checkoutRef.current) {
   checkoutRef.current.innerHTML = '';
   checkout.mount(checkoutRef.current);
   console.log('[CHECKOUT] Successfully mounted');
+  if (initTimeoutRef.current) { clearTimeout(initTimeoutRef.current); initTimeoutRef.current = null; }
 }
 
 currentClientSecretRef.current = clientSecret;
@@ -228,6 +259,11 @@ isInitializingRef.current = false;
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
         retryTimeoutRef.current = null;
+      }
+      // Clear initialization timeout
+      if (initTimeoutRef.current) {
+        clearTimeout(initTimeoutRef.current);
+        initTimeoutRef.current = null;
       }
       
       // Properly unmount the checkout on cleanup

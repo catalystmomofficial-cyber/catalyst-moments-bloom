@@ -28,7 +28,8 @@ serve(async (req) => {
     // Get request body to extract priceId
     const body = await req.json().catch(() => ({}));
     const priceId = body.priceId || "price_1S546jCNwyQa1NiQYpl3OjEe"; // Default to monthly if not provided
-    logStep("Price ID received", { priceId });
+    const uiMode = body.uiMode || (body.hosted ? 'hosted' : 'embedded');
+    logStep("Price ID received", { priceId, uiMode });
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
@@ -70,14 +71,30 @@ serve(async (req) => {
       throw new Error("Unable to determine app origin for redirect URLs");
     }
 
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      customer_email: customerId ? undefined : user.email,
-      line_items: lineItems,
-      mode: "subscription",
-      ui_mode: "embedded",
-      return_url: `${origin}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
-    });
+    let session;
+    if (uiMode === 'embedded') {
+      session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        customer_email: customerId ? undefined : user.email,
+        line_items: lineItems,
+        mode: "subscription",
+        ui_mode: "embedded",
+        return_url: `${origin}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      });
+      logStep("Checkout session created (embedded)", { sessionId: session.id, clientSecret: session.client_secret });
+    } else {
+      session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        customer_email: customerId ? undefined : user.email,
+        line_items: lineItems,
+        mode: "subscription",
+        ui_mode: "hosted",
+        success_url: `${origin}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/dashboard?canceled=true`,
+      });
+      logStep("Checkout session created (hosted)", { sessionId: session.id, url: session.url });
+    }
+
 
     logStep("Checkout session created", { sessionId: session.id, clientSecret: session.client_secret });
 
