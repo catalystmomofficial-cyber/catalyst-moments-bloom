@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -304,7 +305,7 @@ const WellnessArticle = () => {
             <CardContent>
               <div 
                 className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: article.content }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
               />
               
               <div className="mt-8 pt-6 border-t">

@@ -54,15 +54,10 @@ export function useDevBypass() {
 
 /**
  * Check if we're in a development environment
+ * SECURITY: Only trust NODE_ENV, not URL-based checks that can be spoofed
  */
 function isDevelopment(): boolean {
-  return (
-    process.env.NODE_ENV === 'development' || 
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1' ||
-    window.location.hostname.includes('.local') ||
-    window.location.port !== ''
-  );
+  return process.env.NODE_ENV === 'development';
 }
 
 export default useDevBypass;

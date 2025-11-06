@@ -12,15 +12,29 @@ serve(async (req) => {
   }
 
   try {
-    const { title, content, excerpt, author, tags, featured_image_url, slug } = await req.json();
-
-    if (!title || !content) {
-      throw new Error('Title and content are required');
+    // Verify authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing authorization header');
     }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Verify the user is authenticated
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      throw new Error('Unauthorized: Invalid authentication token');
+    }
+
+    const { title, content, excerpt, author, tags, featured_image_url, slug } = await req.json();
+
+    if (!title || !content) {
+      throw new Error('Title and content are required');
+    }
 
     // Generate slug if not provided
     const finalSlug = slug || title.toLowerCase()
