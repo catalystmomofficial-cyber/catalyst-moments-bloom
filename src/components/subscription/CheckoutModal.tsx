@@ -16,7 +16,10 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
 
   // Reset selection when modal closes to avoid stale checkout instances
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      // Auto-select monthly plan to load checkout immediately; users can go back to switch plans
+      setSelectedPriceId('price_1S546jCNwyQa1NiQYpl3OjEe');
+    } else {
       setSelectedPriceId(null);
     }
   }, [isOpen]);

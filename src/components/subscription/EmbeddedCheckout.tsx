@@ -40,7 +40,7 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
 
   const MAX_RETRIES = 2;
   const BASE_DELAY = 500; // 500ms base delay
-  const INIT_TIMEOUT_MS = 7000;
+  const INIT_TIMEOUT_MS = 3000;
 
   const handleRefresh = () => {
     retryCountRef.current = 0;
@@ -331,7 +331,7 @@ isInitializingRef.current = false;
                 </p>
               )}
             </div>
-            {checkoutUrl && retryAttempt > 0 && (
+            {checkoutUrl && (
               <Button
                 onClick={() => window.open(checkoutUrl, '_blank')}
                 variant="outline"
