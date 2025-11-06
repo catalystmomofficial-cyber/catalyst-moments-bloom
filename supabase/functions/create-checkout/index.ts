@@ -77,6 +77,7 @@ serve(async (req) => {
       mode: "subscription",
       ui_mode: "embedded",
       return_url: `${origin}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      payment_method_types: ['card', 'apple_pay', 'google_pay'],
     });
 
     logStep("Checkout session created", { sessionId: session.id, clientSecret: session.client_secret });
