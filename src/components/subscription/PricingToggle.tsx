@@ -26,14 +26,12 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
     <div className="w-full max-w-4xl mx-auto">
       <div className={`grid ${showYearly ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-6 mb-12`}>
         {/* Monthly Plan */}
-        <Card className="relative border-2">
-          {mostPopular === 'monthly' && (
-            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-primary/80 border-0 gap-1 z-10">
-              <TrendingUp className="h-3 w-3" />
-              Most Popular
-            </Badge>
-          )}
-        <CardContent className="p-6">
+        <Card className="relative border-2 border-primary shadow-lg">
+          <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-primary/80 border-0 gap-1 z-10">
+            <TrendingUp className="h-3 w-3" />
+            Most Popular
+          </Badge>
+        <CardContent className="p-6 mt-2">
           <div className="text-center mb-6">
             <h3 className="text-2xl font-bold mb-2">Monthly</h3>
             <div className="flex items-baseline justify-center gap-1">
@@ -73,17 +71,11 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
 
       {/* Yearly Plan - Only show if price ID exists */}
       {showYearly && (
-      <Card className="relative border-2 border-primary shadow-lg">
-        {mostPopular === 'yearly' && (
-          <Badge className="absolute -top-3 left-4 bg-gradient-to-r from-primary to-primary/80 border-0 gap-1 z-10">
-            <TrendingUp className="h-3 w-3" />
-            Most Popular
-          </Badge>
-        )}
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
+      <Card className="relative border-2">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold z-10">
           Save $99
         </div>
-        <CardContent className="p-6">
+        <CardContent className="p-6 mt-2">
           <div className="text-center mb-6">
             <h3 className="text-2xl font-bold mb-2">Yearly</h3>
             <div className="flex items-baseline justify-center gap-2 mb-1">
