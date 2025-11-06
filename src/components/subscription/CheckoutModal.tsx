@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,12 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
   const navigate = useNavigate();
   const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
 
+  // Reset selection when modal closes to avoid stale checkout instances
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedPriceId(null);
+    }
+  }, [isOpen]);
   const handleSuccess = () => {
     onClose();
     navigate('/dashboard?success=true');
@@ -32,8 +38,15 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
     setSelectedPriceId(null);
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setSelectedPriceId(null);
+      onClose();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background to-secondary/20">
         <DialogHeader className="space-y-2 pb-4">
           <div className="flex items-start justify-between">
@@ -74,7 +87,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
               >
                 ← Back to plans
               </Button>
-              <EmbeddedCheckout priceId={selectedPriceId} onSuccess={handleSuccess} />
+              <EmbeddedCheckout key={selectedPriceId!} priceId={selectedPriceId} onSuccess={handleSuccess} />
             </>
           )}
         </div>
