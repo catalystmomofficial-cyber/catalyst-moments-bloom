@@ -29,12 +29,20 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const instanceIdRef = useRef(Symbol('embeddedCheckoutInstance'));
   const isInitializingRef = useRef(false);
   const hasRetriedRef = useRef(false);
+  const retryCountRef = useRef(0);
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [retryAttempt, setRetryAttempt] = useState(0);
+
+  const MAX_RETRIES = 3;
+  const BASE_DELAY = 1000; // 1 second
 
   const handleRefresh = () => {
+    retryCountRef.current = 0;
+    setRetryAttempt(0);
     setRefreshKey(prev => prev + 1);
     setError(null);
     hasRetriedRef.current = false;
@@ -161,7 +169,6 @@ isInitializingRef.current = false;
           } catch {}
           // Retry once after a brief delay
           setTimeout(() => {
-            // Avoid retry if component unmounted
             if (typeof window !== 'undefined') {
               initializeCheckout();
             }
@@ -169,8 +176,30 @@ isInitializingRef.current = false;
           return;
         }
 
+        // Automatic retry with exponential backoff
+        if (retryCountRef.current < MAX_RETRIES) {
+          const delay = BASE_DELAY * Math.pow(2, retryCountRef.current);
+          retryCountRef.current++;
+          setRetryAttempt(retryCountRef.current);
+          
+          console.log(`Retrying checkout initialization (attempt ${retryCountRef.current}/${MAX_RETRIES}) in ${delay}ms...`);
+          
+          retryTimeoutRef.current = setTimeout(() => {
+            if (mounted) {
+              isInitializingRef.current = false;
+              const gRetry = (window as any).__STRIPE_EMBEDDED__;
+              if (gRetry) gRetry.isInitializing = false;
+              initializeCheckout();
+            }
+          }, delay);
+          
+          setIsLoading(true);
+          return;
+        }
+
+        // Max retries reached
         setError(errorMessage);
-        toast.error(errorMessage);
+        toast.error(`Checkout failed after ${MAX_RETRIES} attempts. Please try again.`);
         setIsLoading(false);
         isInitializingRef.current = false;
         const gErr = (window as any).__STRIPE_EMBEDDED__;
@@ -182,6 +211,13 @@ isInitializingRef.current = false;
 
     return () => {
       mounted = false;
+      
+      // Clear any pending retry timeout
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+      }
+      
       // Properly unmount the checkout on cleanup
       const g = (window as any).__STRIPE_EMBEDDED__;
       if (g?.ownerId === instanceIdRef.current && g.checkout) {
@@ -240,6 +276,11 @@ isInitializingRef.current = false;
           <div className="flex flex-col items-center gap-2">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="text-sm text-muted-foreground">Loading secure checkout...</p>
+            {retryAttempt > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Retry attempt {retryAttempt}/{MAX_RETRIES}
+              </p>
+            )}
           </div>
         </div>
       )}
