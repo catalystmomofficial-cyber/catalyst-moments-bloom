@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface EmbeddedCheckoutProps {
@@ -32,6 +32,13 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleRefresh = () => {
+    setRefreshKey(prev => prev + 1);
+    setError(null);
+    hasRetriedRef.current = false;
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -197,13 +204,22 @@ isInitializingRef.current = false;
         stripeCheckoutRef.current = null;
       }
     };
-  }, [priceId]);
+  }, [priceId, refreshKey]);
 
   if (error) {
     return (
       <div className="text-center py-8">
         <p className="text-destructive mb-4">{error}</p>
         <div className="flex flex-col gap-3 items-center">
+          <Button
+            onClick={handleRefresh}
+            variant="outline"
+            size="lg"
+            className="gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Reload checkout
+          </Button>
           {checkoutUrl && (
             <Button
               onClick={() => window.open(checkoutUrl, '_blank')}
@@ -212,12 +228,6 @@ isInitializingRef.current = false;
               Open secure checkout in a new tab
             </Button>
           )}
-          <button 
-            onClick={() => window.location.reload()}
-            className="text-primary hover:underline text-sm"
-          >
-            Try again
-          </button>
         </div>
       </div>
     );
