@@ -37,8 +37,8 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [retryAttempt, setRetryAttempt] = useState(0);
 
-  const MAX_RETRIES = 3;
-  const BASE_DELAY = 1000; // 1 second
+  const MAX_RETRIES = 2;
+  const BASE_DELAY = 500; // 500ms base delay
 
   const handleRefresh = () => {
     retryCountRef.current = 0;
@@ -77,16 +77,21 @@ try {
 
 
         // Get client secret from edge function
+        console.log('[CHECKOUT] Fetching checkout session...');
         const { data, error: invokeError } = await supabase.functions.invoke('create-checkout', {
           body: { priceId }
         });
 
         if (invokeError) {
+          console.error('[CHECKOUT] Error invoking create-checkout:', invokeError);
           throw new Error(invokeError.message);
         }
 
         const clientSecret = data?.clientSecret || data?.client_secret;
         const sessionUrl = data?.url;
+        
+        console.log('[CHECKOUT] Session received:', { hasClientSecret: !!clientSecret, hasUrl: !!sessionUrl });
+        
         if (!clientSecret) {
           throw new Error('No client secret received');
         }
@@ -98,6 +103,7 @@ try {
 
         // Prevent duplicate init with the same session
         if (currentClientSecretRef.current === clientSecret && stripeCheckoutRef.current) {
+          console.log('[CHECKOUT] Using existing checkout instance');
           setIsLoading(false);
           isInitializingRef.current = false;
           return;
@@ -105,8 +111,10 @@ try {
 
         // Initialize Stripe (singleton)
         if (!window.Stripe) {
+          console.error('[CHECKOUT] Stripe.js not loaded');
           throw new Error('Stripe.js failed to load');
         }
+        console.log('[CHECKOUT] Initializing Stripe instance...');
         const PUBLISHABLE_KEY = 'pk_live_51S4sMACNwyQa1NiQmZrjG7oSMVWDUNPdqMWKbGmkk1f8KXcnqXQITGVP2XsI9aXLMxMOQSX8CtU2nEAoNSmrCdGN00aIWz1BSl';
         const stripe = (window.__STRIPE_INSTANCE__ ||= window.Stripe(PUBLISHABLE_KEY));
 
@@ -116,12 +124,14 @@ if (!mounted) return;
 const gState = (window as any).__STRIPE_EMBEDDED__ || ((window as any).__STRIPE_EMBEDDED__ = { checkout: null, clientSecret: null, ownerId: null, isInitializing: false });
 gState.isInitializing = true;
 
+console.log('[CHECKOUT] Mounting embedded checkout...');
 // Mount embedded checkout
 const checkout = await stripe.initEmbeddedCheckout({
   clientSecret: clientSecret,
 });
 
         if (!mounted) {
+          console.log('[CHECKOUT] Component unmounted, cleaning up');
           checkout.unmount();
           return;
         }
@@ -129,8 +139,10 @@ const checkout = await stripe.initEmbeddedCheckout({
 stripeCheckoutRef.current = checkout;
 
 if (checkoutRef.current) {
+  console.log('[CHECKOUT] Mounting to DOM');
   checkoutRef.current.innerHTML = '';
   checkout.mount(checkoutRef.current);
+  console.log('[CHECKOUT] Successfully mounted');
 }
 
 currentClientSecretRef.current = clientSecret;
@@ -272,14 +284,26 @@ isInitializingRef.current = false;
   return (
     <div className="relative min-h-[400px]">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-          <div className="flex flex-col items-center gap-2">
+        <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-10">
+          <div className="flex flex-col items-center gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">Loading secure checkout...</p>
-            {retryAttempt > 0 && (
-              <p className="text-xs text-muted-foreground">
-                Retry attempt {retryAttempt}/{MAX_RETRIES}
-              </p>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">Loading secure checkout...</p>
+              {retryAttempt > 0 && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Retry attempt {retryAttempt}/{MAX_RETRIES}
+                </p>
+              )}
+            </div>
+            {checkoutUrl && retryAttempt > 0 && (
+              <Button
+                onClick={() => window.open(checkoutUrl, '_blank')}
+                variant="outline"
+                size="sm"
+                className="mt-2"
+              >
+                Open in new tab instead
+              </Button>
             )}
           </div>
         </div>
