@@ -64,24 +64,45 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
       setIsLoading(true);
       setCheckoutUrl(null);
       hasRetriedRef.current = false;
+      isInitializingRef.current = false;
       
-      // Clear any existing checkout
-      const g = (window as any).__STRIPE_EMBEDDED__;
-      if (g?.checkout) {
-        try { g.checkout.unmount(); } catch (e) { console.log('Price change cleanup error:', e); }
-        g.checkout = null;
-        g.clientSecret = null;
-        g.ownerId = null;
-        g.isInitializing = false;
-      }
-      if (stripeCheckoutRef.current) {
-        try { stripeCheckoutRef.current.unmount(); } catch (e) { console.log('Local cleanup error:', e); }
-        stripeCheckoutRef.current = null;
-      }
-      currentClientSecretRef.current = null;
+      // Clear any existing checkout with proper async cleanup
+      const cleanup = async () => {
+        const g = (window as any).__STRIPE_EMBEDDED__;
+        if (g?.checkout) {
+          try { 
+            g.checkout.unmount(); 
+            console.log('[CHECKOUT] Global checkout unmounted');
+          } catch (e) { 
+            console.log('Price change cleanup error:', e); 
+          }
+          g.checkout = null;
+          g.clientSecret = null;
+          g.ownerId = null;
+          g.isInitializing = false;
+        }
+        if (stripeCheckoutRef.current) {
+          try { 
+            stripeCheckoutRef.current.unmount(); 
+            console.log('[CHECKOUT] Local checkout unmounted');
+          } catch (e) { 
+            console.log('Local cleanup error:', e); 
+          }
+          stripeCheckoutRef.current = null;
+        }
+        if (checkoutRef.current) {
+          checkoutRef.current.innerHTML = '';
+        }
+        currentClientSecretRef.current = null;
+        
+        // Wait for cleanup to complete
+        await new Promise(r => setTimeout(r, 100));
+        
+        // Force re-init
+        setRefreshKey(prev => prev + 1);
+      };
       
-      // Force re-init
-      setRefreshKey(prev => prev + 1);
+      cleanup();
     }
   }, [priceId]);
 
