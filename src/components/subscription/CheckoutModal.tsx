@@ -39,8 +39,6 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
 
   const handleBack = () => {
     setSelectedPriceId(null);
-    // Refresh the page to ensure clean state when switching plans
-    window.location.reload();
   };
 
   const handleOpenChange = (open: boolean) => {
