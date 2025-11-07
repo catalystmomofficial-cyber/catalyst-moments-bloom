@@ -43,19 +43,27 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
           <ul className="space-y-3 mb-6">
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">Personalized wellness plans</span>
+              <span className="text-sm">Stage-specific protocols (TTC, pregnancy, postpartum)</span>
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">AI wellness coach</span>
+              <span className="text-sm">Fertility optimization programs</span>
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">Exclusive community access</span>
+              <span className="text-sm">Birth prep + pelvic floor healing</span>
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">Premium workout library</span>
+              <span className="text-sm">Diastasis recti repair programs</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <span className="text-sm">Daily workouts, meal plans & community</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <span className="text-sm">24/7 wellness coach chat</span>
             </li>
           </ul>
           
@@ -88,19 +96,27 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
           <ul className="space-y-3 mb-6">
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">Personalized wellness plans</span>
+              <span className="text-sm">Stage-specific protocols (TTC, pregnancy, postpartum)</span>
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">AI wellness coach</span>
+              <span className="text-sm">Fertility optimization programs</span>
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">Exclusive community access</span>
+              <span className="text-sm">Birth prep + pelvic floor healing</span>
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">Premium workout library</span>
+              <span className="text-sm">Diastasis recti repair programs</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <span className="text-sm">Daily workouts, meal plans & community</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <span className="text-sm">24/7 wellness coach chat</span>
             </li>
           </ul>
           
