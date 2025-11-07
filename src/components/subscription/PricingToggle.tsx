@@ -177,7 +177,7 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
                   <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground italic">"I was leaking every sneeze and hiding from mirrors because of my mom pooch. The postpartum protocols closed my gap from 3 fingers to 0.5 in 12 weeks, stopped the leaking by week 3, and the community kept me consistent. Switching from pregnancy to postpartum content was seamless—best $29/month I've spent."</p>
+              <p className="text-sm text-muted-foreground italic">"I was leaking every sneeze and my mom pooch made me avoid mirrors. The postpartum protocols closed my gap from 3 fingers to 0.5 in 12 weeks and stopped the leaking by week 3. Best $29/month I've spent."</p>
               <p className="text-sm font-semibold mt-2">— Jade M.</p>
             </CardContent>
           </Card>
