@@ -10,7 +10,8 @@ import { AnalyticsSection } from '@/components/admin/AnalyticsSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp } from 'lucide-react';
+import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles } from 'lucide-react';
+import { BlogPostGenerator } from '@/components/admin/BlogPostGenerator';
 
 const Admin = () => {
   return (
@@ -28,7 +29,7 @@ const Admin = () => {
           </div>
 
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <Shield className="h-4 w-4" />
                 Overview
@@ -48,6 +49,10 @@ const Admin = () => {
               <TabsTrigger value="affiliates" className="flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
                 Affiliates
+              </TabsTrigger>
+              <TabsTrigger value="blog" className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                Blog
               </TabsTrigger>
             </TabsList>
 
@@ -71,6 +76,10 @@ const Admin = () => {
 
             <TabsContent value="affiliates">
               <AffiliateSection />
+            </TabsContent>
+
+            <TabsContent value="blog">
+              <BlogPostGenerator />
             </TabsContent>
           </Tabs>
         </div>
