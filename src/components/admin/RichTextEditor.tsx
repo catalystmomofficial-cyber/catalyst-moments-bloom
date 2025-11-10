@@ -48,6 +48,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [isUploadingImage, setIsUploadingImage] = React.useState(false);
   const [showLinkDialog, setShowLinkDialog] = React.useState(false);
   const [linkUrl, setLinkUrl] = React.useState('');
+  const [isDraggingOver, setIsDraggingOver] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
@@ -132,6 +133,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    setIsDraggingOver(false);
     
     const files = Array.from(e.dataTransfer.files);
     const imageFile = files.find(file => file.type.startsWith('image/'));
@@ -145,6 +147,34 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     e.preventDefault();
     e.stopPropagation();
   }, []);
+
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set to false if we're leaving the editor container
+    if (e.currentTarget === e.target) {
+      setIsDraggingOver(false);
+    }
+  }, []);
+
+  const handlePaste = useCallback((e: React.ClipboardEvent) => {
+    const items = Array.from(e.clipboardData.items);
+    const imageItem = items.find(item => item.type.startsWith('image/'));
+    
+    if (imageItem) {
+      e.preventDefault();
+      const file = imageItem.getAsFile();
+      if (file) {
+        handleImageUpload(file);
+      }
+    }
+  }, [handleImageUpload]);
 
   if (!editor) {
     return null;
@@ -165,9 +195,14 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   return (
     <div 
-      className="border rounded-lg overflow-hidden bg-background"
+      className={`border rounded-lg overflow-hidden bg-background transition-all ${
+        isDraggingOver ? 'ring-2 ring-primary ring-offset-2 border-primary' : ''
+      }`}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onPaste={handlePaste}
     >
       <div className="border-b bg-muted/50 p-2 flex flex-wrap gap-1">
         <ToolbarButton
@@ -272,7 +307,17 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         />
       </div>
       
-      <EditorContent editor={editor} />
+      <div className="relative">
+        {isDraggingOver && (
+          <div className="absolute inset-0 bg-primary/10 backdrop-blur-sm z-10 flex items-center justify-center border-2 border-dashed border-primary">
+            <div className="text-center">
+              <ImageIcon className="h-12 w-12 mx-auto mb-2 text-primary" />
+              <p className="text-sm font-medium text-primary">Drop image to upload</p>
+            </div>
+          </div>
+        )}
+        <EditorContent editor={editor} />
+      </div>
       
       <input
         ref={fileInputRef}
