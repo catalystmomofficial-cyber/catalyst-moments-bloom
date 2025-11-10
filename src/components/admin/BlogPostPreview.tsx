@@ -1,4 +1,5 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, User } from 'lucide-react';
@@ -62,15 +63,12 @@ export const BlogPostPreview: React.FC<BlogPostPreviewProps> = ({
             </p>
           )}
           
-          <div className="prose prose-slate dark:prose-invert max-w-none">
-            {content.split('\n').map((paragraph, idx) => (
-              paragraph.trim() && (
-                <p key={idx} className="mb-4">
-                  {paragraph}
-                </p>
-              )
-            ))}
-          </div>
+          <div 
+            className="prose prose-slate dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(content) 
+            }}
+          />
 
           {tags && tags.length > 0 && (
             <div className="pt-4 border-t">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { RichTextEditor } from './RichTextEditor';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -225,12 +226,12 @@ export const BlogPostManager = () => {
       </div>
       <div>
         <Label>Content</Label>
-        <Textarea
-          value={editingPost?.content || ''}
-          onChange={(e) =>
-            setEditingPost(editingPost ? { ...editingPost, content: e.target.value } : null)
+        <RichTextEditor
+          content={editingPost?.content || ''}
+          onChange={(newContent) =>
+            setEditingPost(editingPost ? { ...editingPost, content: newContent } : null)
           }
-          rows={12}
+          placeholder="Write your blog post content here..."
         />
       </div>
       <div>
