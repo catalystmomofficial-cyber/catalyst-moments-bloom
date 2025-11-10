@@ -129,6 +129,23 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   }, [editor, linkUrl]);
 
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const files = Array.from(e.dataTransfer.files);
+    const imageFile = files.find(file => file.type.startsWith('image/'));
+    
+    if (imageFile) {
+      handleImageUpload(imageFile);
+    }
+  }, [handleImageUpload]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
   if (!editor) {
     return null;
   }
@@ -147,7 +164,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   );
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-background">
+    <div 
+      className="border rounded-lg overflow-hidden bg-background"
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+    >
       <div className="border-b bg-muted/50 p-2 flex flex-wrap gap-1">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
