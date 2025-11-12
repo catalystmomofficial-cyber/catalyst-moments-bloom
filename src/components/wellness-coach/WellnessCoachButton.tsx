@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
-import WellnessCoachModal from './WellnessCoachModal';
+import EnhancedWellnessCoachModal from './EnhancedWellnessCoachModal';
 import { useToast } from '@/hooks/use-toast';
 
 interface WellnessCoachButtonProps {
@@ -42,7 +42,7 @@ const WellnessCoachButton = ({
         {showLabel && 'Wellness Coach'}
       </Button>
 
-      <WellnessCoachModal 
+      <EnhancedWellnessCoachModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
