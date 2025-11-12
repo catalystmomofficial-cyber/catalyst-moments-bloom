@@ -111,13 +111,6 @@ What would you like help with today?`;
     };
 
     setMessages([welcomeMessage]);
-    
-    // Convert text to speech for welcome message
-    try {
-      await playTextAsAudio(greeting);
-    } catch (error) {
-      console.error('Error playing welcome audio:', error);
-    }
   };
 
   const getStageGreeting = (stage: string): string => {
@@ -292,10 +285,7 @@ What would you like help with today?`;
         });
       }
 
-      // Convert response to speech if in call mode
-      if (isInCall) {
-        await playTextAsAudio(response.data.response);
-      }
+      // Audio disabled to avoid API quota issues
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -434,8 +424,7 @@ What would you like help with today?`;
           });
         }
 
-        // Convert response to speech
-        await playTextAsAudio(response.data.response);
+        // Audio disabled to avoid API quota issues
       };
 
     } catch (error) {
@@ -491,7 +480,6 @@ What would you like help with today?`;
     };
 
     setMessages(prev => [...prev, callMessage]);
-    await playTextAsAudio(callGreeting);
   };
 
   const endCall = () => {
