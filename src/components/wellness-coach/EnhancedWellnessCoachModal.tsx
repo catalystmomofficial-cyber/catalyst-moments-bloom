@@ -67,9 +67,27 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
   }, [isOpen]);
 
   const startPersonalizedConversation = async () => {
-    const greeting = `Hello ${profile?.display_name || 'there'}! 👋 I'm Dr. Maya, your personal wellness coach. I'm here to support you on your ${profile?.motherhood_stage ? `${profile.motherhood_stage} ` : ''}wellness journey. 
+    let greeting = '';
+    
+    if (!profile?.motherhood_stage) {
+      greeting = `Hi ${profile?.display_name || 'there'}! I'm Coach Sarah, your wellness companion at Catalyst Mom 💚
 
-How are you feeling today? I can help with nutrition advice, exercise routines, stress management, or just listen if you need someone to talk to. You can chat with me through text, voice messages, or even share images for personalized insights!`;
+Before we dive in, I'd love to know - where are you in your motherhood journey?
+• Trying to conceive? (How many months?)
+• Pregnant? (Which trimester/weeks?)
+• Postpartum? (How many weeks/months?)
+• Chasing toddlers? (How old?)
+
+This helps me personalize everything just for you!`;
+    } else {
+      // Generate stage-specific quick suggestions
+      const stageGreeting = getStageGreeting(profile.motherhood_stage);
+      greeting = `Hi ${profile?.display_name || 'there'}! I'm Coach Sarah from Catalyst Mom 💚
+
+${stageGreeting}
+
+I'm here to support you with personalized advice, workouts, nutrition, and just to listen. What brings you here today?`;
+    }
 
     const welcomeMessage: Message = {
       id: Date.now().toString(),
@@ -87,6 +105,31 @@ How are you feeling today? I can help with nutrition advice, exercise routines, 
     } catch (error) {
       console.error('Error playing welcome audio:', error);
     }
+  };
+
+  const getStageGreeting = (stage: string): string => {
+    if (stage.includes('ttc')) {
+      return "I see you're on your TTC journey. I'm here to support you with fertility nutrition, cycle tracking insights, and staying hopeful through it all.";
+    }
+    if (stage.includes('trimester_1')) {
+      return "First trimester - such an exciting and sometimes challenging time! I'm here for energy tips, managing symptoms, and safe movement.";
+    }
+    if (stage.includes('trimester_2')) {
+      return "Second trimester energy! Let's make the most of this time with safe workouts, nutrition for baby's growth, and prep for what's ahead.";
+    }
+    if (stage.includes('trimester_3')) {
+      return "Third trimester - the home stretch! I'm here for birth prep, managing discomfort, and keeping you strong and confident.";
+    }
+    if (stage.includes('postpartum_0-6')) {
+      return "Early postpartum - rest and recovery are your priorities right now. I'm here for gentle guidance, healing nutrition, and emotional support.";
+    }
+    if (stage.includes('postpartum')) {
+      return "Postpartum mama, you're doing amazing! I'm here to help you rebuild strength, find energy, and prioritize your wellness while caring for baby.";
+    }
+    if (stage.includes('toddler')) {
+      return "Toddler mom life is no joke! I'm here for quick workouts, energy-boosting nutrition, and strategies to take care of YOU while chasing little ones.";
+    }
+    return "I'm here to support your wellness journey with personalized advice, workouts, and nutrition guidance.";
   };
 
   const handleSendMessage = async () => {
@@ -107,12 +150,13 @@ How are you feeling today? I can help with nutrition advice, exercise routines, 
     setIsLoading(true);
 
     try {
-      const response = await supabase.functions.invoke('ai-wellness-chat', {
+      const response = await supabase.functions.invoke('wellness-coach-chat', {
         body: {
-          message: inputMessage,
-          userProfile: profile,
-          conversationHistory,
-          images: selectedImages
+          messages: [
+            ...conversationHistory,
+            { role: 'user', content: inputMessage }
+          ],
+          userProfile: profile
         }
       });
 
@@ -237,11 +281,13 @@ How are you feeling today? I can help with nutrition advice, exercise routines, 
         setMessages(prev => [...prev, voiceMessage]);
 
         // Process the transcribed text as a regular message
-        const response = await supabase.functions.invoke('ai-wellness-chat', {
+        const response = await supabase.functions.invoke('wellness-coach-chat', {
           body: {
-            message: transcribedText,
-            userProfile: profile,
-            conversationHistory
+            messages: [
+              ...conversationHistory,
+              { role: 'user', content: transcribedText }
+            ],
+            userProfile: profile
           }
         });
 
@@ -308,7 +354,7 @@ How are you feeling today? I can help with nutrition advice, exercise routines, 
     });
 
     // Greet user in call mode
-    const callGreeting = `Hi ${profile?.display_name || 'there'}! I'm so glad you called. How can I support your wellness journey today?`;
+    const callGreeting = `Hi ${profile?.display_name || 'there'}! I'm Coach Sarah - so glad you called. What's on your mind today?`;
     
     const callMessage: Message = {
       id: Date.now().toString(),
@@ -363,13 +409,13 @@ How are you feeling today? I can help with nutrition advice, exercise routines, 
               <Avatar className="h-12 w-12">
                 <AvatarImage src="/placeholder-avatar.jpg" />
                 <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-                  DM
+                  CS
                 </AvatarFallback>
               </Avatar>
               <div>
-                <DialogTitle className="text-lg font-semibold">Dr. Maya</DialogTitle>
+                <DialogTitle className="text-lg font-semibold">Coach Sarah</DialogTitle>
                 <p className="text-sm text-muted-foreground">
-                  {isInCall ? '📞 In Call' : 'Wellness Coach • Online'}
+                  {isInCall ? '📞 In Call' : profile?.motherhood_stage ? `${profile.motherhood_stage} • Online` : 'General Wellness • Online'}
                 </p>
               </div>
             </div>
