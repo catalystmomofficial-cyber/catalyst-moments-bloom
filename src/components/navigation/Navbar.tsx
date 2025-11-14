@@ -13,6 +13,7 @@ const Navbar = () => {
   const links = [
     { name: 'Home', href: '/' },
     { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Progress', href: '/progress' },
     { name: 'Workouts', href: '/workouts' },
     { name: 'Recipes', href: '/recipes' },
     { name: 'Wellness', href: '/wellness' },

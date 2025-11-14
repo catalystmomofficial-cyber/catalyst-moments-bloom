@@ -45,6 +45,7 @@ import Admin from "./pages/Admin";
 import SelfCareGuide from "./pages/wellness/SelfCareGuide";
 import WellnessResources from "./pages/wellness/WellnessResources";
 import WellnessArticle from "./pages/wellness/WellnessArticle";
+import Progress from "./pages/Progress";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
@@ -83,6 +84,11 @@ function AppContent() {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         
         {/* Protected Routes - Require Login and Subscription */}
+        <Route path="/progress" element={
+          <PrivateRoute>
+            <Progress />
+          </PrivateRoute>
+        } />
         <Route path="/dashboard" element={
           <PrivateRoute>
             <SubscriptionGuard>
