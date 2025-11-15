@@ -13,6 +13,7 @@ interface CheckoutModalProps {
 const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
   const navigate = useNavigate();
   const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Reset selection when modal closes to avoid stale checkout instances
   useEffect(() => {
@@ -31,7 +32,11 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
   };
 
   const handleSelectPlan = (priceId: string) => {
-    setSelectedPriceId(priceId);
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelectedPriceId(priceId);
+      setIsTransitioning(false);
+    }, 300);
   };
 
   const handleBack = () => {
@@ -62,7 +67,12 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
         </DialogHeader>
 
         <div className="space-y-4">
-          {!selectedPriceId ? (
+          {isTransitioning ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <p className="text-muted-foreground">Loading checkout...</p>
+            </div>
+          ) : !selectedPriceId ? (
             <>
               <PricingToggle 
                 onSelectPlan={handleSelectPlan}
