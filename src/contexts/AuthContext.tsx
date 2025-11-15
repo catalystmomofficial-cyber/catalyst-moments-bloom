@@ -65,6 +65,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Ensure a profile row exists for the authenticated user (used for Google signups and first logins)
+  const ensureProfile = async (u: User) => {
+    try {
+      const { data: existing, error: selErr } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('user_id', u.id)
+        .maybeSingle();
+
+      if (selErr && selErr.code !== 'PGRST116') {
+        console.error('Error checking profile existence:', selErr);
+        return;
+      }
+
+      if (!existing) {
+        const { data: inserted, error: insErr } = await supabase
+          .from('profiles')
+          .insert({
+            user_id: u.id,
+            display_name: (u.user_metadata as any)?.full_name ?? null,
+            motherhood_stage: (u.user_metadata as any)?.motherhood_stage ?? 'none',
+          })
+          .select('*')
+          .single();
+
+        if (insErr) {
+          console.error('Error creating profile:', insErr);
+          return;
+        }
+
+        setProfile(inserted as UserProfile);
+      }
+    } catch (err) {
+      console.error('ensureProfile error:', err);
+    }
+  };
+
   // Set up auth state listener and check for existing session
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -76,8 +113,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (session?.user) {
           // Defer profile fetching to avoid potential deadlocks
           setTimeout(() => {
-            fetchProfile(session.user.id);
-            checkSubscription();
+            (async () => {
+              await ensureProfile(session.user!);
+              await fetchProfile(session.user!.id);
+              checkSubscription();
+            })();
           }, 0);
         } else {
           setProfile(null);
@@ -101,10 +141,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        fetchProfile(session.user.id);
         // Use setTimeout for consistency and to avoid race conditions
         setTimeout(() => {
-          checkSubscription();
+          (async () => {
+            await ensureProfile(session.user!);
+            await fetchProfile(session.user!.id);
+            checkSubscription();
+          })();
         }, 0);
       }
       
