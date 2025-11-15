@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/common/ScrollToTop";
 import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
+import { GoogleAuthOnboarding } from "./components/onboarding/GoogleAuthOnboarding";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
@@ -66,6 +67,7 @@ function AppContent() {
         <meta property="og:url" content={window.location.href} />
       </Helmet>
       <ScrollToTop />
+      <GoogleAuthOnboarding />
       <Toaster />
       <Sonner />
       <Routes>
