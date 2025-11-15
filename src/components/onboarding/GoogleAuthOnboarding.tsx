@@ -127,8 +127,18 @@ export const GoogleAuthOnboarding = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      // Prevent closing the dialog if profile is incomplete
+      if (!isOpen && (!displayName.trim() || !motherhoodStage || motherhoodStage === 'none')) {
+        return;
+      }
+      setOpen(isOpen);
+    }}>
+      <DialogContent 
+        className="sm:max-w-md" 
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-6 h-6 text-primary" />
