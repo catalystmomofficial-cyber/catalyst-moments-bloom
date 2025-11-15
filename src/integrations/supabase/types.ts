@@ -483,6 +483,60 @@ export type Database = {
         }
         Relationships: []
       }
+      monthly_challenges: {
+        Row: {
+          badge_color: string | null
+          badge_icon: string | null
+          challenge_type: string
+          created_at: string | null
+          current_winners: number
+          description: string | null
+          end_date: string
+          id: string
+          is_active: boolean | null
+          max_winners: number
+          motherhood_stage: string
+          name: string
+          start_date: string
+          target_count: number
+          updated_at: string | null
+        }
+        Insert: {
+          badge_color?: string | null
+          badge_icon?: string | null
+          challenge_type?: string
+          created_at?: string | null
+          current_winners?: number
+          description?: string | null
+          end_date: string
+          id?: string
+          is_active?: boolean | null
+          max_winners?: number
+          motherhood_stage: string
+          name: string
+          start_date: string
+          target_count?: number
+          updated_at?: string | null
+        }
+        Update: {
+          badge_color?: string | null
+          badge_icon?: string | null
+          challenge_type?: string
+          created_at?: string | null
+          current_winners?: number
+          description?: string | null
+          end_date?: string
+          id?: string
+          is_active?: boolean | null
+          max_winners?: number
+          motherhood_stage?: string
+          name?: string
+          start_date?: string
+          target_count?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           created_at: string
@@ -716,6 +770,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_challenge_progress: {
+        Row: {
+          awarded: boolean | null
+          challenge_id: string | null
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          current_count: number | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          awarded?: boolean | null
+          challenge_id?: string | null
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_count?: number | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          awarded?: boolean | null
+          challenge_id?: string | null
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          current_count?: number | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenge_progress_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "monthly_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_content_completion: {
         Row: {
@@ -951,6 +1049,7 @@ export type Database = {
         }[]
       }
       approve_user: { Args: { user_id_param: string }; Returns: undefined }
+      award_challenge_badges: { Args: never; Returns: undefined }
       create_affiliate_application: {
         Args: {
           audience_size_param: string
@@ -1026,6 +1125,10 @@ export type Database = {
           motherhood_stage: string
           user_id: string
         }[]
+      }
+      increment_challenge_progress: {
+        Args: { p_challenge_type: string; p_user_id: string }
+        Returns: undefined
       }
       is_admin: { Args: { user_id_param: string }; Returns: boolean }
       is_premium_user: { Args: never; Returns: boolean }

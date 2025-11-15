@@ -78,6 +78,20 @@ export const AchievementBadges = () => {
     const totalPoints = pointsData?.total_points ?? 0;
     const userLevel = pointsData?.level ?? 1;
 
+    // Check monthly challenge badges
+    const { data: challengeBadges } = await supabase
+      .from('user_challenge_progress')
+      .select(`
+        awarded,
+        completed_at,
+        challenge:monthly_challenges (
+          name,
+          badge_color
+        )
+      `)
+      .eq('user_id', user.id)
+      .eq('awarded', true);
+
     const allAchievements: Achievement[] = [
       {
         id: 'profile_complete',
@@ -154,6 +168,17 @@ export const AchievementBadges = () => {
         earned: totalPoints >= 500,
         rarity: 'rare',
       },
+      // Add monthly challenge badges
+      ...(challengeBadges || []).map((badge: any) => ({
+        id: `challenge_${badge.challenge?.name}`,
+        title: badge.challenge?.name || 'Catalyst Crown',
+        description: 'Limited edition monthly challenge winner',
+        icon: Crown,
+        color: badge.challenge?.badge_color || 'from-yellow-400 to-amber-600',
+        earned: true,
+        earnedDate: badge.completed_at,
+        rarity: 'legendary' as const,
+      })),
     ];
 
     setAchievements(allAchievements);

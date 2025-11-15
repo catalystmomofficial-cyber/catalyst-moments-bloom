@@ -30,6 +30,7 @@ import SubscriptionButton from '@/components/subscription/SubscriptionButton';
 import AffiliateButton from '@/components/affiliate/AffiliateButton';
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
 import { AchievementBadges } from '@/components/profile/AchievementBadges';
+import { MonthlyChallenge } from '@/components/challenges/MonthlyChallenge';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -205,9 +206,12 @@ const Dashboard = () => {
           </Card>
         )}
 
-        {/* Profile Completion and Achievement Badges */}
+        {/* Monthly Challenge, Profile Completion and Achievement Badges */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <ProfileCompletionWidget />
+          <div className="space-y-6">
+            <MonthlyChallenge />
+            <ProfileCompletionWidget />
+          </div>
           <AchievementBadges />
         </div>
         
