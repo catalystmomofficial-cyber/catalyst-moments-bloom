@@ -17,8 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, Award, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Progress } from '@/components/ui/progress';
+import { supabase } from '@/integrations/supabase/client';
 
 export const GoogleAuthOnboarding = () => {
   const { user, profile, updateProfile } = useAuth();
@@ -27,6 +29,29 @@ export const GoogleAuthOnboarding = () => {
   const [displayName, setDisplayName] = useState('');
   const [motherhoodStage, setMotherhoodStage] = useState<MotherhoodStage>('none');
   const [loading, setLoading] = useState(false);
+  const [completionPercentage, setCompletionPercentage] = useState(0);
+
+
+  // Calculate profile completion percentage
+  useEffect(() => {
+    if (profile) {
+      let completed = 0;
+      const totalFields = 2; // display_name and motherhood_stage
+      
+      if (profile.display_name) completed++;
+      if (profile.motherhood_stage && profile.motherhood_stage !== 'none') completed++;
+      
+      setCompletionPercentage((completed / totalFields) * 100);
+    }
+  }, [profile]);
+
+  // Calculate current form completion
+  const currentFormCompletion = () => {
+    let completed = 0;
+    if (displayName.trim()) completed += 50;
+    if (motherhoodStage && motherhoodStage !== 'none') completed += 50;
+    return completed;
+  };
 
   useEffect(() => {
     // Only show onboarding if user is authenticated via Google and profile is missing info
@@ -52,14 +77,37 @@ export const GoogleAuthOnboarding = () => {
     setLoading(true);
 
     try {
+      // Calculate if this is first-time profile completion
+      const wasIncomplete = !profile?.display_name || !profile?.motherhood_stage;
+      
       await updateProfile({
         display_name: displayName,
         motherhood_stage: motherhoodStage,
       });
 
+      // Award bonus points for completing profile (only on first completion)
+      if (wasIncomplete && user) {
+        try {
+          const { error: pointsError } = await supabase.rpc('add_user_points', {
+            p_user_id: user.id,
+            p_points: 100,
+            p_source: 'profile_completion',
+            p_description: 'Profile completion bonus! Welcome to Catalyst Mom 🎉'
+          });
+
+          if (pointsError) {
+            console.error('Error awarding points:', pointsError);
+          }
+        } catch (error) {
+          console.error('Error awarding points:', error);
+        }
+      }
+
       toast({
-        title: 'Welcome to Catalyst Mom! 🎉',
-        description: 'Your profile has been set up successfully.',
+        title: wasIncomplete ? 'Profile Complete! +100 Points! 🎉' : 'Profile Updated! 🎉',
+        description: wasIncomplete 
+          ? 'You earned 100 bonus points for completing your profile!'
+          : 'Your profile has been updated successfully.',
       });
 
       setOpen(false);
@@ -83,13 +131,31 @@ export const GoogleAuthOnboarding = () => {
             <DialogTitle className="text-2xl">Welcome to Catalyst Mom!</DialogTitle>
           </div>
           <DialogDescription>
-            Let's personalize your experience. Tell us a bit about yourself.
+            Let's personalize your experience. Complete your profile to earn bonus points!
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        {/* Progress Indicator */}
+        <div className="space-y-2 mb-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground font-medium">Profile Completion</span>
+            <div className="flex items-center gap-2">
+              <Award className="w-4 h-4 text-primary" />
+              <span className="font-bold text-primary">{Math.round(currentFormCompletion())}%</span>
+            </div>
+          </div>
+          <Progress value={currentFormCompletion()} className="h-2" />
+          <p className="text-xs text-muted-foreground">
+            Complete your profile to earn <strong className="text-primary">100 bonus points!</strong>
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="displayName">Display Name *</Label>
+            <Label htmlFor="displayName" className="flex items-center gap-2">
+              Display Name *
+              {displayName.trim() && <CheckCircle2 className="w-4 h-4 text-green-500" />}
+            </Label>
             <Input
               id="displayName"
               placeholder="How should we call you?"
@@ -100,7 +166,10 @@ export const GoogleAuthOnboarding = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="motherhoodStage">Motherhood Journey *</Label>
+            <Label htmlFor="motherhoodStage" className="flex items-center gap-2">
+              Motherhood Journey *
+              {motherhoodStage && motherhoodStage !== 'none' && <CheckCircle2 className="w-4 h-4 text-green-500" />}
+            </Label>
             <Select onValueChange={(value) => setMotherhoodStage(value as MotherhoodStage)} required>
               <SelectTrigger id="motherhoodStage">
                 <SelectValue placeholder="Select your current stage" />
@@ -115,17 +184,23 @@ export const GoogleAuthOnboarding = () => {
             </Select>
           </div>
 
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-            <p className="text-sm text-muted-foreground">
-              This helps us customize your fitness plans, nutrition guidance, and community recommendations
-              specifically for your journey.
-            </p>
+          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <Award className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium mb-1">Earn Rewards!</p>
+                <p className="text-xs text-muted-foreground">
+                  Complete your profile to unlock <strong className="text-primary">100 bonus points</strong> and 
+                  personalized fitness plans, nutrition guidance, and community recommendations.
+                </p>
+              </div>
+            </div>
           </div>
 
           <Button
             type="submit"
             className="w-full"
-            disabled={loading || !displayName || motherhoodStage === 'none'}
+            disabled={loading || !displayName.trim() || !motherhoodStage || motherhoodStage === 'none'}
           >
             {loading ? (
               <>
@@ -133,7 +208,10 @@ export const GoogleAuthOnboarding = () => {
                 Setting up...
               </>
             ) : (
-              'Complete Setup'
+              <>
+                {currentFormCompletion() === 100 && <Award className="mr-2 h-4 w-4" />}
+                Complete Setup {currentFormCompletion() === 100 && '& Earn 100 Points!'}
+              </>
             )}
           </Button>
         </form>
