@@ -28,6 +28,8 @@ import JourneySelector from '@/components/onboarding/JourneySelector';
 import SubscriptionStatus from '@/components/subscription/SubscriptionStatus';
 import SubscriptionButton from '@/components/subscription/SubscriptionButton';
 import AffiliateButton from '@/components/affiliate/AffiliateButton';
+import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
+import { AchievementBadges } from '@/components/profile/AchievementBadges';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -202,6 +204,12 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Profile Completion and Achievement Badges */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <ProfileCompletionWidget />
+          <AchievementBadges />
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatsCard
