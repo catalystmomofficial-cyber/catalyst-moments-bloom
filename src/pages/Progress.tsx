@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Progress as ProgressBar } from '@/components/ui/progress';
+import { Progress as ProgressIndicator } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -389,7 +389,7 @@ const Progress = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <ProgressBar value={milestoneProgress} className="h-3 mb-4" />
+                <ProgressIndicator value={milestoneProgress} className="h-3 mb-4" />
                 <p className="text-sm text-muted-foreground">
                   Keep going! You're {currentMilestone.count - stats.totalCheckIns} check-ins away from {currentMilestone.label}
                 </p>
