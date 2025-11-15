@@ -2,7 +2,7 @@ import { ReactNode, useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDevBypass } from "@/hooks/useDevBypass";
 import CheckoutModal from "@/components/subscription/CheckoutModal";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 
 interface SubscriptionGuardProps {
   children: ReactNode;
@@ -14,7 +14,10 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   const bypass = useDevBypass();
   const [showModal, setShowModal] = useState(false);
   const [searchParams] = useSearchParams();
-  const [hasSeenDashboard, setHasSeenDashboard] = useState(false);
+  const location = useLocation();
+  
+  // Routes that should NOT trigger the subscription modal
+  const publicRoutes = ['/', '/auth', '/login', '/register', '/forgot-password', '/reset-password'];
   
   // Check if user just completed a successful payment
   useEffect(() => {
@@ -24,36 +27,32 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
     }
   }, [searchParams, checkSubscription]);
 
-  // Allow users to see the dashboard first before showing subscription modal
+  // Show modal immediately when accessing protected routes
   useEffect(() => {
     if (user && !subscribed && !bypass) {
-      // Give users 5 seconds to see the dashboard before showing the modal
-      const timer = setTimeout(() => {
-        setHasSeenDashboard(true);
-      }, 5000);
-      
-      return () => clearTimeout(timer);
+      const isPublicRoute = publicRoutes.includes(location.pathname);
+      setShowModal(!isPublicRoute);
     }
-  }, [user, subscribed, bypass]);
+  }, [user, subscribed, bypass, location.pathname]);
   
-  console.log('[SUBSCRIPTION_GUARD] Subscription state:', { subscribed, bypass, hasSeenDashboard });
+  console.log('[SUBSCRIPTION_GUARD] Subscription state:', { subscribed, bypass, route: location.pathname });
   
   if (bypass) {
     return <>{children}</>;
   }
   
   if (!subscribed) {
-    console.log('[SUBSCRIPTION_GUARD] Not subscribed, showing content with delayed modal');
+    console.log('[SUBSCRIPTION_GUARD] Not subscribed, showing modal:', showModal);
     
     if (fallback) {
       return <>{fallback}</>;
     }
     
-    // Show the dashboard content, and after delay, show the subscription modal
+    // Show the subscription modal when accessing protected features
     return (
       <>
         {children}
-        {hasSeenDashboard && (
+        {showModal && (
           <CheckoutModal 
             isOpen={true} 
             onClose={() => setShowModal(false)} 

@@ -56,10 +56,9 @@ export const GoogleAuthOnboarding = () => {
   useEffect(() => {
     // Only show onboarding if user is authenticated via Google and profile is missing info
     if (user && profile) {
-      const needsOnboarding = !profile.display_name || !profile.motherhood_stage;
+      const needsOnboarding = !profile.display_name || !profile.motherhood_stage || profile.motherhood_stage === 'none';
       
-      // Check if user signed in with Google by checking if they have a password
-      // Google OAuth users won't have a password set
+      // Check if user signed in with Google
       const isGoogleUser = user.app_metadata?.provider === 'google';
       
       if (needsOnboarding && isGoogleUser) {
