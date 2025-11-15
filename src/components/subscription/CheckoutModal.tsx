@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Shield, Check } from "lucide-react";
 import EmbeddedCheckout from "./EmbeddedCheckout";
 import PricingToggle from "./PricingToggle";
 
@@ -50,10 +51,37 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
     }
   };
 
+  const currentStep: 1 | 2 | 3 = isTransitioning ? 2 : selectedPriceId ? 2 : 1;
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background to-secondary/20">
-        <DialogHeader className="space-y-2 pb-4">
+        <DialogHeader className="space-y-4 pb-4">
+          {/* Progress Indicator */}
+          <div className="flex items-center justify-center gap-2 mb-4">
+            {[1, 2, 3].map((step) => (
+              <div key={step} className="flex items-center">
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 transition-all ${
+                  step < currentStep 
+                    ? 'bg-primary border-primary text-primary-foreground' 
+                    : step === currentStep 
+                    ? 'bg-primary border-primary text-primary-foreground' 
+                    : 'bg-background border-muted-foreground/30 text-muted-foreground'
+                }`}>
+                  {step < currentStep ? <Check className="w-4 h-4" /> : step}
+                </div>
+                {step < 3 && (
+                  <div className={`w-12 h-0.5 mx-1 transition-all ${
+                    step < currentStep ? 'bg-primary' : 'bg-muted-foreground/30'
+                  }`} />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="text-center text-sm text-muted-foreground mb-2">
+            {currentStep === 1 ? 'Step 1: Select Your Plan' : currentStep === 2 ? 'Step 2: Payment Details' : 'Step 3: Confirmation'}
+          </div>
+
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
@@ -78,6 +106,15 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 onSelectPlan={handleSelectPlan}
                 yearlyPriceId="price_1S54B1CNwyQa1NiQGKx1Ps0r"
               />
+              
+              {/* Money-Back Guarantee Badge */}
+              <div className="flex items-center justify-center gap-2 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                <Shield className="w-5 h-5 text-primary" />
+                <p className="text-sm font-medium text-foreground">
+                  <span className="text-primary font-semibold">30-Day Money-Back Guarantee</span> - Try risk-free, cancel anytime
+                </p>
+              </div>
+
               <Button
                 variant="ghost"
                 size="sm"
