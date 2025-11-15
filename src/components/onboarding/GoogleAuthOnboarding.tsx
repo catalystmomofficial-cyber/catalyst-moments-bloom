@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth, MotherhoodStage } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogContent,
@@ -25,6 +26,7 @@ import { supabase } from '@/integrations/supabase/client';
 export const GoogleAuthOnboarding = () => {
   const { user, profile, updateProfile } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [displayName, setDisplayName] = useState('');
   const [motherhoodStage, setMotherhoodStage] = useState<MotherhoodStage>('none');
@@ -110,6 +112,9 @@ export const GoogleAuthOnboarding = () => {
       });
 
       setOpen(false);
+      
+      // Navigate to dashboard to trigger subscription flow
+      navigate('/dashboard');
     } catch (error) {
       toast({
         title: 'Error updating profile',

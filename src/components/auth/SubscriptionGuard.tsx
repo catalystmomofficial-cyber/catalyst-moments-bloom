@@ -56,12 +56,17 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
       return <>{fallback}</>;
     }
     
-    // Show only the subscription modal for protected routes
+    // Show the subscription modal with dimmed background content
     return (
-      <CheckoutModal 
-        isOpen={true} 
-        onClose={() => window.location.href = '/'} 
-      />
+      <>
+        <div className="opacity-50 pointer-events-none">
+          {children}
+        </div>
+        <CheckoutModal 
+          isOpen={true} 
+          onClose={() => window.location.href = '/'} 
+        />
+      </>
     );
   }
   
