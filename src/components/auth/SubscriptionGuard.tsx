@@ -1,6 +1,7 @@
 import { ReactNode, useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDevBypass } from "@/hooks/useDevBypass";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import CheckoutModal from "@/components/subscription/CheckoutModal";
 import { useSearchParams, useLocation } from "react-router-dom";
 
@@ -12,6 +13,7 @@ interface SubscriptionGuardProps {
 const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   const { subscribed, checkSubscription, user } = useAuth();
   const bypass = useDevBypass();
+  const { isAdmin } = useAdminAuth();
   const [showModal, setShowModal] = useState(false);
   const [searchParams] = useSearchParams();
   const location = useLocation();
@@ -35,9 +37,10 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
     }
   }, [user, subscribed, bypass, location.pathname]);
   
-  console.log('[SUBSCRIPTION_GUARD] Subscription state:', { subscribed, bypass, route: location.pathname });
+  console.log('[SUBSCRIPTION_GUARD] Subscription state:', { subscribed, bypass, isAdmin, route: location.pathname });
   
-  if (bypass) {
+  // Admins get free access
+  if (isAdmin || bypass) {
     return <>{children}</>;
   }
   
