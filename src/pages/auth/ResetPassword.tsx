@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { Lock, CheckCircle2 } from 'lucide-react';
+import { Lock, CheckCircle2, Eye, EyeOff, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 const calculatePasswordStrength = (pass: string): { strength: number; label: string; color: string } => {
@@ -32,8 +32,17 @@ export default function ResetPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const passwordStrength = useMemo(() => calculatePasswordStrength(password), [password]);
+  
+  const passwordRequirements = useMemo(() => ({
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    number: /\d/.test(password),
+    special: /[^a-zA-Z0-9]/.test(password),
+  }), [password]);
 
   useEffect(() => {
     // Check if we have a valid session from the reset link
@@ -121,16 +130,27 @@ export default function ResetPassword() {
             
             <div className="space-y-2">
               <Label htmlFor="password">New Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter new password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={isLoading}
-                minLength={6}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter new password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  minLength={6}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  disabled={isLoading}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
               {password && (
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
@@ -151,23 +171,69 @@ export default function ResetPassword() {
                   />
                 </div>
               )}
-              <p className="text-xs text-muted-foreground">
-                Use 8+ characters with mix of letters, numbers & symbols
-              </p>
+              
+              <div className="space-y-1.5">
+                <p className="text-xs font-medium text-muted-foreground">Password must contain:</p>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <div className={`flex items-center gap-1.5 text-xs ${passwordRequirements.length ? 'text-primary' : 'text-muted-foreground'}`}>
+                    {passwordRequirements.length ? (
+                      <Check className="w-3.5 h-3.5" />
+                    ) : (
+                      <X className="w-3.5 h-3.5" />
+                    )}
+                    <span>8+ characters</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 text-xs ${passwordRequirements.uppercase ? 'text-primary' : 'text-muted-foreground'}`}>
+                    {passwordRequirements.uppercase ? (
+                      <Check className="w-3.5 h-3.5" />
+                    ) : (
+                      <X className="w-3.5 h-3.5" />
+                    )}
+                    <span>Uppercase letter</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 text-xs ${passwordRequirements.number ? 'text-primary' : 'text-muted-foreground'}`}>
+                    {passwordRequirements.number ? (
+                      <Check className="w-3.5 h-3.5" />
+                    ) : (
+                      <X className="w-3.5 h-3.5" />
+                    )}
+                    <span>Number</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 text-xs ${passwordRequirements.special ? 'text-primary' : 'text-muted-foreground'}`}>
+                    {passwordRequirements.special ? (
+                      <Check className="w-3.5 h-3.5" />
+                    ) : (
+                      <X className="w-3.5 h-3.5" />
+                    )}
+                    <span>Special character</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                disabled={isLoading}
-                minLength={6}
-              />
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  minLength={6}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  disabled={isLoading}
+                >
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
           </CardContent>
           <CardFooter>
