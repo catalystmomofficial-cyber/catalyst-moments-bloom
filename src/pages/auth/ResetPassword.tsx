@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -6,8 +6,24 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Progress } from '@/components/ui/progress';
 import { Lock, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
+
+const calculatePasswordStrength = (pass: string): { strength: number; label: string; color: string } => {
+  if (!pass) return { strength: 0, label: '', color: '' };
+  
+  let strength = 0;
+  if (pass.length >= 8) strength += 25;
+  if (pass.length >= 12) strength += 15;
+  if (/[a-z]/.test(pass) && /[A-Z]/.test(pass)) strength += 20;
+  if (/\d/.test(pass)) strength += 20;
+  if (/[^a-zA-Z0-9]/.test(pass)) strength += 20;
+  
+  if (strength < 40) return { strength, label: 'Weak', color: 'hsl(var(--destructive))' };
+  if (strength < 70) return { strength, label: 'Medium', color: 'hsl(var(--warning) / 0.8)' };
+  return { strength, label: 'Strong', color: 'hsl(var(--primary))' };
+};
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -16,6 +32,8 @@ export default function ResetPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [error, setError] = useState('');
+  
+  const passwordStrength = useMemo(() => calculatePasswordStrength(password), [password]);
 
   useEffect(() => {
     // Check if we have a valid session from the reset link
@@ -113,8 +131,28 @@ export default function ResetPassword() {
                 disabled={isLoading}
                 minLength={6}
               />
+              {password && (
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Password strength:</span>
+                    <span 
+                      className="text-xs font-medium"
+                      style={{ color: passwordStrength.color }}
+                    >
+                      {passwordStrength.label}
+                    </span>
+                  </div>
+                  <Progress 
+                    value={passwordStrength.strength} 
+                    className="h-1.5"
+                    style={{
+                      ['--progress-background' as any]: passwordStrength.color
+                    }}
+                  />
+                </div>
+              )}
               <p className="text-xs text-muted-foreground">
-                Must be at least 6 characters
+                Use 8+ characters with mix of letters, numbers & symbols
               </p>
             </div>
 
