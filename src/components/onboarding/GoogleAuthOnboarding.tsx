@@ -32,6 +32,7 @@ export const GoogleAuthOnboarding = () => {
   const [motherhoodStage, setMotherhoodStage] = useState<MotherhoodStage>('none');
   const [loading, setLoading] = useState(false);
   const [completionPercentage, setCompletionPercentage] = useState(0);
+  const [showIntro, setShowIntro] = useState(true);
 
 
   // Calculate profile completion percentage
@@ -65,6 +66,7 @@ export const GoogleAuthOnboarding = () => {
       
       if (needsOnboarding && isGoogleUser) {
         setOpen(true);
+        setShowIntro(true);
         // Pre-fill display name from Google if available
         if (!profile.display_name && user.user_metadata?.full_name) {
           setDisplayName(user.user_metadata.full_name);
@@ -139,15 +141,88 @@ export const GoogleAuthOnboarding = () => {
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
-        <DialogHeader>
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-6 h-6 text-primary" />
-            <DialogTitle className="text-2xl">Welcome to Catalyst Mom!</DialogTitle>
-          </div>
-          <DialogDescription>
-            Let's personalize your experience. Complete your profile to earn bonus points!
-          </DialogDescription>
-        </DialogHeader>
+        {showIntro ? (
+          <>
+            <DialogHeader>
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-6 h-6 text-primary" />
+                <DialogTitle className="text-2xl">Welcome to Catalyst Mom! 🎉</DialogTitle>
+              </div>
+              <DialogDescription>
+                Your personalized wellness journey starts here
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 py-4">
+              <div className="grid gap-3">
+                <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                  <Sparkles className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-sm mb-1">Journey-Tailored Content</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Workouts, nutrition, and wellness tips customized to your current stage
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                  <Award className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-sm mb-1">Expert Guidance</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Access certified trainers and nutritionists who understand your journey
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                  <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-sm mb-1">Supportive Community</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Connect with moms at the same stage and grow together
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-3 rounded-lg border border-primary/20">
+                <p className="text-xs font-medium text-center">
+                  🎁 Complete your profile and earn <span className="font-bold text-primary">100 bonus points</span>!
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setOpen(false);
+                  navigate('/dashboard');
+                }}
+                className="flex-1"
+              >
+                Skip for Now
+              </Button>
+              <Button
+                onClick={() => setShowIntro(false)}
+                className="flex-1"
+              >
+                Get Started
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <DialogHeader>
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-6 h-6 text-primary" />
+                <DialogTitle className="text-2xl">Complete Your Profile</DialogTitle>
+              </div>
+              <DialogDescription>
+                Let's personalize your experience. Complete your profile to earn bonus points!
+              </DialogDescription>
+            </DialogHeader>
 
         {/* Progress Indicator */}
         <div className="space-y-2 mb-2">
@@ -229,6 +304,8 @@ export const GoogleAuthOnboarding = () => {
             )}
           </Button>
         </form>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
