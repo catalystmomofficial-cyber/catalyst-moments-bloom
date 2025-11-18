@@ -10,6 +10,7 @@ import { UserPlus, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { Separator } from "@/components/ui/separator";
+import { PersonalizedOnboarding } from "@/components/onboarding/PersonalizedOnboarding";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -85,6 +86,7 @@ const Register = () => {
 
   return (
     <PageLayout>
+      <PersonalizedOnboarding />
       <div className="flex items-center justify-center py-10">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="text-center">

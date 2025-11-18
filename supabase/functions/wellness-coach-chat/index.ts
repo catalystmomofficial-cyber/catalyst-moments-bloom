@@ -26,13 +26,62 @@ serve(async (req) => {
     // Initialize Supabase client with service role key for database operations
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
+    // Fetch assessment data for the user
+    let assessmentData = null;
+    const userId = userProfile?.user_id;
+    if (userId) {
+      const { data } = await supabase
+        .from('lead_responses')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      
+      if (data) {
+        assessmentData = data;
+        console.log('[WELLNESS_COACH] Found assessment data for user');
+      }
+    }
+
     // Get journey context
     const motherhoodStage = userProfile?.motherhood_stage || null;
     const displayName = userProfile?.display_name || 'there';
-    const userId = userProfile?.user_id;
+    
+    // Build assessment context if available
+    let assessmentContext = '';
+    if (assessmentData) {
+      const specialNotes = assessmentData.special_notes || {};
+      const overallScore = specialNotes.overall_score || 'N/A';
+      const tier = specialNotes.tier || 'N/A';
+      const categoryScores = specialNotes.category_scores || {};
+      
+      // Find top 3 gaps (lowest scores)
+      const gaps = Object.entries(categoryScores)
+        .sort(([, a], [, b]) => (a as number) - (b as number))
+        .slice(0, 3)
+        .map(([category, score]) => `${category}: ${score}/10`);
+
+      assessmentContext = `
+
+## ASSESSMENT DATA
+This user completed a wellness assessment. Use this to personalize your guidance:
+- Overall Score: ${overallScore}/100 (Tier: ${tier})
+- Primary Goal: ${assessmentData.primary_goal}
+- Top 3 Priority Areas (lowest scores): ${gaps.join(', ')}
+- Dietary Preferences: ${assessmentData.dietary_preferences}
+- Activity Level: ${assessmentData.activity_level}
+- Available Equipment: ${assessmentData.equipment}
+${specialNotes.main_concern ? `- Main Concern: ${specialNotes.main_concern}` : ''}
+
+When providing advice, reference their specific assessment results and focus on their priority areas. For example:
+- "I noticed from your assessment that [category] scored ${gaps[0]?.split(':')[1]}, so let's focus on..."
+- "Since your primary goal is ${assessmentData.primary_goal}, I recommend..."
+- "Given your ${assessmentData.activity_level} activity level and ${assessmentData.equipment} equipment availability..."`;
+    }
     
     // Build comprehensive system prompt focused on the four pillars and conversion
-    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.
+    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}
 
 ## CATALYST MOM CORE OFFERING
 The four pillars of our platform:

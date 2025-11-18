@@ -45,6 +45,7 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
   const [conversationHistory, setConversationHistory] = useState<any[]>([]);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [showQuickSuggestions, setShowQuickSuggestions] = useState(true);
+  const [assessmentData, setAssessmentData] = useState<any>(null);
   
   const { toast } = useToast();
   const { user, profile } = useAuth();
@@ -63,15 +64,57 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
+      fetchAssessmentData();
       startPersonalizedConversation();
     }
   }, [isOpen]);
+
+  const fetchAssessmentData = async () => {
+    if (!user?.id) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('lead_responses')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (data && !error) {
+        setAssessmentData(data);
+        console.log('Found assessment data for wellness coach');
+      }
+    } catch (error) {
+      console.error('Error fetching assessment data:', error);
+    }
+  };
 
   const startPersonalizedConversation = async () => {
     let greeting = '';
     const displayName = profile?.display_name || 'there';
     
-    if (!profile?.motherhood_stage) {
+    // Include assessment insights if available
+    if (assessmentData && assessmentData.special_notes) {
+      const score = assessmentData.special_notes.overall_score;
+      const tier = assessmentData.special_notes.tier;
+      const topGap = Object.entries(assessmentData.special_notes.category_scores || {})
+        .sort(([, a], [, b]) => (a as number) - (b as number))[0];
+
+      greeting = `Hi ${displayName}! 👋 I'm Coach Sarah, and I've reviewed your wellness assessment.
+
+I noticed you scored ${score}/100, with ${topGap ? topGap[0].replace(/_/g, ' ') : 'some areas'} as a key focus area. I'm here to help you improve in exactly these areas!
+
+Your primary goal: ${assessmentData.primary_goal}
+
+I'm ready to support you with:
+🥗 Nutrition plans based on your preferences
+💡 Expert guidance for your specific needs  
+📋 Custom programs that address your priority areas
+🎯 Tools that evolve with your progress
+
+What would you like to work on first?`;
+    } else if (!profile?.motherhood_stage) {
       greeting = `Hi ${displayName}! 👋 I'm Coach Sarah, your personal wellness guide at Catalyst Mom.
 
 I'm here to provide you with:
