@@ -202,8 +202,8 @@ Format the response as JSON with this structure:
         excerpt: generatedContent.excerpt,
         tags: generatedContent.tags,
         author: user.email,
-        published_at: new Date().toISOString(),
-        status: 'published',
+        published_at: null,
+        status: 'draft',
         featured_image_url: featuredImageUrl
       })
       .select()
@@ -220,7 +220,7 @@ Format the response as JSON with this structure:
       JSON.stringify({ 
         success: true, 
         blog: blogData,
-        message: 'Blog post generated and published successfully!' 
+        message: 'Blog post generated and saved as draft!' 
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

@@ -44,6 +44,7 @@ import CourseDetail from "./pages/CourseDetail";
 import GlowAndGo from "./pages/GlowAndGo";
 import Affiliate from "./pages/Affiliate";
 import Admin from "./pages/Admin";
+import BlogPreview from "./pages/BlogPreview";
 import SelfCareGuide from "./pages/wellness/SelfCareGuide";
 import WellnessResources from "./pages/wellness/WellnessResources";
 import WellnessArticle from "./pages/wellness/WellnessArticle";
@@ -240,6 +241,11 @@ function AppContent() {
             <SubscriptionGuard>
               <WellnessArticle />
             </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/blog-preview" element={
+          <PrivateRoute>
+            <BlogPreview />
           </PrivateRoute>
         } />
         

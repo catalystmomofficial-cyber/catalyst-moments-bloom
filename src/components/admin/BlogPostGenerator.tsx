@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, CheckCircle } from 'lucide-react';
 
 export const BlogPostGenerator = () => {
+  const navigate = useNavigate();
   const [topic, setTopic] = useState('');
   const [keywords, setKeywords] = useState('');
   const [tone, setTone] = useState('professional yet friendly');
@@ -49,8 +51,11 @@ export const BlogPostGenerator = () => {
       
       toast({
         title: "Success!",
-        description: "Blog post generated and published successfully.",
+        description: "Blog post generated and saved as draft. Opening preview...",
       });
+
+      // Navigate to preview page
+      navigate(`/blog-preview?id=${data.blog.id}`);
 
       // Reset form
       setTopic('');
