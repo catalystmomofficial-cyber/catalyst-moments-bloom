@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, FileEdit, Trash2, Save, X, Calendar } from 'lucide-react';
+import { ArrowLeft, Eye, FileEdit, Trash2, Save, X, Calendar, Clock } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BlogSEOAnalyzer } from '@/components/admin/BlogSEOAnalyzer';
@@ -43,6 +43,8 @@ export default function BlogPreview() {
   const [saving, setSaving] = useState(false);
   const [scheduleDate, setScheduleDate] = useState<Date | undefined>();
   const [showScheduler, setShowScheduler] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const autoSaveTimerRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     if (blogId) {
@@ -69,6 +71,60 @@ export default function BlogPreview() {
       setLoading(false);
     }
   };
+
+  // Auto-save functionality
+  const autoSaveDraft = useCallback(async () => {
+    if (!editedBlog || !isEditing) return;
+    
+    try {
+      const { error } = await supabase
+        .from('blogs')
+        .update({
+          title: editedBlog.title,
+          content: editedBlog.content,
+          excerpt: editedBlog.excerpt,
+          tags: editedBlog.tags
+        })
+        .eq('id', editedBlog.id);
+
+      if (error) throw error;
+
+      setLastSaved(new Date());
+      setBlog(editedBlog);
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+    }
+  }, [editedBlog, isEditing]);
+
+  // Set up auto-save timer when editing
+  useEffect(() => {
+    if (isEditing && editedBlog) {
+      // Clear existing timer
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+      
+      // Set new timer for 30 seconds
+      autoSaveTimerRef.current = setTimeout(() => {
+        autoSaveDraft();
+      }, 30000);
+    }
+
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [editedBlog, isEditing, autoSaveDraft]);
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleSaveEdits = async () => {
     if (!editedBlog) return;
@@ -198,10 +254,18 @@ export default function BlogPreview() {
       <div className="container max-w-4xl mx-auto py-8 px-4">
         {/* Header Actions */}
         <div className="flex items-center justify-between mb-6">
-          <Button variant="ghost" onClick={() => navigate('/admin')}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Admin
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" onClick={() => navigate('/admin')}>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Admin
+            </Button>
+            {isEditing && lastSaved && (
+              <span className="text-sm text-muted-foreground flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                Auto-saved {format(lastSaved, 'p')}
+              </span>
+            )}
+          </div>
           
           <div className="flex gap-2">
             {isEditing ? (
