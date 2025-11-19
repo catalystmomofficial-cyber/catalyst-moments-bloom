@@ -254,10 +254,6 @@ export default function BlogPreview() {
                         )}
                       </PopoverContent>
                     </Popover>
-                    <Button onClick={handlePublish} disabled={publishing}>
-                      <Eye className="mr-2 h-4 w-4" />
-                      {publishing ? 'Publishing...' : 'Publish Now'}
-                    </Button>
                   </>
                 )}
                 <Button variant="outline" onClick={handleDelete}>
