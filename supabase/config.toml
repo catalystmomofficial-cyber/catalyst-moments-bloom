@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.send-welcome-email]
 verify_jwt = false
+
+[functions.send-blog-notification]
+verify_jwt = false
