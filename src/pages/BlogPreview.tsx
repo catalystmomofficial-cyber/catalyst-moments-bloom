@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { ArrowLeft, Eye, FileEdit, Trash2, Save, X, Calendar } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
@@ -15,6 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import DOMPurify from 'dompurify';
+import { RichTextEditor } from '@/components/admin/RichTextEditor';
 
 interface BlogPost {
   id: string;
@@ -284,11 +284,11 @@ export default function BlogPreview() {
                   <CardTitle className="text-3xl mb-2">{blog.title}</CardTitle>
                 )}
                 {isEditing ? (
-                  <Textarea
+                  <Input
                     value={editedBlog?.excerpt || ''}
                     onChange={(e) => setEditedBlog(prev => prev ? {...prev, excerpt: e.target.value} : null)}
                     className="text-base"
-                    rows={2}
+                    placeholder="Blog excerpt"
                   />
                 ) : (
                   <CardDescription className="text-base">
@@ -358,12 +358,16 @@ export default function BlogPreview() {
 
             {/* HTML Content Rendering */}
             {isEditing ? (
-              <Textarea
-                value={editedBlog?.content || ''}
-                onChange={(e) => setEditedBlog(prev => prev ? {...prev, content: e.target.value} : null)}
-                className="min-h-[400px] font-mono text-sm"
-                placeholder="HTML content..."
-              />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Content</label>
+                  <RichTextEditor
+                    content={editedBlog?.content || ''}
+                    onChange={(newContent) => setEditedBlog(prev => prev ? {...prev, content: newContent} : null)}
+                    placeholder="Write your blog post content here..."
+                  />
+                </div>
+              </div>
             ) : (
               <div 
                 className="prose prose-lg max-w-none dark:prose-invert

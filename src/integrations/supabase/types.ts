@@ -145,6 +145,83 @@ export type Database = {
           },
         ]
       }
+      blog_comment_likes: {
+        Row: {
+          comment_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_comment_likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "blog_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_comments: {
+        Row: {
+          blog_id: string
+          content: string
+          created_at: string
+          id: string
+          is_approved: boolean
+          parent_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          blog_id: string
+          content: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          parent_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          blog_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          parent_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_comments_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "blog_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blogs: {
         Row: {
           author: string | null
