@@ -9,6 +9,8 @@ import { Calendar, User, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { NewsletterWidget } from '@/components/blog/NewsletterWidget';
+import { BlogComments } from '@/components/blog/BlogComments';
+import DOMPurify from 'dompurify';
 import SEO from '@/components/seo/SEO';
 
 interface BlogPost {
@@ -162,10 +164,12 @@ const BlogDetail = () => {
             <CardContent className="pt-6">
               <div 
                 className="prose prose-lg max-w-none dark:prose-invert"
-                dangerouslySetInnerHTML={{ __html: blog.content }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content) }}
               />
             </CardContent>
           </Card>
+
+          <BlogComments blogId={blog.id} />
 
           <NewsletterWidget />
 
