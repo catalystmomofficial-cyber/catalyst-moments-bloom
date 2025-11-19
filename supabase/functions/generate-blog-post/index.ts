@@ -59,25 +59,35 @@ serve(async (req) => {
 
     // Create SEO-optimized prompt
     const keywordList = keywords ? keywords.split(',').map((k: string) => k.trim()).join(', ') : '';
-    const systemPrompt = `You are an expert SEO blog writer for Catalyst Mom, a wellness platform for mothers. Write comprehensive, engaging blog posts that:
-- Are 1200-1500 words long
-- Include natural keyword placement (never force keywords)
-- Have clear H2 and H3 headings for structure
-- Include actionable tips and practical advice
-- Are written in a warm, supportive ${tone || 'professional yet friendly'} tone
-- End with a clear call-to-action
-- Are optimized for Google search
+    const systemPrompt = `You are an expert SEO blog writer for Catalyst Mom, a wellness platform for mothers.
+
+Write a 1000-word SEO-optimized blog post that:
+- Targets the provided keyword naturally throughout the content
+- Naturally mentions and promotes the Catalyst Mom app and our protocol
+- Talks about our personalized assessment (link: https://catalystmom.online/)
+- Is written in a warm, supportive ${tone || 'professional yet friendly'} tone
+- Ends with a clear call-to-action
+
+CRITICAL FORMATTING INSTRUCTIONS:
+- Format everything in clean HTML
+- Use <h2> for subheadings
+- Use <p> for paragraphs
+- Use <ul>/<ol> and <li> for bullet or numbered lists
+- Hyperlink all tools and product links using <a href="URL">text</a> tags
+- Include the Catalyst Mom assessment link as: <a href="https://catalystmom.online/">personalized assessment</a>
+- Do NOT include markdown, asterisks, hashtags, or "***html" text anywhere
+- At the end, include: <p style="display:none;">Meta description: [Insert a 150-character SEO summary]</p>
 
 Format the response as JSON with this structure:
 {
   "title": "SEO-optimized title under 60 characters",
-  "metaDescription": "Compelling meta description under 160 characters",
-  "content": "Full blog post content in markdown format with ## for H2 and ### for H3",
+  "content": "Full blog post content in clean HTML format with <h2>, <p>, <ul>/<ol>, and <a> tags",
   "excerpt": "Brief 150-character summary",
-  "tags": ["tag1", "tag2", "tag3"]
+  "tags": ["tag1", "tag2", "tag3"],
+  "imagePrompt": "A professional, high-quality image description that represents the blog topic (for AI image generation)"
 }`;
 
-    const userPrompt = `Write a blog post about: ${topic}${keywordList ? `\n\nTarget keywords: ${keywordList}` : ''}`;
+    const userPrompt = `Write a blog post about: ${topic}${keywordList ? `\n\nTarget keyword: ${keywordList}` : ''}`;
 
     console.log('Generating blog post with Lovable AI...');
 
@@ -121,6 +131,61 @@ Format the response as JSON with this structure:
     const aiData = await response.json();
     const generatedContent = JSON.parse(aiData.choices[0].message.content);
 
+    console.log('Generating featured image with Gemini AI...');
+
+    // Generate image using Gemini AI
+    const imageResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash-image-preview',
+        messages: [
+          {
+            role: 'user',
+            content: generatedContent.imagePrompt || `Professional, high-quality image representing: ${topic}`
+          }
+        ],
+        modalities: ['image', 'text']
+      }),
+    });
+
+    let featuredImageUrl = null;
+    
+    if (imageResponse.ok) {
+      const imageData = await imageResponse.json();
+      const base64Image = imageData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+      
+      if (base64Image) {
+        // Convert base64 to blob
+        const base64Data = base64Image.split(',')[1];
+        const imageBlob = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+        
+        // Upload to Supabase storage
+        const fileName = `blog-${Date.now()}.png`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('blog-images')
+          .upload(fileName, imageBlob, {
+            contentType: 'image/png',
+            upsert: false
+          });
+
+        if (!uploadError && uploadData) {
+          const { data: { publicUrl } } = supabase.storage
+            .from('blog-images')
+            .getPublicUrl(fileName);
+          featuredImageUrl = publicUrl;
+          console.log('Image uploaded successfully:', featuredImageUrl);
+        } else {
+          console.error('Image upload error:', uploadError);
+        }
+      }
+    } else {
+      console.error('Image generation failed:', await imageResponse.text());
+    }
+
     // Generate slug from title
     const slug = generatedContent.title
       .toLowerCase()
@@ -138,7 +203,8 @@ Format the response as JSON with this structure:
         tags: generatedContent.tags,
         author: user.email,
         published_at: new Date().toISOString(),
-        status: 'published'
+        status: 'published',
+        featured_image_url: featuredImageUrl
       })
       .select()
       .single();
