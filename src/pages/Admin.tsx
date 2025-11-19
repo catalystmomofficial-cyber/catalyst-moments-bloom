@@ -10,9 +10,10 @@ import { AnalyticsSection } from '@/components/admin/AnalyticsSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles, CreditCard } from 'lucide-react';
+import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles, CreditCard, FileText } from 'lucide-react';
 import { BlogPostGenerator } from '@/components/admin/BlogPostGenerator';
 import { BlogPostManager } from '@/components/admin/BlogPostManager';
+import { BlogAnalyticsDashboard } from '@/components/admin/BlogAnalyticsDashboard';
 import { SubscriptionSection } from '@/components/admin/SubscriptionSection';
 
 const Admin = () => {
@@ -31,7 +32,7 @@ const Admin = () => {
           </div>
 
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-7">
+            <TabsList className="grid w-full grid-cols-8">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <Shield className="h-4 w-4" />
                 Overview
@@ -59,6 +60,10 @@ const Admin = () => {
               <TabsTrigger value="blog" className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
                 Blog
+              </TabsTrigger>
+              <TabsTrigger value="blog-analytics" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Blog Analytics
               </TabsTrigger>
             </TabsList>
 
@@ -91,6 +96,10 @@ const Admin = () => {
             <TabsContent value="blog" className="space-y-6">
               <BlogPostGenerator />
               <BlogPostManager />
+            </TabsContent>
+
+            <TabsContent value="blog-analytics">
+              <BlogAnalyticsDashboard />
             </TabsContent>
           </Tabs>
         </div>

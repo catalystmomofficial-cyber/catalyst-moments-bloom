@@ -7,9 +7,13 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, FileEdit, Trash2, Save, X } from 'lucide-react';
+import { ArrowLeft, Eye, FileEdit, Trash2, Save, X, Calendar } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import { Skeleton } from '@/components/ui/skeleton';
+import { BlogSEOAnalyzer } from '@/components/admin/BlogSEOAnalyzer';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { format } from 'date-fns';
 
 interface BlogPost {
   id: string;
@@ -22,6 +26,7 @@ interface BlogPost {
   slug: string;
   status: string;
   published_at: string | null;
+  scheduled_publish_at: string | null;
   created_at: string;
 }
 
@@ -35,6 +40,8 @@ export default function BlogPreview() {
   const [isEditing, setIsEditing] = useState(false);
   const [editedBlog, setEditedBlog] = useState<BlogPost | null>(null);
   const [saving, setSaving] = useState(false);
+  const [scheduleDate, setScheduleDate] = useState<Date | undefined>();
+  const [showScheduler, setShowScheduler] = useState(false);
 
   useEffect(() => {
     if (blogId) {
@@ -110,6 +117,31 @@ export default function BlogPreview() {
     } catch (error) {
       console.error('Error publishing blog:', error);
       toast.error('Failed to publish blog post');
+    } finally {
+      setPublishing(false);
+    }
+  };
+
+  const handleSchedule = async () => {
+    if (!blog || !scheduleDate) return;
+    
+    setPublishing(true);
+    try {
+      const { error } = await supabase
+        .from('blogs')
+        .update({ 
+          scheduled_publish_at: scheduleDate.toISOString()
+        })
+        .eq('id', blog.id);
+
+      if (error) throw error;
+
+      toast.success(`Blog scheduled for ${format(scheduleDate, 'PPP p')}`);
+      setShowScheduler(false);
+      fetchBlogPost(); // Refresh to show scheduled status
+    } catch (error) {
+      console.error('Error scheduling blog:', error);
+      toast.error('Failed to schedule blog post');
     } finally {
       setPublishing(false);
     }
@@ -192,10 +224,36 @@ export default function BlogPreview() {
                   Edit
                 </Button>
                 {blog.status === 'draft' && (
-                  <Button onClick={handlePublish} disabled={publishing}>
-                    <Eye className="mr-2 h-4 w-4" />
-                    {publishing ? 'Publishing...' : 'Publish'}
-                  </Button>
+                  <>
+                    <Popover open={showScheduler} onOpenChange={setShowScheduler}>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline">
+                          <Calendar className="mr-2 h-4 w-4" />
+                          Schedule
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarComponent
+                          mode="single"
+                          selected={scheduleDate}
+                          onSelect={setScheduleDate}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                        />
+                        {scheduleDate && (
+                          <div className="p-3 border-t">
+                            <Button onClick={handleSchedule} className="w-full">
+                              Schedule for {format(scheduleDate, 'PPP')}
+                            </Button>
+                          </div>
+                        )}
+                      </PopoverContent>
+                    </Popover>
+                    <Button onClick={handlePublish} disabled={publishing}>
+                      <Eye className="mr-2 h-4 w-4" />
+                      {publishing ? 'Publishing...' : 'Publish Now'}
+                    </Button>
+                  </>
                 )}
                 <Button variant="outline" onClick={handleDelete}>
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -247,6 +305,14 @@ export default function BlogPreview() {
                 <>
                   <span>•</span>
                   <span>Published: {new Date(blog.published_at).toLocaleDateString()}</span>
+                </>
+              )}
+              {blog.scheduled_publish_at && (
+                <>
+                  <span>•</span>
+                  <span className="text-yellow-600 font-semibold">
+                    Scheduled: {format(new Date(blog.scheduled_publish_at), 'PPP p')}
+                  </span>
                 </>
               )}
             </div>
@@ -311,6 +377,16 @@ export default function BlogPreview() {
             )}
           </CardContent>
         </Card>
+
+        {/* SEO Analyzer */}
+        {!isEditing && (
+          <BlogSEOAnalyzer
+            title={blog.title}
+            content={blog.content}
+            excerpt={blog.excerpt}
+            keywords={blog.tags || []}
+          />
+        )}
       </div>
     </PageLayout>
   );

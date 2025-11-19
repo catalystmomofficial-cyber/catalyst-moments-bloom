@@ -44,6 +44,25 @@ const Blog = () => {
     fetchBlogs();
   }, []);
 
+  // Track analytics when viewing a blog post
+  const trackBlogView = async (blogId: string) => {
+    try {
+      const sessionId = sessionStorage.getItem('session_id') || crypto.randomUUID();
+      sessionStorage.setItem('session_id', sessionId);
+
+      const { data: { user } } = await supabase.auth.getUser();
+
+      await supabase.from('blog_analytics').insert({
+        blog_id: blogId,
+        user_id: user?.id || null,
+        session_id: sessionId,
+        view_date: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error tracking blog view:', error);
+    }
+  };
+
   return (
     <PageLayout>
       <div className="container mx-auto px-4 py-8">
@@ -79,18 +98,27 @@ const Blog = () => {
           ) : (
             <div className="space-y-6">
               {blogs.map((blog) => (
-                <Card key={blog.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card 
+                  key={blog.id} 
+                  className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => {
+                    trackBlogView(blog.id);
+                    window.location.href = `/blog/${blog.slug || blog.id}`;
+                  }}
+                >
                   {blog.featured_image_url && (
                     <div className="w-full h-48 overflow-hidden">
                       <img 
                         src={blog.featured_image_url} 
                         alt={blog.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                   )}
                   <CardHeader>
-                    <CardTitle className="text-2xl">{blog.title}</CardTitle>
+                    <CardTitle className="text-2xl hover:text-primary transition-colors">
+                      {blog.title}
+                    </CardTitle>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <User className="h-4 w-4" />

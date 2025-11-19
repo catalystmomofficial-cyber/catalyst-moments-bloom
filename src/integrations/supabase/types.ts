@@ -107,6 +107,44 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_analytics: {
+        Row: {
+          blog_id: string
+          created_at: string
+          id: string
+          session_id: string | null
+          time_spent_seconds: number | null
+          user_id: string | null
+          view_date: string
+        }
+        Insert: {
+          blog_id: string
+          created_at?: string
+          id?: string
+          session_id?: string | null
+          time_spent_seconds?: number | null
+          user_id?: string | null
+          view_date?: string
+        }
+        Update: {
+          blog_id?: string
+          created_at?: string
+          id?: string
+          session_id?: string | null
+          time_spent_seconds?: number | null
+          user_id?: string | null
+          view_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_analytics_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blogs: {
         Row: {
           author: string | null
@@ -116,6 +154,7 @@ export type Database = {
           featured_image_url: string | null
           id: string
           published_at: string | null
+          scheduled_publish_at: string | null
           slug: string | null
           status: string | null
           tags: string[] | null
@@ -130,6 +169,7 @@ export type Database = {
           featured_image_url?: string | null
           id?: string
           published_at?: string | null
+          scheduled_publish_at?: string | null
           slug?: string | null
           status?: string | null
           tags?: string[] | null
@@ -144,6 +184,7 @@ export type Database = {
           featured_image_url?: string | null
           id?: string
           published_at?: string | null
+          scheduled_publish_at?: string | null
           slug?: string | null
           status?: string | null
           tags?: string[] | null
@@ -1120,6 +1161,16 @@ export type Database = {
           level: number
           total_points: number
           user_id: string
+        }[]
+      }
+      get_blog_analytics_summary: {
+        Args: { days_back?: number }
+        Returns: {
+          avg_time_spent: number
+          blog_id: string
+          blog_title: string
+          total_views: number
+          unique_visitors: number
         }[]
       }
       get_pending_users: {

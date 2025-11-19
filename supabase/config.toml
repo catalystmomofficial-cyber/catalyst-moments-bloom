@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.send-blog-notification]
 verify_jwt = false
+
+[functions.publish-scheduled-blogs]
+verify_jwt = false
