@@ -122,4 +122,61 @@
   .container-padding {
     @apply px-4 md:px-6;
   }
+  
+  /* Enhanced blog content spacing */
+  .prose {
+    @apply text-foreground;
+  }
+  
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    @apply font-bold text-foreground mt-8 mb-4;
+  }
+  
+  .prose h1 {
+    @apply text-4xl mt-12 mb-6;
+  }
+  
+  .prose h2 {
+    @apply text-3xl mt-10 mb-5;
+  }
+  
+  .prose h3 {
+    @apply text-2xl;
+  }
+  
+  .prose p {
+    @apply mb-6 leading-relaxed;
+  }
+  
+  .prose ul, .prose ol {
+    @apply my-6 ml-6 space-y-2;
+  }
+  
+  .prose li {
+    @apply mb-2;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-primary pl-4 my-6 italic text-muted-foreground;
+  }
+  
+  .prose a {
+    @apply text-primary hover:underline;
+  }
+  
+  .prose strong {
+    @apply font-bold text-foreground;
+  }
+  
+  .prose img {
+    @apply rounded-lg my-8;
+  }
+  
+  .prose pre {
+    @apply bg-muted p-4 rounded-lg my-6 overflow-x-auto;
+  }
+  
+  .prose code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm;
+  }
 }

@@ -64,7 +64,7 @@ export const BlogPostPreview: React.FC<BlogPostPreviewProps> = ({
           )}
           
           <div 
-            className="prose prose-slate dark:prose-invert max-w-none"
+            className="prose prose-lg dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ 
               __html: DOMPurify.sanitize(content) 
             }}

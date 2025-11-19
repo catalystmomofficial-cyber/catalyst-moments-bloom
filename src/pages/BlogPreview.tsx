@@ -14,6 +14,7 @@ import { BlogSEOAnalyzer } from '@/components/admin/BlogSEOAnalyzer';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
+import DOMPurify from 'dompurify';
 
 interface BlogPost {
   id: string;
@@ -225,6 +226,10 @@ export default function BlogPreview() {
                 </Button>
                 {blog.status === 'draft' && (
                   <>
+                    <Button onClick={handlePublish} disabled={publishing}>
+                      <Eye className="mr-2 h-4 w-4" />
+                      {publishing ? 'Publishing...' : 'Publish Now'}
+                    </Button>
                     <Popover open={showScheduler} onOpenChange={setShowScheduler}>
                       <PopoverTrigger asChild>
                         <Button variant="outline">
