@@ -34,6 +34,7 @@ import WorkoutPlan from "./pages/WorkoutPlan";
 import SavedWorkoutPlans from "./pages/SavedWorkoutPlans";
 import WorkoutPlanDetail from "./pages/WorkoutPlanDetail";
 import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
 import Experts from "./pages/Experts";
 import Research from "./pages/Research";
 import FAQ from "./pages/FAQ";
@@ -82,6 +83,8 @@ function AppContent() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/food-calories" element={<FoodCalorieChecker />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogDetail />} />
+        <Route path="/blog/preview/:id" element={<PrivateRoute><BlogPreview /></PrivateRoute>} />
         <Route path="/experts" element={<Experts />} />
         <Route path="/research" element={<Research />} />
         <Route path="/faq" element={<FAQ />} />

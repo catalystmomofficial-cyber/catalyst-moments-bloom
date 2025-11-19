@@ -6,6 +6,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Calendar, User } from 'lucide-react';
 import { format } from 'date-fns';
+import { NewsletterWidget } from '@/components/blog/NewsletterWidget';
+import { CategoryFilter } from '@/components/blog/CategoryFilter';
+import SEO from '@/components/seo/SEO';
 
 interface BlogPost {
   id: string;
@@ -21,7 +24,9 @@ interface BlogPost {
 
 const Blog = () => {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [filteredBlogs, setFilteredBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -34,6 +39,7 @@ const Blog = () => {
 
         if (error) throw error;
         setBlogs(data || []);
+        setFilteredBlogs(data || []);
       } catch (error) {
         console.error('Error fetching blogs:', error);
       } finally {
@@ -43,6 +49,16 @@ const Blog = () => {
 
     fetchBlogs();
   }, []);
+
+  useEffect(() => {
+    if (!selectedCategory) {
+      setFilteredBlogs(blogs);
+    } else {
+      setFilteredBlogs(
+        blogs.filter(blog => blog.tags?.includes(selectedCategory))
+      );
+    }
+  }, [selectedCategory, blogs]);
 
   // Track analytics when viewing a blog post
   const trackBlogView = async (blogId: string) => {
@@ -65,9 +81,25 @@ const Blog = () => {
 
   return (
     <PageLayout>
+      <SEO 
+        title="Blog - Pregnancy, Wellness & Motherhood Articles"
+        description="Expert articles on pregnancy, postpartum, TTC, wellness, and motherhood. Evidence-based content to support your journey."
+      />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-8">Blog</h1>
+          <h1 className="text-4xl font-bold text-center mb-2">Our Blog</h1>
+          <p className="text-center text-muted-foreground mb-8">
+            Expert advice and insights for every stage of motherhood
+          </p>
+
+          <CategoryFilter 
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
+
+          <div className="mb-8">
+            <NewsletterWidget />
+          </div>
           
           {loading ? (
             <div className="space-y-4">
@@ -83,21 +115,23 @@ const Blog = () => {
                 </Card>
               ))}
             </div>
-          ) : blogs.length === 0 ? (
+          ) : filteredBlogs.length === 0 ? (
             <Card>
               <CardHeader>
                 <CardTitle>Coming Soon</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Our expert-written articles on pregnancy, wellness, and motherhood are coming soon. 
-                  Stay tuned for evidence-based content to support your journey.
+                  {selectedCategory 
+                    ? `No ${selectedCategory} posts found. Try selecting a different category.`
+                    : 'Our expert-written articles on pregnancy, wellness, and motherhood are coming soon. Stay tuned for evidence-based content to support your journey.'
+                  }
                 </p>
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-6">
-              {blogs.map((blog) => (
+              {filteredBlogs.map((blog) => (
                 <Card 
                   key={blog.id} 
                   className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
