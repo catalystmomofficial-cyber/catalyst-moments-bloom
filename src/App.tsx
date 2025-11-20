@@ -50,6 +50,9 @@ import SelfCareGuide from "./pages/wellness/SelfCareGuide";
 import WellnessResources from "./pages/wellness/WellnessResources";
 import WellnessArticle from "./pages/wellness/WellnessArticle";
 import Progress from "./pages/Progress";
+import BirthBallGuide from "./pages/BirthBallGuide";
+import BirthBallTrimester from "./pages/BirthBallTrimester";
+import BirthBallExercise from "./pages/BirthBallExercise";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
