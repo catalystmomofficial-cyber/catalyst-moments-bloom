@@ -159,13 +159,17 @@ export default function BlogPreview() {
     
     setPublishing(true);
     try {
-      const { error } = await supabase
-        .from('blogs')
-        .update({ 
-          status: 'published',
-          published_at: new Date().toISOString()
-        })
-        .eq('id', blog.id);
+      const { error } = await supabase.rpc('admin_update_blog', {
+        blog_id: blog.id,
+        blog_title: blog.title,
+        blog_content: blog.content,
+        blog_excerpt: blog.excerpt,
+        blog_author: blog.author,
+        blog_featured_image_url: blog.featured_image_url || '',
+        blog_slug: blog.slug,
+        blog_tags: blog.tags || [],
+        blog_status: 'published'
+      });
 
       if (error) throw error;
 

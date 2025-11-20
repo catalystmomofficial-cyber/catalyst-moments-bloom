@@ -18,6 +18,25 @@ interface SEOScore {
 }
 
 export function BlogSEOAnalyzer({ title, content, excerpt, keywords = [] }: BlogSEOAnalyzerProps) {
+  // Auto-generate keywords from content if none provided
+  const generateKeywordsFromContent = (): string[] => {
+    const textContent = content.replace(/<[^>]*>/g, ' ');
+    const words = textContent.toLowerCase().split(/\s+/).filter(w => w.length > 4);
+    const wordFreq: Record<string, number> = {};
+    
+    words.forEach(word => {
+      wordFreq[word] = (wordFreq[word] || 0) + 1;
+    });
+    
+    const sorted = Object.entries(wordFreq)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([word]) => word);
+    
+    return sorted;
+  };
+
+  const effectiveKeywords = keywords.length > 0 ? keywords : generateKeywordsFromContent();
   // Calculate title score
   const getTitleScore = (): SEOScore => {
     const length = title.length;
@@ -64,7 +83,7 @@ export function BlogSEOAnalyzer({ title, content, excerpt, keywords = [] }: Blog
       suggestions.push('Meta description is too long. It may be cut off in search results.');
     }
 
-    if (!keywords.some(kw => excerpt.toLowerCase().includes(kw.toLowerCase()))) {
+    if (!effectiveKeywords.some(kw => excerpt.toLowerCase().includes(kw.toLowerCase()))) {
       score -= 20;
       suggestions.push('Include target keywords in the meta description.');
     }
@@ -86,13 +105,13 @@ export function BlogSEOAnalyzer({ title, content, excerpt, keywords = [] }: Blog
     const words = textContent.toLowerCase().split(/\s+/).filter(w => w.length > 2);
     const totalWords = words.length;
 
-    if (keywords.length === 0) {
+    if (effectiveKeywords.length === 0) {
       score = 0;
-      suggestions.push('No keywords defined. Add target keywords to analyze density.');
+      suggestions.push('No keywords detected. Add more descriptive content.');
       return { score, level: 'poor', suggestions };
     }
 
-    const keywordStats = keywords.map(keyword => {
+    const keywordStats = effectiveKeywords.map(keyword => {
       const kwLower = keyword.toLowerCase();
       const count = words.filter(w => w.includes(kwLower)).length;
       const density = (count / totalWords) * 100;
