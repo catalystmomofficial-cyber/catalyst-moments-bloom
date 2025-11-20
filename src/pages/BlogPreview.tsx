@@ -186,8 +186,21 @@ export default function BlogPreview() {
         throw error;
       }
 
+      // Update local blog state to reflect published status
+      const updatedBlog = {
+        ...blog,
+        status: 'published',
+        published_at: new Date().toISOString()
+      };
+      setBlog(updatedBlog);
+      setEditedBlog(updatedBlog);
+
       toast.success('Blog post published successfully!');
-      navigate('/admin');
+      
+      // Wait a moment before navigating to ensure state is updated
+      setTimeout(() => {
+        navigate('/admin');
+      }, 500);
     } catch (error) {
       console.error('Error publishing blog:', error);
       toast.error(`Failed to publish: ${error.message || 'Unknown error'}`);
