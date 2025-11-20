@@ -32,21 +32,37 @@ const SEO = ({ title, description, canonical, image, structuredData }: SEOProps)
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
+      <meta property="og:locale" content="en_US" />
       {image && <meta property="og:image" content={image} />}
+      {image && <meta property="og:image:secure_url" content={image} />}
       {image && <meta property="og:image:alt" content={title} />}
       {image && <meta property="og:image:width" content="1200" />}
       {image && <meta property="og:image:height" content="630" />}
+      {image && <meta property="og:image:type" content="image/jpeg" />}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@catalystmom" />
+      <meta name="twitter:creator" content="@catalystmom" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       {image && <meta name="twitter:image" content={image} />}
+      {image && <meta name="twitter:image:alt" content={title} />}
+      
+      {/* LinkedIn */}
+      <meta property="og:site_name" content="Catalyst Mom" />
+      
+      {/* Pinterest */}
+      <meta name="pinterest-rich-pin" content="true" />
+      {image && <meta property="og:image" content={image} />}
       
       {/* Additional SEO */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       <meta name="language" content="English" />
+      
+      {/* Sitemap reference */}
+      <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
       {/* JSON-LD Structured Data */}
       {jsonLd && (

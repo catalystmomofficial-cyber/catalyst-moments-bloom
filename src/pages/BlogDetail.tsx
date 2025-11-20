@@ -10,6 +10,8 @@ import { format } from 'date-fns';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { NewsletterWidget } from '@/components/blog/NewsletterWidget';
 import { BlogComments } from '@/components/blog/BlogComments';
+import { SocialShareButtons } from '@/components/blog/SocialShareButtons';
+import { InternalLinkingSuggestions } from '@/components/blog/InternalLinkingSuggestions';
 import DOMPurify from 'dompurify';
 import SEO from '@/components/seo/SEO';
 
@@ -197,6 +199,12 @@ const BlogDetail = () => {
             </div>
           </div>
 
+          <SocialShareButtons 
+            title={blog.title}
+            url={`${window.location.origin}/blog/${slug}`}
+            description={blog.excerpt}
+          />
+
           <Card className="mb-8">
             <CardContent className="pt-6">
               <div 
@@ -216,6 +224,18 @@ const BlogDetail = () => {
               />
             </CardContent>
           </Card>
+
+          <InternalLinkingSuggestions 
+            currentPostId={blog.id}
+            currentTags={blog.tags || []}
+            currentContent={blog.content}
+          />
+
+          <SocialShareButtons 
+            title={blog.title}
+            url={`${window.location.origin}/blog/${slug}`}
+            description={blog.excerpt}
+          />
 
           <BlogComments blogId={blog.id} />
 
