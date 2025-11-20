@@ -53,6 +53,11 @@ import Progress from "./pages/Progress";
 import BirthBallGuide from "./pages/BirthBallGuide";
 import BirthBallTrimester from "./pages/BirthBallTrimester";
 import BirthBallExercise from "./pages/BirthBallExercise";
+import BirthBallBuyingGuide from "./pages/BirthBallBuyingGuide";
+import BirthBallSafety from "./pages/BirthBallSafety";
+import BirthBallFAQ from "./pages/BirthBallFAQ";
+import BirthBallEducation from "./pages/BirthBallEducation";
+import BirthBallEarlyLabor from "./pages/BirthBallEarlyLabor";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
@@ -201,6 +206,65 @@ function AppContent() {
             </SubscriptionGuard>
           </PrivateRoute>
         } />
+        
+        {/* Birth Ball Guide Routes */}
+        <Route path="/birth-ball-guide" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallGuide />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/:trimester" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallTrimester />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/exercise/:exerciseId" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallExercise />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/buying-guide" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallBuyingGuide />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/safety" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallSafety />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/faq" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallFAQ />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/education" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallEducation />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/early-labor" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallEarlyLabor />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        
         <Route path="/courses" element={
           <PrivateRoute>
             <SubscriptionGuard>

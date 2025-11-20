@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Play, Star, Users } from 'lucide-react';
-import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
+import { Play, Star, Users, BookOpen } from 'lucide-react';
 import professionalCover from '@/assets/ultimate-birth-ball-guide-cover.jpg';
 
 const BIRTHBALL_GUIDE_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Ultimate%20birth%20ball%20guide/The%20Ultimate%20Birth%20Ball%20Guide%20Safe%20&%20Effective%20Exercises%20for%20Every%20Trimester.pdf";
@@ -77,8 +77,7 @@ const UserAvatars = ({ enrolledCount }: UserAvatarsProps) => {
 const BirthBallGuideCard = () => {
   const [enrolledCount, setEnrolledCount] = useState(1247);
   const [isHovered, setIsHovered] = useState(false);
-  const [hasStartedProgram, setHasStartedProgram] = useState(false);
-  const { openVideo } = useVideoPlayer();
+  const [hasStartedProgram] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -116,15 +115,10 @@ const BirthBallGuideCard = () => {
             </Badge>
           </div>
 
-          {/* Play Button */}
-          {hasStartedProgram && (
-            <div 
-              className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
-                isHovered ? 'opacity-100' : 'opacity-0'
-              }`}
-              onClick={() => openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "Ultimate Birth Ball Guide")}
-            >
-              <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors cursor-pointer">
+          {/* Play Button - Future video integration */}
+          {hasStartedProgram && isHovered && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
                 <Play className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" />
               </div>
             </div>
@@ -190,17 +184,17 @@ const BirthBallGuideCard = () => {
           <div className="grid grid-cols-1 gap-2">
             <Button 
               className="w-full" 
-              size="lg" 
-              onClick={() => {
-                setHasStartedProgram(true);
-                openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "Ultimate Birth Ball Guide");
-              }}
+              size="lg"
+              asChild
             >
-              {hasStartedProgram ? 'Continue Ball Workouts' : 'Start Ball Workouts'}
+              <Link to="/birth-ball-guide">
+                <BookOpen className="mr-2 h-4 w-4" />
+                {hasStartedProgram ? 'Continue Ball Workouts' : 'Start Interactive Guide'}
+              </Link>
             </Button>
             <Button variant="outline" className="w-full" asChild>
               <a href={BIRTHBALL_GUIDE_URL} target="_blank" rel="noopener noreferrer">
-                View Guide (PDF)
+                View PDF Guide
               </a>
             </Button>
           </div>
