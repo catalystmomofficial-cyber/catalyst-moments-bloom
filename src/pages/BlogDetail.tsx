@@ -13,8 +13,10 @@ import { BlogComments } from '@/components/blog/BlogComments';
 import { SocialShareButtons } from '@/components/blog/SocialShareButtons';
 import { InternalLinkingSuggestions } from '@/components/blog/InternalLinkingSuggestions';
 import { Breadcrumb } from '@/components/blog/Breadcrumb';
+import { TableOfContents } from '@/components/blog/TableOfContents';
 import DOMPurify from 'dompurify';
 import SEO from '@/components/seo/SEO';
+import { detectFAQSchema, generateFAQSchema } from '@/utils/faqSchemaDetector';
 
 interface BlogPost {
   id: string;
@@ -120,6 +122,15 @@ const BlogDetail = () => {
   const primaryCategory = blog.tags?.[0] || 'General';
   const truncatedTitle = blog.title.length > 50 ? blog.title.substring(0, 47) + '...' : blog.title;
 
+  // Detect FAQ patterns and generate FAQ schema
+  const faqItems = detectFAQSchema(blog.content);
+  const faqSchema = generateFAQSchema(faqItems);
+
+  // Sanitize content and add IDs to headings
+  const sanitizedContent = DOMPurify.sanitize(blog.content, {
+    ADD_ATTR: ['loading', 'decoding', 'id'],
+  }).replace(/<img/g, '<img loading="lazy" decoding="async"');
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -156,7 +167,7 @@ const BlogDetail = () => {
         description={blog.excerpt || blog.content.replace(/<[^>]*>/g, '').substring(0, 160)}
         image={blog.featured_image_url}
         canonical={`${window.location.origin}/blog/${slug}`}
-        structuredData={structuredData}
+        structuredData={faqSchema ? [structuredData, faqSchema] : structuredData}
       />
       <article className="container mx-auto px-4 py-8" itemScope itemType="https://schema.org/BlogPosting">
         <meta itemProp="datePublished" content={blog.published_at} />
@@ -219,8 +230,9 @@ const BlogDetail = () => {
             description={blog.excerpt}
           />
 
-          <Card className="mb-8">
-            <CardContent className="pt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 mb-8">
+            <Card>
+              <CardContent className="pt-6">
               <div 
                 className="prose prose-lg max-w-none dark:prose-invert
                   prose-headings:font-bold prose-headings:text-foreground
@@ -235,14 +247,13 @@ const BlogDetail = () => {
                   prose-img:rounded-lg prose-img:shadow-md prose-img:my-6
                   [&_img]:loading-lazy [&_img]:w-full [&_img]:h-auto"
                 itemProp="articleBody"
-                dangerouslySetInnerHTML={{ 
-                  __html: DOMPurify.sanitize(blog.content, {
-                    ADD_ATTR: ['loading', 'decoding'],
-                  }).replace(/<img/g, '<img loading="lazy" decoding="async"')
-                }}
+                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
               />
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            <TableOfContents content={sanitizedContent} />
+          </div>
 
           <InternalLinkingSuggestions 
             currentPostId={blog.id}
