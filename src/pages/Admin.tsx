@@ -15,6 +15,7 @@ import { BlogPostGenerator } from '@/components/admin/BlogPostGenerator';
 import { BlogPostManager } from '@/components/admin/BlogPostManager';
 import { BlogAnalyticsDashboard } from '@/components/admin/BlogAnalyticsDashboard';
 import { SubscriptionSection } from '@/components/admin/SubscriptionSection';
+import { BlogSchedulerSetup } from '@/components/admin/BlogSchedulerSetup';
 
 const Admin = () => {
   return (
@@ -94,6 +95,7 @@ const Admin = () => {
             </TabsContent>
 
             <TabsContent value="blog" className="space-y-6">
+              <BlogSchedulerSetup />
               <BlogPostGenerator />
               <BlogPostManager />
             </TabsContent>

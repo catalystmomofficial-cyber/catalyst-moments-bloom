@@ -195,12 +195,13 @@ export default function BlogPreview() {
       setBlog(updatedBlog);
       setEditedBlog(updatedBlog);
 
-      toast.success('Blog post published successfully!');
-      
-      // Wait a moment before navigating to ensure state is updated
-      setTimeout(() => {
-        navigate('/admin');
-      }, 500);
+      toast.success('Blog post published successfully!', {
+        action: {
+          label: 'View Post',
+          onClick: () => navigate(`/blog/${blog.slug}`)
+        },
+        duration: 5000
+      });
     } catch (error) {
       console.error('Error publishing blog:', error);
       toast.error(`Failed to publish: ${error.message || 'Unknown error'}`);
@@ -318,7 +319,7 @@ export default function BlogPreview() {
                   <FileEdit className="mr-2 h-4 w-4" />
                   Edit
                 </Button>
-                {blog.status === 'draft' && (
+                {blog.status === 'draft' ? (
                   <>
                     <Button onClick={handlePublish} disabled={publishing}>
                       <Eye className="mr-2 h-4 w-4" />
@@ -349,6 +350,11 @@ export default function BlogPreview() {
                       </PopoverContent>
                     </Popover>
                   </>
+                ) : (
+                  <Button onClick={() => navigate(`/blog/${blog.slug}`)}>
+                    <Eye className="mr-2 h-4 w-4" />
+                    View Published Post
+                  </Button>
                 )}
                 <Button variant="outline" onClick={handleDelete}>
                   <Trash2 className="mr-2 h-4 w-4" />
