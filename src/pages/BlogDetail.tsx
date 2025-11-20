@@ -114,23 +114,58 @@ const BlogDetail = () => {
     );
   }
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": blog.title,
+    "description": blog.excerpt || blog.content.substring(0, 160),
+    "image": blog.featured_image_url || `${window.location.origin}/og-image.png`,
+    "datePublished": blog.published_at,
+    "dateModified": blog.published_at,
+    "author": {
+      "@type": "Person",
+      "name": blog.author
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Catalyst Mom",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${window.location.origin}/catalyst-mom-logo.png`
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${window.location.origin}/blog/${slug}`
+    },
+    "keywords": blog.tags?.join(", "),
+    "wordCount": blog.content.split(' ').length,
+    "articleBody": blog.content.replace(/<[^>]*>/g, '').substring(0, 500)
+  };
+
   return (
     <PageLayout>
       <SEO 
-        title={blog.title}
-        description={blog.excerpt || blog.content.substring(0, 160)}
+        title={`${blog.title} | Catalyst Mom Blog`}
+        description={blog.excerpt || blog.content.replace(/<[^>]*>/g, '').substring(0, 160)}
         image={blog.featured_image_url}
+        canonical={`${window.location.origin}/blog/${slug}`}
+        structuredData={structuredData}
       />
-      <article className="container mx-auto px-4 py-8">
+      <article className="container mx-auto px-4 py-8" itemScope itemType="https://schema.org/BlogPosting">
+        <meta itemProp="datePublished" content={blog.published_at} />
+        <meta itemProp="dateModified" content={blog.published_at} />
         <div className="max-w-4xl mx-auto">
           {blog.featured_image_url && (
-            <div className="w-full h-96 overflow-hidden rounded-lg mb-8">
+            <figure className="w-full h-96 overflow-hidden rounded-lg mb-8">
               <img 
                 src={blog.featured_image_url} 
-                alt={blog.title}
+                alt={`Featured image for ${blog.title} - Catalyst Mom Blog`}
+                itemProp="image"
                 className="w-full h-full object-cover"
+                loading="eager"
               />
-            </div>
+            </figure>
           )}
 
           <div className="mb-6">
@@ -142,19 +177,21 @@ const BlogDetail = () => {
               </div>
             )}
             
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">{blog.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4" itemProp="headline">{blog.title}</h1>
             
             <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span>{blog.author}</span>
+              <div className="flex items-center gap-2" itemProp="author" itemScope itemType="https://schema.org/Person">
+                <User className="h-4 w-4" aria-hidden="true" />
+                <span itemProp="name">{blog.author}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                <span>{format(new Date(blog.published_at), 'MMMM d, yyyy')}</span>
+                <Calendar className="h-4 w-4" aria-hidden="true" />
+                <time itemProp="datePublished" dateTime={blog.published_at}>
+                  {format(new Date(blog.published_at), 'MMMM d, yyyy')}
+                </time>
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
+                <Clock className="h-4 w-4" aria-hidden="true" />
                 <span>{Math.ceil(blog.content.split(' ').length / 200)} min read</span>
               </div>
             </div>
@@ -163,7 +200,18 @@ const BlogDetail = () => {
           <Card className="mb-8">
             <CardContent className="pt-6">
               <div 
-                className="prose prose-lg max-w-none dark:prose-invert"
+                className="prose prose-lg max-w-none dark:prose-invert
+                  prose-headings:font-bold prose-headings:text-foreground
+                  prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4
+                  prose-h3:text-2xl prose-h3:mt-6 prose-h3:mb-3
+                  prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4
+                  prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                  prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
+                  prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
+                  prose-li:text-muted-foreground prose-li:mb-2
+                  prose-strong:text-foreground prose-strong:font-semibold
+                  prose-img:rounded-lg prose-img:shadow-md"
+                itemProp="articleBody"
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content) }}
               />
             </CardContent>
