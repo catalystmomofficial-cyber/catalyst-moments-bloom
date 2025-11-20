@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RichTextEditor } from './RichTextEditor';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,6 +63,7 @@ interface BlogPost {
 }
 
 export const BlogPostManager = () => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -334,8 +336,8 @@ export const BlogPostManager = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleEdit(post)}
-                          title="Preview & Edit"
+                          onClick={() => navigate(`/blog-preview?id=${post.id}`)}
+                          title="Preview & Publish"
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
