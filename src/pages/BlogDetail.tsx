@@ -224,12 +224,6 @@ const BlogDetail = () => {
             </div>
           </div>
 
-          <SocialShareButtons 
-            title={blog.title}
-            url={`${window.location.origin}/blog/${slug}`}
-            description={blog.excerpt}
-          />
-
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 mb-8">
             <Card>
               <CardContent className="pt-6">
