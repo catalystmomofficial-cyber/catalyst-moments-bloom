@@ -37,8 +37,8 @@ const BlogDetail = () => {
           .from('blogs')
           .select('*')
           .eq('status', 'published')
-          .or(`slug.eq.${slug},id.eq.${slug}`)
-          .single();
+          .eq('slug', slug)
+          .maybeSingle();
 
         if (error) throw error;
         setBlog(data);
