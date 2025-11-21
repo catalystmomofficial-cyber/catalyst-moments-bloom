@@ -15,13 +15,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Target, Heart, TrendingUp, CheckCircle2 } from 'lucide-react';
 
 interface AssessmentData {
+  id: string;
   email: string;
   name: string;
   primary_goal: string;
   dietary_preferences: string;
   activity_level: string;
   equipment: string;
-  special_notes: any; // JSON containing scores, tier, gaps, etc.
+  special_notes: any;
+  overall_score: number | null;
+  tier: string | null;
+  category_scores: Record<string, number> | null;
 }
 
 export const PersonalizedOnboarding = () => {
@@ -88,9 +92,10 @@ export const PersonalizedOnboarding = () => {
   };
 
   const getScoreInsight = () => {
-    if (!assessmentData?.special_notes?.overall_score) return null;
-    const score = assessmentData.special_notes.overall_score;
-    const tier = assessmentData.special_notes.tier;
+    const score = assessmentData?.overall_score || assessmentData?.special_notes?.overall_score;
+    const tier = assessmentData?.tier || assessmentData?.special_notes?.tier;
+    
+    if (!score) return null;
 
     if (tier === 'high') {
       return {
@@ -114,9 +119,9 @@ export const PersonalizedOnboarding = () => {
   };
 
   const getTopGaps = () => {
-    if (!assessmentData?.special_notes?.category_scores) return [];
+    const scores = assessmentData?.category_scores || assessmentData?.special_notes?.category_scores;
     
-    const scores = assessmentData.special_notes.category_scores;
+    if (!scores) return [];
     const gaps = Object.entries(scores)
       .map(([category, score]) => ({
         category: category.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
@@ -260,11 +265,21 @@ export const PersonalizedOnboarding = () => {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-r from-primary/20 to-primary/10 p-6 rounded-lg text-center">
+              <div className="bg-gradient-to-r from-primary/20 to-primary/10 p-6 rounded-lg text-center space-y-3">
                 <Heart className="h-8 w-8 mx-auto text-primary mb-2" />
                 <p className="font-medium">
                   Everything in your app is now personalized to help you achieve your wellness goals!
                 </p>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate(`/assessment-results?id=${assessmentData.id}`);
+                  }}
+                >
+                  View Full Results
+                </Button>
               </div>
             </motion.div>
           )}

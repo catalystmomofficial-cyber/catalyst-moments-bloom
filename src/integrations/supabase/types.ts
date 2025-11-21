@@ -565,38 +565,50 @@ export type Database = {
       lead_responses: {
         Row: {
           activity_level: string
+          assessment_results: Json | null
+          category_scores: Json | null
           created_at: string | null
           dietary_preferences: string
           email: string
           equipment: string
           id: string
           name: string
+          overall_score: number | null
           primary_goal: string
           special_notes: string | null
+          tier: string | null
           user_id: string | null
         }
         Insert: {
           activity_level: string
+          assessment_results?: Json | null
+          category_scores?: Json | null
           created_at?: string | null
           dietary_preferences: string
           email: string
           equipment: string
           id?: string
           name: string
+          overall_score?: number | null
           primary_goal: string
           special_notes?: string | null
+          tier?: string | null
           user_id?: string | null
         }
         Update: {
           activity_level?: string
+          assessment_results?: Json | null
+          category_scores?: Json | null
           created_at?: string | null
           dietary_preferences?: string
           email?: string
           equipment?: string
           id?: string
           name?: string
+          overall_score?: number | null
           primary_goal?: string
           special_notes?: string | null
+          tier?: string | null
           user_id?: string | null
         }
         Relationships: []
