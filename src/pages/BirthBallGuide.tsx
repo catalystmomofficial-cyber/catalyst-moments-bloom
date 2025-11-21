@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Heart, Clock, Target, BookOpen, Award, AlertCircle } from 'lucide-react';
+import { Heart, Clock, Target, BookOpen, Award, AlertCircle, ShoppingCart, Shield, HelpCircle, GraduationCap } from 'lucide-react';
 import SEO from '@/components/seo/SEO';
 import { trimesterPrograms, educationalContent } from '@/data/birthBallGuideData';
 
@@ -14,7 +14,6 @@ const BirthBallGuide = () => {
   const [savedExercises, setSavedExercises] = useState<string[]>([]);
 
   useEffect(() => {
-    // Load progress from localStorage
     const saved = localStorage.getItem('birthBallProgress');
     if (saved) {
       const data = JSON.parse(saved);
@@ -25,6 +24,51 @@ const BirthBallGuide = () => {
 
   const totalExercises = trimesterPrograms.reduce((acc, program) => acc + program.exercises.length, 0);
   const progress = (completedExercises.length / totalExercises) * 100;
+
+  const resources = [
+    {
+      title: 'Buying Guide',
+      description: 'Choose the right birth ball for your height',
+      icon: ShoppingCart,
+      link: '/birth-ball-guide/buying-guide',
+      color: 'text-blue-600'
+    },
+    {
+      title: 'Safety & Comfort',
+      description: 'Important tips for safe practice',
+      icon: Shield,
+      link: '/birth-ball-guide/safety',
+      color: 'text-green-600'
+    },
+    {
+      title: 'FAQs',
+      description: 'Common questions and solutions',
+      icon: HelpCircle,
+      link: '/birth-ball-guide/faq',
+      color: 'text-orange-600'
+    },
+    {
+      title: 'Pelvic Floor Education',
+      description: 'Understanding your body mechanics',
+      icon: GraduationCap,
+      link: '/birth-ball-guide/education',
+      color: 'text-purple-600'
+    },
+    {
+      title: 'Early Labor Techniques',
+      description: 'Birth ball movements for labor comfort',
+      icon: Heart,
+      link: '/birth-ball-guide/early-labor',
+      color: 'text-red-600'
+    },
+    {
+      title: 'Saved Exercises',
+      description: `${savedExercises.length} favorite exercise${savedExercises.length !== 1 ? 's' : ''} saved`,
+      icon: Heart,
+      link: '/birth-ball-guide/saved',
+      color: 'text-pink-600'
+    },
+  ];
 
   return (
     <PageLayout>
@@ -168,79 +212,29 @@ const BirthBallGuide = () => {
           </div>
         </section>
 
-        {/* Quick Access Cards */}
-        <section className="mb-12">
+        {/* Resources Grid */}
+        <section>
           <h2 className="text-2xl font-bold mb-6">Essential Resources</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-lg">Buying Guide</CardTitle>
-                <CardDescription>Choose the right birth ball for your height and needs</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button asChild variant="outline" className="w-full">
-                  <Link to="/birth-ball-guide/buying-guide">View Guide</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-lg">Safety & Comfort</CardTitle>
-                <CardDescription>Important tips for safe and effective practice</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button asChild variant="outline" className="w-full">
-                  <Link to="/birth-ball-guide/safety">View Tips</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-lg">FAQs & Troubleshooting</CardTitle>
-                <CardDescription>Common questions and solutions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button asChild variant="outline" className="w-full">
-                  <Link to="/birth-ball-guide/faq">Get Answers</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        {/* Education Section Preview */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">Understanding Your Body</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Pelvic Floor & Body Mechanics</CardTitle>
-                <CardDescription>
-                  Learn how your body changes and how the birth ball supports you
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button asChild variant="outline" className="w-full">
-                  <Link to="/birth-ball-guide/education">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Using the Ball in Early Labor</CardTitle>
-                <CardDescription>
-                  Techniques for managing contractions and staying comfortable
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button asChild variant="outline" className="w-full">
-                  <Link to="/birth-ball-guide/early-labor">View Techniques</Link>
-                </Button>
-              </CardContent>
-            </Card>
+            {resources.map((resource) => {
+              const Icon = resource.icon;
+              return (
+                <Card key={resource.title} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center gap-3 mb-2">
+                      <Icon className={`h-5 w-5 ${resource.color}`} />
+                      <CardTitle className="text-lg">{resource.title}</CardTitle>
+                    </div>
+                    <CardDescription>{resource.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link to={resource.link}>View {resource.title === 'Saved Exercises' ? 'Saved' : ''}</Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
       </div>

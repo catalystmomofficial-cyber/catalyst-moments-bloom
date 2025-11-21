@@ -58,6 +58,7 @@ import BirthBallSafety from "./pages/BirthBallSafety";
 import BirthBallFAQ from "./pages/BirthBallFAQ";
 import BirthBallEducation from "./pages/BirthBallEducation";
 import BirthBallEarlyLabor from "./pages/BirthBallEarlyLabor";
+import SavedBirthBallExercises from "./pages/SavedBirthBallExercises";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
@@ -261,6 +262,13 @@ function AppContent() {
           <PrivateRoute>
             <SubscriptionGuard>
               <BirthBallEarlyLabor />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/saved" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <SavedBirthBallExercises />
             </SubscriptionGuard>
           </PrivateRoute>
         } />

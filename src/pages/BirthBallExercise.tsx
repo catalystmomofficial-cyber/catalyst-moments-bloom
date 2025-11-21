@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Clock, Heart, CheckCircle } from 'lucide-react';
 import { birthBallExercises } from '@/data/birthBallGuideData';
 import { toast } from 'sonner';
+import VideoPlayer from '@/components/workouts/VideoPlayer';
 
 const BirthBallExercise = () => {
   const { exerciseId } = useParams<{ exerciseId: string }>();
@@ -96,6 +97,12 @@ const BirthBallExercise = () => {
             <span>{exercise.duration}</span>
           </div>
         </div>
+
+        {exercise.videoUrl && (
+          <div className="mb-8">
+            <VideoPlayer videoUrl={exercise.videoUrl} title={exercise.name} />
+          </div>
+        )}
 
         {exercise.imageUrl && (
           <div className="aspect-video bg-muted rounded-lg mb-8 overflow-hidden">
