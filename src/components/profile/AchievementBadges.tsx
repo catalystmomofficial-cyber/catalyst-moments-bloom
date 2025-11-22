@@ -38,6 +38,28 @@ export const AchievementBadges = () => {
   useEffect(() => {
     if (user && profile) {
       checkAchievements();
+      
+      // Set up realtime listener for challenge progress updates
+      const channel = supabase
+        .channel('achievement_updates')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'user_challenge_progress',
+            filter: `user_id=eq.${user.id}`,
+          },
+          () => {
+            // Refresh achievements when challenge progress updates
+            checkAchievements();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [user, profile]);
 

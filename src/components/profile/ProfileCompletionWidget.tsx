@@ -50,6 +50,15 @@ export const ProfileCompletionWidget = () => {
   });
   const [milestones, setMilestones] = useState<ProfileMilestone[]>([]);
   const [claimedMilestones, setClaimedMilestones] = useState<string[]>([]);
+  const [claimingReward, setClaimingReward] = useState<string | null>(null);
+
+  // Load claimed milestones from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(`claimed_milestones_${user?.id}`);
+    if (saved) {
+      setClaimedMilestones(JSON.parse(saved));
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     if (user && profile) {
@@ -130,8 +139,10 @@ export const ProfileCompletionWidget = () => {
   };
 
   const handleClaimReward = async (milestone: ProfileMilestone) => {
-    if (!user || !milestone.completed || claimedMilestones.includes(milestone.id)) return;
+    if (!user || !milestone.completed || claimedMilestones.includes(milestone.id) || claimingReward) return;
 
+    setClaimingReward(milestone.id);
+    
     try {
       // Award points
       const { error } = await supabase.rpc('add_user_points', {
@@ -143,12 +154,23 @@ export const ProfileCompletionWidget = () => {
 
       if (error) throw error;
 
-      setClaimedMilestones([...claimedMilestones, milestone.id]);
+      const updatedClaimed = [...claimedMilestones, milestone.id];
+      setClaimedMilestones(updatedClaimed);
+      
+      // Persist to localStorage
+      localStorage.setItem(`claimed_milestones_${user.id}`, JSON.stringify(updatedClaimed));
 
+      // Show success with animation
       toast({
-        title: `+${milestone.points} Points Earned! 🎉`,
+        title: `🎉 +${milestone.points} Points Earned!`,
         description: milestone.label,
+        duration: 5000,
       });
+
+      // Refresh completion status
+      setTimeout(() => {
+        checkCompletion();
+      }, 500);
     } catch (error) {
       console.error('Error claiming reward:', error);
       toast({
@@ -156,11 +178,19 @@ export const ProfileCompletionWidget = () => {
         description: 'Please try again later',
         variant: 'destructive',
       });
+    } finally {
+      setClaimingReward(null);
     }
   };
 
   const incompleteMilestones = milestones.filter(m => !m.completed);
   const completedMilestones = milestones.filter(m => m.completed);
+  
+  // Hide widget when 100% complete and all rewards claimed
+  const allRewardsClaimed = completedMilestones.every(m => claimedMilestones.includes(m.id));
+  if (completion.totalPercentage === 100 && allRewardsClaimed) {
+    return null;
+  }
 
   return (
     <Card className="border-2 border-primary/20">
@@ -198,11 +228,12 @@ export const ProfileCompletionWidget = () => {
               {completedMilestones.map((milestone) => {
                 const Icon = milestone.icon;
                 const isClaimed = claimedMilestones.includes(milestone.id);
+                const isClaiming = claimingReward === milestone.id;
                 
                 return (
                   <div
                     key={milestone.id}
-                    className="flex items-center justify-between p-3 rounded-lg bg-primary/5 border border-primary/20"
+                    className="flex items-center justify-between p-3 rounded-lg bg-primary/5 border border-primary/20 animate-fade-in"
                   >
                     <div className="flex items-center gap-3 flex-1">
                       <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -220,15 +251,22 @@ export const ProfileCompletionWidget = () => {
                       <Button
                         size="sm"
                         onClick={() => handleClaimReward(milestone)}
-                        className="ml-2"
+                        disabled={isClaiming}
+                        className="ml-2 gap-1"
                       >
-                        <Award className="w-3 h-3 mr-1" />
-                        +{milestone.points}
+                        {isClaiming ? (
+                          <>Processing...</>
+                        ) : (
+                          <>
+                            <Award className="w-3 h-3" />
+                            +{milestone.points}
+                          </>
+                        )}
                       </Button>
                     )}
                     {isClaimed && (
-                      <Badge variant="outline" className="ml-2">
-                        Claimed
+                      <Badge variant="outline" className="ml-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400">
+                        ✓ Claimed
                       </Badge>
                     )}
                   </div>
@@ -286,16 +324,16 @@ export const ProfileCompletionWidget = () => {
         )}
 
         {/* 100% Completion Message */}
-        {completion.totalPercentage === 100 && (
-          <div className="p-4 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10 border-2 border-primary/20 text-center">
+        {completion.totalPercentage === 100 && !allRewardsClaimed && (
+          <div className="p-4 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10 border-2 border-primary/20 text-center animate-pulse-soft">
             <div className="flex justify-center mb-2">
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
                 <Sparkles className="w-6 h-6 text-primary" />
               </div>
             </div>
             <p className="font-bold text-lg mb-1">Profile Complete! 🎉</p>
-            <p className="text-sm text-muted-foreground">
-              You've unlocked all personalized features and earned maximum rewards!
+            <p className="text-sm text-muted-foreground mb-2">
+              Don't forget to claim your remaining rewards above!
             </p>
           </div>
         )}

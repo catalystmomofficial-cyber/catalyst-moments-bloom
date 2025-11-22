@@ -34,6 +34,28 @@ export const MonthlyChallenge = () => {
   useEffect(() => {
     if (user) {
       fetchChallenge();
+      
+      // Set up realtime listener for progress updates
+      const channel = supabase
+        .channel('challenge_progress')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'user_challenge_progress',
+            filter: `user_id=eq.${user.id}`,
+          },
+          () => {
+            // Refresh challenge data when progress updates
+            fetchChallenge();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [user]);
 
