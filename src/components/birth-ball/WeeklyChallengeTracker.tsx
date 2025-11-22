@@ -3,8 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Calendar, CheckCircle2, Trophy, Flame } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Calendar, CheckCircle2, Trophy, Flame, Bell, Mail } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ChallengeData {
   startDate: string;
@@ -14,19 +19,85 @@ interface ChallengeData {
 }
 
 const WeeklyChallengeTracker = () => {
+  const { user } = useAuth();
   const [challengeData, setChallengeData] = useState<ChallengeData>({
     startDate: new Date().toISOString().split('T')[0],
     completedDays: [],
     currentStreak: 0,
     longestStreak: 0
   });
+  const [emailReminder, setEmailReminder] = useState(false);
+  const [reminderTime, setReminderTime] = useState('09:00');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     const saved = localStorage.getItem('birthBallChallenge');
     if (saved) {
       setChallengeData(JSON.parse(saved));
     }
-  }, []);
+    
+    // Load email reminder settings
+    if (user) {
+      loadReminderSettings();
+    }
+  }, [user]);
+
+  const loadReminderSettings = async () => {
+    if (!user) return;
+    
+    const { data, error } = await supabase
+      .from('birth_ball_reminders')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+    
+    if (data && !error) {
+      setEmailReminder(data.is_active);
+      setReminderTime(data.reminder_time.slice(0, 5)); // HH:MM format
+      setEmail(data.email);
+    }
+  };
+
+  const handleReminderToggle = async (enabled: boolean) => {
+    if (!user) {
+      toast.error('Please log in to set up email reminders');
+      return;
+    }
+
+    if (enabled && !email) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    setEmailReminder(enabled);
+
+    const { error } = await supabase
+      .from('birth_ball_reminders')
+      .upsert({
+        user_id: user.id,
+        email: email || user.email || '',
+        reminder_time: `${reminderTime}:00`,
+        is_active: enabled
+      });
+
+    if (error) {
+      toast.error('Failed to update reminder settings');
+      console.error(error);
+    } else {
+      toast.success(enabled ? 'Daily reminders enabled!' : 'Reminders disabled');
+    }
+  };
+
+  const handleTimeChange = async (newTime: string) => {
+    setReminderTime(newTime);
+    
+    if (!user || !emailReminder) return;
+
+    await supabase
+      .from('birth_ball_reminders')
+      .update({ reminder_time: `${newTime}:00` })
+      .eq('user_id', user.id);
+  };
 
   const saveProgress = (data: ChallengeData) => {
     localStorage.setItem('birthBallChallenge', JSON.stringify(data));
@@ -187,6 +258,54 @@ const WeeklyChallengeTracker = () => {
               <span className="font-semibold text-foreground">{challengeData.longestStreak} days</span>
             </div>
           )}
+
+          {/* Email Reminders Section */}
+          <div className="space-y-4 pt-4 border-t">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <Label htmlFor="email-reminder" className="font-medium">
+                  Daily Email Reminders
+                </Label>
+              </div>
+              <Switch
+                id="email-reminder"
+                checked={emailReminder}
+                onCheckedChange={handleReminderToggle}
+              />
+            </div>
+            
+            {emailReminder && (
+              <div className="space-y-3 animate-fade-in">
+                <div>
+                  <Label htmlFor="reminder-email" className="text-sm">Email Address</Label>
+                  <Input
+                    id="reminder-email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onBlur={() => handleReminderToggle(true)}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="reminder-time" className="text-sm">Reminder Time</Label>
+                  <Input
+                    id="reminder-time"
+                    type="time"
+                    value={reminderTime}
+                    onChange={(e) => handleTimeChange(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Bell className="h-3 w-3" />
+                  You'll receive a daily reminder at {reminderTime} to practice
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
