@@ -8,6 +8,9 @@ import { Progress } from '@/components/ui/progress';
 import { Heart, Clock, Target, BookOpen, Award, AlertCircle, ShoppingCart, Shield, HelpCircle, GraduationCap } from 'lucide-react';
 import SEO from '@/components/seo/SEO';
 import { trimesterPrograms, educationalContent } from '@/data/birthBallGuideData';
+import HeroVideoSection from '@/components/birth-ball/HeroVideoSection';
+import WeeklyChallengeTracker from '@/components/birth-ball/WeeklyChallengeTracker';
+import PrintableWorkoutCards from '@/components/birth-ball/PrintableWorkoutCards';
 
 const BirthBallGuide = () => {
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
@@ -78,6 +81,9 @@ const BirthBallGuide = () => {
       />
 
       <div className="container px-4 mx-auto py-8">
+        {/* Hero Video Section */}
+        <HeroVideoSection />
+
         {/* Hero Section */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-4">
@@ -133,8 +139,11 @@ const BirthBallGuide = () => {
           </div>
         </div>
 
+        {/* Weekly Challenge Tracker */}
+        <WeeklyChallengeTracker />
+
         {/* Introduction Card */}
-        <Card className="mb-8">
+        <Card className="my-8">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BookOpen className="h-5 w-5" />
@@ -233,7 +242,7 @@ const BirthBallGuide = () => {
         </section>
 
         {/* Resources Grid */}
-        <section>
+        <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Essential Resources</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.map((resource, index) => {
@@ -267,6 +276,9 @@ const BirthBallGuide = () => {
             })}
           </div>
         </section>
+
+        {/* Printable Workout Cards */}
+        <PrintableWorkoutCards />
       </div>
     </PageLayout>
   );
