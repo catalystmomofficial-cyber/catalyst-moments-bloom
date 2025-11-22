@@ -19,20 +19,20 @@ export default function VideoPlayer({ videoUrl, title }: VideoPlayerProps) {
   return (
     <div className="w-full mb-6">
       <h4 className="font-medium mb-2">Exercise Video:</h4>
-      <div className="aspect-video bg-black rounded-lg overflow-hidden">
+      <div className="relative w-full overflow-hidden rounded-lg bg-black" style={{ paddingBottom: '56.25%' }}>
         {isMp4 ? (
           <video
             src={videoUrl}
             controls
             playsInline
-            className="w-full h-full"
+            className="absolute top-0 left-0 w-full h-full object-contain"
             title={title}
           />
         ) : (
           <iframe
             src={videoUrl}
             title={title}
-            className="w-full h-full"
+            className="absolute top-0 left-0 w-full h-full"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
