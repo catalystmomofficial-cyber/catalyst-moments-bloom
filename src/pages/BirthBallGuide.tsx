@@ -177,15 +177,28 @@ const BirthBallGuide = () => {
           <h2 className="text-2xl font-bold mb-6">Trimester-Specific Programs</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {trimesterPrograms.map((program) => (
-              <Card key={program.id} className="hover:shadow-lg transition-shadow">
-                <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-6xl font-bold text-primary mb-2">
-                      {program.trimester}
+              <Card key={program.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                {program.imageUrl ? (
+                  <div className="aspect-video relative overflow-hidden">
+                    <img 
+                      src={program.imageUrl} 
+                      alt={`${program.title} cover image`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                      Trimester {program.trimester}
                     </div>
-                    <div className="text-sm text-muted-foreground">Trimester</div>
                   </div>
-                </div>
+                ) : (
+                  <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-6xl font-bold text-primary mb-2">
+                        {program.trimester}
+                      </div>
+                      <div className="text-sm text-muted-foreground">Trimester</div>
+                    </div>
+                  </div>
+                )}
                 <CardHeader>
                   <div className="flex items-center justify-between mb-2">
                     <Badge variant="secondary">{program.weeks}</Badge>
