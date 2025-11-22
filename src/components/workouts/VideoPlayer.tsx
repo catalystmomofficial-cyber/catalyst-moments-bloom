@@ -11,7 +11,18 @@ export default function VideoPlayer({ videoUrl, title, thumbnail }: VideoPlayerP
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMp4 = /\.mp4($|[?])/i.test(videoUrl || '');
-  const isYouTube = videoUrl && /youtube|youtu\.be/i.test(videoUrl);
+  const isYouTube = videoUrl && (/youtube\.com|youtu\.be/i.test(videoUrl));
+  
+  // Format YouTube URL properly for embedding
+  const getYouTubeEmbedUrl = (url: string) => {
+    if (!url) return '';
+    // If already an embed URL, ensure it has proper parameters
+    if (url.includes('/embed/')) {
+      const baseUrl = url.split('?')[0];
+      return `${baseUrl}?rel=0&modestbranding=1`;
+    }
+    return url;
+  };
 
   const speedOptions = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
@@ -94,15 +105,19 @@ export default function VideoPlayer({ videoUrl, title, thumbnail }: VideoPlayerP
               </div>
             </div>
           </div>
-        ) : (
+        ) : isYouTube ? (
           <iframe
-            src={showIframe ? `${videoUrl}?autoplay=1` : videoUrl}
+            src={showIframe ? `${getYouTubeEmbedUrl(videoUrl)}${getYouTubeEmbedUrl(videoUrl).includes('?') ? '&' : '?'}autoplay=1` : getYouTubeEmbedUrl(videoUrl)}
             title={title}
             className="absolute top-0 left-0 w-full h-full"
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
+        ) : (
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-muted">
+            <p className="text-muted-foreground">Unsupported video format</p>
+          </div>
         )}
       </div>
     </div>
