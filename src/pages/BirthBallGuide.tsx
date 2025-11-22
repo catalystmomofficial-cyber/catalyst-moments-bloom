@@ -176,16 +176,21 @@ const BirthBallGuide = () => {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Trimester-Specific Programs</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trimesterPrograms.map((program) => (
-              <Card key={program.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+            {trimesterPrograms.map((program, index) => (
+              <Card 
+                key={program.id} 
+                className="hover:shadow-lg transition-all duration-300 overflow-hidden hover-scale animate-fade-in"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
                 {program.imageUrl ? (
-                  <div className="aspect-video relative overflow-hidden">
+                  <div className="aspect-video relative overflow-hidden group">
                     <img 
                       src={program.imageUrl} 
                       alt={`${program.title} cover image`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold shadow-lg transform group-hover:scale-110 transition-transform duration-300">
                       Trimester {program.trimester}
                     </div>
                   </div>
@@ -213,9 +218,11 @@ const BirthBallGuide = () => {
                       <Clock className="h-4 w-4" />
                       <span>{program.routineTime}</span>
                     </div>
-                    <Button asChild className="w-full">
+                    <Button asChild className="w-full group">
                       <Link to={`/birth-ball-guide/trimester-${program.trimester}`}>
-                        View Program
+                        <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
+                          View Program
+                        </span>
                       </Link>
                     </Button>
                   </div>
@@ -229,20 +236,30 @@ const BirthBallGuide = () => {
         <section>
           <h2 className="text-2xl font-bold mb-6">Essential Resources</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {resources.map((resource) => {
+            {resources.map((resource, index) => {
               const Icon = resource.icon;
               return (
-                <Card key={resource.title} className="hover:shadow-lg transition-shadow">
+                <Card 
+                  key={resource.title} 
+                  className="hover:shadow-lg transition-all duration-300 hover-scale animate-fade-in"
+                  style={{ animationDelay: `${(index + 3) * 100}ms` }}
+                >
                   <CardHeader>
                     <div className="flex items-center gap-3 mb-2">
-                      <Icon className={`h-5 w-5 ${resource.color}`} />
+                      <div className="p-2 rounded-lg bg-primary/10 transition-colors duration-300 hover:bg-primary/20">
+                        <Icon className={`h-5 w-5 ${resource.color}`} />
+                      </div>
                       <CardTitle className="text-lg">{resource.title}</CardTitle>
                     </div>
                     <CardDescription>{resource.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button asChild variant="outline" className="w-full">
-                      <Link to={resource.link}>View {resource.title === 'Saved Exercises' ? 'Saved' : ''}</Link>
+                    <Button asChild variant="outline" className="w-full group">
+                      <Link to={resource.link}>
+                        <span className="group-hover:translate-x-1 transition-transform duration-200 inline-block">
+                          View {resource.title === 'Saved Exercises' ? 'Saved' : ''}
+                        </span>
+                      </Link>
                     </Button>
                   </CardContent>
                 </Card>
