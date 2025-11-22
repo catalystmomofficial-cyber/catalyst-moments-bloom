@@ -469,6 +469,7 @@ export const trimesterPrograms: TrimesterProgram[] = [
       "No deep stretching that could overstretch ligaments"
     ],
     exercises: birthBallExercises.filter(ex => ex.trimester === 1 && ex.category === "Mobility + Posture"),
+    imageUrl: "/birth-ball-images/trimester-1-cover.png",
     routineTime: "10 minutes total"
   },
   {
@@ -490,6 +491,7 @@ export const trimesterPrograms: TrimesterProgram[] = [
       "Avoid exercises that put too much pressure on the lower back"
     ],
     exercises: birthBallExercises.filter(ex => ex.trimester === 2 && ex.category === "Strength + Mobility"),
+    imageUrl: "/birth-ball-images/trimester-2-cover.png",
     routineTime: "10 minutes total"
   },
   {
@@ -513,6 +515,7 @@ export const trimesterPrograms: TrimesterProgram[] = [
       "Don't overexert yourself; listen to your body"
     ],
     exercises: birthBallExercises.filter(ex => ex.trimester === 3 && ex.category === "Labor Prep"),
+    imageUrl: "/birth-ball-images/trimester-3-cover.png",
     routineTime: "10-12 minutes total"
   }
 ];
