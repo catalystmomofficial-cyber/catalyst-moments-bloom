@@ -342,15 +342,15 @@ const Dashboard = () => {
 };
 
 const StatsCard = ({ title, value, description, icon, color }: StatsCardProps) => (
-  <Card className="border-muted/50">
-    <CardContent className="p-4">
-      <div className="flex items-center justify-between">
-        <div className="space-y-0.5 flex-1">
-          <p className="text-xs font-medium text-muted-foreground">{title}</p>
-          <p className="text-2xl font-bold">{value}</p>
+  <Card>
+    <CardContent className="pt-6">
+      <div className="flex items-start justify-between">
+        <div className="space-y-1 flex-1">
+          <p className="text-sm font-medium text-muted-foreground">{title}</p>
+          <p className="text-3xl font-bold">{value}</p>
           <p className="text-xs text-muted-foreground">{description}</p>
         </div>
-        <div className={`${color} rounded-lg p-2.5`}>
+        <div className={`${color} rounded-full p-3`}>
           {icon}
         </div>
       </div>
