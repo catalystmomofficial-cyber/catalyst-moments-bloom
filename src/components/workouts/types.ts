@@ -19,6 +19,7 @@ export interface WorkoutPlayerProps {
 export interface VideoPlayerProps {
   videoUrl?: string;
   title: string;
+  thumbnail?: string;
 }
 
 export interface ExerciseTimerProps {

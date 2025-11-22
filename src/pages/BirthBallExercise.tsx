@@ -100,7 +100,11 @@ const BirthBallExercise = () => {
 
         {exercise.videoUrl && (
           <div className="mb-8">
-            <VideoPlayer videoUrl={exercise.videoUrl} title={exercise.name} />
+            <VideoPlayer 
+              videoUrl={exercise.videoUrl} 
+              title={exercise.name}
+              thumbnail={exercise.imageUrl}
+            />
           </div>
         )}
 
