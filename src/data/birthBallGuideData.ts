@@ -33,7 +33,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "1 min",
     category: "Mobility + Posture",
     trimester: 1,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/pelvic-tilts.png",
     instructions: [
       "Sit upright on the birth ball with feet flat on the floor, hip-width apart",
       "Place hands on your hips or rest them on your thighs",
@@ -54,7 +54,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Mobility + Posture",
     trimester: 1,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/seated-posture.png",
     instructions: [
       "Sit tall on the ball with your feet firmly planted",
       "Engage your core lightly (imagine hugging baby gently)",
@@ -75,7 +75,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Mobility + Posture",
     trimester: 1,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/arm-reaches.png",
     instructions: [
       "Sit upright on the ball with feet grounded",
       "Extend one arm overhead, reaching toward the ceiling",
@@ -96,7 +96,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Mobility + Posture",
     trimester: 1,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/hip-circles.png",
     instructions: [
       "Sit on the ball with feet hip-width apart",
       "Slowly circle your hips in one direction (clockwise)",
@@ -117,7 +117,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2-3 mins",
     category: "Mobility + Posture",
     trimester: 1,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/deep-breathing.png",
     instructions: [
       "Sit comfortably on the ball with good posture",
       "Place one hand on your chest, one on your belly",
@@ -140,7 +140,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Strength + Mobility",
     trimester: 2,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/supported-squats.png",
     instructions: [
       "Stand with the ball against a wall behind you",
       "Lean back gently against the ball for support",
@@ -181,7 +181,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Strength + Mobility",
     trimester: 2,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/side-rocking.png",
     instructions: [
       "Sit on the ball with feet planted firmly",
       "Gently rock your hips from side to side",
@@ -244,7 +244,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "1-2 mins",
     category: "Labor Prep",
     trimester: 3,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/slow-bounces.png",
     instructions: [
       "Sit on the ball with feet firmly planted",
       "Stay close to a wall or chair for support",
@@ -265,7 +265,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Labor Prep",
     trimester: 3,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/figure-eights.png",
     instructions: [
       "Sit on the ball with good posture",
       "Move your hips in a figure-8 pattern",
@@ -286,7 +286,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Labor Prep",
     trimester: 3,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/all-fours-tilts.png",
     instructions: [
       "Get on hands and knees with the ball in front of you",
       "Rest your hands or forearms on the ball",
@@ -307,7 +307,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Labor Prep",
     trimester: 3,
-    imageUrl: "/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png",
+    imageUrl: "/birth-ball-images/forward-lean.png",
     instructions: [
       "Kneel in front of the ball",
       "Lean forward and rest your upper body on the ball",
