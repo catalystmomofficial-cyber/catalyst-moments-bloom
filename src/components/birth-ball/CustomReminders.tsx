@@ -17,10 +17,12 @@ interface CustomReminder {
   title: string;
   description: string | null;
   reminder_time: string;
-  days_of_week: number[];
+  days_of_week: number[] | null;
   exercise_id: string | null;
   goal_type: string | null;
   is_active: boolean;
+  frequency: string;
+  monthly_day: number | null;
 }
 
 const DAYS = [
@@ -51,6 +53,8 @@ export const CustomReminders = () => {
     reminder_time: '09:00',
     days_of_week: [1, 2, 3, 4, 5, 6, 7],
     goal_type: '',
+    frequency: 'weekly' as 'daily' | 'weekly' | 'monthly',
+    monthly_day: 1,
   });
 
   useEffect(() => {
@@ -96,8 +100,10 @@ export const CustomReminders = () => {
           title: formData.title,
           description: formData.description || null,
           reminder_time: formData.reminder_time,
-          days_of_week: formData.days_of_week,
+          days_of_week: formData.frequency === 'weekly' ? formData.days_of_week : null,
           goal_type: formData.goal_type || null,
+          frequency: formData.frequency,
+          monthly_day: formData.frequency === 'monthly' ? formData.monthly_day : null,
         });
 
       if (error) throw error;
@@ -114,6 +120,8 @@ export const CustomReminders = () => {
         reminder_time: '09:00',
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
         goal_type: '',
+        frequency: 'weekly',
+        monthly_day: 1,
       });
       loadReminders();
     } catch (error) {
@@ -174,7 +182,8 @@ export const CustomReminders = () => {
     }));
   };
 
-  const formatDays = (days: number[]) => {
+  const formatDays = (days: number[] | null) => {
+    if (!days || days.length === 0) return '';
     if (days.length === 7) return 'Every day';
     return days
       .sort()
@@ -243,22 +252,62 @@ export const CustomReminders = () => {
                 </div>
 
                 <div>
-                  <Label>Days of Week</Label>
-                  <div className="flex gap-2 mt-2">
-                    {DAYS.map(day => (
-                      <Button
-                        key={day.value}
-                        type="button"
-                        variant={formData.days_of_week.includes(day.value) ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => toggleDay(day.value)}
-                        className="flex-1"
-                      >
-                        {day.label}
-                      </Button>
-                    ))}
-                  </div>
+                  <Label>Frequency</Label>
+                  <Select
+                    value={formData.frequency}
+                    onValueChange={(value: 'daily' | 'weekly' | 'monthly') =>
+                      setFormData({ ...formData, frequency: value })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="daily">Daily</SelectItem>
+                      <SelectItem value="weekly">Weekly</SelectItem>
+                      <SelectItem value="monthly">Monthly</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
+
+                {formData.frequency === 'weekly' && (
+                  <div>
+                    <Label>Days of Week</Label>
+                    <div className="flex gap-2 mt-2">
+                      {DAYS.map(day => (
+                        <Button
+                          key={day.value}
+                          type="button"
+                          variant={formData.days_of_week.includes(day.value) ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => toggleDay(day.value)}
+                          className="flex-1"
+                        >
+                          {day.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {formData.frequency === 'monthly' && (
+                  <div>
+                    <Label htmlFor="monthly-day">Day of Month</Label>
+                    <Input
+                      id="monthly-day"
+                      type="number"
+                      min="1"
+                      max="31"
+                      value={formData.monthly_day}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          monthly_day: parseInt(e.target.value) || 1,
+                        })
+                      }
+                    />
+                  </div>
+                )}
 
                 <div>
                   <Label htmlFor="goal-type">Related Goal (Optional)</Label>
@@ -308,10 +357,18 @@ export const CustomReminders = () => {
                       <Clock className="w-3 h-3" />
                       {reminder.reminder_time}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {formatDays(reminder.days_of_week)}
+                    <span className="capitalize">
+                      📆 {reminder.frequency}
                     </span>
+                    {reminder.frequency === 'weekly' && reminder.days_of_week && (
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        {formatDays(reminder.days_of_week)}
+                      </span>
+                    )}
+                    {reminder.frequency === 'monthly' && reminder.monthly_day && (
+                      <span>Day {reminder.monthly_day}</span>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

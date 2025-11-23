@@ -526,9 +526,11 @@ export type Database = {
           days_of_week: number[] | null
           description: string | null
           exercise_id: string | null
+          frequency: string
           goal_type: string | null
           id: string
           is_active: boolean
+          monthly_day: number | null
           reminder_time: string
           title: string
           updated_at: string
@@ -539,9 +541,11 @@ export type Database = {
           days_of_week?: number[] | null
           description?: string | null
           exercise_id?: string | null
+          frequency?: string
           goal_type?: string | null
           id?: string
           is_active?: boolean
+          monthly_day?: number | null
           reminder_time?: string
           title: string
           updated_at?: string
@@ -552,9 +556,11 @@ export type Database = {
           days_of_week?: number[] | null
           description?: string | null
           exercise_id?: string | null
+          frequency?: string
           goal_type?: string | null
           id?: string
           is_active?: boolean
+          monthly_day?: number | null
           reminder_time?: string
           title?: string
           updated_at?: string
@@ -999,6 +1005,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      reminder_logs: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          reminder_id: string | null
+          reminder_type: string
+          sent_at: string
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          reminder_id?: string | null
+          reminder_type: string
+          sent_at?: string
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          reminder_id?: string | null
+          reminder_type?: string
+          sent_at?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_logs_reminder_id_fkey"
+            columns: ["reminder_id"]
+            isOneToOne: false
+            referencedRelation: "custom_reminders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       "Strip balance": {
         Row: {

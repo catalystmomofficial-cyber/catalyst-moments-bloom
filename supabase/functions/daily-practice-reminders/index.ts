@@ -24,8 +24,9 @@ const handler = async (req: Request): Promise<Response> => {
     const currentHour = now.getUTCHours();
     const currentMinute = now.getUTCMinutes();
     const currentTime = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}:00`;
+    const currentDayOfMonth = now.getUTCDate();
 
-    console.log(`Current UTC time: ${currentTime}`);
+    console.log(`Current UTC time: ${currentTime}, Day of month: ${currentDayOfMonth}`);
 
     // Get current day of week (1=Monday, 7=Sunday)
     const dayOfWeek = ((now.getUTCDay() + 6) % 7) + 1;
@@ -41,11 +42,22 @@ const handler = async (req: Request): Promise<Response> => {
     // Get custom reminders for this time and day
     const { data: customReminders, error: customError } = await supabase
       .from('custom_reminders')
-      .select('user_id, title, description')
+      .select('id, user_id, title, description, frequency, days_of_week, monthly_day')
       .eq('is_active', true)
       .gte('reminder_time', `${currentHour}:${currentMinute - 5}:00`)
-      .lte('reminder_time', `${currentHour}:${currentMinute + 5}:00`)
-      .contains('days_of_week', [dayOfWeek]);
+      .lte('reminder_time', `${currentHour}:${currentMinute + 5}:00`);
+    
+    // Filter custom reminders based on frequency
+    const filteredCustomReminders = customReminders?.filter(reminder => {
+      if (reminder.frequency === 'daily') return true;
+      if (reminder.frequency === 'weekly') {
+        return reminder.days_of_week?.includes(dayOfWeek);
+      }
+      if (reminder.frequency === 'monthly') {
+        return reminder.monthly_day === currentDayOfMonth;
+      }
+      return false;
+    }) || [];
 
     if (prefError) {
       console.error('Error fetching preferences:', prefError);
@@ -56,7 +68,7 @@ const handler = async (req: Request): Promise<Response> => {
       console.error('Error fetching custom reminders:', customError);
     }
 
-    const totalReminders = (preferences?.length || 0) + (customReminders?.length || 0);
+    const totalReminders = (preferences?.length || 0) + filteredCustomReminders.length;
 
     if (totalReminders === 0) {
       console.log('No users to send reminders to at this time');
@@ -66,7 +78,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log(`Found ${preferences?.length || 0} daily reminders and ${customReminders?.length || 0} custom reminders`);
+    console.log(`Found ${preferences?.length || 0} daily reminders and ${filteredCustomReminders.length} custom reminders`);
 
     const userIds = preferences.map(p => p.user_id);
 
@@ -102,11 +114,22 @@ const handler = async (req: Request): Promise<Response> => {
           action_url: '/birth-ball-guide',
         });
 
+      // Log reminder sent
+      await supabase
+        .from('reminder_logs')
+        .insert({
+          user_id: userId,
+          reminder_type: 'daily_practice',
+          title: 'Daily Practice Reminder',
+          message,
+          status: 'sent',
+        });
+
       return userId;
     });
 
     // Send custom reminders
-    const customNotificationPromises = (customReminders || []).map(async (reminder) => {
+    const customNotificationPromises = filteredCustomReminders.map(async (reminder) => {
       await supabase
         .from('notifications')
         .insert({
@@ -115,6 +138,18 @@ const handler = async (req: Request): Promise<Response> => {
           title: reminder.title,
           message: reminder.description || 'Time for your scheduled reminder!',
           action_url: '/birth-ball-guide',
+        });
+
+      // Log reminder sent
+      await supabase
+        .from('reminder_logs')
+        .insert({
+          user_id: reminder.user_id,
+          reminder_id: reminder.id,
+          reminder_type: 'custom',
+          title: reminder.title,
+          message: reminder.description || 'Time for your scheduled reminder!',
+          status: 'sent',
         });
 
       return reminder.user_id;
@@ -131,7 +166,7 @@ const handler = async (req: Request): Promise<Response> => {
         reminders_sent: successful,
         total_users: totalReminders,
         daily_reminders: preferences?.length || 0,
-        custom_reminders: customReminders?.length || 0,
+        custom_reminders: filteredCustomReminders.length,
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

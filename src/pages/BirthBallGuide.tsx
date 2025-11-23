@@ -17,6 +17,7 @@ import { WeeklyGoals } from '@/components/birth-ball/WeeklyGoals';
 import { NotificationSettings } from '@/components/birth-ball/NotificationSettings';
 import { AchievementBadges } from '@/components/birth-ball/AchievementBadges';
 import { CustomReminders } from '@/components/birth-ball/CustomReminders';
+import { ReminderHistory } from '@/components/birth-ball/ReminderHistory';
 
 const BirthBallGuide = () => {
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
@@ -157,9 +158,10 @@ const BirthBallGuide = () => {
           <NotificationSettings />
         </div>
 
-        {/* Custom Reminders */}
-        <div className="mb-8">
+        {/* Custom Reminders and History */}
+        <div className="grid gap-6 lg:grid-cols-2 mb-8">
           <CustomReminders />
+          <ReminderHistory />
         </div>
 
         {/* Weekly Challenge Tracker */}
