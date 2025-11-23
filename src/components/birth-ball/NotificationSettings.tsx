@@ -94,12 +94,12 @@ export const NotificationSettings = () => {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2">
           <Bell className="w-5 h-5 text-primary" />
-          <CardTitle>Notification Settings</CardTitle>
-        </div>
+          Notification Settings
+        </CardTitle>
         <CardDescription>
-          Manage how you receive reminders and updates
+          Manage daily reminders and notification preferences
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
