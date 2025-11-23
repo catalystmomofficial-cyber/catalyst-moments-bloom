@@ -520,6 +520,48 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_reminders: {
+        Row: {
+          created_at: string
+          days_of_week: number[] | null
+          description: string | null
+          exercise_id: string | null
+          goal_type: string | null
+          id: string
+          is_active: boolean
+          reminder_time: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          days_of_week?: number[] | null
+          description?: string | null
+          exercise_id?: string | null
+          goal_type?: string | null
+          id?: string
+          is_active?: boolean
+          reminder_time?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          days_of_week?: number[] | null
+          description?: string | null
+          exercise_id?: string | null
+          goal_type?: string | null
+          id?: string
+          is_active?: boolean
+          reminder_time?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       custom_workout_programs: {
         Row: {
           created_at: string

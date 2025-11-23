@@ -16,6 +16,7 @@ import { PersonalizedSchedule } from '@/components/birth-ball/PersonalizedSchedu
 import { WeeklyGoals } from '@/components/birth-ball/WeeklyGoals';
 import { NotificationSettings } from '@/components/birth-ball/NotificationSettings';
 import { AchievementBadges } from '@/components/birth-ball/AchievementBadges';
+import { CustomReminders } from '@/components/birth-ball/CustomReminders';
 
 const BirthBallGuide = () => {
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
@@ -154,6 +155,11 @@ const BirthBallGuide = () => {
         <div className="grid gap-6 lg:grid-cols-2 mb-8">
           <AchievementBadges />
           <NotificationSettings />
+        </div>
+
+        {/* Custom Reminders */}
+        <div className="mb-8">
+          <CustomReminders />
         </div>
 
         {/* Weekly Challenge Tracker */}
