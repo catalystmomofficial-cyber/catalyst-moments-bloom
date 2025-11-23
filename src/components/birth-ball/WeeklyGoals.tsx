@@ -85,6 +85,12 @@ export const WeeklyGoals = () => {
 
       setGoals(progress);
 
+      // Check if all goals are complete and award badge
+      const allComplete = progress.every(g => g.current >= g.target);
+      if (allComplete) {
+        await checkAndAwardBadge();
+      }
+
       // Calculate week streak
       const { data: allLogs } = await supabase
         .from('birth_ball_exercise_logs')
@@ -120,6 +126,86 @@ export const WeeklyGoals = () => {
       console.error('Error loading weekly progress:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const checkAndAwardBadge = async () => {
+    if (!user) return;
+
+    try {
+      // Get previous weeks' completions to determine streak
+      const { data: previousWeeks, error } = await supabase
+        .from('birth_ball_exercise_logs')
+        .select('completed_at')
+        .eq('user_id', user.id)
+        .order('completed_at', { ascending: false })
+        .limit(1000);
+
+      if (error) throw error;
+
+      // Count consecutive weeks with activity
+      let consecutiveWeeks = 0;
+      let currentWeekStart = getWeekStart();
+      
+      for (let i = 0; i < 12; i++) {
+        const weekEnd = new Date(currentWeekStart);
+        weekEnd.setDate(weekEnd.getDate() + 7);
+        
+        const hasActivity = previousWeeks?.some(log => {
+          const logDate = new Date(log.completed_at);
+          return logDate >= currentWeekStart && logDate < weekEnd;
+        });
+
+        if (hasActivity) {
+          consecutiveWeeks++;
+          currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+        } else {
+          break;
+        }
+      }
+
+      // Award badges based on consecutive weeks
+      const badges = [
+        { weeks: 1, id: 'first_week', title: 'First Week Champion', description: 'Completed your first weekly goal!', icon: 'target' },
+        { weeks: 2, id: 'two_week_streak', title: 'Two Week Warrior', description: 'Completed goals for 2 consecutive weeks', icon: 'flame' },
+        { weeks: 4, id: 'monthly_master', title: 'Monthly Master', description: 'Completed goals for 4 consecutive weeks', icon: 'star' },
+        { weeks: 8, id: 'consistency_champion', title: 'Consistency Champion', description: 'Completed goals for 8 consecutive weeks', icon: 'award' },
+        { weeks: 12, id: 'dedication_legend', title: 'Dedication Legend', description: 'Completed goals for 12 consecutive weeks!', icon: 'crown', level: 2 },
+      ];
+
+      for (const badge of badges) {
+        if (consecutiveWeeks >= badge.weeks) {
+          // Check if already awarded
+          const { data: existing } = await supabase
+            .from('user_achievements')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('achievement_id', badge.id)
+            .single();
+
+          if (!existing) {
+            await supabase.from('user_achievements').insert({
+              user_id: user.id,
+              achievement_id: badge.id,
+              title: badge.title,
+              description: badge.description,
+              icon: badge.icon,
+              level: badge.level || 1,
+            });
+
+            // Create notification
+            await supabase.from('notifications').insert({
+              user_id: user.id,
+              type: 'achievement',
+              title: 'New Achievement Unlocked! 🏆',
+              message: `You earned the "${badge.title}" badge!`,
+              action_url: '/birth-ball-guide',
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error checking badges:', error);
     }
   };
 
