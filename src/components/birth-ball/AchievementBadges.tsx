@@ -5,6 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Award, Flame, Star, Crown, Target } from 'lucide-react';
 import { format } from 'date-fns';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { toast } from '@/hooks/use-toast';
 
 interface Achievement {
   id: string;
@@ -27,8 +30,11 @@ const iconMap: Record<string, typeof Trophy> = {
 
 export const AchievementBadges = () => {
   const { user } = useAuth();
+  const { vibrate } = useHapticFeedback();
+  const { playSound } = useSoundEffects();
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
+  const [previousCount, setPreviousCount] = useState(0);
 
   useEffect(() => {
     if (user) {
@@ -49,7 +55,24 @@ export const AchievementBadges = () => {
 
       if (error) throw error;
 
-      setAchievements(data || []);
+      const newAchievements = data || [];
+      
+      // Check if new achievement was earned
+      if (previousCount > 0 && newAchievements.length > previousCount) {
+        const latestAchievement = newAchievements[0];
+        
+        // Play celebration feedback
+        vibrate('success');
+        playSound('achievement');
+        
+        toast({
+          title: '🏆 Achievement Unlocked!',
+          description: `You earned "${latestAchievement.title}"`,
+        });
+      }
+
+      setAchievements(newAchievements);
+      setPreviousCount(newAchievements.length);
     } catch (error) {
       console.error('Error loading achievements:', error);
     } finally {
@@ -107,7 +130,11 @@ export const AchievementBadges = () => {
             return (
               <div
                 key={achievement.id}
-                className="flex items-start gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                className="flex items-start gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-300 hover:scale-105 animate-fade-in"
+                onClick={() => {
+                  vibrate('light');
+                  playSound('click');
+                }}
               >
                 <div className="p-2 rounded-full bg-primary/10">
                   <Icon className="w-5 h-5 text-primary" />

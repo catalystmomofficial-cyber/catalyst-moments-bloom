@@ -10,6 +10,8 @@ import { Calendar, CheckCircle2, Trophy, Flame, Bell, Mail } from 'lucide-react'
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
 
 interface ChallengeData {
   startDate: string;
@@ -20,6 +22,8 @@ interface ChallengeData {
 
 const WeeklyChallengeTracker = () => {
   const { user } = useAuth();
+  const { vibrate } = useHapticFeedback();
+  const { playSound } = useSoundEffects();
   const [challengeData, setChallengeData] = useState<ChallengeData>({
     startDate: new Date().toISOString().split('T')[0],
     completedDays: [],
@@ -147,12 +151,17 @@ const WeeklyChallengeTracker = () => {
   const checkInToday = () => {
     if (todayCompleted) {
       toast.info('Already checked in today!');
+      vibrate('light');
       return;
     }
 
     const newCompletedDays = [...challengeData.completedDays, today];
     const newStreak = calculateStreak(newCompletedDays);
     const newLongestStreak = Math.max(newStreak, challengeData.longestStreak);
+
+    // Play success feedback
+    vibrate('success');
+    playSound('complete');
 
     saveProgress({
       ...challengeData,
@@ -164,6 +173,17 @@ const WeeklyChallengeTracker = () => {
     toast.success('Great job! Practice logged for today 🎉', {
       description: `Current streak: ${newStreak} day${newStreak !== 1 ? 's' : ''}`
     });
+
+    // Extra celebration for milestones
+    if (newStreak === 7 || newStreak === 30 || newStreak === 100) {
+      setTimeout(() => {
+        vibrate('success');
+        playSound('achievement');
+        toast.success(`🏆 Amazing! ${newStreak} day streak!`, {
+          description: 'You\'re building an incredible habit!'
+        });
+      }, 500);
+    }
   };
 
   const getDayName = (dateString: string) => {
