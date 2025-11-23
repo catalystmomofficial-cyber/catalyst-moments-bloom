@@ -28,6 +28,7 @@ export function ToolsDrawer() {
         <Button
           size="lg"
           className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50"
+          aria-label="Open practice tools"
         >
           <Settings className="h-6 w-6" />
         </Button>

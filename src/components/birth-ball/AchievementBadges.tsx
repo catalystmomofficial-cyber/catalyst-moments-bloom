@@ -130,10 +130,18 @@ export const AchievementBadges = () => {
             return (
               <div
                 key={achievement.id}
-                className="flex items-start gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-300 hover:scale-105 animate-fade-in"
+                className="flex items-start gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-300 hover:scale-105 animate-fade-in cursor-pointer"
                 onClick={() => {
                   vibrate('light');
                   playSound('click');
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    vibrate('light');
+                    playSound('click');
+                  }
                 }}
               >
                 <div className="p-2 rounded-full bg-primary/10">
