@@ -161,6 +161,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Strength + Mobility",
     trimester: 2,
+    imageUrl: "/birth-ball-images/seated-posture.png",
     instructions: [
       "Sit tall on the ball with your feet firmly planted",
       "Engage your core lightly to support growing belly",
@@ -202,6 +203,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Strength + Mobility",
     trimester: 2,
+    imageUrl: "/birth-ball-images/hip-circles.png",
     instructions: [
       "Sit centered on the ball",
       "Make smooth, circular motions with your hips",
