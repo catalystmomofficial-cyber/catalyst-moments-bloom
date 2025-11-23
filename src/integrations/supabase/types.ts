@@ -757,6 +757,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          achievement_alerts_enabled: boolean
+          created_at: string
+          daily_reminders_enabled: boolean
+          id: string
+          reminder_time: string
+          updated_at: string
+          user_id: string
+          weekly_summary_enabled: boolean
+        }
+        Insert: {
+          achievement_alerts_enabled?: boolean
+          created_at?: string
+          daily_reminders_enabled?: boolean
+          id?: string
+          reminder_time?: string
+          updated_at?: string
+          user_id: string
+          weekly_summary_enabled?: boolean
+        }
+        Update: {
+          achievement_alerts_enabled?: boolean
+          created_at?: string
+          daily_reminders_enabled?: boolean
+          id?: string
+          reminder_time?: string
+          updated_at?: string
+          user_id?: string
+          weekly_summary_enabled?: boolean
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           action_url: string | null
@@ -969,6 +1002,45 @@ export type Database = {
           subscription_end?: string | null
           subscription_tier?: string | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          achievement_type: string
+          created_at: string
+          description: string
+          earned_at: string
+          icon: string
+          id: string
+          level: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          achievement_type?: string
+          created_at?: string
+          description: string
+          earned_at?: string
+          icon?: string
+          id?: string
+          level?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          achievement_type?: string
+          created_at?: string
+          description?: string
+          earned_at?: string
+          icon?: string
+          id?: string
+          level?: number | null
+          title?: string
           user_id?: string
         }
         Relationships: []
