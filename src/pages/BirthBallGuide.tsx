@@ -12,6 +12,7 @@ import HeroVideoSection from '@/components/birth-ball/HeroVideoSection';
 import WeeklyChallengeTracker from '@/components/birth-ball/WeeklyChallengeTracker';
 import PrintableWorkoutCards from '@/components/birth-ball/PrintableWorkoutCards';
 import { BirthBallAnalytics } from '@/components/birth-ball/analytics/BirthBallAnalytics';
+import { PersonalizedSchedule } from '@/components/birth-ball/PersonalizedSchedule';
 
 const BirthBallGuide = () => {
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
@@ -138,6 +139,11 @@ const BirthBallGuide = () => {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Personalized Schedule */}
+        <div className="mb-8">
+          <PersonalizedSchedule />
         </div>
 
         {/* Weekly Challenge Tracker */}
