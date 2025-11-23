@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -183,12 +184,19 @@ export const CustomReminders = () => {
   };
 
   const formatDays = (days: number[] | null) => {
-    if (!days || days.length === 0) return '';
+    if (!days || days.length === 0) return 'No days selected';
     if (days.length === 7) return 'Every day';
     return days
       .sort()
       .map(d => DAYS.find(day => day.value === d)?.label)
+      .filter(Boolean)
       .join(', ');
+  };
+
+  const getFrequencyDisplay = (reminder: CustomReminder) => {
+    if (reminder.frequency === 'daily') return 'Daily';
+    if (reminder.frequency === 'monthly') return `Monthly (Day ${reminder.monthly_day})`;
+    return formatDays(reminder.days_of_week);
   };
 
   if (loading) {
@@ -352,22 +360,19 @@ export const CustomReminders = () => {
                       {reminder.description}
                     </p>
                   )}
-                  <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {reminder.reminder_time}
                     </span>
-                    <span className="capitalize">
-                      📆 {reminder.frequency}
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {getFrequencyDisplay(reminder)}
                     </span>
-                    {reminder.frequency === 'weekly' && reminder.days_of_week && (
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {formatDays(reminder.days_of_week)}
-                      </span>
-                    )}
-                    {reminder.frequency === 'monthly' && reminder.monthly_day && (
-                      <span>Day {reminder.monthly_day}</span>
+                    {reminder.goal_type && (
+                      <Badge variant="outline" className="text-xs">
+                        {GOAL_TYPES.find(g => g.value === reminder.goal_type)?.label || reminder.goal_type}
+                      </Badge>
                     )}
                   </div>
                 </div>

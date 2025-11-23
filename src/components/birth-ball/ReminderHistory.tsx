@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { CheckCircle, XCircle, Clock, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -22,31 +22,59 @@ export function ReminderHistory() {
 
   if (isLoading) {
     return (
-      <Card className="p-6">
-        <p className="text-muted-foreground text-center">Loading reminder history...</p>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bell className="w-5 h-5 text-primary" />
+            Reminder History
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground text-center py-8">Loading reminder history...</p>
+        </CardContent>
       </Card>
     );
   }
 
   if (!reminderLogs || reminderLogs.length === 0) {
     return (
-      <Card className="p-6">
-        <div className="text-center">
-          <Bell className="mx-auto h-12 w-12 text-muted-foreground/50 mb-3" />
-          <p className="text-muted-foreground">No reminder history yet</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Your sent reminders will appear here
-          </p>
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bell className="w-5 h-5 text-primary" />
+            Reminder History
+          </CardTitle>
+          <CardDescription>
+            Recent notification activity and delivery status
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <Bell className="mx-auto h-12 w-12 text-muted-foreground/50 mb-3" />
+            <p className="text-muted-foreground">No reminder history yet</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Your sent reminders will appear here
+            </p>
+          </div>
+        </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">Reminder History</h3>
-      <div className="space-y-3">
-        {reminderLogs.map((log) => (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Bell className="w-5 h-5 text-primary" />
+          Reminder History
+        </CardTitle>
+        <CardDescription>
+          Recent notification activity and delivery status
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3 max-h-[400px] overflow-y-auto">
+          {reminderLogs.map((log) => (
           <div
             key={log.id}
             className="flex items-start gap-3 p-3 rounded-lg border bg-card"
@@ -83,8 +111,9 @@ export function ReminderHistory() {
               </div>
             </div>
           </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </CardContent>
     </Card>
   );
 }
