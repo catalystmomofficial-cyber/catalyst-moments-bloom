@@ -35,17 +35,19 @@ export function ToolsDrawer() {
       </SheetTrigger>
       <SheetContent 
         side={isMobile ? "bottom" : "right"} 
-        className={isMobile ? "h-[85vh] rounded-t-xl" : "w-full sm:max-w-2xl overflow-y-auto"}
+        className={isMobile ? "h-[85vh] rounded-t-xl overflow-y-auto" : "w-full sm:max-w-2xl overflow-y-auto"}
       >
-        <SheetHeader className="mb-6">
+        <SheetHeader className="mb-6 sticky top-0 bg-background z-10 pb-4">
           <SheetTitle className="text-2xl">Your Practice Tools</SheetTitle>
           <SheetDescription>
             Manage your schedule, reminders, and achievements
           </SheetDescription>
         </SheetHeader>
 
+        <div className="pb-8">{/* Added padding bottom for scroll clearance */}
+
         <Tabs defaultValue="schedule" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
+          <TabsList className="grid w-full grid-cols-3 mb-6 sticky top-16 bg-background z-10">
             <TabsTrigger value="schedule" className="gap-2">
               <Calendar className="h-4 w-4" />
               {!isMobile && <span>Schedule</span>}
@@ -100,6 +102,7 @@ export function ToolsDrawer() {
             <AchievementBadges />
           </TabsContent>
         </Tabs>
+        </div>{/* Close padding div */}
       </SheetContent>
     </Sheet>
   );

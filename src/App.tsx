@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/common/ScrollToTop";
 import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
 import { GoogleAuthOnboarding } from "./components/onboarding/GoogleAuthOnboarding";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
@@ -69,20 +70,21 @@ function AppContent() {
   const { showCheckoutModal, setShowCheckoutModal } = useAuth();
   
   return (
-    <BrowserRouter>
-      <Helmet>
-        <title>Catalyst Mom | Wellness, Fitness & Nutrition</title>
-        <meta name="description" content="Personalized wellness, fitness, and nutrition for moms. Join our community for workouts, meal plans, and support." />
-        <link rel="canonical" href={window.location.href} />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Catalyst Mom | Wellness, Fitness & Nutrition" />
-        <meta property="og:description" content="Personalized wellness, fitness, and nutrition for moms." />
-        <meta property="og:url" content={window.location.href} />
-      </Helmet>
-      <ScrollToTop />
-      <GoogleAuthOnboarding />
-      <Toaster />
-      <Sonner />
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Helmet>
+          <title>Catalyst Mom | Wellness, Fitness & Nutrition</title>
+          <meta name="description" content="Personalized wellness, fitness, and nutrition for moms. Join our community for workouts, meal plans, and support." />
+          <link rel="canonical" href={window.location.href} />
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="Catalyst Mom | Wellness, Fitness & Nutrition" />
+          <meta property="og:description" content="Personalized wellness, fitness, and nutrition for moms." />
+          <meta property="og:url" content={window.location.href} />
+        </Helmet>
+        <ScrollToTop />
+        <GoogleAuthOnboarding />
+        <Toaster />
+        <Sonner />
       <Routes>
         <Route path="/" element={<Index />} />
         
@@ -348,6 +350,7 @@ function AppContent() {
       />
       <GlobalVideoPlayer />
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
