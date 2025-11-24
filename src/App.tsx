@@ -8,6 +8,7 @@ import ScrollToTop from "./components/common/ScrollToTop";
 import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
 import { GoogleAuthOnboarding } from "./components/onboarding/GoogleAuthOnboarding";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { VideoPlayerProvider } from "@/contexts/VideoPlayerContext";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
@@ -375,7 +376,9 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-          <AppContent />
+          <VideoPlayerProvider>
+            <AppContent />
+          </VideoPlayerProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
