@@ -101,7 +101,7 @@ export const BirthBallCommunitySection = () => {
       </CardContent>
       <CardFooter>
         <Button variant="outline" className="w-full" asChild>
-          <Link to="/community?filter=birth-ball">View All Posts</Link>
+          <Link to="/community/birth-ball">View All Posts</Link>
         </Button>
       </CardFooter>
     </Card>

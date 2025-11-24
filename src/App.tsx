@@ -61,6 +61,7 @@ import BirthBallEducation from "./pages/BirthBallEducation";
 import BirthBallEarlyLabor from "./pages/BirthBallEarlyLabor";
 import SavedBirthBallExercises from "./pages/SavedBirthBallExercises";
 import AssessmentResults from "./pages/AssessmentResults";
+import BirthBallCommunityFeed from "./pages/BirthBallCommunityFeed";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
@@ -159,6 +160,13 @@ function AppContent() {
         <Route path="/community/groups/:slug" element={
           <PrivateRoute>
             <GroupDetail />
+          </PrivateRoute>
+        } />
+        <Route path="/community/birth-ball" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallCommunityFeed />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/profile" element={
