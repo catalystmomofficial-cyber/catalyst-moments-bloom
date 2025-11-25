@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Heart, Clock, Target, BookOpen, Award, AlertCircle, ShoppingCart, Shield, HelpCircle, GraduationCap } from 'lucide-react';
+import { Heart, Clock, Target, BookOpen, Award, AlertCircle, ShoppingCart, Shield, HelpCircle, GraduationCap, Users } from 'lucide-react';
 import SEO from '@/components/seo/SEO';
 import { trimesterPrograms, educationalContent } from '@/data/birthBallGuideData';
 import HeroVideoSection from '@/components/birth-ball/HeroVideoSection';
@@ -32,6 +32,13 @@ const BirthBallGuide = () => {
   const progress = (completedExercises.length / totalExercises) * 100;
 
   const resources = [
+    {
+      title: 'Birth Ball Community',
+      description: 'Connect with other moms practicing birth ball exercises',
+      icon: Users,
+      link: '/community/birth-ball',
+      color: 'text-violet-600'
+    },
     {
       title: 'Breathing Practice Tool',
       description: 'Interactive breathing techniques for pregnancy & labor',
