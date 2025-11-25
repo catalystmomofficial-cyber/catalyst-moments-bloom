@@ -156,6 +156,9 @@ export function getGroupsForStage(stage?: string) {
     return groups.filter(g => g.journey === 'general');
   }
   
+  // Extract base journey from stage (e.g., "pregnant_trimester_2" -> "pregnant")
+  const baseJourney = stage.split('_')[0] as JourneyType;
+  
   // Return groups for specific stage + general groups
-  return groups.filter(g => g.journey === stage || g.journey === 'general');
+  return groups.filter(g => g.journey === baseJourney || g.journey === 'general');
 }
