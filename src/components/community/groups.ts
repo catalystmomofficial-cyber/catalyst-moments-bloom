@@ -10,6 +10,7 @@ import workingMomsCover from '@/assets/community-covers/working-moms.jpg';
 import mentalHealthCover from '@/assets/community-covers/mental-health.jpg';
 import nutritionForMomsCover from '@/assets/community-covers/nutrition-for-moms.jpg';
 import birthPrepCover from '@/assets/community-covers/birth-prep.jpg';
+import birthBallGuideCover from '@/assets/ultimate-birth-ball-guide-cover.jpg';
 
 export type JourneyType = 'ttc' | 'pregnant' | 'postpartum' | 'general';
 
@@ -93,10 +94,10 @@ export const groups: CommunityGroup[] = [
   {
     slug: 'birth-ball',
     name: 'Birth Ball Community',
-    description: 'Share your birth ball journey, get exercise tips, and connect with other moms practicing prenatal birth ball exercises. Daily challenges and weekly progress celebrations.',
+    description: 'Ultimate Birth Ball Community for Birth Prep',
     journey: 'pregnant',
     memberCount: 856,
-    coverImage: prenatalFitnessCover,
+    coverImage: birthBallGuideCover,
     badge: 'BB'
   },
 
