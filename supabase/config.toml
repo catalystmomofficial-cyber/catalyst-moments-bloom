@@ -35,3 +35,9 @@ verify_jwt = false
 
 [functions.vo-assessment-webhook]
 verify_jwt = false
+
+[functions.suggest-blog-topics]
+verify_jwt = true
+
+[functions.generate-blog-post]
+verify_jwt = true
