@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, CheckCircle } from 'lucide-react';
 import { BlogTopicSuggestions } from './BlogTopicSuggestions';
+import { CompetitorAnalysis } from './CompetitorAnalysis';
 
 export const BlogPostGenerator = () => {
   const navigate = useNavigate();
@@ -86,6 +87,8 @@ export const BlogPostGenerator = () => {
 
   return (
     <div className="space-y-6">
+      <CompetitorAnalysis onSelectGap={handleSelectTopic} />
+      
       <BlogTopicSuggestions onSelectTopic={handleSelectTopic} />
       
       <Card>
