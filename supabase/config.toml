@@ -47,3 +47,6 @@ verify_jwt = true
 
 [functions.generate-content-calendar]
 verify_jwt = true
+
+[functions.ai-edit-blog]
+verify_jwt = true

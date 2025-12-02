@@ -10,6 +10,7 @@ import { ArrowLeft, Eye, FileEdit, Trash2, Save, X, Calendar, Clock } from 'luci
 import PageLayout from '@/components/layout/PageLayout';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BlogSEOAnalyzer } from '@/components/admin/BlogSEOAnalyzer';
+import { AIEditAssistant } from '@/components/admin/AIEditAssistant';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
@@ -455,6 +456,12 @@ export default function BlogPreview() {
             {/* HTML Content Rendering */}
             {isEditing ? (
               <div className="space-y-4">
+                {/* AI Edit Assistant */}
+                <AIEditAssistant
+                  content={editedBlog?.content || ''}
+                  onApplyEdit={(newContent) => setEditedBlog(prev => prev ? {...prev, content: newContent} : null)}
+                />
+                
                 <div>
                   <label className="block text-sm font-medium mb-2">Content</label>
                   <RichTextEditor
