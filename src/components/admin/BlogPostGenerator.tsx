@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles, CheckCircle } from 'lucide-react';
+import { BlogTopicSuggestions } from './BlogTopicSuggestions';
 
 export const BlogPostGenerator = () => {
   const navigate = useNavigate();
@@ -18,6 +19,15 @@ export const BlogPostGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [lastGeneratedPost, setLastGeneratedPost] = useState<any>(null);
   const { toast } = useToast();
+
+  const handleSelectTopic = (title: string, keywords: string[]) => {
+    setTopic(title);
+    setKeywords(keywords.join(', '));
+    toast({
+      title: "Topic Selected",
+      description: "Topic and keywords applied. Click generate when ready!",
+    });
+  };
 
   const handleGenerate = async () => {
     if (!topic.trim()) {
@@ -76,6 +86,8 @@ export const BlogPostGenerator = () => {
 
   return (
     <div className="space-y-6">
+      <BlogTopicSuggestions onSelectTopic={handleSelectTopic} />
+      
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
