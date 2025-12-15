@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Phone, PhoneCall, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { Phone, PhoneCall, Mic, MicOff, Volume2, Coins } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useToast } from '@/components/ui/use-toast';
+import { useCredits, CREDIT_COSTS } from '@/hooks/useCredits';
 import { supabase } from '@/integrations/supabase/client';
+import CreditPurchaseModal from './CreditPurchaseModal';
 
 interface VoiceCallInterfaceProps {
   isOpen: boolean;
@@ -16,6 +18,7 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
   const { user, profile } = useAuth();
   const { wellnessEntries } = useWellnessData();
   const { toast } = useToast();
+  const { credits, deductCredits, hasEnoughCredits, loading: creditsLoading, fetchCredits } = useCredits();
   
   const [callState, setCallState] = useState<'idle' | 'connecting' | 'connected' | 'ended'>('idle');
   const [isMuted, setIsMuted] = useState(false);
@@ -23,6 +26,7 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [isCoachSpeaking, setIsCoachSpeaking] = useState(false);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -77,8 +81,22 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
   }, []);
 
   const startVoiceCall = async () => {
+    // Check credits first
+    if (!hasEnoughCredits(CREDIT_COSTS.voice_call)) {
+      setShowPurchaseModal(true);
+      return;
+    }
+
     try {
       setCallState('connecting');
+      
+      // Deduct credits
+      const result = await deductCredits(CREDIT_COSTS.voice_call, 'wellness_voice_call', 'Wellness Coach voice call');
+      if (!result.success) {
+        setCallState('idle');
+        setShowPurchaseModal(true);
+        return;
+      }
       
       // Check for microphone permission
       await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -110,7 +128,7 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       
       toast({
         title: "Voice Call Started",
-        description: "Dr. Maya is ready to talk with you!",
+        description: `Dr. Maya is ready to talk with you! (${CREDIT_COSTS.voice_call} credits used)`,
       });
     } catch (error) {
       console.error('Error starting voice call:', error);
@@ -140,7 +158,7 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       const userContext = {
         displayName: profile?.display_name || user?.email?.split('@')[0] || 'there',
         motherhood_stage: profile?.motherhood_stage,
-        wellnessEntries: wellnessEntries?.slice(0, 10), // More wellness history
+        wellnessEntries: wellnessEntries?.slice(0, 10),
         recentMoods: wellnessEntries?.slice(0, 7)?.map(e => e.mood_score).filter(Boolean),
         avgEnergyLevel: wellnessEntries?.slice(0, 7)?.reduce((sum, e) => sum + (e.energy_level || 0), 0) / Math.max(wellnessEntries?.slice(0, 7)?.length || 1, 1),
         commonConcerns: wellnessEntries?.slice(0, 10)?.map(e => e.notes).filter(Boolean),
@@ -156,7 +174,7 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
         body: {
           message: speechText,
           userContext,
-          conversationHistory: conversationHistory.slice(-10) // Last 10 messages for context
+          conversationHistory: conversationHistory.slice(-10)
         }
       });
 
@@ -174,7 +192,6 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       
     } catch (error) {
       console.error('Error generating response:', error);
-      // Fallback response when AI is unavailable
       speakMessage("I understand you're trying to share something with me. While I'm having some technical difficulties with my AI right now, I'm still here to listen. Could you tell me more about how you're feeling today?");
     }
   };
@@ -187,7 +204,7 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       const { data, error } = await supabase.functions.invoke('text-to-speech-elevenlabs', {
         body: {
           text,
-          voice_id: "EXAVITQu4vr4xnSDxMaL" // Sarah - warm, professional female voice
+          voice_id: "EXAVITQu4vr4xnSDxMaL"
         }
       });
 
@@ -198,7 +215,6 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       
       audio.onended = () => {
         setIsCoachSpeaking(false);
-        // Resume listening after coach finishes speaking
         setTimeout(() => {
           if (callState === 'connected') {
             startListening();
@@ -209,7 +225,6 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       audio.onerror = () => {
         console.error('Audio playback error');
         setIsCoachSpeaking(false);
-        // Fallback to browser speech synthesis
         fallbackSpeech(text);
       };
 
@@ -218,7 +233,6 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
     } catch (error) {
       console.error('Error with ElevenLabs TTS:', error);
       setIsCoachSpeaking(false);
-      // Fallback to browser speech synthesis
       fallbackSpeech(text);
     }
   };
@@ -232,7 +246,6 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       utterance.pitch = 1.1;
       utterance.volume = 1;
       
-      // Try to use a female voice
       const voices = speechSynthesis.getVoices();
       const femaleVoice = voices.find(voice => 
         voice.name.includes('Female') || 
@@ -246,7 +259,6 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
 
       utterance.onend = () => {
         setIsCoachSpeaking(false);
-        // Resume listening after coach finishes speaking
         setTimeout(() => {
           if (callState === 'connected') {
             startListening();
@@ -274,7 +286,6 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
   };
 
   const endVoiceCall = () => {
-    // Stop all speech and recognition
     stopListening();
     if (synthRef.current) {
       speechSynthesis.cancel();
@@ -296,162 +307,190 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
     });
   };
 
+  // Refresh credits when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      fetchCredits();
+    }
+  }, [isOpen, fetchCredits]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-sm">
-        <CardContent className="p-6">
-          <div className="text-center space-y-6">
-            {/* Avatar and Coach Info */}
-            <div className="space-y-3">
-              <div className="w-24 h-24 mx-auto bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white text-3xl">
-                👩🏻‍⚕️
+    <>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <Card className="w-full max-w-sm">
+          <CardContent className="p-6">
+            <div className="text-center space-y-6">
+              {/* Avatar and Coach Info */}
+              <div className="space-y-3">
+                <div className="w-24 h-24 mx-auto bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-white text-3xl">
+                  👩🏻‍⚕️
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">Dr. Maya</h3>
+                  <p className="text-sm text-muted-foreground">Your Wellness Coach</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold">Dr. Maya</h3>
-                <p className="text-sm text-muted-foreground">Your Wellness Coach</p>
-              </div>
-            </div>
 
-            {/* Call Status */}
-            <div className="space-y-2">
-              {callState === 'idle' && (
-                <p className="text-sm text-muted-foreground">
-                  Ready to start your wellness conversation
-                </p>
-              )}
-              
-              {callState === 'connecting' && (
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">Connecting...</p>
-                  <div className="flex justify-center">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+              {/* Credit Balance Display */}
+              <div className="flex items-center justify-center gap-2 bg-muted/50 rounded-lg py-2 px-4">
+                <Coins className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium">
+                  {creditsLoading ? '...' : credits} credits
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  (Call costs {CREDIT_COSTS.voice_call})
+                </span>
+              </div>
+
+              {/* Call Status */}
+              <div className="space-y-2">
+                {callState === 'idle' && (
+                  <p className="text-sm text-muted-foreground">
+                    Ready to start your wellness conversation
+                  </p>
+                )}
+                
+                {callState === 'connecting' && (
+                  <div className="space-y-2">
+                    <p className="text-sm text-muted-foreground">Connecting...</p>
+                    <div className="flex justify-center">
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
+                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-              
-              {callState === 'connected' && (
-                <div className="space-y-2">
-                  <p className="text-sm text-green-600 font-medium">Connected</p>
-                  <p className="text-lg font-mono">{formatDuration(callDuration)}</p>
-                  <div className="flex justify-center items-center gap-2">
-                    {isCoachSpeaking ? (
-                      <div className="flex items-center gap-1">
-                        <div className="w-1 h-4 bg-blue-500 rounded-full animate-pulse" />
-                        <div className="w-1 h-6 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
-                        <div className="w-1 h-5 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
-                        <span className="text-xs text-blue-600 ml-2">Dr. Maya speaking...</span>
+                )}
+                
+                {callState === 'connected' && (
+                  <div className="space-y-2">
+                    <p className="text-sm text-green-600 font-medium">Connected</p>
+                    <p className="text-lg font-mono">{formatDuration(callDuration)}</p>
+                    <div className="flex justify-center items-center gap-2">
+                      {isCoachSpeaking ? (
+                        <div className="flex items-center gap-1">
+                          <div className="w-1 h-4 bg-blue-500 rounded-full animate-pulse" />
+                          <div className="w-1 h-6 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
+                          <div className="w-1 h-5 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                          <span className="text-xs text-blue-600 ml-2">Dr. Maya speaking...</span>
+                        </div>
+                      ) : isListening ? (
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                          <span className="text-xs text-red-600">Listening...</span>
+                        </div>
+                      ) : (
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                      )}
+                    </div>
+                    {transcript && (
+                      <div className="text-xs text-muted-foreground italic">
+                        "{transcript}"
                       </div>
-                    ) : isListening ? (
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                        <span className="text-xs text-red-600">Listening...</span>
-                      </div>
-                    ) : (
-                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                     )}
                   </div>
-                  {transcript && (
-                    <div className="text-xs text-muted-foreground italic">
-                      "{transcript}"
-                    </div>
+                )}
+                
+                {callState === 'ended' && (
+                  <p className="text-sm text-muted-foreground">Call ended</p>
+                )}
+              </div>
+
+              {/* Call Controls */}
+              <div className="flex justify-center gap-4">
+                {callState === 'idle' && (
+                  <>
+                    <Button
+                      size="lg"
+                      onClick={startVoiceCall}
+                      className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 text-white"
+                      disabled={creditsLoading}
+                    >
+                      <Phone className="h-6 w-6" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={onClose}
+                      className="rounded-full w-16 h-16"
+                    >
+                      <PhoneCall className="h-6 w-6" />
+                    </Button>
+                  </>
+                )}
+
+                {(callState === 'connecting' || callState === 'connected') && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={() => {
+                        if (isListening) {
+                          stopListening();
+                        } else {
+                          startListening();
+                        }
+                        setIsMuted(!isMuted);
+                      }}
+                      className={`rounded-full w-12 h-12 ${isListening ? 'bg-red-100 border-red-300' : ''}`}
+                    >
+                      {isListening ? <Mic className="h-5 w-5 text-red-600" /> : <MicOff className="h-5 w-5" />}
+                    </Button>
+                    
+                    <Button
+                      size="lg"
+                      onClick={endVoiceCall}
+                      className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 text-white"
+                    >
+                      <PhoneCall className="h-6 w-6" />
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded-full w-12 h-12"
+                    >
+                      <Volume2 className="h-5 w-5" />
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              {/* Tips */}
+              {callState === 'idle' && (
+                <div className="text-xs text-muted-foreground space-y-1">
+                  <p>• Dr. Maya knows about your wellness journey</p>
+                  <p>• Ask about nutrition, fitness, or emotional support</p>
+                  <p>• Conversation is private and personalized</p>
+                </div>
+              )}
+
+              {callState === 'connected' && (
+                <div className="text-xs text-muted-foreground space-y-1">
+                  {isCoachSpeaking ? (
+                    <p>Dr. Maya is speaking... Please listen.</p>
+                  ) : isListening ? (
+                    <p>Dr. Maya is listening. Speak naturally!</p>
+                  ) : (
+                    <p>Tap the microphone to speak with Dr. Maya</p>
                   )}
                 </div>
               )}
-              
-              {callState === 'ended' && (
-                <p className="text-sm text-muted-foreground">Call ended</p>
-              )}
             </div>
+          </CardContent>
+        </Card>
+      </div>
 
-            {/* Call Controls */}
-            <div className="flex justify-center gap-4">
-              {callState === 'idle' && (
-                <>
-                  <Button
-                    size="lg"
-                    onClick={startVoiceCall}
-                    className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 text-white"
-                  >
-                    <Phone className="h-6 w-6" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={onClose}
-                    className="rounded-full w-16 h-16"
-                  >
-                    <PhoneCall className="h-6 w-6" />
-                  </Button>
-                </>
-              )}
-
-              {(callState === 'connecting' || callState === 'connected') && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={() => {
-                      if (isListening) {
-                        stopListening();
-                      } else {
-                        startListening();
-                      }
-                      setIsMuted(!isMuted);
-                    }}
-                    className={`rounded-full w-12 h-12 ${isListening ? 'bg-red-100 border-red-300' : ''}`}
-                  >
-                    {isListening ? <Mic className="h-5 w-5 text-red-600" /> : <MicOff className="h-5 w-5" />}
-                  </Button>
-                  
-                  <Button
-                    size="lg"
-                    onClick={endVoiceCall}
-                    className="rounded-full w-16 h-16 bg-red-500 hover:bg-red-600 text-white"
-                  >
-                    <PhoneCall className="h-6 w-6" />
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full w-12 h-12"
-                  >
-                    <Volume2 className="h-5 w-5" />
-                  </Button>
-                </>
-              )}
-            </div>
-
-            {/* Tips */}
-            {callState === 'idle' && (
-              <div className="text-xs text-muted-foreground space-y-1">
-                <p>• Dr. Maya knows about your wellness journey</p>
-                <p>• Ask about nutrition, fitness, or emotional support</p>
-                <p>• Conversation is private and personalized</p>
-              </div>
-            )}
-
-            {callState === 'connected' && (
-              <div className="text-xs text-muted-foreground space-y-1">
-                {isCoachSpeaking ? (
-                  <p>Dr. Maya is speaking... Please listen.</p>
-                ) : isListening ? (
-                  <p>Dr. Maya is listening. Speak naturally!</p>
-                ) : (
-                  <p>Tap the microphone to speak with Dr. Maya</p>
-                )}
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      <CreditPurchaseModal
+        isOpen={showPurchaseModal}
+        onClose={() => setShowPurchaseModal(false)}
+        currentCredits={credits}
+        requiredCredits={CREDIT_COSTS.voice_call}
+      />
+    </>
   );
 };
 

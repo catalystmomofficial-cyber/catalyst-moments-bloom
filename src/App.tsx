@@ -64,6 +64,7 @@ import SavedBirthBallExercises from "./pages/SavedBirthBallExercises";
 import AssessmentResults from "./pages/AssessmentResults";
 import BirthBallCommunityFeed from "./pages/BirthBallCommunityFeed";
 import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
+import CreditPurchaseSuccess from "./pages/CreditPurchaseSuccess";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
@@ -356,6 +357,7 @@ function AppContent() {
             <AssessmentResults />
           </PrivateRoute>
         } />
+        <Route path="/credit-purchase-success" element={<CreditPurchaseSuccess />} />
         
         {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />

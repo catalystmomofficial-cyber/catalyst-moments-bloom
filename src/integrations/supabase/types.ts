@@ -1376,6 +1376,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_purchased_credits: {
+        Args: {
+          p_amount: number
+          p_description?: string
+          p_source: string
+          p_user_id: string
+        }
+        Returns: {
+          new_total: number
+          success: boolean
+        }[]
+      }
       add_user_points: {
         Args: {
           p_description?: string
@@ -1426,6 +1438,19 @@ export type Database = {
           social_media_param: string
         }
         Returns: undefined
+      }
+      deduct_user_credits: {
+        Args: {
+          p_amount: number
+          p_description?: string
+          p_source: string
+          p_user_id: string
+        }
+        Returns: {
+          error_message: string
+          remaining_points: number
+          success: boolean
+        }[]
       }
       get_affiliate_status: {
         Args: { user_id_param: string }
@@ -1502,6 +1527,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_user_credits: { Args: { p_user_id: string }; Returns: number }
       increment_challenge_progress: {
         Args: { p_challenge_type: string; p_user_id: string }
         Returns: undefined
