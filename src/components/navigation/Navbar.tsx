@@ -44,8 +44,9 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Auth Links - Desktop */}
-          <div className="hidden md:block">
+          {/* Auth Links + Notifications - Desktop */}
+          <div className="hidden md:flex items-center gap-2">
+            <NotificationSystem />
             <AuthLinks />
           </div>
 
