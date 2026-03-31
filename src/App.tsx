@@ -65,6 +65,23 @@ import AssessmentResults from "./pages/AssessmentResults";
 import BirthBallCommunityFeed from "./pages/BirthBallCommunityFeed";
 import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
 import CreditPurchaseSuccess from "./pages/CreditPurchaseSuccess";
+import PregnancyHub from "./pages/PregnancyHub";
+import PregnancyTrackerPage from "./pages/pregnancy/PregnancyTrackerPage";
+import BabyKickCounterPage from "./pages/pregnancy/BabyKickCounterPage";
+import ContractionTrackerPage from "./pages/pregnancy/ContractionTrackerPage";
+import PregnancyJournalPage from "./pages/pregnancy/PregnancyJournalPage";
+import PostpartumPrepPage from "./pages/pregnancy/PostpartumPrepPage";
+import WellnessDigestPage from "./pages/pregnancy/WellnessDigestPage";
+import PregnancyCommunityPage from "./pages/pregnancy/PregnancyCommunityPage";
+import TTCHub from "./pages/TTCHub";
+import TTCTrackerPage from "./pages/ttc/TTCTrackerPage";
+import CycleCalendarPage from "./pages/ttc/CycleCalendarPage";
+import TTCNutritionPage from "./pages/ttc/TTCNutritionPage";
+import TTCWorkoutsPage from "./pages/ttc/TTCWorkoutsPage";
+import TTCEducationPage from "./pages/ttc/TTCEducationPage";
+import TTCAdvicePage from "./pages/ttc/TTCAdvicePage";
+import TTCCommunityPage from "./pages/ttc/TTCCommunityPage";
+import TTCChallengesPage from "./pages/ttc/TTCChallengesPage";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
