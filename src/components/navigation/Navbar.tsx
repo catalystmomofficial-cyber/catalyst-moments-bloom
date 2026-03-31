@@ -17,8 +17,6 @@ const Navbar = () => {
     { name: 'Workouts', href: '/workouts' },
     { name: 'Recipes', href: '/recipes' },
     { name: 'Wellness', href: '/wellness' },
-    { name: 'Pregnancy', href: '/pregnancy' },
-    { name: 'TTC', href: '/ttc' },
     { name: 'Community', href: '/community' },
   ];
 
