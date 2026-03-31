@@ -375,7 +375,28 @@ function AppContent() {
           </PrivateRoute>
         } />
         <Route path="/credit-purchase-success" element={<CreditPurchaseSuccess />} />
-        
+
+        {/* Pregnancy Suite Routes */}
+        <Route path="/pregnancy" element={<PrivateRoute><SubscriptionGuard><PregnancyHub /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/pregnancy/tracker" element={<PrivateRoute><SubscriptionGuard><PregnancyTrackerPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/pregnancy/kick-counter" element={<PrivateRoute><SubscriptionGuard><BabyKickCounterPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/pregnancy/contractions" element={<PrivateRoute><SubscriptionGuard><ContractionTrackerPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/pregnancy/journal" element={<PrivateRoute><SubscriptionGuard><PregnancyJournalPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/pregnancy/postpartum-prep" element={<PrivateRoute><SubscriptionGuard><PostpartumPrepPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/pregnancy/wellness-digest" element={<PrivateRoute><SubscriptionGuard><WellnessDigestPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/pregnancy/community" element={<PrivateRoute><SubscriptionGuard><PregnancyCommunityPage /></SubscriptionGuard></PrivateRoute>} />
+
+        {/* TTC Suite Routes */}
+        <Route path="/ttc" element={<PrivateRoute><SubscriptionGuard><TTCHub /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/ttc/tracker" element={<PrivateRoute><SubscriptionGuard><TTCTrackerPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/ttc/cycle-calendar" element={<PrivateRoute><SubscriptionGuard><CycleCalendarPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/ttc/nutrition" element={<PrivateRoute><SubscriptionGuard><TTCNutritionPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/ttc/workouts" element={<PrivateRoute><SubscriptionGuard><TTCWorkoutsPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/ttc/education" element={<PrivateRoute><SubscriptionGuard><TTCEducationPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/ttc/advice" element={<PrivateRoute><SubscriptionGuard><TTCAdvicePage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/ttc/community" element={<PrivateRoute><SubscriptionGuard><TTCCommunityPage /></SubscriptionGuard></PrivateRoute>} />
+        <Route path="/ttc/challenges" element={<PrivateRoute><SubscriptionGuard><TTCChallengesPage /></SubscriptionGuard></PrivateRoute>} />
+
         {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
