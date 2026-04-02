@@ -1,16 +1,7 @@
 import ttcJourneySupportCover from '@/assets/community-covers/ttc-journey-support.jpg';
-import fertilityNutritionCover from '@/assets/community-covers/fertility-nutrition.jpg';
-import cycleTrackingBuddiesCover from '@/assets/community-covers/cycle-tracking-buddies.jpg';
-import mindfulWellnessCover from '@/assets/community-covers/mindful-wellness.jpg';
 import pregnancySupportCover from '@/assets/community-covers/pregnancy-support.jpg';
-import firstTrimesterCrewCover from '@/assets/community-covers/first-trimester-crew.jpg';
-import prenatalFitnessCover from '@/assets/community-covers/prenatal-fitness.jpg';
 import postpartumSupportCover from '@/assets/community-covers/postpartum-support.jpg';
-import workingMomsCover from '@/assets/community-covers/working-moms.jpg';
 import mentalHealthCover from '@/assets/community-covers/mental-health.jpg';
-import nutritionForMomsCover from '@/assets/community-covers/nutrition-for-moms.jpg';
-import birthPrepCover from '@/assets/community-covers/birth-prep.jpg';
-import birthBallGuideCover from '@/assets/ultimate-birth-ball-guide-cover.jpg';
 
 export type JourneyType = 'ttc' | 'pregnant' | 'postpartum' | 'general';
 
