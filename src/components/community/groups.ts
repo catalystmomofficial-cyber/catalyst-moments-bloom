@@ -22,10 +22,43 @@ export interface CommunityGroup {
   memberCount: number;
   coverImage: string;
   badge?: string;
+  isFree?: boolean; // true = accessible without subscription
 }
 
 export const groups: CommunityGroup[] = [
-  // TTC groups
+  // ── General (free for all logged-in users) ──
+  {
+    slug: 'mom-life-general',
+    name: 'Mom Life – General',
+    description: 'The open hub for every mom on CatalystMom. Share wins, ask questions, and support one another — no subscription required!',
+    journey: 'general',
+    memberCount: 3_421,
+    coverImage: mentalHealthCover,
+    badge: 'ALL',
+    isFree: true,
+  },
+  {
+    slug: 'sleep-support',
+    name: 'Sleep Support Circle',
+    description: 'Tips, routines, and solidarity for moms navigating sleep challenges at every stage — newborn nights to toddler bedtimes.',
+    journey: 'general',
+    memberCount: 1_876,
+    coverImage: mindfulWellnessCover,
+    badge: 'ZZ',
+    isFree: true,
+  },
+  {
+    slug: 'toddler-moms',
+    name: 'Toddler Moms',
+    description: 'Tantrums, milestones, meal ideas, and laughs. A space for moms raising tiny humans with big personalities.',
+    journey: 'general',
+    memberCount: 2_103,
+    coverImage: nutritionForMomsCover,
+    badge: 'TM',
+    isFree: true,
+  },
+
+  // ── TTC (subscription required) ──
   {
     slug: 'ttc-journey-support',
     name: 'TTC Journey Support',
@@ -33,7 +66,7 @@ export const groups: CommunityGroup[] = [
     journey: 'ttc',
     memberCount: 1_124,
     coverImage: ttcJourneySupportCover,
-    badge: 'TTC'
+    badge: 'TTC',
   },
   {
     slug: 'fertility-nutrition',
@@ -42,7 +75,7 @@ export const groups: CommunityGroup[] = [
     journey: 'ttc',
     memberCount: 687,
     coverImage: fertilityNutritionCover,
-    badge: 'FN'
+    badge: 'FN',
   },
   {
     slug: 'cycle-tracking-buddies',
@@ -51,19 +84,10 @@ export const groups: CommunityGroup[] = [
     journey: 'ttc',
     memberCount: 743,
     coverImage: cycleTrackingBuddiesCover,
-    badge: 'CT'
-  },
-  {
-    slug: 'mindful-wellness',
-    name: 'Mindful Wellness',
-    description: 'Stress relief, yoga, and mindfulness to stay grounded throughout your journey. Join our virtual meditation sessions every Sunday at 9 AM.',
-    journey: 'ttc',
-    memberCount: 892,
-    coverImage: mindfulWellnessCover,
-    badge: 'MW'
+    badge: 'CT',
   },
 
-  // Pregnant groups
+  // ── Pregnant (subscription required) ──
   {
     slug: 'pregnancy-support',
     name: 'Pregnancy Support',
@@ -71,7 +95,7 @@ export const groups: CommunityGroup[] = [
     journey: 'pregnant',
     memberCount: 1_567,
     coverImage: pregnancySupportCover,
-    badge: 'PS'
+    badge: 'PS',
   },
   {
     slug: 'first-trimester-crew',
@@ -80,7 +104,7 @@ export const groups: CommunityGroup[] = [
     journey: 'pregnant',
     memberCount: 1_298,
     coverImage: firstTrimesterCrewCover,
-    badge: 'T1'
+    badge: 'T1',
   },
   {
     slug: 'prenatal-fitness',
@@ -89,7 +113,7 @@ export const groups: CommunityGroup[] = [
     journey: 'pregnant',
     memberCount: 1_034,
     coverImage: prenatalFitnessCover,
-    badge: 'PF'
+    badge: 'PF',
   },
   {
     slug: 'birth-ball',
@@ -98,47 +122,7 @@ export const groups: CommunityGroup[] = [
     journey: 'pregnant',
     memberCount: 856,
     coverImage: birthBallGuideCover,
-    badge: 'BB'
-  },
-
-  // Postpartum groups
-  {
-    slug: 'postpartum-support',
-    name: 'Postpartum Support',
-    description: 'Recovery, mental health, and gentle fitness—support for the fourth trimester. Postpartum depression support and healing journey stories shared daily.',
-    journey: 'postpartum',
-    memberCount: 1_456,
-    coverImage: postpartumSupportCover,
-    badge: 'PP'
-  },
-  {
-    slug: 'working-moms',
-    name: 'Working Moms',
-    description: 'Balance career and motherhood—time-saving tips, routines, and solidarity. Monthly work-life balance workshops and productivity hacks.',
-    journey: 'postpartum',
-    memberCount: 1_123,
-    coverImage: workingMomsCover,
-    badge: 'WM'
-  },
-
-  // General groups - visible to everyone
-  {
-    slug: 'mental-health',
-    name: 'Mental Health for Moms',
-    description: 'Safe space for discussing anxiety, depression, and mental wellness. Weekly virtual support circles and professional guidance available.',
-    journey: 'general',
-    memberCount: 967,
-    coverImage: mentalHealthCover,
-    badge: 'MH'
-  },
-  {
-    slug: 'nutrition-for-moms',
-    name: 'Nutrition for Moms',
-    description: 'Healthy, simple recipes and smart planning for busy mom life. Weekly meal prep sessions and family-friendly recipe exchanges.',
-    journey: 'general',
-    memberCount: 2_187,
-    coverImage: nutritionForMomsCover,
-    badge: 'NF'
+    badge: 'BB',
   },
   {
     slug: 'birth-prep',
@@ -147,25 +131,50 @@ export const groups: CommunityGroup[] = [
     journey: 'pregnant',
     memberCount: 892,
     coverImage: birthPrepCover,
-    badge: 'BP'
-  }
+    badge: 'BP',
+  },
+
+  // ── Postpartum (subscription required) ──
+  {
+    slug: 'postpartum-support',
+    name: 'Postpartum Support',
+    description: 'Recovery, mental health, and gentle fitness—support for the fourth trimester. Postpartum depression support and healing journey stories shared daily.',
+    journey: 'postpartum',
+    memberCount: 1_456,
+    coverImage: postpartumSupportCover,
+    badge: 'PP',
+  },
+  {
+    slug: 'working-moms',
+    name: 'Working Moms',
+    description: 'Balance career and motherhood—time-saving tips, routines, and solidarity. Monthly work-life balance workshops and productivity hacks.',
+    journey: 'postpartum',
+    memberCount: 1_123,
+    coverImage: workingMomsCover,
+    badge: 'WM',
+  },
 ];
 
+/**
+ * Returns groups relevant to the user's stage.
+ * Always includes general (free) groups + stage-specific groups.
+ */
 export function getGroupsForStage(stage?: string) {
-  console.log('[GROUPS] getGroupsForStage called with stage:', stage);
-  
   if (!stage) {
+    // Not logged in or no stage set → show only general (free) groups
     return groups.filter(g => g.journey === 'general');
   }
-  
+
   // Extract base journey from stage (e.g., "pregnant_trimester_2" -> "pregnant")
   const baseJourney = stage.split('_')[0] as JourneyType;
-  console.log('[GROUPS] Extracted baseJourney:', baseJourney);
-  
-  // Return groups for specific stage + general groups
-  const filtered = groups.filter(g => g.journey === baseJourney || g.journey === 'general');
-  console.log('[GROUPS] Filtered groups count:', filtered.length);
-  console.log('[GROUPS] Filtered groups:', filtered.map(g => ({ name: g.name, journey: g.journey })));
-  
-  return filtered;
+
+  // Return general groups + groups for their specific journey
+  return groups.filter(g => g.journey === baseJourney || g.journey === 'general');
+}
+
+/**
+ * Get all groups (for "View All" scenarios)
+ */
+export function getAllGroups() {
+  return groups;
 }
