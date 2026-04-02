@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, ArrowLeft, Bell, ShieldCheck } from 'lucide-react';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { groups } from '@/components/community/groups';
