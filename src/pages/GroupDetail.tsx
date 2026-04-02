@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, ArrowLeft, Bell, ShieldCheck } from 'lucide-react';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { groups } from '@/components/community/groups';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 import CheckoutModal from '@/components/subscription/CheckoutModal';
 
 const GroupDetail = () => {
@@ -21,12 +21,16 @@ const GroupDetail = () => {
   const { user, subscribed } = useAuth();
   const group = useMemo(() => groups.find(g => g.slug === slug), [slug]);
   const [isMember, setIsMember] = useState(false);
-  const [isJoining, setIsJoining] = useState(false);
   const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
+  const [activeSubCategory, setActiveSubCategory] = useState('general');
 
   useEffect(() => {
     if (group) {
       document.title = `${group.name} | Community Group`;
+      // Default to first subcategory
+      if (group.subCategories.length > 0) {
+        setActiveSubCategory(group.subCategories[0].id);
+      }
     }
   }, [group]);
 
@@ -48,18 +52,12 @@ const GroupDetail = () => {
 
   const handleJoin = () => {
     if (!user) {
-      toast({
-        title: "Sign in required",
-        description: "Please sign in to join groups",
-        variant: "destructive",
-      });
+      toast({ title: "Sign in required", description: "Please sign in to join groups", variant: "destructive" });
       navigate('/login');
       return;
     }
 
-    // Free groups don't require subscription
     if (!isFreeGroup && !subscribed) {
-      console.log('[GROUP_DETAIL] User not subscribed, showing payment wall');
       setShowSubscriptionPrompt(true);
       return;
     }
@@ -72,6 +70,8 @@ const GroupDetail = () => {
         : `You've joined ${group.name}`,
     });
   };
+
+  const activeSubCategoryData = group.subCategories.find(sc => sc.id === activeSubCategory);
 
   return (
     <PageLayout>
@@ -89,7 +89,7 @@ const GroupDetail = () => {
             <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12 ring-2 ring-background shadow">
-                  <AvatarFallback>{group.badge || group.name.substring(0,2).toUpperCase()}</AvatarFallback>
+                  <AvatarFallback>{group.badge || group.name.substring(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div>
                   <h1 className="text-2xl font-bold leading-tight">{group.name}</h1>
@@ -97,6 +97,7 @@ const GroupDetail = () => {
                     <Users className="h-4 w-4" />
                     <span>{group.memberCount.toLocaleString()} members</span>
                     <Badge variant="secondary" className="text-xs capitalize">{group.journey}</Badge>
+                    {group.isFree && <Badge variant="outline" className="text-xs border-green-600 text-green-600/80">Free</Badge>}
                   </div>
                 </div>
               </div>
@@ -112,19 +113,39 @@ const GroupDetail = () => {
           </div>
         </div>
 
+        {/* Subcategory Tabs */}
+        {group.subCategories.length > 0 && (
+          <Tabs value={activeSubCategory} onValueChange={setActiveSubCategory} className="mb-6">
+            <TabsList className="w-full justify-start overflow-x-auto">
+              {group.subCategories.map(sc => (
+                <TabsTrigger key={sc.id} value={sc.id} className="whitespace-nowrap">
+                  {sc.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {activeSubCategoryData && (
+              <p className="text-sm text-muted-foreground mt-2 px-1">
+                {activeSubCategoryData.description}
+              </p>
+            )}
+          </Tabs>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-6">
-            {/* Feed */}
             <Card>
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Group Feed</h2>
-                <DynamicCommunityFeed groupSlug={group.slug} isTTC={isTTCGroup} />
+                <h2 className="text-xl font-semibold mb-4">
+                  {activeSubCategoryData?.label || 'Group Feed'}
+                </h2>
+                <DynamicCommunityFeed groupSlug={`${group.slug}-${activeSubCategory}`} isTTC={isTTCGroup} />
               </CardContent>
             </Card>
-            
-            <CheckoutModal 
-              isOpen={showSubscriptionPrompt} 
-              onClose={() => setShowSubscriptionPrompt(false)} 
+
+            <CheckoutModal
+              isOpen={showSubscriptionPrompt}
+              onClose={() => setShowSubscriptionPrompt(false)}
             />
           </div>
 
@@ -143,6 +164,19 @@ const GroupDetail = () => {
                   <span>Be kind. Share support. No medical advice.</span>
                 </div>
                 <Separator className="my-4" />
+                <h4 className="text-sm font-medium mb-2">Sub-categories</h4>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {group.subCategories.map(sc => (
+                    <Badge
+                      key={sc.id}
+                      variant={activeSubCategory === sc.id ? 'default' : 'outline'}
+                      className="cursor-pointer"
+                      onClick={() => setActiveSubCategory(sc.id)}
+                    >
+                      {sc.label}
+                    </Badge>
+                  ))}
+                </div>
                 <Button onClick={handleJoin} className="w-full" variant={isMember ? 'secondary' : 'default'}>
                   {isMember ? 'Joined' : 'Join Group'}
                 </Button>
@@ -155,11 +189,11 @@ const GroupDetail = () => {
                 <div className="flex -space-x-2 mb-2">
                   {Array.from({ length: 7 }).map((_, i) => (
                     <Avatar key={i} className="h-8 w-8 ring-2 ring-background">
-                      <AvatarFallback>{['A','S','J','M','K','L','E'][i]}</AvatarFallback>
+                      <AvatarFallback>{['A', 'S', 'J', 'M', 'K', 'L', 'E'][i]}</AvatarFallback>
                     </Avatar>
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground">Active discussions happening—jump in and say hi!</p>
+                <p className="text-xs text-muted-foreground">Active discussions happening — jump in and say hi!</p>
               </CardContent>
             </Card>
           </div>

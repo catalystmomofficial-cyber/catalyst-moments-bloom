@@ -32,7 +32,7 @@ const Community = () => {
   const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
 
   // Feed filter categories based on stage
-  const feedFilters = ['all', 'postpartum', 'ttc', 'pregnancy', 'sleep', 'toddler', 'general'];
+  const feedFilters = ['all', 'general', 'ttc', 'pregnancy', 'postpartum'];
   
   const handleInteractionClick = (action: string) => {
     if (!user) {
