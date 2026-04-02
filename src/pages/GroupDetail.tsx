@@ -97,7 +97,7 @@ const GroupDetail = () => {
                     <Users className="h-4 w-4" />
                     <span>{group.memberCount.toLocaleString()} members</span>
                     <Badge variant="secondary" className="text-xs capitalize">{group.journey}</Badge>
-                    {group.isFree && <Badge variant="outline" className="text-xs border-green-600 text-green-600">Free</Badge>}
+                    {group.isFree && <Badge variant="outline" className="text-xs border-green-600 text-green-600/80">Free</Badge>}
                   </div>
                 </div>
               </div>
