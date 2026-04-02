@@ -44,6 +44,7 @@ const GroupDetail = () => {
   }
 
   const isTTCGroup = group.journey === 'ttc';
+  const isFreeGroup = !!group.isFree;
 
   const handleJoin = () => {
     if (!user) {
@@ -56,7 +57,8 @@ const GroupDetail = () => {
       return;
     }
 
-    if (!subscribed) {
+    // Free groups don't require subscription
+    if (!isFreeGroup && !subscribed) {
       console.log('[GROUP_DETAIL] User not subscribed, showing payment wall');
       setShowSubscriptionPrompt(true);
       return;
