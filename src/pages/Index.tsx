@@ -20,17 +20,19 @@ const isStandaloneMode = () =>
 const Index = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
-  const [showSplash, setShowSplash] = useState(isStandaloneMode);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [videoTitle, setVideoTitle] = useState("");
+  const [isWelcomeVideo, setIsWelcomeVideo] = useState(false);
+
+  const isPWA = isStandaloneMode();
 
   useEffect(() => {
-    if (!isStandaloneMode()) return;
+    if (!isPWA || isLoading) return;
+    navigate(isAuthenticated ? '/dashboard' : '/login', { replace: true });
+  }, [isAuthenticated, isLoading, navigate, isPWA]);
 
-    if (!isLoading) {
-      navigate(isAuthenticated ? '/dashboard' : '/login', { replace: true });
-    }
-  }, [isAuthenticated, isLoading, navigate]);
-
-  if (showSplash && isLoading) {
+  if (isPWA && isLoading) {
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-primary/90 to-primary gap-6">
         <div className="animate-pulse flex flex-col items-center gap-4">
@@ -44,11 +46,6 @@ const Index = () => {
       </div>
     );
   }
-
-  const [videoModalOpen, setVideoModalOpen] = useState(false);
-  const [videoUrl, setVideoUrl] = useState("");
-  const [videoTitle, setVideoTitle] = useState("");
-  const [isWelcomeVideo, setIsWelcomeVideo] = useState(false);
 
   const openVideoModal = (url: string, title: string) => {
     setVideoUrl(url);
