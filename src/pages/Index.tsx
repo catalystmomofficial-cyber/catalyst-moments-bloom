@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PageLayout from "@/components/layout/PageLayout";
 import VideoModal from "@/components/ui/video-modal";
 import HeroSection from '@/components/home/HeroSection';
@@ -9,9 +10,22 @@ import TestimonialsSection from '@/components/home/TestimonialsSection';
 import CTASection from '@/components/home/CTASection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
+import { useAuth } from '@/contexts/AuthContext';
 
 
 const Index = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  useEffect(() => {
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (navigator as any).standalone === true;
+
+    if (isStandalone && !isLoading) {
+      navigate(isAuthenticated ? '/dashboard' : '/login', { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate]);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
