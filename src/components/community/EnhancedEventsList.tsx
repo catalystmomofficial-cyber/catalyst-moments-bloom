@@ -91,9 +91,9 @@ const EnhancedEventsList = () => {
     }
   };
 
-  const getRandomAttendeeAvatars = (count: number) => {
-    const shuffled = [...memberAvatars].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.min(count, 6));
+  const getAttendeeInitials = (count: number) => {
+    const initials = ['A', 'S', 'J', 'M', 'K', 'L'];
+    return initials.slice(0, Math.min(count, 4));
   };
 
   return (
