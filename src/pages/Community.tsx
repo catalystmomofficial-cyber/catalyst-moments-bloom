@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Users, MessageCircle, Lock, Search } from 'lucide-react';
+import { Users, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import CheckoutModal from '@/components/subscription/CheckoutModal';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getGroupsForStage } from '@/components/community/groups';
-import EnhancedGroupsList from '@/components/community/EnhancedGroupsList';
 import EnhancedEventsList from '@/components/community/EnhancedEventsList';
 import { useToast } from '@/components/ui/use-toast';
-import { Input } from '@/components/ui/input';
 
 const Community = () => {
   const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
