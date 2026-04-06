@@ -36,8 +36,8 @@ const Index = () => {
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-primary/90 to-primary gap-6">
         <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-lg">
-            <span className="text-4xl font-bold text-white">C</span>
+          <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-lg overflow-hidden">
+            <img src="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" alt="Catalyst Mom" className="w-16 h-16 object-contain" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Catalyst Mom</h1>
         </div>
