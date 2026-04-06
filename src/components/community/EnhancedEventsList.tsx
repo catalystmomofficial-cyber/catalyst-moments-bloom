@@ -164,10 +164,9 @@ const EnhancedEventsList = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex -space-x-2">
-                      {getRandomAttendeeAvatars(4).map((avatar, index) => (
+                      {getAttendeeInitials(4).map((initial, index) => (
                         <Avatar key={index} className="w-6 h-6 border-2 border-background">
-                          <AvatarImage src={avatar} alt={`Attendee ${index + 1}`} />
-                          <AvatarFallback className="text-xs">M{index + 1}</AvatarFallback>
+                          <AvatarFallback className="text-[10px]">{initial}</AvatarFallback>
                         </Avatar>
                       ))}
                       {event.attendees > 4 && (
