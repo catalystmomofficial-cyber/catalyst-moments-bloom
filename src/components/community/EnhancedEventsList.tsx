@@ -2,20 +2,9 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Calendar, Clock, Users, MapPin, Star } from 'lucide-react';
 import EventRegistrationModal from './EventRegistrationModal';
-
-
-// Import member avatars
-import mom1 from '@/assets/member-avatars/mom-1.jpg';
-import mom2 from '@/assets/member-avatars/mom-2.jpg';
-import mom3 from '@/assets/member-avatars/mom-3.jpg';
-import mom4 from '@/assets/member-avatars/mom-4.jpg';
-import mom5 from '@/assets/member-avatars/mom-5.jpg';
-import mom6 from '@/assets/member-avatars/mom-6.jpg';
-
-const memberAvatars = [mom1, mom2, mom3, mom4, mom5, mom6];
 
 interface Event {
   id: string;

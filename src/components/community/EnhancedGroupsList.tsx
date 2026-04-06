@@ -107,10 +107,9 @@ const EnhancedGroupsList = () => {
 
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-1">
-                    {getRandomActiveMembers(3, group.recentMembers).map((avatarIndex, index) => (
+                    {getRandomActiveMembers(3, group.recentMembers).map((_, index) => (
                       <Avatar key={index} className="w-6 h-6 border-2 border-background">
-                        <AvatarImage src={memberAvatars[avatarIndex]} alt={`Member ${index + 1}`} />
-                        <AvatarFallback className="text-xs">M{index + 1}</AvatarFallback>
+                        <AvatarFallback className="text-[10px]">M{index + 1}</AvatarFallback>
                       </Avatar>
                     ))}
                   </div>
