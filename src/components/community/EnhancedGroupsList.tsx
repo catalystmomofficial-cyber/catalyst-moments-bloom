@@ -1,20 +1,10 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Users, MessageCircle, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-// Import member avatars
-import mom1 from '@/assets/member-avatars/mom-1.jpg';
-import mom2 from '@/assets/member-avatars/mom-2.jpg';
-import mom3 from '@/assets/member-avatars/mom-3.jpg';
-import mom4 from '@/assets/member-avatars/mom-4.jpg';
-import mom5 from '@/assets/member-avatars/mom-5.jpg';
-import mom6 from '@/assets/member-avatars/mom-6.jpg';
-
-const memberAvatars = [mom1, mom2, mom3, mom4, mom5, mom6];
 
 interface Group {
   id: string;
@@ -117,10 +107,9 @@ const EnhancedGroupsList = () => {
 
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-1">
-                    {getRandomActiveMembers(3, group.recentMembers).map((avatarIndex, index) => (
+                    {getRandomActiveMembers(3, group.recentMembers).map((_, index) => (
                       <Avatar key={index} className="w-6 h-6 border-2 border-background">
-                        <AvatarImage src={memberAvatars[avatarIndex]} alt={`Member ${index + 1}`} />
-                        <AvatarFallback className="text-xs">M{index + 1}</AvatarFallback>
+                        <AvatarFallback className="text-[10px]">M{index + 1}</AvatarFallback>
                       </Avatar>
                     ))}
                   </div>
