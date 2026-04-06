@@ -41,8 +41,10 @@ const Index = () => {
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Catalyst Mom</h1>
         </div>
-        <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin" />
-        <p className="text-white/70 text-sm">Loading your wellness journey…</p>
+        <p className="text-white/80 text-sm font-medium tracking-wide">Your Wellness, Your Way</p>
+        <div className="w-48 h-1.5 bg-white/20 rounded-full overflow-hidden mt-2">
+          <div className="h-full bg-white/80 rounded-full animate-[loading_1.5s_ease-in-out_infinite]" />
+        </div>
       </div>
     );
   }
