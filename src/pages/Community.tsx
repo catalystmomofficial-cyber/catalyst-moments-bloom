@@ -87,7 +87,7 @@ const Community = () => {
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-sm truncate">{g.name}</h3>
                         {g.isFree && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 shrink-0">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent/20 text-accent-foreground shrink-0">
                             Free
                           </span>
                         )}
