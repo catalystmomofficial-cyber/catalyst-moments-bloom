@@ -184,8 +184,16 @@ const GroupDetail = () => {
             </Card>
 
             <Card>
-              <CardContent className="p-6 text-center">
-                <p className="text-sm text-muted-foreground">Members will appear here as they join the group.</p>
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-3">Members online now</h3>
+                <div className="flex -space-x-2 mb-2">
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <Avatar key={i} className="h-8 w-8 ring-2 ring-background">
+                      <AvatarFallback>{['A', 'S', 'J', 'M', 'K', 'L', 'E'][i]}</AvatarFallback>
+                    </Avatar>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">Active discussions happening — jump in and say hi!</p>
               </CardContent>
             </Card>
           </div>

@@ -2,9 +2,20 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Calendar, Clock, Users, MapPin, Star } from 'lucide-react';
 import EventRegistrationModal from './EventRegistrationModal';
+
+
+// Import member avatars
+import mom1 from '@/assets/member-avatars/mom-1.jpg';
+import mom2 from '@/assets/member-avatars/mom-2.jpg';
+import mom3 from '@/assets/member-avatars/mom-3.jpg';
+import mom4 from '@/assets/member-avatars/mom-4.jpg';
+import mom5 from '@/assets/member-avatars/mom-5.jpg';
+import mom6 from '@/assets/member-avatars/mom-6.jpg';
+
+const memberAvatars = [mom1, mom2, mom3, mom4, mom5, mom6];
 
 interface Event {
   id: string;
@@ -91,9 +102,9 @@ const EnhancedEventsList = () => {
     }
   };
 
-  const getAttendeeInitials = (count: number) => {
-    const initials = ['A', 'S', 'J', 'M', 'K', 'L'];
-    return initials.slice(0, Math.min(count, 4));
+  const getRandomAttendeeAvatars = (count: number) => {
+    const shuffled = [...memberAvatars].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, Math.min(count, 6));
   };
 
   return (
@@ -164,9 +175,10 @@ const EnhancedEventsList = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex -space-x-2">
-                      {getAttendeeInitials(4).map((initial, index) => (
+                      {getRandomAttendeeAvatars(4).map((avatar, index) => (
                         <Avatar key={index} className="w-6 h-6 border-2 border-background">
-                          <AvatarFallback className="text-[10px]">{initial}</AvatarFallback>
+                          <AvatarImage src={avatar} alt={`Attendee ${index + 1}`} />
+                          <AvatarFallback className="text-xs">M{index + 1}</AvatarFallback>
                         </Avatar>
                       ))}
                       {event.attendees > 4 && (
