@@ -3,16 +3,14 @@ import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Heart, MessageCircle, Share2, Users, ThumbsUp, Calendar, Search, Camera, Star, Lock } from 'lucide-react';
+import { Heart, MessageCircle, Users, Search, Camera, Star, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
 import CheckoutModal from '@/components/subscription/CheckoutModal';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getGroupsForStage } from '@/components/community/groups';
 import communityCover from '@/assets/community-cover.jpg';
 import EnhancedGroupsList from '@/components/community/EnhancedGroupsList';
@@ -20,19 +18,14 @@ import EnhancedEventsList from '@/components/community/EnhancedEventsList';
 import { useToast } from '@/components/ui/use-toast';
 
 const Community = () => {
-  const [activeFilter, setActiveFilter] = useState('all');
   const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
   const { user, profile, subscribed } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const isTTC = profile?.motherhood_stage === 'ttc';
   const stageGroups = getGroupsForStage(profile?.motherhood_stage);
   const location = useLocation();
   const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
-
-  // Feed filter categories based on stage
-  const feedFilters = ['all', 'general', 'ttc', 'pregnancy', 'postpartum'];
   
   const handleInteractionClick = (action: string) => {
     if (!user) {
