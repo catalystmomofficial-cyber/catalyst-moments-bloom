@@ -10,6 +10,7 @@ import TestimonialsSection from '@/components/home/TestimonialsSection';
 import CTASection from '@/components/home/CTASection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
+import PWAInstallBanner from '@/components/pwa/PWAInstallBanner';
 import { useAuth } from '@/contexts/AuthContext';
 
 
