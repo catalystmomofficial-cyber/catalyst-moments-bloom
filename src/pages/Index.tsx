@@ -94,6 +94,9 @@ const Index = () => {
       {/* CTA Section */}
       <CTASection onWatchDemo={openWelcomeVideo} />
 
+      {/* PWA Install Banner */}
+      <PWAInstallBanner />
+
       {/* Video Modal */}
       <VideoModal 
         isOpen={videoModalOpen}
