@@ -141,31 +141,9 @@ const Community = () => {
           <TabsContent value="feed" className="mt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-2/3 space-y-6">
-                <Card>
-                  <CardHeader className="p-4 flex flex-row items-center space-x-4">
-                    <Avatar><AvatarFallback>CM</AvatarFallback></Avatar>
-                    <Input placeholder="Share something with other moms..." onClick={() => handleInteractionClick('post')} />
-                    <Button size="sm" onClick={() => handleInteractionClick('post')}>Post</Button>
-                  </CardHeader>
-                </Card>
-                
                 <CheckoutModal isOpen={showSubscriptionPrompt} onClose={() => setShowSubscriptionPrompt(false)} />
                 
-                <div className="flex space-x-2 overflow-x-auto pb-2">
-                  {feedFilters.map((filter) => (
-                    <Button
-                      key={filter}
-                      variant={activeFilter === filter ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setActiveFilter(filter)}
-                      className="capitalize whitespace-nowrap"
-                    >
-                      {filter === 'ttc' ? 'TTC' : filter}
-                    </Button>
-                  ))}
-                </div>
-                
-                <DynamicCommunityFeed isTTC={isTTC} />
+                <DynamicCommunityFeed groupSlug="general" />
               </div>
               
               <div className="md:w-1/3 space-y-6">
