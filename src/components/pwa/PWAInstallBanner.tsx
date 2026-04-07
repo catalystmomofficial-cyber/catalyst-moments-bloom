@@ -19,6 +19,7 @@ const PWAInstallBanner = () => {
   const [showBanner, setShowBanner] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (isStandalone()) return;
