@@ -105,7 +105,9 @@ const PWAInstallBanner = () => {
       )}
 
       {/* Sticky Banner */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-3 bg-card/95 backdrop-blur-md border-t border-border shadow-lg safe-area-bottom">
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-50 p-3 bg-card/95 backdrop-blur-md border-t border-border shadow-lg safe-area-bottom transition-transform duration-500 ease-out ${visible ? 'translate-y-0' : 'translate-y-full'}`}
+      >
         <div className="flex items-center gap-3 max-w-lg mx-auto">
           <img
             src="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png"
