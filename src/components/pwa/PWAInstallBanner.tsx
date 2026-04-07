@@ -25,8 +25,13 @@ const PWAInstallBanner = () => {
     if (isStandalone()) return;
     if (localStorage.getItem('pwa-banner-dismissed') === 'true') return;
 
-    if (isIOS()) {
+    const reveal = () => {
       setShowBanner(true);
+      setTimeout(() => setVisible(true), 2000);
+    };
+
+    if (isIOS()) {
+      reveal();
       return;
     }
 
