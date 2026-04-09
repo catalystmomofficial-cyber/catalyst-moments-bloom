@@ -4,10 +4,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Award, Flame, Star, Crown, Target } from 'lucide-react';
-import { format } from 'date-fns';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
+import { AchievementModal } from '@/components/gamification/AchievementModal';
 
 interface Achievement {
   id: string;
@@ -35,16 +35,14 @@ export const AchievementBadges = () => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const [loading, setLoading] = useState(true);
   const [previousCount, setPreviousCount] = useState(0);
+  const [selectedAchievement, setSelectedAchievement] = useState<Achievement | null>(null);
 
   useEffect(() => {
-    if (user) {
-      loadAchievements();
-    }
+    if (user) loadAchievements();
   }, [user]);
 
   const loadAchievements = async () => {
     if (!user) return;
-
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -54,21 +52,12 @@ export const AchievementBadges = () => {
         .order('earned_at', { ascending: false });
 
       if (error) throw error;
-
       const newAchievements = data || [];
-      
-      // Check if new achievement was earned
+
       if (previousCount > 0 && newAchievements.length > previousCount) {
-        const latestAchievement = newAchievements[0];
-        
-        // Play celebration feedback
         vibrate('success');
         playSound('achievement');
-        
-        toast({
-          title: '🏆 Achievement Unlocked!',
-          description: `You earned "${latestAchievement.title}"`,
-        });
+        toast.success(`🏆 Achievement Unlocked: "${newAchievements[0].title}"`);
       }
 
       setAchievements(newAchievements);
@@ -112,62 +101,54 @@ export const AchievementBadges = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-primary" />
-            <CardTitle>Your Achievements</CardTitle>
+    <>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-primary" />
+              <CardTitle>Your Achievements</CardTitle>
+            </div>
+            <Badge variant="secondary">{achievements.length} earned</Badge>
           </div>
-          <Badge variant="secondary">{achievements.length} earned</Badge>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4 md:grid-cols-2">
-          {achievements.map((achievement) => {
-            const Icon = iconMap[achievement.icon] || Trophy;
-            
-            return (
-              <div
-                key={achievement.id}
-                className="flex items-start gap-3 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-300 hover:scale-105 animate-fade-in cursor-pointer"
-                onClick={() => {
-                  vibrate('light');
-                  playSound('click');
-                }}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 grid-cols-3 sm:grid-cols-4">
+            {achievements.map((achievement) => {
+              const Icon = iconMap[achievement.icon] || Trophy;
+              return (
+                <button
+                  key={achievement.id}
+                  onClick={() => {
                     vibrate('light');
                     playSound('click');
-                  }
-                }}
-              >
-                <div className="p-2 rounded-full bg-primary/10">
-                  <Icon className="w-5 h-5 text-primary" />
-                </div>
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-semibold text-sm">{achievement.title}</h4>
-                    {achievement.level > 1 && (
-                      <Badge variant="outline" className="text-xs">
-                        Level {achievement.level}
-                      </Badge>
-                    )}
+                    setSelectedAchievement(achievement);
+                  }}
+                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl border bg-card hover:bg-accent/50 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <div className="p-2.5 rounded-full bg-primary/10">
+                    <Icon className="w-5 h-5 text-primary" />
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {achievement.description}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Earned {format(new Date(achievement.earned_at), 'MMM d, yyyy')}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+                  <span className="text-[11px] font-medium text-center leading-tight line-clamp-2">
+                    {achievement.title}
+                  </span>
+                  {achievement.level > 1 && (
+                    <Badge variant="outline" className="text-[9px] px-1 h-4">
+                      Lv.{achievement.level}
+                    </Badge>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      <AchievementModal
+        achievement={selectedAchievement}
+        open={!!selectedAchievement}
+        onOpenChange={(open) => !open && setSelectedAchievement(null)}
+      />
+    </>
   );
 };
