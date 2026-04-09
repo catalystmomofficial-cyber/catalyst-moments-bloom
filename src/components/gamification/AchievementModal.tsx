@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, Award, Flame, Star, Crown, Target } from 'lucide-react';
+import { Trophy, Award, Flame, Star, Crown, Target, Calendar, Heart, Users, Zap } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -21,6 +21,10 @@ const iconMap: Record<string, typeof Trophy> = {
   star: Star,
   crown: Crown,
   target: Target,
+  calendar: Calendar,
+  heart: Heart,
+  users: Users,
+  zap: Zap,
 };
 
 interface AchievementModalProps {

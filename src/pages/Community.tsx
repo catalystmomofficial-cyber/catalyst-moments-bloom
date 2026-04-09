@@ -136,7 +136,7 @@ const Community = () => {
               <div className="md:w-2/3 space-y-6">
                 <CheckoutModal isOpen={showSubscriptionPrompt} onClose={() => setShowSubscriptionPrompt(false)} />
                 
-                <DynamicCommunityFeed groupSlug="general" />
+                <DynamicCommunityFeed groupSlug="mom-life-general-general" />
               </div>
               
               <div className="md:w-1/3 space-y-6">

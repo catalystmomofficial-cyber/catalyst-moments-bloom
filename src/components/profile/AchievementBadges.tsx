@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { 
   Trophy, 
   Crown, 
@@ -13,17 +12,28 @@ import {
   Star,
   Heart,
   Zap,
-  Share2
+  type LucideIcon,
 } from 'lucide-react';
-import { ShareModal } from '@/components/social/ShareModal';
-import { AchievementBadge as AchievementBadgeDisplay } from '@/components/social/AchievementBadge';
+import { AchievementModal } from '@/components/gamification/AchievementModal';
+
+type AchievementIcon = 'trophy' | 'crown' | 'users' | 'calendar' | 'flame' | 'star' | 'heart' | 'zap';
+
+const iconMap: Record<AchievementIcon, LucideIcon> = {
+  trophy: Trophy,
+  crown: Crown,
+  users: Users,
+  calendar: Calendar,
+  flame: Flame,
+  star: Star,
+  heart: Heart,
+  zap: Zap,
+};
 
 interface Achievement {
   id: string;
   title: string;
   description: string;
-  icon: any;
-  color: string;
+  icon: AchievementIcon;
   earned: boolean;
   earnedDate?: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
@@ -32,7 +42,6 @@ interface Achievement {
 export const AchievementBadges = () => {
   const { user, profile } = useAuth();
   const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [selectedAchievement, setSelectedAchievement] = useState<Achievement | null>(null);
 
   useEffect(() => {
@@ -119,8 +128,7 @@ export const AchievementBadges = () => {
         id: 'profile_complete',
         title: '100% Profile Complete',
         description: 'Completed all profile information',
-        icon: Trophy,
-        color: 'from-yellow-400 to-orange-500',
+        icon: 'trophy',
         earned: isProfileComplete,
         rarity: 'epic',
       },
@@ -128,8 +136,7 @@ export const AchievementBadges = () => {
         id: 'early_adopter',
         title: 'Early Adopter',
         description: 'Joined during the launch period',
-        icon: Crown,
-        color: 'from-purple-400 to-pink-500',
+        icon: 'crown',
         earned: isEarlyAdopter,
         earnedDate: profile.created_at,
         rarity: 'legendary',
@@ -138,8 +145,7 @@ export const AchievementBadges = () => {
         id: 'community_member',
         title: 'Community Member',
         description: 'Active member of Catalyst Mom',
-        icon: Users,
-        color: 'from-blue-400 to-cyan-500',
+        icon: 'users',
         earned: true, // All registered users get this
         earnedDate: profile.created_at,
         rarity: 'common',
@@ -148,8 +154,7 @@ export const AchievementBadges = () => {
         id: 'first_steps',
         title: 'First Steps',
         description: 'Logged your first progress check-in',
-        icon: Calendar,
-        color: 'from-green-400 to-emerald-500',
+        icon: 'calendar',
         earned: hasFirstCheckIn,
         earnedDate: checkIns?.[0]?.created_at,
         rarity: 'common',
@@ -158,8 +163,7 @@ export const AchievementBadges = () => {
         id: 'dedicated',
         title: 'Dedicated Tracker',
         description: 'Completed 3 weekly check-ins',
-        icon: Flame,
-        color: 'from-orange-400 to-red-500',
+        icon: 'flame',
         earned: hasMultipleCheckIns,
         rarity: 'rare',
       },
@@ -167,8 +171,7 @@ export const AchievementBadges = () => {
         id: 'consistency_champion',
         title: 'Consistency Champion',
         description: 'Completed 5+ weekly check-ins',
-        icon: Star,
-        color: 'from-yellow-300 to-amber-500',
+        icon: 'star',
         earned: hasConsistentCheckIns,
         rarity: 'epic',
       },
@@ -176,8 +179,7 @@ export const AchievementBadges = () => {
         id: 'level_5',
         title: 'Rising Star',
         description: 'Reached Level 5',
-        icon: Zap,
-        color: 'from-indigo-400 to-purple-500',
+        icon: 'zap',
         earned: userLevel >= 5,
         rarity: 'rare',
       },
@@ -185,8 +187,7 @@ export const AchievementBadges = () => {
         id: 'points_500',
         title: 'Points Collector',
         description: 'Earned 500+ total points',
-        icon: Heart,
-        color: 'from-pink-400 to-rose-500',
+        icon: 'heart',
         earned: totalPoints >= 500,
         rarity: 'rare',
       },
@@ -195,8 +196,7 @@ export const AchievementBadges = () => {
         id: `challenge_${badge.challenge?.name}`,
         title: badge.challenge?.name || 'Catalyst Crown',
         description: 'Limited edition monthly challenge winner',
-        icon: Crown,
-        color: badge.challenge?.badge_color || 'from-yellow-400 to-amber-600',
+          icon: 'crown' as const,
         earned: true,
         earnedDate: badge.completed_at,
         rarity: 'legendary' as const,
@@ -206,20 +206,19 @@ export const AchievementBadges = () => {
     setAchievements(allAchievements);
   };
 
-  const handleShareAchievement = (achievement: Achievement) => {
-    setSelectedAchievement(achievement);
-    setShareModalOpen(true);
-  };
+  const earnedAchievements = useMemo(() => achievements.filter((achievement) => achievement.earned), [achievements]);
+  const lockedCount = achievements.length - earnedAchievements.length;
 
-  const earnedAchievements = achievements.filter(a => a.earned);
-  const lockedAchievements = achievements.filter(a => !a.earned);
-
-  const getRarityColor = (rarity: string) => {
+  const getModalLevel = (rarity: Achievement['rarity']) => {
     switch (rarity) {
-      case 'legendary': return 'text-purple-600 bg-purple-100 border-purple-300';
-      case 'epic': return 'text-orange-600 bg-orange-100 border-orange-300';
-      case 'rare': return 'text-blue-600 bg-blue-100 border-blue-300';
-      default: return 'text-gray-600 bg-gray-100 border-gray-300';
+      case 'legendary':
+        return 4;
+      case 'epic':
+        return 3;
+      case 'rare':
+        return 2;
+      default:
+        return 1;
     }
   };
 
@@ -240,118 +239,64 @@ export const AchievementBadges = () => {
             Earn badges by completing milestones and share them with the community
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Earned Achievements */}
-          {earnedAchievements.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold">Earned Badges</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {earnedAchievements.map((achievement) => {
-                  const Icon = achievement.icon;
-                  
-                  return (
-                    <div
-                      key={achievement.id}
-                      className="relative group p-4 rounded-lg border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5 hover:shadow-lg transition-all"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${achievement.color} flex items-center justify-center flex-shrink-0 shadow-md`}>
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <h4 className="font-semibold text-sm">{achievement.title}</h4>
-                            <Badge 
-                              variant="outline" 
-                              className={`text-xs ${getRarityColor(achievement.rarity)} capitalize`}
-                            >
-                              {achievement.rarity}
-                            </Badge>
-                          </div>
-                          <p className="text-xs text-muted-foreground mb-2">
-                            {achievement.description}
-                          </p>
-                          {achievement.earnedDate && (
-                            <p className="text-xs text-muted-foreground">
-                              Earned {new Date(achievement.earnedDate).toLocaleDateString()}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="w-full mt-3"
-                        onClick={() => handleShareAchievement(achievement)}
-                      >
-                        <Share2 className="w-3 h-3 mr-2" />
-                        Share Badge
-                      </Button>
+        <CardContent className="space-y-4">
+          {earnedAchievements.length === 0 ? (
+            <div className="py-8 text-center text-muted-foreground">
+              <Trophy className="mx-auto mb-3 h-10 w-10 opacity-50" />
+              <p className="text-sm">Complete check-ins and milestones to unlock your first badge.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+              {earnedAchievements.map((achievement) => {
+                const Icon = iconMap[achievement.icon] || Trophy;
+
+                return (
+                  <button
+                    key={achievement.id}
+                    type="button"
+                    onClick={() => setSelectedAchievement(achievement)}
+                    className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3 text-center transition-all duration-200 hover:bg-accent/50 hover:shadow-sm active:scale-95"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <Icon className="h-5 w-5" />
                     </div>
-                  );
-                })}
-              </div>
+                    <span className="line-clamp-2 text-[11px] font-medium leading-tight">
+                      {achievement.title}
+                    </span>
+                    {achievement.rarity !== 'common' && (
+                      <Badge variant="secondary" className="h-4 px-1.5 text-[9px] capitalize">
+                        {achievement.rarity}
+                      </Badge>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           )}
 
-          {/* Locked Achievements */}
-          {lockedAchievements.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-muted-foreground">Locked Badges</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {lockedAchievements.map((achievement) => {
-                  const Icon = achievement.icon;
-                  
-                  return (
-                    <div
-                      key={achievement.id}
-                      className="p-4 rounded-lg border border-border bg-muted/30 opacity-60"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-6 h-6 text-muted-foreground" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <h4 className="font-semibold text-sm text-muted-foreground">
-                              {achievement.title}
-                            </h4>
-                            <Badge variant="outline" className="text-xs">
-                              Locked
-                            </Badge>
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            {achievement.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          {lockedCount > 0 && (
+            <p className="text-xs text-muted-foreground">
+              {lockedCount} more badge{lockedCount === 1 ? '' : 's'} still locked.
+            </p>
           )}
         </CardContent>
       </Card>
 
-      {/* Share Modal */}
       {selectedAchievement && (
-        <ShareModal
-          open={shareModalOpen}
-          onOpenChange={setShareModalOpen}
-          content={
-            <AchievementBadgeDisplay
-              achievement={{
-                id: selectedAchievement.id,
-                title: selectedAchievement.title,
-                description: selectedAchievement.description,
-                icon: selectedAchievement.id, // Use id as icon key
-                date: selectedAchievement.earnedDate,
-              }}
-            />
-          }
-          shareText={`I just earned the "${selectedAchievement.title}" badge on Catalyst Mom! 🎉`}
-          fileName={`catalyst-mom-${selectedAchievement.id}`}
+        <AchievementModal
+          achievement={{
+            id: selectedAchievement.id,
+            achievement_id: selectedAchievement.id,
+            title: selectedAchievement.title,
+            description: selectedAchievement.description,
+            icon: selectedAchievement.icon,
+            level: getModalLevel(selectedAchievement.rarity),
+            earned_at: selectedAchievement.earnedDate || new Date().toISOString(),
+          }}
+          open={!!selectedAchievement}
+          onOpenChange={(open) => {
+            if (!open) setSelectedAchievement(null);
+          }}
         />
       )}
     </>

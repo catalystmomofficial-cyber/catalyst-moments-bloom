@@ -49,6 +49,7 @@ const GroupDetail = () => {
 
   const isTTCGroup = group.journey === 'ttc';
   const isFreeGroup = !!group.isFree;
+  const canAccessFeed = Boolean(user) && (isFreeGroup || subscribed);
 
   const handleJoin = () => {
     if (!user) {
@@ -139,7 +140,33 @@ const GroupDetail = () => {
                 <h2 className="text-xl font-semibold mb-4">
                   {activeSubCategoryData?.label || 'Group Feed'}
                 </h2>
-                <DynamicCommunityFeed groupSlug={`${group.slug}-${activeSubCategory}`} isTTC={isTTCGroup} />
+                {canAccessFeed ? (
+                  <DynamicCommunityFeed groupSlug={`${group.slug}-${activeSubCategory}`} isTTC={isTTCGroup} />
+                ) : (
+                  <div className="rounded-xl border border-border bg-muted/30 p-6 text-center">
+                    <p className="font-medium text-foreground">
+                      {user ? 'This group is for subscribers.' : 'Sign in to join this community.'}
+                    </p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {user
+                        ? 'Mom Life General stays open for all logged-in users, but stage groups unlock with a subscription.'
+                        : 'You need an account to enter Mom Life General and a subscription to open stage-specific groups.'}
+                    </p>
+                    <Button
+                      className="mt-4"
+                      onClick={() => {
+                        if (!user) {
+                          navigate('/login');
+                          return;
+                        }
+
+                        setShowSubscriptionPrompt(true);
+                      }}
+                    >
+                      {user ? 'Unlock this group' : 'Go to login'}
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
