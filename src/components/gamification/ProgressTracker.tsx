@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Star, Target, Flame, Award, Zap } from 'lucide-react';
+import { usePoints } from '@/hooks/usePoints';
 
 interface Achievement {
   id: string;
@@ -20,53 +21,44 @@ interface ProgressTrackerProps {
 }
 
 export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
-  const [totalPoints, setTotalPoints] = useState(() => {
-    const saved = localStorage.getItem('userPoints');
-    return saved ? parseInt(saved) : 0;
-  });
+  const { getPoints } = usePoints();
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [level, setLevel] = useState(1);
   const [streak, setStreak] = useState(() => {
     const saved = localStorage.getItem('userStreak');
     const lastActive = localStorage.getItem('lastActiveDate');
     const today = new Date().toDateString();
-    
-    // Check if user skipped a day - if so, reset streak
+
     if (lastActive && lastActive !== today) {
       const lastActiveDate = new Date(lastActive);
       const todayDate = new Date(today);
       const daysDiff = Math.floor((todayDate.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24));
-      
       if (daysDiff > 1) {
-        // Skipped a day, reset streak
         localStorage.setItem('userStreak', '0');
         return 0;
       }
     }
-    
     return saved ? parseInt(saved) : 0;
   });
-  const [level, setLevel] = useState(() => {
-    const points = localStorage.getItem('userPoints');
-    const pointsNum = points ? parseInt(points) : 0;
-    return Math.floor(pointsNum / 100) + 1;
-  });
-  const [nextLevelPoints, setNextLevelPoints] = useState(() => {
-    const points = localStorage.getItem('userPoints');
-    const pointsNum = points ? parseInt(points) : 0;
-    const currentLevel = Math.floor(pointsNum / 100) + 1;
-    return currentLevel * 100;
-  });
 
-  // Update localStorage when points change
+  // Fetch real points from Supabase
   useEffect(() => {
-    localStorage.setItem('userPoints', totalPoints.toString());
+    const load = async () => {
+      const { total, level: lvl } = await getPoints();
+      setTotalPoints(total);
+      setLevel(lvl);
+    };
+    load();
+    // Refresh every 30s to stay current
+    const interval = setInterval(load, 30000);
+    return () => clearInterval(interval);
+  }, [getPoints]);
+
+  useEffect(() => {
     localStorage.setItem('userStreak', streak.toString());
-    
-    const newLevel = Math.floor(totalPoints / 100) + 1;
-    if (newLevel !== level) {
-      setLevel(newLevel);
-      setNextLevelPoints(newLevel * 100);
-    }
-  }, [totalPoints, streak, level]);
+  }, [streak]);
+
+  const nextLevelPoints = level * 100;
 
   const achievements: Achievement[] = [
     {

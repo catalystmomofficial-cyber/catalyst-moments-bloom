@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Bell, X, Heart, Activity, Users, Baby, Trophy, Info, Settings } from 'lucide-react';
+import { Bell, X, Heart, Activity, Users, Baby, Trophy, Info, Settings, Volume2, VolumeX } from 'lucide-react';
 import { useNotifications, type DbNotification } from '@/hooks/useNotifications';
 import { useAuth } from '@/contexts/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { NotificationPreferencesPanel } from './NotificationPreferencesPanel';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
 
 const typeIconMap: Record<string, React.ReactNode> = {
   reminder: <Heart className="h-4 w-4" />,
@@ -43,6 +44,17 @@ export const NotificationSystem = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
   const navigate = useNavigate();
+  const { playSound, isSoundEnabled, setSoundEnabled } = useSoundEffects();
+  const prevUnreadRef = useRef(unreadCount);
+  const soundOn = isSoundEnabled();
+
+  // Play notification sound when new unread arrives
+  useEffect(() => {
+    if (unreadCount > prevUnreadRef.current) {
+      playSound('notification');
+    }
+    prevUnreadRef.current = unreadCount;
+  }, [unreadCount, playSound]);
 
   if (!user) return null;
 
@@ -86,6 +98,15 @@ export const NotificationSystem = () => {
               )}
             </div>
             <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={() => setSoundEnabled(!soundOn)}
+                title={soundOn ? 'Mute notification sounds' : 'Enable notification sounds'}
+              >
+                {soundOn ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
+              </Button>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setShowPrefs(!showPrefs)}>
                 <Settings className="h-3.5 w-3.5" />
               </Button>

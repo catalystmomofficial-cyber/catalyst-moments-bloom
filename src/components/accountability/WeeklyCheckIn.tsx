@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import progressPhotoGuide from '@/assets/progress-photo-guide-woman.png';
+import { usePoints } from '@/hooks/usePoints';
 export const WeeklyCheckIn = () => {
   const {
     toast
@@ -18,6 +19,7 @@ export const WeeklyCheckIn = () => {
     user
   } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { awardPoints } = usePoints();
   const [progressPhotos, setProgressPhotos] = useState<{
     front?: {
       file: File;
@@ -138,8 +140,11 @@ export const WeeklyCheckIn = () => {
         });
         return;
       }
+      // Award points for weekly check-in
+      await awardPoints(15, 'weekly_checkin', 'Completed weekly check-in');
+
       toast({
-        title: "Check-in completed!",
+        title: "Check-in completed! +15 points 🎉",
         description: "Your weekly progress has been recorded"
       });
 

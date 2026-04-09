@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Smile, Frown, Meh, Heart, Zap, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useWellnessData } from '@/hooks/useWellnessData';
+import { usePoints } from '@/hooks/usePoints';
 
 export const MoodCheckIn = () => {
   const [open, setOpen] = useState(false);
@@ -19,6 +20,7 @@ export const MoodCheckIn = () => {
   
   const { addMoodEntry } = useWellnessData();
   const { toast } = useToast();
+  const { awardPoints } = usePoints();
 
   // Initialize mood tracking storage
   useEffect(() => {
@@ -107,11 +109,14 @@ export const MoodCheckIn = () => {
         }
       }
       
+      // Award 5 points for mood check-in
+      await awardPoints(5, 'mood_checkin', 'Daily mood check-in');
+
       const advice = getActionableAdvice();
-      
+
       toast({
-        title: "Mood logged successfully!",
-        description: advice.length > 0 
+        title: "Mood logged! +5 points ✨",
+        description: advice.length > 0
           ? `${advice[0].icon} ${advice[0].action}`
           : "Your wellness data has been updated.",
       });
