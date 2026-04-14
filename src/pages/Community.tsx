@@ -82,7 +82,7 @@ const Community = () => {
                 <Users className="h-5 w-5 mr-2" /> Join Discussions
               </Button>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black" onClick={() => handleInteractionClick('share')}>
-                <Camera className="h-5 w-5 mr-2" /> Share Your Story
+                <Camera className="h-5 w-5" />
               </Button>
             </div>
           </div>
