@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Check, Target, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { usePoints } from '@/hooks/usePoints';
 import { WorkoutPlayerProps, Exercise } from './types';
 import { getWorkoutData } from './WorkoutData';
 import VideoPlayer from './VideoPlayer';

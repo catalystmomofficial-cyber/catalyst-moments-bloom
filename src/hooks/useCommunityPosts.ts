@@ -27,6 +27,7 @@ export interface PostComment {
 
 export function useCommunityPosts(groupSlug: string = 'general', subCategory: string = 'general') {
   const { user } = useAuth();
+  const { awardPoints } = usePoints();
   const [posts, setPosts] = useState<CommunityPostData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
