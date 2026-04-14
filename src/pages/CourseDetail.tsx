@@ -43,6 +43,7 @@ export default function CourseDetail() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { awardPoints } = usePoints();
   
   const [course, setCourse] = useState<Course | null>(null);
   const [weeks, setWeeks] = useState<CourseWeek[]>([]);
