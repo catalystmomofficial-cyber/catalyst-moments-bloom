@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { usePoints } from '@/hooks/usePoints';
 import { ArrowLeft, Play, CheckCircle, Calendar, Clock, Target } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import WorkoutPlayer from "@/components/workouts/WorkoutPlayer";
@@ -42,6 +43,7 @@ export default function CourseDetail() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { awardPoints } = usePoints();
   
   const [course, setCourse] = useState<Course | null>(null);
   const [weeks, setWeeks] = useState<CourseWeek[]>([]);
@@ -189,13 +191,17 @@ export default function CourseDetail() {
 
       if (error) throw error;
 
+      // Award points for completing a workout day
+      await awardPoints(15, 'course_workout', `Completed Week ${activeWorkout.week}, Day ${activeWorkout.day}`);
+
       setIsWorkoutActive(false);
       setActiveWorkout(null);
       fetchCourseData();
 
       if (isLastDay) {
+        await awardPoints(50, 'course_complete', 'Completed the entire 30 Days Glow Up Challenge!');
         toast({
-          title: "🎉 Challenge Complete!",
+          title: "🎉 Challenge Complete! +50 bonus points",
           description: "Congratulations! You've completed the entire 30 Days Glow Up Challenge!",
         });
       }

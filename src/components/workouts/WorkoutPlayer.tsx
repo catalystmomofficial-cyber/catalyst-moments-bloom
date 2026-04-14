@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Check, Target, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { usePoints } from '@/hooks/usePoints';
 import { WorkoutPlayerProps, Exercise } from './types';
 import { getWorkoutData } from './WorkoutData';
 import VideoPlayer from './VideoPlayer';
@@ -13,6 +14,7 @@ import ExerciseList from './ExerciseList';
 
 export default function WorkoutPlayer({ week, day, onComplete, onBack }: WorkoutPlayerProps) {
   const { toast } = useToast();
+  const { awardPoints } = usePoints();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -87,9 +89,10 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
     setIsPlaying(false);
   };
 
-  const completeWorkout = () => {
+  const completeWorkout = async () => {
+    await awardPoints(15, 'workout_complete', `Completed Week ${week}, Day ${day} workout`);
     toast({
-      title: "Workout Complete! 🎉",
+      title: "Workout Complete! 🎉 +15 points",
       description: `Amazing work on Week ${week}, Day ${day}!`,
     });
     onComplete();

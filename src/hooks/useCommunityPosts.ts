@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePoints } from '@/hooks/usePoints';
 
 export interface CommunityPostData {
   id: string;
@@ -26,6 +27,7 @@ export interface PostComment {
 
 export function useCommunityPosts(groupSlug: string = 'general', subCategory: string = 'general') {
   const { user } = useAuth();
+  const { awardPoints } = usePoints();
   const [posts, setPosts] = useState<CommunityPostData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -106,8 +108,12 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
       sub_category: subCategory,
       content: content.trim(),
     });
-    if (error) console.error('Error creating post:', error);
-  }, [user, groupSlug, subCategory]);
+    if (!error) {
+      await awardPoints(10, 'community_post', 'Shared a community post');
+    } else {
+      console.error('Error creating post:', error);
+    }
+  }, [user, groupSlug, subCategory, awardPoints]);
 
   const toggleLike = useCallback(async (postId: string, currentlyLiked: boolean) => {
     if (!user) return;
@@ -164,8 +170,9 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
       if (post) {
         await supabase.from('community_posts').update({ comments_count: post.comments_count + 1 }).eq('id', postId);
       }
+      await awardPoints(5, 'community_comment', 'Commented on a community post');
     }
-  }, [user, posts]);
+  }, [user, posts, awardPoints]);
 
   return { posts, isLoading, createPost, toggleLike, fetchComments, addComment, refetch: fetchPosts };
 }
