@@ -205,7 +205,6 @@ export default function CourseDetail() {
           description: "Congratulations! You've completed the entire 30 Days Glow Up Challenge!",
         });
       }
-      }
     } catch (error) {
       console.error('Error completing workout:', error);
       toast({
