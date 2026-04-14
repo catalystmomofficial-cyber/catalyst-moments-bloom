@@ -191,15 +191,20 @@ export default function CourseDetail() {
 
       if (error) throw error;
 
+      // Award points for completing a workout day
+      await awardPoints(15, 'course_workout', `Completed Week ${activeWorkout.week}, Day ${activeWorkout.day}`);
+
       setIsWorkoutActive(false);
       setActiveWorkout(null);
       fetchCourseData();
 
       if (isLastDay) {
+        await awardPoints(50, 'course_complete', 'Completed the entire 30 Days Glow Up Challenge!');
         toast({
-          title: "🎉 Challenge Complete!",
+          title: "🎉 Challenge Complete! +50 bonus points",
           description: "Congratulations! You've completed the entire 30 Days Glow Up Challenge!",
         });
+      }
       }
     } catch (error) {
       console.error('Error completing workout:', error);
