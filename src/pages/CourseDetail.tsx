@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { usePoints } from '@/hooks/usePoints';
 import { ArrowLeft, Play, CheckCircle, Calendar, Clock, Target } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
 import WorkoutPlayer from "@/components/workouts/WorkoutPlayer";
