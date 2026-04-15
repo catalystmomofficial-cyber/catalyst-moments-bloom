@@ -95,9 +95,6 @@ const Community = () => {
               <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90" onClick={() => handleInteractionClick('join')}>
                 <Users className="h-5 w-5 mr-2" /> Join Discussions
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black" onClick={() => handleInteractionClick('share')}>
-                <Camera className="h-5 w-5" />
-              </Button>
             </div>
           </div>
         </div>
