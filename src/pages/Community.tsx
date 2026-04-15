@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Heart, MessageCircle, Users, Search, Camera, Star, Lock } from 'lucide-react';
+import { Heart, MessageCircle, Users, Search, Star, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
@@ -94,9 +94,6 @@ const Community = () => {
             <div className="flex flex-wrap gap-4 animate-fade-in">
               <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90" onClick={() => handleInteractionClick('join')}>
                 <Users className="h-5 w-5 mr-2" /> Join Discussions
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black" onClick={() => handleInteractionClick('share')}>
-                <Camera className="h-5 w-5" />
               </Button>
             </div>
           </div>
