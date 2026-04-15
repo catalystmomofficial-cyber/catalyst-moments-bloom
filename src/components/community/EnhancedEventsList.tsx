@@ -83,7 +83,11 @@ const upcomingEvents: Event[] = [
   },
 ];
 
-const EnhancedEventsList = () => {
+interface EnhancedEventsListProps {
+  onViewCalendar?: () => void;
+}
+
+const EnhancedEventsList = ({ onViewCalendar }: EnhancedEventsListProps) => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
 
@@ -112,7 +116,7 @@ const EnhancedEventsList = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold">Upcoming Events</h3>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={onViewCalendar}>
             View Calendar
           </Button>
         </div>

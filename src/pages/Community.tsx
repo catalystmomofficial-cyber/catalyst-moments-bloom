@@ -148,8 +148,6 @@ const Community = () => {
           <TabsContent value="feed" className="mt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-2/3 space-y-6">
-                <CheckoutModal isOpen={showSubscriptionPrompt} onClose={() => setShowSubscriptionPrompt(false)} />
-                
                 <DynamicCommunityFeed groupSlug="mom-life-general-general" />
               </div>
               
@@ -157,12 +155,15 @@ const Community = () => {
                 <ProgressTracker userStage={profile?.motherhood_stage} />
                 <Card>
                   <CardHeader className="pb-2">
-                    <EnhancedGroupsList />
+                    <EnhancedGroupsList 
+                      onManage={() => setActiveTab('groups')} 
+                      onViewAll={() => setActiveTab('groups')} 
+                    />
                   </CardHeader>
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <EnhancedEventsList />
+                    <EnhancedEventsList onViewCalendar={() => setActiveTab('events')} />
                   </CardHeader>
                 </Card>
                 <Card>
@@ -233,6 +234,8 @@ const Community = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <CheckoutModal isOpen={showSubscriptionPrompt} onClose={() => setShowSubscriptionPrompt(false)} />
     </PageLayout>
   );
 };
