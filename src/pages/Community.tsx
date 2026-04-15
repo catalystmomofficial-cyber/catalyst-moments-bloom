@@ -19,13 +19,14 @@ import { useToast } from '@/components/ui/use-toast';
 
 const Community = () => {
   const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
+  const location = useLocation();
+  const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const { user, profile, subscribed } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   
   const stageGroups = getGroupsForStage(profile?.motherhood_stage);
-  const location = useLocation();
-  const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
   
   const handleInteractionClick = (action: string) => {
     if (!user) {
@@ -35,6 +36,19 @@ const Community = () => {
     if (!subscribed) {
       setShowSubscriptionPrompt(true);
       return;
+    }
+    if (action === 'join' || action === 'share') {
+      setActiveTab('feed');
+      setTimeout(() => {
+        const feedArea = document.querySelector('textarea');
+        if (feedArea) {
+          feedArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          feedArea.focus();
+        }
+      }, 100);
+    }
+    if (action === 'join-group') {
+      setActiveTab('groups');
     }
   };
 
@@ -124,7 +138,7 @@ const Community = () => {
           </div>
         </div>
         
-        <Tabs defaultValue={initialTab} className="mb-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
           <TabsList>
             <TabsTrigger value="feed">Feed</TabsTrigger>
             <TabsTrigger value="groups">Groups</TabsTrigger>
