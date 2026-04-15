@@ -155,12 +155,15 @@ const Community = () => {
                 <ProgressTracker userStage={profile?.motherhood_stage} />
                 <Card>
                   <CardHeader className="pb-2">
-                    <EnhancedGroupsList />
+                    <EnhancedGroupsList 
+                      onManage={() => setActiveTab('groups')} 
+                      onViewAll={() => setActiveTab('groups')} 
+                    />
                   </CardHeader>
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <EnhancedEventsList />
+                    <EnhancedEventsList onViewCalendar={() => setActiveTab('events')} />
                   </CardHeader>
                 </Card>
                 <Card>
