@@ -19,14 +19,14 @@ import { useToast } from '@/components/ui/use-toast';
 
 const Community = () => {
   const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
-  const [activeTab, setActiveTab] = useState('feed');
+  const location = useLocation();
+  const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const { user, profile, subscribed } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   
   const stageGroups = getGroupsForStage(profile?.motherhood_stage);
-  const location = useLocation();
-  const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
   
   const handleInteractionClick = (action: string) => {
     if (!user) {
