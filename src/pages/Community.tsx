@@ -19,6 +19,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 const Community = () => {
   const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
+  const [activeTab, setActiveTab] = useState('feed');
   const { user, profile, subscribed } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -35,6 +36,19 @@ const Community = () => {
     if (!subscribed) {
       setShowSubscriptionPrompt(true);
       return;
+    }
+    if (action === 'join' || action === 'share') {
+      setActiveTab('feed');
+      setTimeout(() => {
+        const feedArea = document.querySelector('textarea');
+        if (feedArea) {
+          feedArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          feedArea.focus();
+        }
+      }, 100);
+    }
+    if (action === 'join-group') {
+      setActiveTab('groups');
     }
   };
 
