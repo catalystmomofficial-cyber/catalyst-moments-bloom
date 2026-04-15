@@ -64,7 +64,12 @@ const userGroups: Group[] = [
   },
 ];
 
-const EnhancedGroupsList = () => {
+interface EnhancedGroupsListProps {
+  onManage?: () => void;
+  onViewAll?: () => void;
+}
+
+const EnhancedGroupsList = ({ onManage, onViewAll }: EnhancedGroupsListProps) => {
   const getRandomActiveMembers = (count: number, recentMembers: number[]) => {
     return recentMembers.slice(0, Math.min(count, 4));
   };
@@ -75,7 +80,7 @@ const EnhancedGroupsList = () => {
         <h3 className="font-semibold flex items-center">
           <Users className="h-4 w-4 mr-2" /> Your Groups
         </h3>
-        <Button variant="ghost" size="sm" className="text-primary">
+        <Button variant="ghost" size="sm" className="text-primary" onClick={onManage}>
           Manage
         </Button>
       </div>
@@ -136,10 +141,8 @@ const EnhancedGroupsList = () => {
         ))}
       </div>
 
-      <Button variant="outline" size="sm" className="w-full" asChild>
-        <Link to="/community?tab=groups">
-          View All Groups
-        </Link>
+      <Button variant="outline" size="sm" className="w-full" onClick={onViewAll}>
+        View All Groups
       </Button>
     </div>
   );

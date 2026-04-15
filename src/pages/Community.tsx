@@ -148,8 +148,6 @@ const Community = () => {
           <TabsContent value="feed" className="mt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-2/3 space-y-6">
-                <CheckoutModal isOpen={showSubscriptionPrompt} onClose={() => setShowSubscriptionPrompt(false)} />
-                
                 <DynamicCommunityFeed groupSlug="mom-life-general-general" />
               </div>
               
@@ -233,6 +231,8 @@ const Community = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <CheckoutModal isOpen={showSubscriptionPrompt} onClose={() => setShowSubscriptionPrompt(false)} />
     </PageLayout>
   );
 };
