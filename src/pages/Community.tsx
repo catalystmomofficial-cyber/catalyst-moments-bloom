@@ -138,7 +138,7 @@ const Community = () => {
           </div>
         </div>
         
-        <Tabs defaultValue={initialTab} className="mb-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
           <TabsList>
             <TabsTrigger value="feed">Feed</TabsTrigger>
             <TabsTrigger value="groups">Groups</TabsTrigger>
