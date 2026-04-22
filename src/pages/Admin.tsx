@@ -79,6 +79,7 @@ const Admin = () => {
 
             <TabsContent value="users" className="space-y-6">
               <PendingUsersSection />
+              <StageChangeRequestsSection />
               <UsersSection />
               <UserPointsManager />
             </TabsContent>
