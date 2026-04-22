@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Shield, Check } from "lucide-react";
 import EmbeddedCheckout from "./EmbeddedCheckout";
-import PricingToggle from "./PricingToggle";
+import AnimatedPricingSection from "./AnimatedPricingSection";
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -102,7 +102,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
             </div>
           ) : !selectedPriceId ? (
             <>
-              <PricingToggle 
+              <AnimatedPricingSection
                 onSelectPlan={handleSelectPlan}
                 yearlyPriceId="price_1S54B1CNwyQa1NiQGKx1Ps0r"
               />
