@@ -73,15 +73,19 @@ const EventRegistrationModal = ({ isOpen, onClose, event }: EventRegistrationMod
 
     // Fire confirmation email (non-blocking — don't fail registration if email errors)
     supabase.functions
-      .invoke('send-event-confirmation', {
+      .invoke('send-transactional-email', {
         body: {
-          email: formData.email,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          eventTitle: event.title,
-          eventDate: event.date,
-          eventTime: event.time,
-          instructor: event.instructor,
+          templateName: 'event-confirmation',
+          recipientEmail: formData.email,
+          idempotencyKey: `event-confirm-${event.id}-${formData.email}`,
+          templateData: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            eventTitle: event.title,
+            eventDate: event.date,
+            eventTime: event.time,
+            instructor: event.instructor,
+          },
         },
       })
       .catch((err) => console.error('Confirmation email failed:', err));
