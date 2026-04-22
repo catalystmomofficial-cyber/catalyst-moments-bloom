@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/contexts/AuthContext";
-import aboutHero from "@/assets/about-hero.jpg";
+
 
 const About = () => {
   const navigate = useNavigate();
@@ -106,104 +106,50 @@ const About = () => {
         }
         .our-story-page .nav-cta:hover { background: var(--copper); color: white; }
         .our-story-page .hero {
-          min-height: 100vh;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          align-items: stretch;
+          min-height: 80vh;
+          display: flex; align-items: center; justify-content: center;
           position: relative; overflow: hidden;
-          padding: 0;
+          padding: 7rem 2rem 5rem;
         }
         .our-story-page .hero-bg {
           position: absolute; inset: 0;
           background:
-            radial-gradient(ellipse at 20% 50%, rgba(181,101,29,0.12) 0%, transparent 60%),
-            radial-gradient(ellipse at 80% 20%, rgba(244,197,160,0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 20% 50%, rgba(181,101,29,0.18) 0%, transparent 60%),
+            radial-gradient(ellipse at 80% 30%, rgba(244,197,160,0.08) 0%, transparent 50%),
             radial-gradient(ellipse at 50% 100%, rgba(181,101,29,0.08) 0%, transparent 50%);
           pointer-events: none;
         }
-        .our-story-page .hero-image {
-          position: relative;
-          background-image: url(${JSON.stringify(aboutHero)});
-          background-size: cover;
-          background-position: center;
-          min-height: 60vh;
-        }
-        .our-story-page .hero-image::after {
-          content: '';
-          position: absolute; inset: 0;
-          background: linear-gradient(to right, rgba(26,16,8,0) 60%, rgba(26,16,8,0.85) 100%),
-                      linear-gradient(to bottom, rgba(26,16,8,0.15) 0%, rgba(26,16,8,0.45) 100%);
-        }
-        .our-story-page .hero-image-frame {
-          position: absolute; inset: 2rem;
-          border: 1px solid rgba(244,197,160,0.18);
-          pointer-events: none;
-          z-index: 1;
-        }
-        .our-story-page .hero-image-tag {
-          position: absolute;
-          bottom: 2.5rem; left: 2.5rem;
-          z-index: 2;
-          font-size: 0.6rem;
-          letter-spacing: 0.3em;
-          text-transform: uppercase;
-          color: var(--peach);
-          opacity: 0.85;
-        }
-        .our-story-page .hero-text-col {
-          position: relative;
-          display: flex;
-          align-items: center;
-          padding: 8rem 4rem 5rem;
-        }
         .our-story-page .hero-content {
           position: relative; z-index: 1;
-          text-align: left;
-          max-width: 540px;
-        }
-        @media (max-width: 900px) {
-          .our-story-page .hero { grid-template-columns: 1fr; }
-          .our-story-page .hero-image { min-height: 45vh; }
-          .our-story-page .hero-image::after {
-            background: linear-gradient(to bottom, rgba(26,16,8,0.1) 0%, rgba(26,16,8,0.85) 100%);
-          }
-          .our-story-page .hero-text-col { padding: 4rem 1.5rem 4rem; text-align: center; }
-          .our-story-page .hero-content { text-align: center; margin: 0 auto; }
+          text-align: center;
+          max-width: 800px;
+          margin: 0 auto;
         }
         .our-story-page .hero-eyebrow {
           font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
           color: var(--copper); margin-bottom: 1.8rem;
-          display: flex; align-items: center; gap: 1rem;
           opacity: 0; animation: os-rise 1s ease 0.2s forwards;
-        }
-        .our-story-page .hero-eyebrow::after {
-          content: ''; flex: 1; height: 1px;
-          background: linear-gradient(to right, rgba(181,101,29,0.4), transparent);
-          max-width: 60px;
         }
         .our-story-page .hero-title {
           font-family: 'Playfair Display', serif;
-          font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+          font-size: clamp(2.5rem, 6vw, 4.5rem);
           font-weight: 400; line-height: 1.15; margin-bottom: 1.8rem;
           opacity: 0; animation: os-rise 1s ease 0.4s forwards;
         }
         .our-story-page .hero-title em { font-style: italic; color: var(--peach); }
         .our-story-page .hero-sub {
-          font-size: 1rem; color: rgba(253,246,238,0.65);
-          line-height: 1.85; max-width: 480px; margin: 0 0 2.5rem;
+          font-size: 1.05rem; color: rgba(253,246,238,0.65);
+          line-height: 1.85; max-width: 580px; margin: 0 auto 2.5rem;
           opacity: 0; animation: os-rise 1s ease 0.6s forwards;
         }
         .our-story-page .scroll-indicator {
-          display: flex; flex-direction: row; align-items: center; gap: 1rem;
+          display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
           opacity: 0; animation: os-rise 1s ease 0.9s forwards;
         }
         .our-story-page .scroll-line {
-          width: 40px; height: 1px;
-          background: linear-gradient(to right, var(--copper), transparent);
+          width: 1px; height: 50px;
+          background: linear-gradient(to bottom, var(--copper), transparent);
           animation: os-pulse-line 2s ease-in-out infinite;
-        }
-        @media (max-width: 900px) {
-          .our-story-page .scroll-indicator { justify-content: center; }
         }
         .our-story-page .scroll-text {
           font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-gray);
