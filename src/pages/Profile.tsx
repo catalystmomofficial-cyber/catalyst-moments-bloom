@@ -204,21 +204,45 @@ const Profile = () => {
                   
                   <div className="space-y-2">
                     <Label htmlFor="motherhood-stage">Motherhood Stage</Label>
-                    <Select 
-                      value={motherhoodStage} 
+                    <Select
+                      value={motherhoodStage}
                       onValueChange={handleStageChange}
+                      disabled={!!pendingRequest}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select your stage" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="ttc">Trying to Conceive</SelectItem>
-                        <SelectItem value="pregnant">Pregnant</SelectItem>
+                        <SelectItem value="pregnancy">Pregnant</SelectItem>
                         <SelectItem value="postpartum">Postpartum (0-12 months)</SelectItem>
-                        <SelectItem value="toddler">Toddler Mom</SelectItem>
                         <SelectItem value="none">Prefer not to say</SelectItem>
                       </SelectContent>
                     </Select>
+
+                    {pendingRequest && (
+                      <Alert className="mt-2">
+                        <Clock className="h-4 w-4" />
+                        <AlertDescription>
+                          Stage change to <strong>{pendingRequest.requested_stage}</strong> is pending admin approval.
+                          You can't request another change until this one is reviewed.
+                        </AlertDescription>
+                      </Alert>
+                    )}
+
+                    {hasExistingStage && stageChanged && !pendingRequest && (
+                      <div className="space-y-2 mt-2 p-3 border border-dashed rounded-md bg-muted/30">
+                        <p className="text-sm text-muted-foreground">
+                          Switching stages requires admin approval to prevent abuse. Please tell us why:
+                        </p>
+                        <Textarea
+                          value={stageReason}
+                          onChange={(e) => setStageReason(e.target.value)}
+                          placeholder="Optional: explain why you need to switch..."
+                          className="h-20"
+                        />
+                      </div>
+                    )}
                   </div>
                   
                   <div className="space-y-2">
