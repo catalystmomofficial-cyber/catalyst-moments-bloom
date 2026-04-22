@@ -318,25 +318,19 @@ const About = () => {
         </nav>
 
         <section className="hero">
-          <div className="hero-image" role="img" aria-label="A serene moment — the quiet behind Catalyst Mom">
-            <div className="hero-image-frame" />
-            <div className="hero-image-tag">Born from love</div>
-          </div>
-          <div className="hero-text-col">
-            <div className="hero-bg" />
-            <div className="hero-content">
-              <div className="hero-eyebrow">Our Story — Catalyst Mom</div>
-              <h1 className="hero-title">
-                This was never just<br />
-                about <em>fitness.</em>
-              </h1>
-              <p className="hero-sub">
-                Catalyst Mom was born from love, from grief, from watching the women who matter most suffer through something that didn't have to be that hard.
-              </p>
-              <div className="scroll-indicator">
-                <div className="scroll-line" />
-                <div className="scroll-text">Read our story</div>
-              </div>
+          <div className="hero-bg" />
+          <div className="hero-content">
+            <div className="hero-eyebrow">Our Story — Catalyst Mom</div>
+            <h1 className="hero-title">
+              This was never just<br />
+              about <em>fitness.</em>
+            </h1>
+            <p className="hero-sub">
+              Catalyst Mom was born from love, from grief, from watching the women who matter most suffer through something that didn't have to be that hard.
+            </p>
+            <div className="scroll-indicator">
+              <div className="scroll-line" />
+              <div className="scroll-text">Read our story</div>
             </div>
           </div>
         </section>
