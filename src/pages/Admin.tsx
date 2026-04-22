@@ -17,6 +17,7 @@ import { BlogAnalyticsDashboard } from '@/components/admin/BlogAnalyticsDashboar
 import { SubscriptionSection } from '@/components/admin/SubscriptionSection';
 import { BlogSchedulerSetup } from '@/components/admin/BlogSchedulerSetup';
 import { StageChangeRequestsSection } from '@/components/admin/StageChangeRequestsSection';
+import { EventRegistrationsSection } from '@/components/admin/EventRegistrationsSection';
 
 const Admin = () => {
   return (
@@ -80,6 +81,7 @@ const Admin = () => {
             <TabsContent value="users" className="space-y-6">
               <PendingUsersSection />
               <StageChangeRequestsSection />
+              <EventRegistrationsSection />
               <UsersSection />
               <UserPointsManager />
             </TabsContent>

@@ -3,10 +3,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Users, MessageCircle, TrendingUp } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Users, MessageCircle, TrendingUp, Lock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/components/ui/use-toast';
+import { getGroupsForStage, groups as allGroups, type CommunityGroup } from './groups';
+import CheckoutModal from '@/components/subscription/CheckoutModal';
 
-// Import member avatars
 import mom1 from '@/assets/member-avatars/mom-1.jpg';
 import mom2 from '@/assets/member-avatars/mom-2.jpg';
 import mom3 from '@/assets/member-avatars/mom-3.jpg';
@@ -16,53 +19,23 @@ import mom6 from '@/assets/member-avatars/mom-6.jpg';
 
 const memberAvatars = [mom1, mom2, mom3, mom4, mom5, mom6];
 
-interface Group {
-  id: string;
-  name: string;
-  shortName: string;
-  memberCount: number;
-  hasNewPosts: boolean;
-  activeNow: number;
-  description: string;
-  color: string;
-  recentMembers: number[];
-}
+const colorForGroup = (g: CommunityGroup) => {
+  switch (g.journey) {
+    case 'ttc': return 'bg-pink-500';
+    case 'pregnant': return 'bg-purple-500';
+    case 'postpartum': return 'bg-rose-500';
+    default: return 'bg-emerald-500';
+  }
+};
 
-const userGroups: Group[] = [
-  {
-    id: 'postpartum-support',
-    name: 'Postpartum Support',
-    shortName: 'PP',
-    memberCount: 1245,
-    hasNewPosts: true,
-    activeNow: 23,
-    description: 'Support and guidance for the postpartum journey',
-    color: 'bg-pink-500',
-    recentMembers: [0, 1, 2, 3],
-  },
-  {
-    id: 'working-moms',
-    name: 'Working Moms',
-    shortName: 'WM',
-    memberCount: 876,
-    hasNewPosts: false,
-    activeNow: 15,
-    description: 'Balancing career and motherhood together',
-    color: 'bg-blue-500',
-    recentMembers: [1, 3, 4],
-  },
-  {
-    id: 'fitness-together',
-    name: 'Fitness Together',
-    shortName: 'FT',
-    memberCount: 2104,
-    hasNewPosts: false,
-    activeNow: 31,
-    description: 'Fitness motivation and workout buddies',
-    color: 'bg-green-500',
-    recentMembers: [0, 2, 4, 5],
-  },
-];
+const shortName = (g: CommunityGroup) =>
+  g.badge ||
+  g.name
+    .split(' ')
+    .map(w => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
 interface EnhancedGroupsListProps {
   onManage?: () => void;
@@ -70,8 +43,35 @@ interface EnhancedGroupsListProps {
 }
 
 const EnhancedGroupsList = ({ onManage, onViewAll }: EnhancedGroupsListProps) => {
-  const getRandomActiveMembers = (count: number, recentMembers: number[]) => {
-    return recentMembers.slice(0, Math.min(count, 4));
+  const navigate = useNavigate();
+  const { user, profile, subscribed } = useAuth();
+  const { toast } = useToast();
+  const [showCheckout, setShowCheckout] = React.useState(false);
+
+  // Always include Mom Life General + stage-relevant groups, deduped
+  const stageGroups = getGroupsForStage(profile?.motherhood_stage);
+  const general = allGroups.find(g => g.slug === 'mom-life-general');
+  const merged: CommunityGroup[] = [];
+  for (const g of [...(general ? [general] : []), ...stageGroups]) {
+    if (!merged.find(m => m.slug === g.slug)) merged.push(g);
+  }
+  const userGroups = merged.slice(0, 4);
+
+  const handleOpenGroup = (g: CommunityGroup) => {
+    if (!user) {
+      toast({ title: 'Sign in required', description: 'Please sign in to view groups', variant: 'destructive' });
+      navigate('/login');
+      return;
+    }
+    if (g.isFree) {
+      navigate(`/community/groups/${g.slug}`);
+      return;
+    }
+    if (!subscribed) {
+      setShowCheckout(true);
+      return;
+    }
+    navigate(`/community/groups/${g.slug}`);
   };
 
   return (
@@ -86,64 +86,78 @@ const EnhancedGroupsList = ({ onManage, onViewAll }: EnhancedGroupsListProps) =>
       </div>
 
       <div className="space-y-3">
-        {userGroups.map((group) => (
-          <Card key={group.id} className="hover:shadow-sm transition-shadow cursor-pointer">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3 flex-1">
-                  <div className={`w-10 h-10 rounded-full ${group.color} flex items-center justify-center relative`}>
-                    <span className="text-xs font-medium text-white">{group.shortName}</span>
-                    {group.hasNewPosts && (
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-background" />
-                    )}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium truncate">{group.name}</p>
-                      {group.hasNewPosts && (
-                        <Badge variant="secondary" className="text-xs">
-                          New posts
-                        </Badge>
+        {userGroups.map((g) => {
+          const isLocked = !g.isFree && !subscribed;
+          return (
+            <Card
+              key={g.slug}
+              className="hover:shadow-sm transition-shadow cursor-pointer"
+              onClick={() => handleOpenGroup(g)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    <div className={`w-10 h-10 rounded-full ${colorForGroup(g)} flex items-center justify-center relative shrink-0`}>
+                      <span className="text-xs font-medium text-white">{shortName(g)}</span>
+                      {isLocked && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-background rounded-full border border-border flex items-center justify-center">
+                          <Lock className="h-2.5 w-2.5 text-muted-foreground" />
+                        </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Users className="h-3 w-3" />
-                        {group.memberCount.toLocaleString()}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <TrendingUp className="h-3 w-3" />
-                        {group.activeNow} active
-                      </span>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-sm font-medium truncate">{g.name}</p>
+                        {g.isFree && (
+                          <Badge variant="outline" className="text-xs text-green-600 border-green-600">Free</Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <Users className="h-3 w-3" />
+                          {g.memberCount.toLocaleString()}
+                        </span>
+                        <span className="flex items-center gap-1 capitalize">
+                          <TrendingUp className="h-3 w-3" />
+                          {g.journey}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <div className="flex -space-x-1">
-                    {getRandomActiveMembers(3, group.recentMembers).map((avatarIndex, index) => (
-                      <Avatar key={index} className="w-6 h-6 border-2 border-background">
-                        <AvatarImage src={memberAvatars[avatarIndex]} alt={`Member ${index + 1}`} />
-                        <AvatarFallback className="text-xs">M{index + 1}</AvatarFallback>
-                      </Avatar>
-                    ))}
-                  </div>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to={`/community/groups/${group.id}`}>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex -space-x-1">
+                      {memberAvatars.slice(0, 3).map((avatar, index) => (
+                        <Avatar key={index} className="w-6 h-6 border-2 border-background">
+                          <AvatarImage src={avatar} alt={`Member ${index + 1}`} />
+                          <AvatarFallback className="text-xs">M{index + 1}</AvatarFallback>
+                        </Avatar>
+                      ))}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenGroup(g);
+                      }}
+                    >
                       <MessageCircle className="h-4 w-4" />
-                    </Link>
-                  </Button>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       <Button variant="outline" size="sm" className="w-full" onClick={onViewAll}>
         View All Groups
       </Button>
+
+      <CheckoutModal isOpen={showCheckout} onClose={() => setShowCheckout(false)} />
     </div>
   );
 };
