@@ -170,16 +170,17 @@ export const PersonalizedRecommendations = () => {
 
       {/* Personalized Recommendations */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5" />
-            Your Personalized Recommendations
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 space-y-0">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Sparkles className="h-5 w-5 flex-shrink-0" />
+            <span>Your Personalized Recommendations</span>
           </CardTitle>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={generateRecommendations}
             disabled={refreshing}
+            className="self-start sm:self-auto gap-2"
           >
             {refreshing ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -193,12 +194,12 @@ export const PersonalizedRecommendations = () => {
           <div className="space-y-4">
             {recommendations.map((rec) => (
               <div key={rec.id} className="p-4 rounded-lg border bg-card">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{rec.icon}</span>
-                    <h3 className="font-semibold">{rec.title}</h3>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-2xl flex-shrink-0">{rec.icon}</span>
+                    <h3 className="font-semibold break-words">{rec.title}</h3>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2 sm:flex-shrink-0">
                     <Badge className={getPriorityColor(rec.priority)}>
                       {rec.priority}
                     </Badge>
@@ -207,26 +208,30 @@ export const PersonalizedRecommendations = () => {
                     </Badge>
                   </div>
                 </div>
-                
-                <p className="text-muted-foreground mb-3">{rec.description}</p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-muted-foreground">
-                    <span className="font-medium">Time:</span> {rec.timeframe} • 
-                    <span className="font-medium ml-1">Why:</span> {rec.reasoning}
+
+                <p className="text-muted-foreground mb-3 text-sm sm:text-base">{rec.description}</p>
+
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+                  <div className="text-sm text-muted-foreground space-y-1 min-w-0 flex-1">
+                    <div>
+                      <span className="font-medium text-foreground">Time:</span> {rec.timeframe}
+                    </div>
+                    <div>
+                      <span className="font-medium text-foreground">Why:</span> {rec.reasoning}
+                    </div>
                   </div>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" className="w-full sm:w-auto sm:flex-shrink-0">
                     {rec.action}
                   </Button>
                 </div>
               </div>
             ))}
           </div>
-          
+
           <div className="mt-6 p-4 rounded-lg bg-muted/30 border">
             <p className="text-sm text-muted-foreground text-center">
-              💡 These recommendations are personalized based on your current wellness data, 
-              journey stage ({currentJourney} - {currentStage}), and recent activities. 
+              💡 These recommendations are personalized based on your current wellness data,
+              journey stage ({currentJourney} - {currentStage}), and recent activities.
               They update automatically as you log new data.
             </p>
           </div>
