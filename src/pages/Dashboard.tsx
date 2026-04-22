@@ -31,6 +31,7 @@ import AffiliateButton from '@/components/affiliate/AffiliateButton';
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
 import { AchievementBadges } from '@/components/profile/AchievementBadges';
 import { MonthlyChallenge } from '@/components/challenges/MonthlyChallenge';
+import { PushNotificationPrompt } from '@/components/notifications/PushNotificationPrompt';
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
