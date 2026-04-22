@@ -50,21 +50,8 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
   };
 
   const handleClick = () => {
-    if (!isAuthenticated) {
-      // Redirect to affiliate page (now accessible to guests)
-      window.location.href = '/affiliate';
-      return;
-    }
-
-    if (affiliateStatus === 'approved') {
-      // Redirect to affiliate dashboard
-      window.location.href = '/affiliate';
-      return;
-    }
-
-    if (affiliateStatus === 'none' || affiliateStatus === 'rejected') {
-      setIsInfoOpen(true);
-    }
+    // Always route to the Partner landing page
+    window.location.href = '/affiliate';
   };
 
   const getButtonText = () => {
