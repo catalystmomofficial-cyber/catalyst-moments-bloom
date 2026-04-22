@@ -196,13 +196,36 @@ const Profile = () => {
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
               <Avatar className="h-32 w-32">
-                <AvatarImage src="" alt={profile?.display_name || 'User'} />
+                <AvatarImage src={avatarUrl || ''} alt={profile?.display_name || 'User'} />
                 <AvatarFallback className="text-2xl bg-primary/20">
                   {profile?.display_name ? getInitials(profile.display_name) : user?.email?.[0]?.toUpperCase() || "CM"}
                 </AvatarFallback>
               </Avatar>
-              <Button variant="outline" className="w-full">
-                <Upload className="mr-2 h-4 w-4" /> Upload Photo
+              {profile?.display_name && (
+                <p className="text-center font-semibold text-base">{profile.display_name}</p>
+              )}
+              {user?.email && (
+                <p className="text-center text-xs text-muted-foreground -mt-2">{user.email}</p>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarUpload}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingAvatar}
+              >
+                {uploadingAvatar ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Uploading...</>
+                ) : (
+                  <><Upload className="mr-2 h-4 w-4" /> {avatarUrl ? 'Change Photo' : 'Upload Photo'}</>
+                )}
               </Button>
             </CardContent>
           </Card>
