@@ -16,6 +16,7 @@ import { BlogPostManager } from '@/components/admin/BlogPostManager';
 import { BlogAnalyticsDashboard } from '@/components/admin/BlogAnalyticsDashboard';
 import { SubscriptionSection } from '@/components/admin/SubscriptionSection';
 import { BlogSchedulerSetup } from '@/components/admin/BlogSchedulerSetup';
+import { StageChangeRequestsSection } from '@/components/admin/StageChangeRequestsSection';
 
 const Admin = () => {
   return (
