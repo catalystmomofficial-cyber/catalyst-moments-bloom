@@ -27,6 +27,27 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingRequest, setPendingRequest] = useState<{ requested_stage: string; created_at: string } | null>(null);
+  const [stageReason, setStageReason] = useState("");
+  const [requestingStage, setRequestingStage] = useState(false);
+
+  const currentStage = (profile?.motherhood_stage as MotherhoodStage) || "none";
+  const hasExistingStage = currentStage && currentStage !== "none";
+  const stageChanged = motherhoodStage !== currentStage;
+
+  // Load any pending stage change request
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("stage_change_requests" as any)
+      .select("requested_stage, created_at")
+      .eq("user_id", user.id)
+      .eq("status", "pending")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setPendingRequest(data as any);
+      });
+  }, [user]);
 
   // If not authenticated, redirect to login
   if (!isLoading && !isAuthenticated) {
@@ -46,12 +67,46 @@ const Profile = () => {
       .toUpperCase();
   };
 
+  const submitStageRequest = async () => {
+    if (!user) return;
+    setRequestingStage(true);
+    const { data, error } = await supabase.rpc("request_stage_change" as any, {
+      p_requested_stage: motherhoodStage,
+      p_reason: stageReason || null,
+    });
+    setRequestingStage(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Stage change request submitted. An admin will review it shortly.");
+    setPendingRequest({ requested_stage: motherhoodStage, created_at: new Date().toISOString() });
+    setStageReason("");
+    setMotherhoodStage(currentStage);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
+
+    // If user is trying to change stage and already has one, require approval
+    if (hasExistingStage && stageChanged) {
+      if (pendingRequest) {
+        setError("You already have a pending stage change request.");
+        return;
+      }
+      await submitStageRequest();
+      // Save other fields without stage change
+      setIsSubmitting(true);
+      try {
+        await updateProfile({ display_name: name, bio });
+      } catch {}
+      setIsSubmitting(false);
+      return;
+    }
+
     setIsSubmitting(true);
-    
     try {
       await updateProfile({
         display_name: name,
