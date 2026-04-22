@@ -21,7 +21,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               Made for Every Stage of Motherhood
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
-              You Should Not Have to <span className="text-catalyst-copper">Figure This Out</span> Alone.
+              Your Wellness <span className="text-catalyst-copper">Journey</span> Through Motherhood
             </h1>
             <p className="text-lg mb-8 text-muted-foreground max-w-lg leading-relaxed">
               Catalyst Mom empowers you with personalized fitness, nutrition, self-care, and community support — designed for every stage of motherhood.
