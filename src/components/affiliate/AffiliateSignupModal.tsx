@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,82 +20,94 @@ interface AffiliateSignupModalProps {
   onClose: () => void;
 }
 
+const ROLE_OPTIONS = [
+  { value: 'active_member', label: 'Active Member (current Catalyst Mom user)' },
+  { value: 'wellness_pro', label: 'Wellness Professional (OB, midwife, doula, PT...)' },
+  { value: 'creator', label: 'Creator / Mom Blogger / Influencer' },
+  { value: 'other_advocate', label: 'Other Advocate' },
+];
+
+const isValidEmail = (email: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
 const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    socialMediaHandles: '',
-    audienceSize: '',
-    experience: '',
-    motivation: ''
+    role: '',
+    socialHandle: '',
+    motivation: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Security validation: Require email for all users
+
     const email = user?.email || formData.email;
     if (!email || !isValidEmail(email)) {
       toast({
-        title: "Email Required",
-        description: "Please provide a valid email address.",
-        variant: "destructive",
-        duration: 5000,
+        title: 'Email Required',
+        description: 'Please provide a valid email address.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!formData.role) {
+      toast({
+        title: 'Role Required',
+        description: 'Please tell us which best describes you.',
+        variant: 'destructive',
       });
       return;
     }
 
     setIsLoading(true);
     try {
+      const roleLabel =
+        ROLE_OPTIONS.find((r) => r.value === formData.role)?.label || formData.role;
+
       const { error } = await (supabase as any).rpc('create_affiliate_application', {
         full_name_param: formData.fullName,
-        social_media_param: formData.socialMediaHandles,
-        audience_size_param: formData.audienceSize,
-        experience_param: formData.experience,
+        social_media_param: formData.socialHandle,
+        audience_size_param: roleLabel,
+        experience_param: roleLabel,
         motivation_param: formData.motivation,
-        email_param: email
+        email_param: email,
       });
 
       if (error) throw error;
 
       toast({
-        title: "Application Submitted! ✨",
-        description: "We'll review your application within 24 hours and get back to you via email.",
+        title: 'Application Submitted ✨',
+        description:
+          "We'll review your application and get back to you via email within 48 hours.",
         duration: 5000,
       });
-      
+
       onClose();
       setFormData({
         fullName: '',
         email: '',
-        socialMediaHandles: '',
-        audienceSize: '',
-        experience: '',
-        motivation: ''
+        role: '',
+        socialHandle: '',
+        motivation: '',
       });
     } catch (error: any) {
       toast({
-        title: "Submission failed",
-        description: error.message || "Please try again later.",
-        variant: "destructive",
-        duration: 5000,
+        title: 'Submission failed',
+        description: error.message || 'Please try again later.',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  // Email validation helper
-  const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   };
 
   return (
@@ -96,10 +115,13 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
-            Join Catalyst Moms—Empower Moms, <span className="text-2xl font-bold">Earn $35 Per Sale!</span>
+            Apply to Partner with Catalyst Mom
           </DialogTitle>
+          <p className="text-sm text-muted-foreground text-center mt-2">
+            Help a mama heal — earn $29 for every paid referral.
+          </p>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="fullName">Full Name *</Label>
@@ -109,6 +131,7 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
               onChange={(e) => handleChange('fullName', e.target.value)}
               required
               disabled={isLoading}
+              placeholder="Your full name"
             />
           </div>
 
@@ -126,69 +149,62 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
               />
             </div>
           )}
-          
+
           <div>
-            <Label htmlFor="socialMedia">Social Media Handles</Label>
+            <Label htmlFor="role">Which best describes you? *</Label>
+            <Select
+              value={formData.role}
+              onValueChange={(v) => handleChange('role', v)}
+              disabled={isLoading}
+            >
+              <SelectTrigger id="role">
+                <SelectValue placeholder="Select an option" />
+              </SelectTrigger>
+              <SelectContent>
+                {ROLE_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="socialHandle">Social Handle / Website</Label>
             <Input
-              id="socialMedia"
-              placeholder="@yourusername on Instagram, TikTok, etc."
-              value={formData.socialMediaHandles}
-              onChange={(e) => handleChange('socialMediaHandles', e.target.value)}
+              id="socialHandle"
+              placeholder="@yourhandle or yourwebsite.com"
+              value={formData.socialHandle}
+              onChange={(e) => handleChange('socialHandle', e.target.value)}
               disabled={isLoading}
             />
           </div>
-          
+
           <div>
-            <Label htmlFor="audience">Audience Size (approximate)</Label>
-            <Input
-              id="audience"
-              placeholder="e.g., 1K Instagram followers, 500 email subscribers"
-              value={formData.audienceSize}
-              onChange={(e) => handleChange('audienceSize', e.target.value)}
-              disabled={isLoading}
-            />
-          </div>
-          
-          <div>
-            <Label htmlFor="experience">Previous Affiliate/Marketing Experience</Label>
-            <Textarea
-              id="experience"
-              placeholder="Tell us about any previous experience with affiliate marketing, content creation, or promoting products..."
-              value={formData.experience}
-              onChange={(e) => handleChange('experience', e.target.value)}
-              disabled={isLoading}
-              rows={3}
-            />
-          </div>
-          
-          <div>
-            <Label htmlFor="motivation">Which moms do you want to help first? *</Label>
+            <Label htmlFor="motivation">
+              Why do you want to partner with Catalyst Mom? *
+            </Label>
             <Textarea
               id="motivation"
-              placeholder="Share your story and why you're passionate about helping other moms..."
+              placeholder="Share your story and why you want to help moms heal..."
               value={formData.motivation}
               onChange={(e) => handleChange('motivation', e.target.value)}
               required
               disabled={isLoading}
-              rows={3}
+              rows={4}
             />
           </div>
-          
-          <div className="pt-4">
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? 'Submitting...' : 'Submit Application'}
-            </Button>
-          </div>
+
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading ? 'Submitting...' : 'Submit Application'}
+          </Button>
+
+          <p className="text-xs text-muted-foreground text-center">
+            By applying, you agree to our Partner Terms. We respect your privacy
+            and will never share your data.
+          </p>
         </form>
-        
-        <div className="text-xs text-muted-foreground mt-4 p-3 bg-muted rounded-lg">
-          <p className="font-medium mb-1">What happens next?</p>
-          <ul className="space-y-1">
-            <li>• We'll review your application within 24 hours</li>
-            <li>• If approved, you'll receive an email with your affiliate dashboard access</li>
-            <li>• Start earning <span className="font-bold text-lg">$35 per sale</span> for every subscription, course, or meal plan!</li>
-          </ul>
-        </div>
       </DialogContent>
     </Dialog>
   );
