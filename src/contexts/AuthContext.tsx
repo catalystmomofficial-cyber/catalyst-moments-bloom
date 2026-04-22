@@ -11,6 +11,7 @@ export interface UserProfile {
   display_name: string | null;
   motherhood_stage: string | null;
   bio: string | null;
+  avatar_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -29,7 +30,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string, stage: MotherhoodStage, referralCode?: string | null) => Promise<void>;
   logout: () => Promise<void>;
-  updateProfile: (data: { display_name?: string; motherhood_stage?: string; bio?: string }) => Promise<void>;
+  updateProfile: (data: { display_name?: string; motherhood_stage?: string; bio?: string; avatar_url?: string }) => Promise<void>;
   checkSubscription: () => Promise<void>;
 }
 

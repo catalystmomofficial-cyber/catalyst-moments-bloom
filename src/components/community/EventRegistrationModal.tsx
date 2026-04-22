@@ -71,10 +71,25 @@ const EventRegistrationModal = ({ isOpen, onClose, event }: EventRegistrationMod
       return;
     }
 
+    // Fire confirmation email (non-blocking — don't fail registration if email errors)
+    supabase.functions
+      .invoke('send-event-confirmation', {
+        body: {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          eventTitle: event.title,
+          eventDate: event.date,
+          eventTime: event.time,
+          instructor: event.instructor,
+        },
+      })
+      .catch((err) => console.error('Confirmation email failed:', err));
+
     setIsSuccess(true);
     toast({
       title: "Registration Successful!",
-      description: `You're registered for ${event.title}. You'll receive a confirmation email shortly.`,
+      description: `You're registered for ${event.title}. A confirmation email is on its way.`,
     });
 
     // Reset form after 3 seconds

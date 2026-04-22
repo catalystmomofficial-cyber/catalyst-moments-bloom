@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,10 +30,19 @@ const Profile = () => {
   const [pendingRequest, setPendingRequest] = useState<{ requested_stage: string; created_at: string } | null>(null);
   const [stageReason, setStageReason] = useState("");
   const [requestingStage, setRequestingStage] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(profile?.avatar_url || null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const currentStage = (profile?.motherhood_stage as MotherhoodStage) || "none";
   const hasExistingStage = currentStage && currentStage !== "none";
   const stageChanged = motherhoodStage !== currentStage;
+
+  // Sync avatar when profile loads
+  useEffect(() => {
+    setAvatarUrl(profile?.avatar_url || null);
+    if (profile?.display_name) setName(profile.display_name);
+  }, [profile?.avatar_url, profile?.display_name]);
 
   // Load any pending stage change request
   useEffect(() => {
@@ -65,6 +74,44 @@ const Profile = () => {
       .map(n => n[0])
       .join("")
       .toUpperCase();
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be smaller than 5MB");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const filePath = `${user.id}/avatar-${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true, cacheControl: "3600" });
+      if (uploadError) throw uploadError;
+
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(filePath);
+      const publicUrl = pub.publicUrl;
+
+      await updateProfile({ avatar_url: publicUrl });
+      setAvatarUrl(publicUrl);
+      toast.success("Profile photo updated!");
+    } catch (err) {
+      console.error(err);
+      toast.error(err instanceof Error ? err.message : "Failed to upload photo");
+    } finally {
+      setUploadingAvatar(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const submitStageRequest = async () => {
@@ -149,13 +196,36 @@ const Profile = () => {
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
               <Avatar className="h-32 w-32">
-                <AvatarImage src="" alt={profile?.display_name || 'User'} />
+                <AvatarImage src={avatarUrl || ''} alt={profile?.display_name || 'User'} />
                 <AvatarFallback className="text-2xl bg-primary/20">
                   {profile?.display_name ? getInitials(profile.display_name) : user?.email?.[0]?.toUpperCase() || "CM"}
                 </AvatarFallback>
               </Avatar>
-              <Button variant="outline" className="w-full">
-                <Upload className="mr-2 h-4 w-4" /> Upload Photo
+              {profile?.display_name && (
+                <p className="text-center font-semibold text-base">{profile.display_name}</p>
+              )}
+              {user?.email && (
+                <p className="text-center text-xs text-muted-foreground -mt-2">{user.email}</p>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarUpload}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingAvatar}
+              >
+                {uploadingAvatar ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Uploading...</>
+                ) : (
+                  <><Upload className="mr-2 h-4 w-4" /> {avatarUrl ? 'Change Photo' : 'Upload Photo'}</>
+                )}
               </Button>
             </CardContent>
           </Card>
