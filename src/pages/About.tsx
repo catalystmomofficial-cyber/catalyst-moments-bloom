@@ -482,9 +482,14 @@ const About = () => {
             <a href={user ? "/dashboard" : "/register"} onClick={handleStart} className="cta-btn">
               Start Your Journey
             </a>
-            <Link to="/questionnaire" className="cta-btn-ghost">
+            <a
+              href="https://catalystmom.online"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cta-btn-ghost"
+            >
               Take the Free Assessment
-            </Link>
+            </a>
           </div>
         </section>
 
