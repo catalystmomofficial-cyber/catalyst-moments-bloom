@@ -94,6 +94,10 @@ const Dashboard = () => {
           </div>
         ) : (
           <>
+            {/* Push Notification Prompt */}
+            <div className="mb-4">
+              <PushNotificationPrompt />
+            </div>
 
             {/* Header Section - More Compact */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
