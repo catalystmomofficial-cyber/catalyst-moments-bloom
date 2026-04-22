@@ -66,6 +66,7 @@ import BirthBallCommunityFeed from "./pages/BirthBallCommunityFeed";
 import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
 import CreditPurchaseSuccess from "./pages/CreditPurchaseSuccess";
 import About from "./pages/About";
+import Unsubscribe from "./pages/Unsubscribe";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
@@ -108,6 +109,7 @@ function AppContent() {
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/about" element={<About />} />
+        <Route path="/unsubscribe" element={<Unsubscribe />} />
         
         {/* Protected Routes - Require Login and Subscription */}
         <Route path="/progress" element={
