@@ -136,22 +136,22 @@ export const PersonalizedRecommendations = () => {
     <div className="space-y-6">
       {/* Dynamic Insights */}
       {insights.length > 0 && (
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5" />
-              Your Wellness Insights
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Sparkles className="h-5 w-5 flex-shrink-0" />
+              <span className="break-words">Your Wellness Insights</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               {insights.map((insight, index) => (
                 <div key={index} className="p-3 rounded-lg bg-muted/50 border-l-4 border-primary">
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium break-words">
                     {/* Make AI talk conversationally */}
-                    {insight.includes('Hydration') && insight.includes('60%') 
-                      ? 'Hydration at 60%-dance break, +5 points!' 
-                      : insight.includes('mood') 
+                    {insight.includes('Hydration') && insight.includes('60%')
+                      ? 'Hydration at 60%-dance break, +5 points!'
+                      : insight.includes('mood')
                       ? `Mood tracker noticed something - ${insight.toLowerCase()}, here's what might help!`
                       : insight.includes('energy')
                       ? `Energy levels looking ${insight.includes('high') ? 'amazing' : 'low'} - ${insight.toLowerCase()}, let's boost it!`
