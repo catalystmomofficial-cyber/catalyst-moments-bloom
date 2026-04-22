@@ -107,6 +107,7 @@ function AppContent() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/about" element={<About />} />
         
         {/* Protected Routes - Require Login and Subscription */}
         <Route path="/progress" element={
