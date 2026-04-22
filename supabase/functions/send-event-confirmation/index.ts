@@ -1,6 +1,8 @@
-import { Resend } from 'npm:resend@4.0.0'
+// Sends event confirmation emails via Lovable Email infrastructure
+// using the verified subdomain notify.catalystmomofficial.com.
 
-const resend = new Resend(Deno.env.get('RESEND_API_KEY') as string)
+const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY') as string
+const SENDER_DOMAIN = 'notify.catalystmomofficial.com'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
