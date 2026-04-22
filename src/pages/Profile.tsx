@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,10 +30,19 @@ const Profile = () => {
   const [pendingRequest, setPendingRequest] = useState<{ requested_stage: string; created_at: string } | null>(null);
   const [stageReason, setStageReason] = useState("");
   const [requestingStage, setRequestingStage] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(profile?.avatar_url || null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const currentStage = (profile?.motherhood_stage as MotherhoodStage) || "none";
   const hasExistingStage = currentStage && currentStage !== "none";
   const stageChanged = motherhoodStage !== currentStage;
+
+  // Sync avatar when profile loads
+  useEffect(() => {
+    setAvatarUrl(profile?.avatar_url || null);
+    if (profile?.display_name) setName(profile.display_name);
+  }, [profile?.avatar_url, profile?.display_name]);
 
   // Load any pending stage change request
   useEffect(() => {
