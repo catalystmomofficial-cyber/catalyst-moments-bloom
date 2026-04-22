@@ -61,8 +61,8 @@ const sampleRec = {
 import { PersonalizedRecommendations } from "../PersonalizedRecommendations";
 
 const findCardHeader = (titleEl: HTMLElement): HTMLElement => {
-  // CardHeader is the parent of the CardTitle
-  const header = titleEl.closest('[class*="flex"]') as HTMLElement | null;
+  // CardTitle is the direct child of CardHeader
+  const header = titleEl.parentElement as HTMLElement | null;
   if (!header) throw new Error("Could not find CardHeader element");
   return header;
 };
