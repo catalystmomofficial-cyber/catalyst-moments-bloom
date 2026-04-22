@@ -8,6 +8,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, Users, CheckCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Event {
   id: string;
@@ -40,20 +42,39 @@ const EventRegistrationModal = ({ isOpen, onClose, event }: EventRegistrationMod
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!event) return;
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    const { error } = await supabase.from('event_registrations').insert({
+      user_id: user?.id ?? null,
+      event_id: event.id,
+      event_title: event.title,
+      event_date: event.date,
+      event_time: event.time,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      phone: formData.phone || null,
+      questions: formData.questions || null,
+      experience: formData.experience || null,
+      notification_pref: formData.notifications,
+    });
 
     setIsSubmitting(false);
+
+    if (error) {
+      toast({ title: 'Registration failed', description: error.message, variant: 'destructive' });
+      return;
+    }
+
     setIsSuccess(true);
-    
     toast({
       title: "Registration Successful!",
-      description: `You're registered for ${event?.title}. You'll receive a confirmation email shortly.`,
+      description: `You're registered for ${event.title}. You'll receive a confirmation email shortly.`,
     });
 
     // Reset form after 3 seconds

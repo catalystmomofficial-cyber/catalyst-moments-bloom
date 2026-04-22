@@ -707,6 +707,57 @@ export type Database = {
         }
         Relationships: []
       }
+      event_registrations: {
+        Row: {
+          created_at: string
+          email: string
+          event_date: string | null
+          event_id: string
+          event_time: string | null
+          event_title: string
+          experience: string | null
+          first_name: string
+          id: string
+          last_name: string
+          notification_pref: string | null
+          phone: string | null
+          questions: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          event_date?: string | null
+          event_id: string
+          event_time?: string | null
+          event_title: string
+          experience?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          notification_pref?: string | null
+          phone?: string | null
+          questions?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          event_date?: string | null
+          event_id?: string
+          event_time?: string | null
+          event_title?: string
+          experience?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          notification_pref?: string | null
+          phone?: string | null
+          questions?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       food_detection_logs: {
         Row: {
           calories: number | null
