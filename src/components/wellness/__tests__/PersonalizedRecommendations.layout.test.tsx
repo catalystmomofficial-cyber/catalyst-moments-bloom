@@ -61,10 +61,15 @@ const sampleRec = {
 import { PersonalizedRecommendations } from "../PersonalizedRecommendations";
 
 const findCardHeader = (titleEl: HTMLElement): HTMLElement => {
-  // CardTitle is the direct child of CardHeader
-  const header = titleEl.parentElement as HTMLElement | null;
-  if (!header) throw new Error("Could not find CardHeader element");
-  return header;
+  // Walk up until we find the element that is the responsive flex header
+  let node: HTMLElement | null = titleEl;
+  while (node) {
+    if (node.className && /\bsm:flex-row\b/.test(node.className) && /sm:justify-between/.test(node.className)) {
+      return node;
+    }
+    node = node.parentElement;
+  }
+  throw new Error("Could not find responsive CardHeader element");
 };
 
 describe("PersonalizedRecommendations layout regression", () => {
