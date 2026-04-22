@@ -30,25 +30,32 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: vi.fn() }),
 }));
 
-const sampleRec = {
-  id: "rec-1",
-  type: "mindfulness" as const,
-  title: "Try a 5-minute breathing reset to anchor your afternoon",
-  description: "A short box-breathing session can lower stress and boost focus.",
-  action: "Start now",
-  priority: "high" as const,
-  reasoning: "Stress level is elevated relative to your weekly baseline",
-  timeframe: "5 minutes",
-  category: "Mindfulness",
-  icon: "🧘",
-};
-
 vi.mock("@/services/wellnessAI", () => ({
   wellnessAI: {
-    generatePersonalizedRecommendations: vi.fn().mockResolvedValue([sampleRec]),
+    generatePersonalizedRecommendations: vi.fn().mockResolvedValue([
+      {
+        id: "rec-1",
+        type: "mindfulness",
+        title: "Try a 5-minute breathing reset to anchor your afternoon",
+        description: "A short box-breathing session can lower stress and boost focus.",
+        action: "Start now",
+        priority: "high",
+        reasoning: "Stress level is elevated relative to your weekly baseline",
+        timeframe: "5 minutes",
+        category: "Mindfulness",
+        icon: "🧘",
+      },
+    ]),
     generateDynamicInsights: vi.fn().mockResolvedValue(["Hydration looking good"]),
   },
 }));
+
+const sampleRec = {
+  title: "Try a 5-minute breathing reset to anchor your afternoon",
+  action: "Start now",
+  priority: "high",
+  category: "Mindfulness",
+};
 
 // --- Import after mocks --------------------------------------------------
 import { PersonalizedRecommendations } from "../PersonalizedRecommendations";
