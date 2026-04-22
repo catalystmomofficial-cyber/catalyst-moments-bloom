@@ -192,47 +192,62 @@ export const PersonalizedRecommendations = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {recommendations.map((rec) => (
-              <div key={rec.id} className="p-4 rounded-lg border bg-card overflow-hidden">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
-                  <div className="flex items-start gap-2 min-w-0 flex-1">
-                    <span className="text-2xl flex-shrink-0 leading-none">{rec.icon}</span>
-                    <h3 className="font-semibold break-words min-w-0">{rec.title}</h3>
-                  </div>
-                  <div className="flex flex-wrap gap-2 sm:flex-shrink-0">
-                    <Badge className={getPriorityColor(rec.priority)}>
-                      {rec.priority}
-                    </Badge>
-                    <Badge variant="outline" className={getTypeColor(rec.type)}>
-                      {rec.category}
-                    </Badge>
-                  </div>
-                </div>
+            {recommendations.map((rec) => {
+              // Icon may come back as a name string (e.g. "water-outline") instead of an emoji.
+              // Only render single-glyph emoji-like values; otherwise show a neutral dot.
+              const isEmoji = typeof rec.icon === 'string' && rec.icon.length <= 4 && !/[a-zA-Z-]/.test(rec.icon);
+              // Action labels are sometimes long sentences from the AI. Keep button readable.
+              const actionLabel = (rec.action || 'Start').trim();
+              const shortAction = actionLabel.length > 24 ? actionLabel.slice(0, 22).trimEnd() + '…' : actionLabel;
 
-                <p className="text-muted-foreground mb-3 text-sm sm:text-base break-words">{rec.description}</p>
-
-                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-                  <div className="text-sm text-muted-foreground space-y-1 min-w-0 flex-1">
-                    <div>
-                      <span className="font-medium text-foreground">Time:</span> {rec.timeframe}
+              return (
+                <div key={rec.id} className="p-4 rounded-lg border bg-card overflow-hidden">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                    <div className="flex items-start gap-2 min-w-0 flex-1">
+                      {isEmoji ? (
+                        <span className="text-2xl flex-shrink-0 leading-none">{rec.icon}</span>
+                      ) : (
+                        <span className="w-2 h-2 mt-2 rounded-full bg-primary flex-shrink-0" aria-hidden />
+                      )}
+                      <h3 className="font-semibold break-words min-w-0 text-base sm:text-lg leading-snug">
+                        {rec.title}
+                      </h3>
                     </div>
-                    <div>
-                      <span className="font-medium text-foreground">Why:</span> {rec.reasoning}
+                    <div className="flex flex-wrap gap-2 sm:flex-shrink-0">
+                      <Badge className={getPriorityColor(rec.priority)}>{rec.priority}</Badge>
+                      <Badge variant="outline" className={getTypeColor(rec.type)}>{rec.category}</Badge>
                     </div>
                   </div>
-                  <Button size="sm" variant="outline" className="w-full sm:w-auto sm:flex-shrink-0">
-                    {rec.action}
-                  </Button>
+
+                  <p className="text-muted-foreground mb-3 text-sm sm:text-base break-words">{rec.description}</p>
+
+                  <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+                    <div className="text-sm text-muted-foreground space-y-1 min-w-0 flex-1">
+                      <div className="break-words">
+                        <span className="font-medium text-foreground">Time:</span> {rec.timeframe}
+                      </div>
+                      <div className="break-words">
+                        <span className="font-medium text-foreground">Why:</span> {rec.reasoning}
+                      </div>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="w-full sm:w-auto sm:flex-shrink-0 sm:max-w-[180px] truncate"
+                      title={actionLabel}
+                    >
+                      {shortAction}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-6 p-4 rounded-lg bg-muted/30 border">
-            <p className="text-sm text-muted-foreground text-center">
-              💡 These recommendations are personalized based on your current wellness data,
-              journey stage ({currentJourney} - {currentStage}), and recent activities.
-              They update automatically as you log new data.
+            <p className="text-xs sm:text-sm text-muted-foreground text-center break-words">
+              💡 Personalized for your {currentJourney || 'wellness'} journey
+              {currentStage ? ` (${currentStage})` : ''}. Updates as you log new data.
             </p>
           </div>
         </CardContent>
