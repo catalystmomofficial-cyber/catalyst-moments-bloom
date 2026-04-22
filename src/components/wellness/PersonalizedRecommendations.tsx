@@ -136,22 +136,22 @@ export const PersonalizedRecommendations = () => {
     <div className="space-y-6">
       {/* Dynamic Insights */}
       {insights.length > 0 && (
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5" />
-              Your Wellness Insights
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Sparkles className="h-5 w-5 flex-shrink-0" />
+              <span className="break-words">Your Wellness Insights</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               {insights.map((insight, index) => (
                 <div key={index} className="p-3 rounded-lg bg-muted/50 border-l-4 border-primary">
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium break-words">
                     {/* Make AI talk conversationally */}
-                    {insight.includes('Hydration') && insight.includes('60%') 
-                      ? 'Hydration at 60%-dance break, +5 points!' 
-                      : insight.includes('mood') 
+                    {insight.includes('Hydration') && insight.includes('60%')
+                      ? 'Hydration at 60%-dance break, +5 points!'
+                      : insight.includes('mood')
                       ? `Mood tracker noticed something - ${insight.toLowerCase()}, here's what might help!`
                       : insight.includes('energy')
                       ? `Energy levels looking ${insight.includes('high') ? 'amazing' : 'low'} - ${insight.toLowerCase()}, let's boost it!`
@@ -169,18 +169,18 @@ export const PersonalizedRecommendations = () => {
       )}
 
       {/* Personalized Recommendations */}
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 space-y-0">
-          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg min-w-0">
             <Sparkles className="h-5 w-5 flex-shrink-0" />
-            <span>Your Personalized Recommendations</span>
+            <span className="break-words">Your Personalized Recommendations</span>
           </CardTitle>
           <Button
             variant="outline"
             size="sm"
             onClick={generateRecommendations}
             disabled={refreshing}
-            className="self-start sm:self-auto gap-2"
+            className="self-start sm:self-auto gap-2 flex-shrink-0"
           >
             {refreshing ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -193,11 +193,11 @@ export const PersonalizedRecommendations = () => {
         <CardContent>
           <div className="space-y-4">
             {recommendations.map((rec) => (
-              <div key={rec.id} className="p-4 rounded-lg border bg-card">
+              <div key={rec.id} className="p-4 rounded-lg border bg-card overflow-hidden">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-2xl flex-shrink-0">{rec.icon}</span>
-                    <h3 className="font-semibold break-words">{rec.title}</h3>
+                  <div className="flex items-start gap-2 min-w-0 flex-1">
+                    <span className="text-2xl flex-shrink-0 leading-none">{rec.icon}</span>
+                    <h3 className="font-semibold break-words min-w-0">{rec.title}</h3>
                   </div>
                   <div className="flex flex-wrap gap-2 sm:flex-shrink-0">
                     <Badge className={getPriorityColor(rec.priority)}>
@@ -209,7 +209,7 @@ export const PersonalizedRecommendations = () => {
                   </div>
                 </div>
 
-                <p className="text-muted-foreground mb-3 text-sm sm:text-base">{rec.description}</p>
+                <p className="text-muted-foreground mb-3 text-sm sm:text-base break-words">{rec.description}</p>
 
                 <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
                   <div className="text-sm text-muted-foreground space-y-1 min-w-0 flex-1">
