@@ -1147,6 +1147,48 @@ export type Database = {
           },
         ]
       }
+      stage_change_requests: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          current_stage: string | null
+          id: string
+          reason: string | null
+          requested_stage: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          current_stage?: string | null
+          id?: string
+          reason?: string | null
+          requested_stage: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          current_stage?: string | null
+          id?: string
+          reason?: string | null
+          requested_stage?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       "Strip balance": {
         Row: {
           attrs: Json | null
@@ -1614,6 +1656,19 @@ export type Database = {
           unique_visitors: number
         }[]
       }
+      get_pending_stage_change_requests: {
+        Args: never
+        Returns: {
+          created_at: string
+          current_stage: string
+          display_name: string
+          email: string
+          id: string
+          reason: string
+          requested_stage: string
+          user_id: string
+        }[]
+      }
       get_pending_users: {
         Args: never
         Returns: {
@@ -1650,6 +1705,14 @@ export type Database = {
           remaining_points: number
           success: boolean
         }[]
+      }
+      request_stage_change: {
+        Args: { p_reason?: string; p_requested_stage: string }
+        Returns: string
+      }
+      review_stage_change: {
+        Args: { p_decision: string; p_notes?: string; p_request_id: string }
+        Returns: undefined
       }
       update_affiliate_status: {
         Args: { application_id: string; new_status: string }
