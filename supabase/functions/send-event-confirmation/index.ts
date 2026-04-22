@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
     `
 
     const { error } = await resend.emails.send({
-      from: 'Catalyst Mom <admin@catalystmom.online>',
+      from: 'Catalyst Mom <admin@notify.catalystmomofficial.com>',
       reply_to: 'admin@catalystmom.online',
       to: [email],
       subject: `You're registered for ${eventTitle}`,
