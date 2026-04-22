@@ -65,6 +65,7 @@ import AssessmentResults from "./pages/AssessmentResults";
 import BirthBallCommunityFeed from "./pages/BirthBallCommunityFeed";
 import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
 import CreditPurchaseSuccess from "./pages/CreditPurchaseSuccess";
+import About from "./pages/About";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
