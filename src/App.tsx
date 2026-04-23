@@ -139,6 +139,7 @@ function AppContent() {
             </SubscriptionGuard>
           </PrivateRoute>
         } />
+        <Route path="/nutrition" element={<Navigate to="/recipes" replace />} />
         <Route path="/recipes" element={
           <PrivateRoute>
             <SubscriptionGuard>
