@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/common/ScrollToTop";
+import CookieConsentBanner from "./components/common/CookieConsentBanner";
 import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
 import { GoogleAuthOnboarding } from "./components/onboarding/GoogleAuthOnboarding";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -372,6 +373,7 @@ function AppContent() {
         onClose={() => setShowCheckoutModal(false)} 
       />
       <GlobalVideoPlayer />
+      <CookieConsentBanner />
     </BrowserRouter>
     </ErrorBoundary>
   );
