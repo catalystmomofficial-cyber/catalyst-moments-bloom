@@ -13,6 +13,7 @@ export interface CommunityPostData {
   comments_count: number;
   created_at: string;
   display_name: string | null;
+  avatar_url: string | null;
   is_liked: boolean;
 }
 
@@ -23,6 +24,7 @@ export interface PostComment {
   content: string;
   created_at: string;
   display_name: string | null;
+  avatar_url: string | null;
 }
 
 export function useCommunityPosts(groupSlug: string = 'general', subCategory: string = 'general') {
@@ -50,10 +52,10 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
     const userIds = [...new Set(postsData.map(p => p.user_id))];
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('user_id, display_name')
+      .select('user_id, display_name, avatar_url')
       .in('user_id', userIds);
 
-    const profileMap = new Map(profiles?.map(p => [p.user_id, p.display_name]) || []);
+    const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
 
     // Fetch which posts current user liked
     const { data: likes } = await supabase
@@ -73,7 +75,8 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
       likes_count: p.likes_count,
       comments_count: p.comments_count,
       created_at: p.created_at,
-      display_name: profileMap.get(p.user_id) || 'Community Member',
+      display_name: profileMap.get(p.user_id)?.display_name || 'Community Member',
+      avatar_url: profileMap.get(p.user_id)?.avatar_url || null,
       is_liked: likedSet.has(p.id),
     }));
 
@@ -146,14 +149,15 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
     const userIds = [...new Set(data.map(c => c.user_id))];
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('user_id, display_name')
+      .select('user_id, display_name, avatar_url')
       .in('user_id', userIds);
 
-    const profileMap = new Map(profiles?.map(p => [p.user_id, p.display_name]) || []);
+    const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
 
     return data.map(c => ({
       ...c,
-      display_name: profileMap.get(c.user_id) || 'Community Member',
+      display_name: profileMap.get(c.user_id)?.display_name || 'Community Member',
+      avatar_url: profileMap.get(c.user_id)?.avatar_url || null,
     }));
   }, []);
 
