@@ -17,7 +17,7 @@ const BenefitsSection = () => {
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Designed With You in Mind</h2>
             <p className="text-muted-foreground mb-8">
-              At Catalyst Mom, we understand the unique challenges of motherhood because we've been there. Our platform is built by moms, for moms.
+              At Catalyst Mom, we understand the unique challenges of motherhood because we've been there. Our platform is built from love — for moms, with moms.
             </p>
             
             <div className="space-y-4">
