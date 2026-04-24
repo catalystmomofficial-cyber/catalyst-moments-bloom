@@ -23,7 +23,7 @@ const FeaturesSection = () => {
           <FeatureCard
             icon={<Activity className="h-8 w-8 text-catalyst-copper" />}
             title="Adaptive Workouts"
-            description="Workouts designed for pregnancy, postpartum, and busy mom life. All adjustable to your energy level and available time."
+            description="Workouts designed for TTC, pregnancy, postpartum, and busy mom life. All adjustable to your energy level and available time."
           />
           <FeatureCard
             icon={<Heart className="h-8 w-8 text-catalyst-copper" />}
