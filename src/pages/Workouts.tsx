@@ -70,31 +70,6 @@ const allWorkouts: (ContentItem & WorkoutCardProps)[] = [
     tags: ["Yoga", "Flexibility"],
     journey: ['ttc']
   },
-  // Pregnancy Workouts
-  {
-    id: 'prenatal-gentle',
-    title: "Gentle Prenatal Yoga",
-    description: "Safe, flowing movements for expecting mothers",
-    duration: "30 min",
-    level: "Beginner",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
-    category: "Prenatal",
-    tags: ["Yoga", "Gentle", "Pregnancy"],
-    journey: ['pregnant'],
-    stage: ['trimester_1', 'trimester_2', 'trimester_3']
-  },
-  {
-    id: 'prenatal-strength',
-    title: "Pregnancy Strength Training",
-    description: "Build strength safely during pregnancy",
-    duration: "25 min",
-    level: "Intermediate",
-    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b",
-    category: "Prenatal",
-    tags: ["Strength", "Pregnancy"],
-    journey: ['pregnant'],
-    stage: ['trimester_2', 'trimester_3']
-  },
   // Postpartum Workouts
   {
     id: 'core-recovery',
