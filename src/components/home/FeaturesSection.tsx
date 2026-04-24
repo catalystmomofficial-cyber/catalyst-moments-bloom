@@ -3,7 +3,7 @@ import React from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Activity, Baby, Calendar, Heart, Users } from "lucide-react";
 import FeatureCard from './FeatureCard';
-import WellnessCoachButton from "@/components/wellness-coach/WellnessCoachButton";
+
 
 const FeaturesSection = () => {
   return (
@@ -15,7 +15,7 @@ const FeaturesSection = () => {
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything You Need in One Place</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            We've combined the essential wellness tools to support your motherhood journey, all personalized to your unique needs.
+            Everything built specifically for TTC, Pregnancy, and Postpartum — personalised to where you actually are right now.
           </p>
         </div>
         
@@ -23,7 +23,7 @@ const FeaturesSection = () => {
           <FeatureCard
             icon={<Activity className="h-8 w-8 text-catalyst-copper" />}
             title="Adaptive Workouts"
-            description="Workouts designed for TTC, pregnancy, postpartum, and busy mom life. All adjustable to your energy level and available time."
+            description="Workouts designed for TTC, pregnancy, and postpartum. All adjustable to your energy level and available time."
           />
           <FeatureCard
             icon={<Heart className="h-8 w-8 text-catalyst-copper" />}
@@ -33,7 +33,7 @@ const FeaturesSection = () => {
           <FeatureCard
             icon={<Baby className="h-8 w-8 text-catalyst-copper" />}
             title="Stage-Based Support"
-            description="Get resources specific to your journey, whether you're TTC, pregnant, postpartum, or years into motherhood."
+            description="Get resources specific to your journey, whether you are TTC, pregnant, or postpartum."
           />
           <FeatureCard
             icon={<Calendar className="h-8 w-8 text-catalyst-copper" />}
@@ -53,7 +53,7 @@ const FeaturesSection = () => {
             <p className="text-muted-foreground mb-6">
               Nutrition guidance, expert advice, personalized plans, and tools that grow with you.
             </p>
-            <WellnessCoachButton variant="ghost" className="mt-auto text-catalyst-copper hover:text-catalyst-copper/90 hover:bg-catalyst-copper/5" />
+            
           </div>
         </div>
       </div>
