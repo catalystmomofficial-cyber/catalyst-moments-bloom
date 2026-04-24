@@ -38,7 +38,7 @@ const FeaturesSection = () => {
           <FeatureCard
             icon={<Calendar className="h-8 w-8 text-catalyst-copper" />}
             title="Daily Guidance"
-            description="Simple, achievable daily plans that flex with your unpredictable mom schedule."
+            description="Simple, achievable daily plans that flex with your schedule. Complete workouts, log your wellness, and earn points as you build your streak — because progress should feel rewarding, not just exhausting."
           />
           <FeatureCard
             icon={<Users className="h-8 w-8 text-catalyst-copper" />}
