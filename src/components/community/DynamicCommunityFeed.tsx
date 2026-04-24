@@ -19,14 +19,18 @@ import mom6 from '@/assets/member-avatars/mom-6.jpg';
 
 const memberAvatars = [mom1, mom2, mom3, mom4, mom5, mom6];
 
-// Deterministic avatar based on user_id string
-function getAvatar(userId: string): string {
+// Deterministic avatar fallback based on user_id string
+function getFallbackAvatar(userId: string): string {
   let hash = 0;
   for (let i = 0; i < userId.length; i++) {
     hash = ((hash << 5) - hash) + userId.charCodeAt(i);
     hash |= 0;
   }
   return memberAvatars[Math.abs(hash) % memberAvatars.length];
+}
+
+function getAvatar(userId: string, avatarUrl?: string | null): string {
+  return avatarUrl || getFallbackAvatar(userId);
 }
 
 function getInitials(name: string | null): string {
@@ -40,7 +44,7 @@ interface DynamicCommunityFeedProps {
 }
 
 export const DynamicCommunityFeed = ({ groupSlug = 'general', isTTC = false }: DynamicCommunityFeedProps) => {
-  const { user, subscribed, setShowCheckoutModal } = useAuth();
+  const { user, profile, subscribed, setShowCheckoutModal } = useAuth();
   const [newPostContent, setNewPostContent] = useState('');
   const [isPosting, setIsPosting] = useState(false);
 
@@ -67,8 +71,8 @@ export const DynamicCommunityFeed = ({ groupSlug = 'general', isTTC = false }: D
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={getAvatar(user.id)} />
-                <AvatarFallback>{getInitials(user.user_metadata?.full_name || user.user_metadata?.name)}</AvatarFallback>
+                <AvatarImage src={getAvatar(user.id, profile?.avatar_url)} />
+                <AvatarFallback>{getInitials(profile?.display_name || user.user_metadata?.full_name || user.user_metadata?.name)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-2">
                 <Textarea
@@ -131,7 +135,7 @@ const LivePost = ({ post, onToggleLike, onFetchComments, onAddComment }: LivePos
   const [commentText, setCommentText] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
 
-  const avatarSrc = useMemo(() => getAvatar(post.user_id), [post.user_id]);
+  const avatarSrc = useMemo(() => getAvatar(post.user_id, post.avatar_url), [post.user_id, post.avatar_url]);
   const initials = useMemo(() => getInitials(post.display_name), [post.display_name]);
 
   const handleToggleComments = async () => {
@@ -207,7 +211,7 @@ const LivePost = ({ post, onToggleLike, onFetchComments, onAddComment }: LivePos
             {comments.map((c) => (
               <div key={c.id} className="flex items-start gap-2">
                 <Avatar className="h-7 w-7">
-                  <AvatarImage src={getAvatar(c.user_id)} />
+                  <AvatarImage src={getAvatar(c.user_id, c.avatar_url)} />
                   <AvatarFallback className="text-xs">{getInitials(c.display_name)}</AvatarFallback>
                 </Avatar>
                 <div className="bg-muted rounded-lg px-3 py-2 flex-1">
