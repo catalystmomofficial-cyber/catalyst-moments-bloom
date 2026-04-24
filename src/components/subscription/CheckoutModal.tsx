@@ -111,7 +111,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
               <div className="flex items-center justify-center gap-2 p-4 bg-primary/5 border border-primary/20 rounded-lg">
                 <Shield className="w-5 h-5 text-primary" />
                 <p className="text-sm font-medium text-foreground">
-                  <span className="text-primary font-semibold">30-Day Money-Back Guarantee</span> - Try risk-free, cancel anytime
+                  <span className="text-primary font-semibold">30-Day Money-Back Guarantee</span> — If Catalyst Mom is not right for you, we will refund every penny. No questions asked.
                 </p>
               </div>
 
