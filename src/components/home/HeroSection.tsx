@@ -36,7 +36,6 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
                 </Link>
               </Button>
             </div>
-            <HomeWellnessCoachButton variant="secondary" size="lg" className="mt-2" />
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="relative">
