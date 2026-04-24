@@ -165,23 +165,6 @@ const Workouts = () => {
                     onComplete={() => handleComplete(idx)}
                   />
                 ))}
-                <Card className="border border-dashed flex flex-col items-center justify-center p-6 h-full">
-                  <div className="text-center">
-                    <div className="bg-primary/10 rounded-full p-3 mx-auto mb-4 w-fit">
-                      <Activity className="h-6 w-6 text-primary" />
-                    </div>
-                    <h3 className="font-medium mb-2">Discover More Workouts</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {sortedWorkouts.length > 5 
-                        ? `${sortedWorkouts.length - 5} more workouts available for your ${stageInfo?.phase?.toLowerCase()} stage`
-                        : `Specialized workouts designed for your ${stageInfo?.phase?.toLowerCase()} journey`
-                      }
-                    </p>
-                    <Button variant="outline" asChild>
-                      <Link to="/workout-plan">Create Custom Plan</Link>
-                    </Button>
-                  </div>
-                </Card>
               </div>
             </TabsContent>
           
