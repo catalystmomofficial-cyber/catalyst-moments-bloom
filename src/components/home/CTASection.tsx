@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Play } from "lucide-react";
-import HomeWellnessCoachButton from "@/components/wellness-coach/HomeWellnessCoachButton";
+
 import AffiliateButton from "@/components/affiliate/AffiliateButton";
 
 interface CTASectionProps {
@@ -37,7 +37,6 @@ const CTASection = ({ onWatchDemo }: CTASectionProps) => {
           </Button>
         </div>
         <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-          <HomeWellnessCoachButton variant="secondary" size="lg" />
           <AffiliateButton variant="outline" size="lg" className="border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5" />
         </div>
       </div>
