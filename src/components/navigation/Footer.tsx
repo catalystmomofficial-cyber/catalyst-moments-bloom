@@ -99,7 +99,7 @@ const Footer = () => {
                 asChild
               >
                 <a 
-                  href="https://www.instagram.com/catalyst_mom/" 
+                  href="https://www.instagram.com/catalyst_mom/?hl=en" 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
