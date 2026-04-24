@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Badge } from "@/components/ui/badge";
-import { Activity, Baby, Calendar, Heart, Users } from "lucide-react";
+import { Activity, Baby, Calendar, Heart, Users, CheckCircle2 } from "lucide-react";
 import FeatureCard from './FeatureCard';
 
 
@@ -44,6 +44,11 @@ const FeaturesSection = () => {
             icon={<Users className="h-8 w-8 text-catalyst-copper" />}
             title="Supportive Community"
             description="Connect with mothers in similar life stages who understand exactly what you're going through."
+          />
+          <FeatureCard
+            icon={<CheckCircle2 className="h-8 w-8 text-catalyst-copper" />}
+            title="Real Accountability"
+            description="Bi-weekly check-ins with a real coach keep you on track without the pressure. Your progress is tracked, your wins are celebrated, and when life gets in the way — we hold your place."
           />
           <div className="bg-gradient-to-br from-catalyst-copper/5 to-catalyst-peach/20 rounded-2xl p-7 flex flex-col items-center text-center shadow-soft">
             <div className="rounded-full bg-catalyst-copper/10 p-3 mb-4">
