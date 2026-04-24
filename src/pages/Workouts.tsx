@@ -13,7 +13,7 @@ import FitFierceAdvancedCard from '@/components/workouts/FitFierceAdvancedCard';
 import CoreRestoreCard from '@/components/workouts/CoreRestoreCard';
 import EnergyStrengthCard from '@/components/workouts/EnergyStrengthCard';
 import BirthBallGuideCard from '@/components/workouts/BirthBallGuideCard';
-import { TTCWorkoutCard } from '@/components/ttc/TTCWorkoutCard';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter, ContentItem } from '@/hooks/useContentFilter';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
