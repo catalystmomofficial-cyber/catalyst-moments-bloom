@@ -236,20 +236,7 @@ const Workouts = () => {
               {isPostpartum && <FitFierceAdvancedCard />}
               {isPostpartum && <CoreRestoreCard />}
               {(isPostpartum || isToddler) && <EnergyStrengthCard />}
-              {!isPregnant && !isPostpartum && !isToddler && (
-                <Card className="border border-dashed flex flex-col items-center justify-center p-6">
-                  <div className="text-center">
-                    <Activity className="h-8 w-8 mx-auto mb-4 text-muted-foreground" />
-                    <h3 className="font-medium mb-2">Programs for {stageInfo?.phase}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Specialized workout programs for your journey are coming soon.
-                    </p>
-                    <Button variant="outline" asChild>
-                      <Link to="/workout-plan">Create Custom Plan</Link>
-                    </Button>
-                  </div>
-                </Card>
-              )}
+              {!isPregnant && !isPostpartum && !isToddler && null}
             </div>
           </div>
         )}
