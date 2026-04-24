@@ -15,7 +15,7 @@ const FeaturesSection = () => {
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything You Need in One Place</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            We've combined the essential wellness tools to support your motherhood journey, all personalized to your unique needs.
+            Everything built specifically for TTC, Pregnancy, and Postpartum — personalised to where you actually are right now.
           </p>
         </div>
         
