@@ -88,7 +88,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 Complete Your Subscription
               </DialogTitle>
               <DialogDescription className="text-muted-foreground mt-1">
-                Join 1,000+ moms transforming their wellness journey
+                After supporting over 2,000 mamas with our digital guides, we built the Catalyst Mom App to take your recovery even deeper.
               </DialogDescription>
             </div>
           </div>

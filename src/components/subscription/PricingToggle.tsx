@@ -63,7 +63,11 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">24/7 wellness coach chat</span>
+              <span className="text-sm">1-on-1 Human Check-ins — Bi-weekly expert progress reviews.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <span className="text-sm">24/7 Catalyst AI Expert — Instant answers to any wellness question.</span>
             </li>
           </ul>
           
@@ -116,7 +120,11 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">24/7 wellness coach chat</span>
+              <span className="text-sm">1-on-1 Human Check-ins — Bi-weekly expert progress reviews.</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <span className="text-sm">24/7 Catalyst AI Expert — Instant answers to any wellness question.</span>
             </li>
           </ul>
           
@@ -137,7 +145,7 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
         <div className="flex items-center justify-center gap-8 flex-wrap">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
-            <span className="text-lg font-semibold">1,000+ Happy Members</span>
+            <span className="text-lg font-semibold">2,000+ Mamas Supported</span>
           </div>
           <div className="flex items-center gap-2">
             <Star className="h-5 w-5 text-catalyst-copper fill-catalyst-copper" />
@@ -153,8 +161,8 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
                   <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground italic">"I was trying for 9 months with no luck. After joining Catalyst Mom and following the fertility optimization protocols, I got pregnant in 6 weeks. The app gave me everything I needed in one place—best $29 I've ever spent."</p>
-              <p className="text-sm font-semibold mt-2">Maren L., Now 18 weeks pregnant</p>
+              <p className="text-sm text-muted-foreground italic">"I was leaking every sneeze and my belly still looked 5 months pregnant. Three weeks into this program my core finally feels like mine again. I actually cried during my check-in. Do not sleep on this."</p>
+              <p className="text-sm font-semibold mt-2">Catalyst Mom Community Member · Postpartum</p>
             </CardContent>
           </Card>
           
@@ -165,8 +173,8 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
                   <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground italic">"The pelvic floor + birth prep protocols changed EVERYTHING. My second labor was 6 hours (first was 24 hours). I walked in confident instead of terrified. Worth every single penny."</p>
-              <p className="text-sm font-semibold mt-2">Brianna R., Mom of 2</p>
+              <p className="text-sm text-muted-foreground italic">"My second VBAC was completely different. After doing the low-impact exercises throughout my pregnancy, when labour finally kicked in I felt in control the whole way through. I pushed my baby out in 10 minutes. My first VBAC took over an hour of pushing. This program changed everything."</p>
+              <p className="text-sm font-semibold mt-2">Catalyst Mom Community Member · VBAC Mama</p>
             </CardContent>
           </Card>
           
@@ -177,8 +185,8 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
                   <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground italic">"I was leaking every sneeze and my mom pooch made me avoid mirrors. The postpartum protocols closed my gap from 3 fingers to 0.5 in 12 weeks and stopped the leaking by week 3. I'd pay double for these results."</p>
-              <p className="text-sm font-semibold mt-2">Jade M., 6 months postpartum</p>
+              <p className="text-sm text-muted-foreground italic">"I had been trying for 8 months and felt completely lost. I didn't even know my cycle properly — I was just guessing. Two months into Catalyst Mom I finally felt like I had a real plan. Not just hope."</p>
+              <p className="text-sm font-semibold mt-2">Catalyst Mom Community Member · TTC</p>
             </CardContent>
           </Card>
         </div>
