@@ -188,27 +188,6 @@ const Workouts = () => {
                     featured={workout.featured}
                   />
                 ))}
-                {filteredWorkouts.filter(w => 
-                  (isTTC && w.category === 'TTC') ||
-                  (isPregnant && w.category === 'Prenatal') ||
-                  (isPostpartum && w.category === 'Postpartum') ||
-                  (isToddler && (w.category === 'Quick' || w.category === 'Outdoor'))
-                ).length === 0 && (
-                  <div className="col-span-full text-center py-8 border rounded-lg bg-muted/30">
-                    <Baby className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <h3 className="font-medium mb-1">
-                      {isTTC ? 'Fertility Collection' : 
-                       isPregnant ? 'Prenatal Collection' :
-                       isPostpartum ? 'Recovery Collection' : 'Quick Workout Collection'}
-                    </h3>
-                    <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                      Specialized workouts for your {stageInfo?.phase?.toLowerCase()} stage will appear here.
-                    </p>
-                    <Button asChild>
-                      <Link to="/workout-plan">Create Custom Plan</Link>
-                    </Button>
-                  </div>
-                )}
               </div>
             </TabsContent>
           
@@ -229,20 +208,6 @@ const Workouts = () => {
                     featured={workout.featured}
                   />
                 ))}
-                {filteredWorkouts.filter(w => 
-                  w.category === 'Quick' || parseInt(w.duration) <= 15
-                ).length === 0 && (
-                  <div className="col-span-full text-center py-8 border rounded-lg bg-muted/30">
-                    <Clock className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <h3 className="font-medium mb-1">Quick Workouts</h3>
-                    <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                      Short, effective workouts for your busy schedule will appear here.
-                    </p>
-                    <Button asChild>
-                      <Link to="/workout-plan">Create Quick Plan</Link>
-                    </Button>
-                  </div>
-                )}
               </div>
             </TabsContent>
           
@@ -271,20 +236,7 @@ const Workouts = () => {
               {isPostpartum && <FitFierceAdvancedCard />}
               {isPostpartum && <CoreRestoreCard />}
               {(isPostpartum || isToddler) && <EnergyStrengthCard />}
-              {!isPregnant && !isPostpartum && !isToddler && (
-                <Card className="border border-dashed flex flex-col items-center justify-center p-6">
-                  <div className="text-center">
-                    <Activity className="h-8 w-8 mx-auto mb-4 text-muted-foreground" />
-                    <h3 className="font-medium mb-2">Programs for {stageInfo?.phase}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Specialized workout programs for your journey are coming soon.
-                    </p>
-                    <Button variant="outline" asChild>
-                      <Link to="/workout-plan">Create Custom Plan</Link>
-                    </Button>
-                  </div>
-                </Card>
-              )}
+              {!isPregnant && !isPostpartum && !isToddler && null}
             </div>
           </div>
         )}
