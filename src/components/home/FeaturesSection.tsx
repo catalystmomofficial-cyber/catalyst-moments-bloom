@@ -50,16 +50,6 @@ const FeaturesSection = () => {
             title="Real Accountability"
             description="Bi-weekly check-ins with a real coach keep you on track without the pressure. Your progress is tracked, your wins are celebrated, and when life gets in the way — we hold your place."
           />
-          <div className="bg-gradient-to-br from-catalyst-copper/5 to-catalyst-peach/20 rounded-2xl p-7 flex flex-col items-center text-center shadow-soft">
-            <div className="rounded-full bg-catalyst-copper/10 p-3 mb-4">
-              <div className="bg-catalyst-copper rounded-full h-8 w-8 flex items-center justify-center text-white font-bold">+</div>
-            </div>
-            <h3 className="font-bold text-lg mb-2">And Much More</h3>
-            <p className="text-muted-foreground mb-6">
-              Nutrition guidance, expert advice, personalized plans, and tools that grow with you.
-            </p>
-            
-          </div>
         </div>
       </div>
     </section>
