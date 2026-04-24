@@ -24,7 +24,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               Your Wellness <span className="text-catalyst-copper">Journey</span> Through Motherhood
             </h1>
             <p className="text-lg mb-8 text-muted-foreground max-w-lg leading-relaxed">
-              Whether you are trying to conceive, growing a baby, or healing postpartum — Catalyst Mom gives you personalised fitness, nutrition, and a community that actually gets it.
+              Whether you are trying to conceive, growing a baby, or healing postpartum Catalyst Mom gives you personalised fitness, nutrition, and a community that actually gets it.
             </p>
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
               <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
