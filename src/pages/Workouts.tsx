@@ -233,9 +233,7 @@ const Workouts = () => {
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
               {isPostpartum && <PostpartumGlowUpChallenge />}
-              {isPostpartum && <FitFierceAdvancedCard />}
-              {isPostpartum && <CoreRestoreCard />}
-              {(isPostpartum || isToddler) && <EnergyStrengthCard />}
+              {isToddler && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && null}
             </div>
           </div>
