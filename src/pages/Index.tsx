@@ -70,18 +70,7 @@ const Index = () => {
       />
       {/* Hero Section */}
       <HeroSection onWatchVideo={openWelcomeVideo} />
-      
 
-      {/* Food Calorie Checker Feature */}
-      <div className="container mx-auto py-12">
-        <h2 className="text-3xl font-bold text-center mb-8">
-          Try Our Latest Feature
-        </h2>
-        <div className="max-w-lg mx-auto">
-          <FoodCalorieCheckerCard />
-        </div>
-      </div>
-      
       {/* Features Section */}
       <FeaturesSection />
       
