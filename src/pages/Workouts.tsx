@@ -188,27 +188,6 @@ const Workouts = () => {
                     featured={workout.featured}
                   />
                 ))}
-                {filteredWorkouts.filter(w => 
-                  (isTTC && w.category === 'TTC') ||
-                  (isPregnant && w.category === 'Prenatal') ||
-                  (isPostpartum && w.category === 'Postpartum') ||
-                  (isToddler && (w.category === 'Quick' || w.category === 'Outdoor'))
-                ).length === 0 && (
-                  <div className="col-span-full text-center py-8 border rounded-lg bg-muted/30">
-                    <Baby className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <h3 className="font-medium mb-1">
-                      {isTTC ? 'Fertility Collection' : 
-                       isPregnant ? 'Prenatal Collection' :
-                       isPostpartum ? 'Recovery Collection' : 'Quick Workout Collection'}
-                    </h3>
-                    <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                      Specialized workouts for your {stageInfo?.phase?.toLowerCase()} stage will appear here.
-                    </p>
-                    <Button asChild>
-                      <Link to="/workout-plan">Create Custom Plan</Link>
-                    </Button>
-                  </div>
-                )}
               </div>
             </TabsContent>
           
