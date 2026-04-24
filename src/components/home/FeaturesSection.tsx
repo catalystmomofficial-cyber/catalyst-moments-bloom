@@ -33,7 +33,7 @@ const FeaturesSection = () => {
           <FeatureCard
             icon={<Baby className="h-8 w-8 text-catalyst-copper" />}
             title="Stage-Based Support"
-            description="Get resources specific to your journey, whether you're pregnant, postpartum, or years into motherhood."
+            description="Get resources specific to your journey, whether you're TTC, pregnant, postpartum, or years into motherhood."
           />
           <FeatureCard
             icon={<Calendar className="h-8 w-8 text-catalyst-copper" />}
