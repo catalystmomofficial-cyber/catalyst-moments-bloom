@@ -208,20 +208,6 @@ const Workouts = () => {
                     featured={workout.featured}
                   />
                 ))}
-                {filteredWorkouts.filter(w => 
-                  w.category === 'Quick' || parseInt(w.duration) <= 15
-                ).length === 0 && (
-                  <div className="col-span-full text-center py-8 border rounded-lg bg-muted/30">
-                    <Clock className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <h3 className="font-medium mb-1">Quick Workouts</h3>
-                    <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                      Short, effective workouts for your busy schedule will appear here.
-                    </p>
-                    <Button asChild>
-                      <Link to="/workout-plan">Create Quick Plan</Link>
-                    </Button>
-                  </div>
-                )}
               </div>
             </TabsContent>
           
