@@ -16,7 +16,7 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.wellness-coach-chat]
-verify_jwt = false
+verify_jwt = true
 
 [functions.blog-webhook]
 verify_jwt = true
