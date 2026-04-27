@@ -96,7 +96,7 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { title, body, icon, url, user_ids } = await req.json();
     const vapidPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY');
-    const vapidPublicKey = 'BEu2WPxFvMv7LzVp6BXJBLLuyhEKb3BYit1PR70_xsD4mH4afblCs2X883ekK6Knneu7jM_25zb_i6Cv7v6Wdu0';
+    const vapidPublicKey = 'BNE3CbrZIF5fS_HMByom1M9MuwcEn_aRiIJS3LFQRJdp7plk40tKMqHQMH07zSm1ZgkKxTVAsVDTfk7ofy3BfM0';
     const vapidSubject = 'mailto:catalystmom@outlook.com';
 
     if (!vapidPrivateKey) {
