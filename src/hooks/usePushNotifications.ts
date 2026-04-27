@@ -1,81 +1,105 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-
-const VAPID_PUBLIC_KEY = 'BNE3CbrZIF5fS_HMByom1M9MuwcEn_aRiIJS3LFQRJdp7plk40tKMqHQMH07zSm1ZgkKxTVAsVDTfk7ofy3BfM0';
-
-function urlBase64ToUint8Array(base64String: string): Uint8Array {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
+import { getMessagingIfSupported, getToken, onMessage, VAPID_KEY } from '@/lib/firebase';
 
 export function usePushNotifications() {
   const { user } = useAuth();
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const isSupported = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  const isSupported =
+    typeof window !== 'undefined' &&
+    'serviceWorker' in navigator &&
+    'Notification' in window &&
+    'PushManager' in window;
 
   useEffect(() => {
     if (!isSupported) return;
     setPermission(Notification.permission);
+  }, [isSupported]);
 
-    if (user && Notification.permission === 'granted') {
-      checkExistingSubscription();
-    }
+  // Check existing token
+  useEffect(() => {
+    if (!user || !isSupported || Notification.permission !== 'granted') return;
+    (async () => {
+      try {
+        const { data } = await supabase
+          .from('push_subscriptions')
+          .select('fcm_token')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        setIsSubscribed(!!data?.fcm_token);
+      } catch {
+        setIsSubscribed(false);
+      }
+    })();
   }, [user, isSupported]);
 
-  const checkExistingSubscription = async () => {
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-      setIsSubscribed(!!subscription);
-    } catch {
-      setIsSubscribed(false);
-    }
-  };
+  // Foreground message handler
+  useEffect(() => {
+    let unsub: (() => void) | undefined;
+    (async () => {
+      const messaging = await getMessagingIfSupported();
+      if (!messaging) return;
+      unsub = onMessage(messaging, (payload) => {
+        const n = payload.notification || {};
+        const data = (payload.data || {}) as Record<string, string>;
+        const title = n.title || data.title || 'Catalyst Mom';
+        const body = n.body || data.body || '';
+        if (Notification.permission === 'granted') {
+          try {
+            new Notification(title, {
+              body,
+              icon: n.icon || data.icon || '/catalyst-mom-logo.png',
+            });
+          } catch {
+            // ignore
+          }
+        }
+      });
+    })();
+    return () => unsub?.();
+  }, []);
 
   const requestPermission = useCallback(async (): Promise<boolean> => {
     if (!isSupported || !user) return false;
     setIsLoading(true);
-
     try {
       const result = await Notification.requestPermission();
       setPermission(result);
+      if (result !== 'granted') return false;
 
-      if (result !== 'granted') {
-        setIsLoading(false);
-        return false;
-      }
+      const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      await navigator.serviceWorker.ready;
 
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as BufferSource,
+      const messaging = await getMessagingIfSupported();
+      if (!messaging) throw new Error('FCM not supported in this browser');
+
+      const token = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: swReg,
       });
+      if (!token) throw new Error('Failed to obtain FCM token');
 
-      const json = subscription.toJSON();
-      const { error } = await supabase.from('push_subscriptions').upsert(
-        {
-          user_id: user.id,
-          endpoint: json.endpoint!,
-          p256dh_key: json.keys!.p256dh,
-          auth_key: json.keys!.auth,
-        },
-        { onConflict: 'user_id' }
-      );
-
+      const { error } = await supabase
+        .from('push_subscriptions')
+        .upsert(
+          {
+            user_id: user.id,
+            fcm_token: token,
+            endpoint: `fcm:${token}`,
+            auth_key: 'fcm',
+            p256dh_key: 'fcm',
+          },
+          { onConflict: 'user_id' }
+        );
       if (error) throw error;
+
       setIsSubscribed(true);
       return true;
     } catch (err) {
-      console.error('Push subscription failed:', err);
+      console.error('FCM subscription failed:', err);
       return false;
     } finally {
       setIsLoading(false);
@@ -85,10 +109,6 @@ export function usePushNotifications() {
   const unsubscribe = useCallback(async () => {
     if (!user) return;
     try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-      if (subscription) await subscription.unsubscribe();
-
       await supabase.from('push_subscriptions').delete().eq('user_id', user.id);
       setIsSubscribed(false);
     } catch (err) {

@@ -1129,29 +1129,32 @@ export type Database = {
       }
       push_subscriptions: {
         Row: {
-          auth_key: string
+          auth_key: string | null
           created_at: string
-          endpoint: string
+          endpoint: string | null
+          fcm_token: string | null
           id: string
-          p256dh_key: string
+          p256dh_key: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
-          auth_key: string
+          auth_key?: string | null
           created_at?: string
-          endpoint: string
+          endpoint?: string | null
+          fcm_token?: string | null
           id?: string
-          p256dh_key: string
+          p256dh_key?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
-          auth_key?: string
+          auth_key?: string | null
           created_at?: string
-          endpoint?: string
+          endpoint?: string | null
+          fcm_token?: string | null
           id?: string
-          p256dh_key?: string
+          p256dh_key?: string | null
           updated_at?: string
           user_id?: string
         }
