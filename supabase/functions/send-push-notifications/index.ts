@@ -1,91 +1,73 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import * as jose from "https://deno.land/x/jose@v5.2.0/index.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-function base64UrlEncode(data: Uint8Array): string {
+// --- Helpers ---
+function base64UrlEncode(data: Uint8Array | string): string {
+  const bytes = typeof data === 'string' ? new TextEncoder().encode(data) : data;
   let binary = '';
-  for (const byte of data) binary += String.fromCharCode(byte);
+  for (const byte of bytes) binary += String.fromCharCode(byte);
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-function base64UrlDecode(str: string): Uint8Array {
-  str = str.replace(/-/g, '+').replace(/_/g, '/');
-  const pad = str.length % 4;
-  if (pad) str += '='.repeat(4 - pad);
-  const binary = atob(str);
+function pemToArrayBuffer(pem: string): ArrayBuffer {
+  const b64 = pem
+    .replace(/-----BEGIN PRIVATE KEY-----/, '')
+    .replace(/-----END PRIVATE KEY-----/, '')
+    .replace(/\s+/g, '');
+  const binary = atob(b64);
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes;
+  return bytes.buffer;
 }
 
-async function importVapidKeys(publicKeyB64: string, privateKeyB64: string) {
-  const publicKeyBytes = base64UrlDecode(publicKeyB64);
-  const privateKeyBytes = base64UrlDecode(privateKeyB64);
+interface ServiceAccount {
+  client_email: string;
+  private_key: string;
+  project_id: string;
+  token_uri?: string;
+}
 
-  // Build JWK for ES256
-  const x = base64UrlEncode(publicKeyBytes.slice(1, 33));
-  const y = base64UrlEncode(publicKeyBytes.slice(33, 65));
-  const d = base64UrlEncode(privateKeyBytes);
+async function getAccessToken(sa: ServiceAccount): Promise<string> {
+  const now = Math.floor(Date.now() / 1000);
+  const header = { alg: 'RS256', typ: 'JWT' };
+  const payload = {
+    iss: sa.client_email,
+    scope: 'https://www.googleapis.com/auth/firebase.messaging',
+    aud: sa.token_uri || 'https://oauth2.googleapis.com/token',
+    iat: now,
+    exp: now + 3600,
+  };
 
-  const privateKey = await crypto.subtle.importKey(
-    'jwk',
-    { kty: 'EC', crv: 'P-256', x, y, d },
-    { name: 'ECDSA', namedCurve: 'P-256' },
-    true,
+  const encHeader = base64UrlEncode(JSON.stringify(header));
+  const encPayload = base64UrlEncode(JSON.stringify(payload));
+  const signingInput = `${encHeader}.${encPayload}`;
+
+  const keyData = pemToArrayBuffer(sa.private_key.replace(/\\n/g, '\n'));
+  const cryptoKey = await crypto.subtle.importKey(
+    'pkcs8',
+    keyData,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false,
     ['sign']
   );
+  const sigBuf = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', cryptoKey, new TextEncoder().encode(signingInput));
+  const jwt = `${signingInput}.${base64UrlEncode(new Uint8Array(sigBuf))}`;
 
-  return privateKey;
-}
-
-async function createVapidAuthHeader(
-  endpoint: string,
-  vapidSubject: string,
-  publicKey: string,
-  privateKeyB64: string
-): Promise<{ authorization: string; cryptoKey: string }> {
-  const url = new URL(endpoint);
-  const audience = `${url.protocol}//${url.host}`;
-
-  const privateKey = await importVapidKeys(publicKey, privateKeyB64);
-
-  const header = { alg: 'ES256', typ: 'JWT' };
-  const payload = {
-    aud: audience,
-    exp: Math.floor(Date.now() / 1000) + 12 * 60 * 60,
-    sub: vapidSubject,
-  };
-
-  const encodedHeader = base64UrlEncode(new TextEncoder().encode(JSON.stringify(header)));
-  const encodedPayload = base64UrlEncode(new TextEncoder().encode(JSON.stringify(payload)));
-  const signingInput = `${encodedHeader}.${encodedPayload}`;
-
-  const signature = await crypto.subtle.sign(
-    { name: 'ECDSA', hash: 'SHA-256' },
-    privateKey,
-    new TextEncoder().encode(signingInput)
-  );
-
-  // Convert DER signature to raw r||s format if needed
-  const sigBytes = new Uint8Array(signature);
-  let rawSig: Uint8Array;
-  if (sigBytes.length === 64) {
-    rawSig = sigBytes;
-  } else {
-    // Already raw from WebCrypto
-    rawSig = sigBytes;
+  const res = await fetch(sa.token_uri || 'https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`OAuth token error: ${res.status} ${t}`);
   }
-
-  const token = `${signingInput}.${base64UrlEncode(rawSig)}`;
-
-  return {
-    authorization: `vapid t=${token}, k=${publicKey}`,
-    cryptoKey: `p256ecdsa=${publicKey}`,
-  };
+  const json = await res.json();
+  return json.access_token;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -95,92 +77,117 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const { title, body, icon, url, user_ids } = await req.json();
-    const vapidPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY');
-    const vapidPublicKey = 'BNE3CbrZIF5fS_HMByom1M9MuwcEn_aRiIJS3LFQRJdp7plk40tKMqHQMH07zSm1ZgkKxTVAsVDTfk7ofy3BfM0';
-    const vapidSubject = 'mailto:catalystmom@outlook.com';
 
-    if (!vapidPrivateKey) {
-      throw new Error('VAPID_PRIVATE_KEY not configured');
+    const saRaw = Deno.env.get('FIREBASE_SERVICE_ACCOUNT');
+    if (!saRaw) throw new Error('FIREBASE_SERVICE_ACCOUNT not configured');
+
+    let sa: ServiceAccount;
+    try {
+      sa = JSON.parse(saRaw);
+    } catch {
+      throw new Error('FIREBASE_SERVICE_ACCOUNT is not valid JSON');
     }
 
-    console.log('Sending push notifications to users:', user_ids);
+    if (!Array.isArray(user_ids) || user_ids.length === 0) {
+      return new Response(JSON.stringify({ error: 'user_ids required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-    const subscriptionsResponse = await fetch(
-      `${Deno.env.get('SUPABASE_URL')}/rest/v1/push_subscriptions?user_id=in.(${user_ids.join(',')})`,
+    console.log('Sending FCM to users:', user_ids);
+
+    const subsRes = await fetch(
+      `${Deno.env.get('SUPABASE_URL')}/rest/v1/push_subscriptions?user_id=in.(${user_ids.join(',')})&fcm_token=not.is.null&select=user_id,fcm_token`,
       {
         headers: {
-          'apikey': Deno.env.get('SUPABASE_ANON_KEY')!,
-          'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!}`,
+          apikey: Deno.env.get('SUPABASE_ANON_KEY')!,
+          Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!}`,
         },
       }
     );
+    const subs: { user_id: string; fcm_token: string }[] = await subsRes.json();
+    console.log(`Found ${subs.length} FCM tokens`);
 
-    interface PushSub {
-      endpoint: string;
-      auth_key: string;
-      p256dh_key: string;
-      user_id: string;
+    if (subs.length === 0) {
+      return new Response(JSON.stringify({ success: true, sent: 0, failed: 0 }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    const subscriptions: PushSub[] = await subscriptionsResponse.json();
-    console.log(`Found ${subscriptions.length} subscriptions`);
-
-    const payload = JSON.stringify({
-      title: title || 'Catalyst Mom',
-      body: body || '',
-      icon: icon || '/catalyst-mom-logo.png',
-      url: url || '/',
-      timestamp: Date.now(),
-    });
+    const accessToken = await getAccessToken(sa);
+    const fcmUrl = `https://fcm.googleapis.com/v1/projects/${sa.project_id}/messages:send`;
 
     const results = await Promise.allSettled(
-      subscriptions.map(async (sub) => {
-        try {
-          const vapidHeaders = await createVapidAuthHeader(
-            sub.endpoint,
-            vapidSubject,
-            vapidPublicKey,
-            vapidPrivateKey
-          );
-
-          const response = await fetch(sub.endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/octet-stream',
-              'Content-Encoding': 'aes128gcm',
-              'TTL': '86400',
-              'Authorization': vapidHeaders.authorization,
-              'Crypto-Key': vapidHeaders.cryptoKey,
+      subs.map(async (sub) => {
+        const message = {
+          message: {
+            token: sub.fcm_token,
+            notification: {
+              title: title || 'Catalyst Mom',
+              body: body || '',
             },
-            body: new TextEncoder().encode(payload),
-          });
+            data: {
+              url: url || '/',
+              icon: icon || '/catalyst-mom-logo.png',
+              title: title || 'Catalyst Mom',
+              body: body || '',
+            },
+            webpush: {
+              fcm_options: { link: url || '/' },
+              notification: {
+                icon: icon || '/catalyst-mom-logo.png',
+                badge: '/catalyst-mom-logo.png',
+              },
+            },
+          },
+        };
 
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Push failed (${response.status}): ${errorText}`);
+        const r = await fetch(fcmUrl, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(message),
+        });
+
+        if (!r.ok) {
+          const errText = await r.text();
+          // Clean up invalid tokens
+          if (r.status === 404 || r.status === 400) {
+            await fetch(
+              `${Deno.env.get('SUPABASE_URL')}/rest/v1/push_subscriptions?fcm_token=eq.${encodeURIComponent(sub.fcm_token)}`,
+              {
+                method: 'DELETE',
+                headers: {
+                  apikey: Deno.env.get('SUPABASE_ANON_KEY')!,
+                  Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!}`,
+                },
+              }
+            );
           }
-
-          return { success: true, user_id: sub.user_id };
-        } catch (error) {
-          console.error(`Failed for user ${sub.user_id}:`, error);
-          return { success: false, user_id: sub.user_id, error: (error as Error).message };
+          throw new Error(`FCM ${r.status}: ${errText}`);
         }
+        return { success: true, user_id: sub.user_id };
       })
     );
 
-    const successful = results.filter(r => r.status === 'fulfilled' && (r.value as any).success).length;
+    const successful = results.filter((r) => r.status === 'fulfilled').length;
     const failed = results.length - successful;
+    results.forEach((r) => {
+      if (r.status === 'rejected') console.error('FCM send failed:', r.reason);
+    });
 
-    return new Response(
-      JSON.stringify({ success: true, sent: successful, failed }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ success: true, sent: successful, failed }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error('Error:', error);
-    return new Response(
-      JSON.stringify({ error: (error as Error).message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 };
 
