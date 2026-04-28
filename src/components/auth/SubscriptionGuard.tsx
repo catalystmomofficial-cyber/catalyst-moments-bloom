@@ -46,6 +46,11 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
     return <>{children}</>;
   }
   
+  // While we're verifying with the server, render content normally — never flash the paywall.
+  if (!subscribed && isCheckingSubscription) {
+    return <>{children}</>;
+  }
+
   if (!subscribed) {
     console.log('[SUBSCRIPTION_GUARD] Not subscribed, showing modal:', showModal);
     
