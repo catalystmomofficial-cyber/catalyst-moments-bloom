@@ -38,17 +38,25 @@ export const SubscriptionSection = () => {
     try {
       const { data, error } = await supabase
         .from('subscribers')
-        .select(`
-          *,
-          profiles!inner(display_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
+      // Fetch display names separately (profiles RLS may block joins for admins viewing other users)
+      const userIds = (data || []).map((s: any) => s.user_id).filter(Boolean);
+      let nameMap: Record<string, string> = {};
+      if (userIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('user_id, display_name')
+          .in('user_id', userIds);
+        nameMap = Object.fromEntries((profiles || []).map((p: any) => [p.user_id, p.display_name]));
+      }
+
       const formattedData = data?.map(sub => ({
         ...sub,
-        display_name: (sub.profiles as any)?.display_name || 'Unknown'
+        display_name: nameMap[sub.user_id] || 'Unknown'
       })) || [];
 
       setSubscribers(formattedData);
