@@ -42,9 +42,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [subscribed, setSubscribed] = useState<boolean>(false);
-  const [subscriptionTier, setSubscriptionTier] = useState<string | null>(null);
-  const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+  // Hydrate subscription state from localStorage to prevent paywall flash on reload
+  const cachedSub = (() => {
+    try {
+      const raw = localStorage.getItem('cm_subscription');
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  })();
+  const [subscribed, setSubscribed] = useState<boolean>(cachedSub?.subscribed ?? false);
+  const [subscriptionTier, setSubscriptionTier] = useState<string | null>(cachedSub?.subscription_tier ?? null);
+  const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(cachedSub?.subscription_end ?? null);
   const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
@@ -125,9 +132,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }, 0);
         } else {
           setProfile(null);
-          setSubscribed(false);
-          setSubscriptionTier(null);
-          setSubscriptionEnd(null);
         }
         
         if (event === 'SIGNED_OUT') {
@@ -135,6 +139,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setSubscribed(false);
           setSubscriptionTier(null);
           setSubscriptionEnd(null);
+          try { localStorage.removeItem('cm_subscription'); } catch {}
         }
       }
     );
@@ -267,7 +272,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const checkSubscription = async () => {
-    if (!session) {
+    // Use the freshest session (avoid stale closure right after sign-in)
+    const { data: { session: freshSession } } = await supabase.auth.getSession();
+    if (!freshSession) {
+      setSubscribed(false);
+      setSubscriptionTier(null);
+      setSubscriptionEnd(null);
+      try { localStorage.removeItem('cm_subscription'); } catch {}
       setIsCheckingSubscription(false);
       return;
     }
@@ -278,12 +289,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) {
         console.error('Error checking subscription:', error);
+        // Don't downgrade the user on a transient error — keep cached state
         return;
       }
 
-      setSubscribed(data.subscribed || false);
-      setSubscriptionTier(data.subscription_tier || null);
-      setSubscriptionEnd(data.subscription_end || null);
+      const next = {
+        subscribed: !!data.subscribed,
+        subscription_tier: data.subscription_tier || null,
+        subscription_end: data.subscription_end || null,
+      };
+      setSubscribed(next.subscribed);
+      setSubscriptionTier(next.subscription_tier);
+      setSubscriptionEnd(next.subscription_end);
+      try { localStorage.setItem('cm_subscription', JSON.stringify(next)); } catch {}
     } catch (error) {
       console.error('Error checking subscription:', error);
     } finally {
