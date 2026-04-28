@@ -132,9 +132,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }, 0);
         } else {
           setProfile(null);
-          setSubscribed(false);
-          setSubscriptionTier(null);
-          setSubscriptionEnd(null);
         }
         
         if (event === 'SIGNED_OUT') {
