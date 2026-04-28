@@ -144,7 +144,11 @@ const SubscriptionSuccess = () => {
                     <div className="flex items-start gap-2">
                       <Mail className="h-4 w-4 mt-0.5 text-primary flex-shrink-0" />
                       <span>
-                        A confirmation email is on its way to <strong>{user?.email}</strong>.
+                        {emailSent ? (
+                          <>A confirmation email has been sent to <strong>{user?.email}</strong>.</>
+                        ) : (
+                          <>We'll email a confirmation to <strong>{user?.email}</strong> shortly.</>
+                        )}
                       </span>
                     </div>
                     <div className="flex items-start gap-2">
