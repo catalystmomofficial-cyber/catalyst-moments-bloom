@@ -79,7 +79,7 @@ serve(async (req) => {
         line_items: lineItems,
         mode: "subscription",
         ui_mode: "embedded",
-        return_url: `${origin}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        return_url: `${origin}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
       });
       logStep("Checkout session created (embedded)", { sessionId: session.id, clientSecret: session.client_secret });
     } else {
@@ -89,7 +89,7 @@ serve(async (req) => {
         line_items: lineItems,
         mode: "subscription",
         ui_mode: "hosted",
-        success_url: `${origin}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${origin}/subscription-success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${origin}/dashboard?canceled=true`,
       });
       logStep("Checkout session created (hosted)", { sessionId: session.id, url: session.url });
