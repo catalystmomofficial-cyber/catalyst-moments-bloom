@@ -18,15 +18,18 @@ const SubscriptionSuccess = () => {
 
   const sessionId = searchParams.get('session_id');
 
+  const [emailSent, setEmailSent] = useState(false);
+
   useEffect(() => {
     if (!user || sentRef.current) return;
     sentRef.current = true;
 
     let cancelled = false;
     const sync = async () => {
-      // Poll subscription status (Stripe → check-subscription)
+      // Poll subscription status server-side (Stripe → check-subscription)
+      // Longer window: up to ~36s (12 × 3s) to allow Stripe propagation.
       let confirmed = false;
-      for (let i = 0; i < 8 && !cancelled; i++) {
+      for (let i = 0; i < 12 && !cancelled; i++) {
         try {
           await checkSubscription();
           const { data } = await supabase.functions.invoke('check-subscription');
@@ -37,13 +40,20 @@ const SubscriptionSuccess = () => {
         } catch (e) {
           console.error('[SUB_SUCCESS] poll error', e);
         }
-        await new Promise((r) => setTimeout(r, 2000));
+        await new Promise((r) => setTimeout(r, 3000));
       }
 
       if (cancelled) return;
-      setStatus(confirmed ? 'success' : 'pending');
 
-      // Send confirmation email (idempotent via session id)
+      if (!confirmed) {
+        // Do NOT send the email or claim it was sent until subscription is verified.
+        setStatus('pending');
+        return;
+      }
+
+      setStatus('success');
+
+      // Send confirmation email only after server-side confirmation (idempotent).
       try {
         const { data: profile } = await supabase
           .from('profiles')
@@ -53,7 +63,7 @@ const SubscriptionSuccess = () => {
 
         const firstName = profile?.display_name?.split(' ')[0];
 
-        await supabase.functions.invoke('send-transactional-email', {
+        const { error: emailError } = await supabase.functions.invoke('send-transactional-email', {
           body: {
             templateName: 'subscription-confirmation',
             recipientEmail: user.email,
@@ -65,6 +75,13 @@ const SubscriptionSuccess = () => {
             },
           },
         });
+
+        if (cancelled) return;
+        if (emailError) {
+          console.error('[SUB_SUCCESS] email send error', emailError);
+        } else {
+          setEmailSent(true);
+        }
       } catch (e) {
         console.error('[SUB_SUCCESS] email send error', e);
       }
