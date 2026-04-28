@@ -94,6 +94,14 @@ serve(async (req) => {
       logStep("No active subscription found");
     }
 
+    // Detect transition: was this user previously NOT subscribed?
+    const { data: prevRow } = await supabaseClient
+      .from("subscribers")
+      .select("subscribed")
+      .eq("email", user.email)
+      .maybeSingle();
+    const wasSubscribed = !!prevRow?.subscribed;
+
     await supabaseClient.from("subscribers").upsert({
       email: user.email,
       user_id: user.id,
@@ -105,6 +113,58 @@ serve(async (req) => {
     }, { onConflict: 'email' });
 
     logStep("Updated database with subscription info", { subscribed: hasActiveSub, subscriptionTier });
+
+    // 🔔 Notify all admins on NEW active subscription
+    if (hasActiveSub && !wasSubscribed) {
+      try {
+        logStep("New subscription detected — notifying admins");
+
+        const { data: profile } = await supabaseClient
+          .from("profiles")
+          .select("display_name")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        const memberName = profile?.display_name || user.email;
+
+        const { data: adminRows } = await supabaseClient
+          .from("admin_roles")
+          .select("user_id");
+        const adminIds: string[] = (adminRows ?? []).map((r: any) => r.user_id);
+        logStep("Admins to notify", { count: adminIds.length });
+
+        if (adminIds.length > 0) {
+          const title = "💰 New subscription!";
+          const message = `${memberName} just subscribed to ${subscriptionTier ?? 'Premium'}.`;
+
+          // In-app notifications
+          const rows = adminIds.map((aid) => ({
+            user_id: aid,
+            title,
+            message,
+            type: "success",
+            action_url: "/admin",
+          }));
+          await supabaseClient.from("notifications").insert(rows);
+
+          // Push notifications (best-effort)
+          try {
+            await supabaseClient.functions.invoke("send-push-notifications", {
+              body: {
+                title,
+                body: message,
+                url: "/admin",
+                user_ids: adminIds,
+              },
+            });
+          } catch (pushErr) {
+            logStep("Push notify error (non-fatal)", { error: String(pushErr) });
+          }
+        }
+      } catch (notifyErr) {
+        logStep("Admin notify error (non-fatal)", { error: String(notifyErr) });
+      }
+    }
+
     return new Response(JSON.stringify({
       subscribed: hasActiveSub,
       subscription_tier: subscriptionTier,
