@@ -42,9 +42,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [subscribed, setSubscribed] = useState<boolean>(false);
-  const [subscriptionTier, setSubscriptionTier] = useState<string | null>(null);
-  const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+  // Hydrate subscription state from localStorage to prevent paywall flash on reload
+  const cachedSub = (() => {
+    try {
+      const raw = localStorage.getItem('cm_subscription');
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  })();
+  const [subscribed, setSubscribed] = useState<boolean>(cachedSub?.subscribed ?? false);
+  const [subscriptionTier, setSubscriptionTier] = useState<string | null>(cachedSub?.subscription_tier ?? null);
+  const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(cachedSub?.subscription_end ?? null);
   const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
