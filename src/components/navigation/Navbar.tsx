@@ -2,13 +2,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Menu, Crown } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import AuthLinks from './AuthLinks';
 import { NotificationSystem } from '@/components/notifications/NotificationSystem';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { subscribed, subscriptionTier } = useAuth();
 
   const links = [
     { name: 'Home', href: '/' },
@@ -46,6 +49,17 @@ const Navbar = () => {
 
           {/* Auth Links + Notifications - Desktop */}
           <div className="hidden md:flex items-center gap-2">
+            {subscribed && (
+              <Link to="/profile" aria-label="Manage subscription">
+                <Badge
+                  variant="secondary"
+                  className="bg-gradient-to-r from-catalyst-gold/20 to-catalyst-copper/20 text-catalyst-brown border border-catalyst-gold/40 hover:from-catalyst-gold/30 hover:to-catalyst-copper/30 transition-colors gap-1 px-2.5 py-1"
+                >
+                  <Crown className="h-3.5 w-3.5" />
+                  {subscriptionTier || 'Premium'} Member
+                </Badge>
+              </Link>
+            )}
             <NotificationSystem />
             <AuthLinks />
           </div>
@@ -70,7 +84,16 @@ const Navbar = () => {
                       {link.name}
                     </Link>
                   ))}
-                  <div className="pt-4 border-t">
+                  <div className="pt-4 border-t space-y-3">
+                    {subscribed && (
+                      <Badge
+                        variant="secondary"
+                        className="w-full justify-center bg-gradient-to-r from-catalyst-gold/20 to-catalyst-copper/20 text-catalyst-brown border border-catalyst-gold/40 gap-1 py-1.5"
+                      >
+                        <Crown className="h-3.5 w-3.5" />
+                        {subscriptionTier || 'Premium'} Member — Active
+                      </Badge>
+                    )}
                     <AuthLinks />
                   </div>
                 </nav>
