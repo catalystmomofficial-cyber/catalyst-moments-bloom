@@ -300,6 +300,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     subscribed,
     subscriptionTier,
     subscriptionEnd,
+    isCheckingSubscription,
     showCheckoutModal,
     setShowCheckoutModal,
     login,
