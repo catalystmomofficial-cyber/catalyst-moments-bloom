@@ -1,66 +1,58 @@
+## Goal
 
+Add a new Supabase Edge Function `stripe-webhook` that fires on Stripe `checkout.session.completed`, sends a branded welcome email via Resend, and syncs the customer into Omnisend with tags so your "Welcome Sequence" automation triggers.
 
-## Push Notification Support Plan
+## What gets built
 
-### Overview
-Add browser push notifications with a service worker, permission request UI, VAPID key integration, and proper Web Push protocol in the edge function. The `push_subscriptions` table already exists in Supabase.
+### 1. New Edge Function: `supabase/functions/stripe-webhook/index.ts`
 
-### What You Need to Do First (Manual Step)
-Generate VAPID keys for Web Push. You can use a free online tool or run `npx web-push generate-vapid-keys`. You will need to add the **private key** as a Supabase secret (`VAPID_PRIVATE_KEY`) and the **public key** will be stored in code (it is safe to expose publicly). You will also need a **VAPID subject** (your email, e.g. `mailto:catalystmom@outlook.com`).
+- **Public endpoint** (no JWT) — Stripe must reach it without an auth header. Will be added to `supabase/config.toml` with `verify_jwt = false`.
+- **Raw body capture** — uses `await req.text()` (required for Stripe signature verification).
+- **Signature verification** — `stripe.webhooks.constructEventAsync(body, sig, STRIPE_WEBHOOK_SECRET)` (the async variant is required in Deno because `crypto.subtle` is async).
+- **Event filter** — only acts on `checkout.session.completed`. Other events return `200` immediately so Stripe doesn't retry.
+- **Data extracted from session**: `customer_email` (falls back to `customer_details.email`), `customer_details.name`, `amount_total`, `currency`, `id`.
+- **Action A — Resend email** (wrapped in try/catch, logged on failure):
+  - From: `Catalyst Mom <onboarding@resend.dev>` (matches your existing `send-welcome-email` sender)
+  - Subject: `You're In! Your Catalyst Mom Recovery Starts Now 🌸`
+  - HTML body: warm, on-brand (catalyst-copper `#b87333` accents matching your transactional templates), confirms payment amount, CTA button to `https://catalystmomofficial.com/login`, and a "Add to Home Screen" reminder block for PWA recovery alerts.
+- **Action B — Omnisend sync** (wrapped in try/catch, logged on failure):
+  - `POST https://api.omnisend.com/v3/contacts`
+  - Headers: `X-API-KEY: ${OMNISEND_API_KEY}`, `Content-Type: application/json`
+  - Body: `{ identifiers: [{ type: "email", id: email, channels: { email: { status: "subscribed", statusDate: <iso> } } }], firstName, lastName, tags: ["source: stripe_payment", "status: paid_subscriber"] }`
+- **Independent failure handling** — both actions run; one failing does not block the other. Webhook always returns `200` after attempting both (so Stripe doesn't retry on email/marketing hiccups). Errors are logged to function logs.
 
----
+### 2. Config: `supabase/config.toml`
 
-### Implementation Steps
+Add:
+```
+[functions.stripe-webhook]
+verify_jwt = false
+```
 
-#### 1. Create Service Worker (`public/sw.js`)
-- Listen for `push` events, parse notification data, and display via `self.registration.showNotification()`
-- Listen for `notificationclick` to open the target URL
-- Basic caching strategy is not needed here (this is purely for push)
+### 3. Secrets
 
-#### 2. Create Push Notification Hook (`src/hooks/usePushNotifications.ts`)
-- Register the service worker on mount
-- Check current permission status (`Notification.permission`)
-- Provide `requestPermission()` function that:
-  1. Calls `Notification.requestPermission()`
-  2. On grant, subscribes via `registration.pushManager.subscribe()` with the VAPID public key
-  3. Saves the subscription (endpoint, p256dh, auth keys) to the `push_subscriptions` table via Supabase
-- Provide `unsubscribe()` function to remove from table
-- Expose `isSupported`, `permission`, `isSubscribed` state
+Already configured: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`.
 
-#### 3. Create Permission Request UI (`src/components/notifications/PushNotificationPrompt.tsx`)
-- A dismissible banner/card shown to authenticated users who haven't granted permission
-- "Enable Notifications" button that calls `requestPermission()`
-- Shows in Dashboard or as a toast-style prompt after login
-- Stores dismissal in `localStorage` so it doesn't nag
+Need to add (will prompt you):
+- `STRIPE_WEBHOOK_SECRET` — get from Stripe Dashboard → Developers → Webhooks after creating the endpoint
+- `OMNISEND_API_KEY` — get from Omnisend → Store settings → Integrations → API keys
 
-#### 4. Update Edge Function (`supabase/functions/send-push-notifications/index.ts`)
-- Replace the naive `fetch(endpoint)` with proper Web Push protocol using VAPID authentication
-- Use the `web-push` library (via ESM import for Deno) or implement JWT-based VAPID signing manually
-- Sign each push message with the VAPID private key so push services (FCM, Mozilla) accept it
+### 4. Stripe Dashboard setup (you do this once after deploy)
 
-#### 5. Add VAPID Secret
-- Add `VAPID_PRIVATE_KEY` as a Supabase Edge Function secret
-- Store the VAPID public key as a constant in the client code (safe to expose)
+1. Go to Stripe → Developers → Webhooks → Add endpoint
+2. URL: `https://moxxceccaftkeuaowctw.supabase.co/functions/v1/stripe-webhook`
+3. Select event: `checkout.session.completed`
+4. Copy the signing secret (`whsec_…`) and paste it into `STRIPE_WEBHOOK_SECRET`
 
-#### 6. Integrate into App
-- Add service worker registration in `src/main.tsx`
-- Show `PushNotificationPrompt` in the Dashboard page for logged-in users
-- Wire the existing `NotificationSystem` bell icon to also show a "Turn on push notifications" option if not yet subscribed
+## Notes on existing setup
 
-### Files to Create/Modify
+Your project currently sends the customer confirmation email **client-side** from `SubscriptionSuccess.tsx` after polling `check-subscription`. That works only if the user lands on the success page. This webhook becomes a **server-side backup** that fires the moment Stripe confirms payment — so even users who close the tab still get the welcome email and are added to your Omnisend sequence. The two paths are idempotent enough not to cause duplicates: Resend will send a second email if invoked twice, but the existing client-side call uses an `idempotencyKey` (`sub-confirm-${sessionId}`) — the new webhook will use a different key (`stripe-webhook-${sessionId}`) since it's a different template/sender concept. If you want strict dedup, say the word and I'll have the webhook reuse the same idempotency key as the client path.
 
-| File | Action |
-|------|--------|
-| `public/sw.js` | Create - Service worker for push events |
-| `src/hooks/usePushNotifications.ts` | Create - Hook for permission + subscription management |
-| `src/components/notifications/PushNotificationPrompt.tsx` | Create - Permission request UI |
-| `supabase/functions/send-push-notifications/index.ts` | Update - Add VAPID signing |
-| `src/main.tsx` | Update - Register service worker |
-| `src/pages/Dashboard.tsx` | Update - Add push prompt |
+## What I'll need from you after approval
 
-### Technical Details
-- VAPID public key stored as `VITE_VAPID_PUBLIC_KEY` in `.env` or hardcoded constant
-- VAPID private key stored as Supabase secret `VAPID_PRIVATE_KEY`
-- Service worker uses the Push API standard (`PushEvent`, `showNotification`)
-- Subscription object keys (`p256dh`, `auth`) map to existing `push_subscriptions` table columns
+1. Approve adding the two secrets (`STRIPE_WEBHOOK_SECRET`, `OMNISEND_API_KEY`) — I'll prompt with the add-secret tool.
+2. After deploy, register the webhook in Stripe (URL above) and paste the signing secret.
 
+<lov-actions>
+<lov-link href="https://supabase.com/dashboard/project/moxxceccaftkeuaowctw/functions">Edge Functions dashboard</lov-link>
+</lov-actions>
