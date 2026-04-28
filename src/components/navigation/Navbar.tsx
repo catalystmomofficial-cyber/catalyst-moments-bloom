@@ -84,7 +84,16 @@ const Navbar = () => {
                       {link.name}
                     </Link>
                   ))}
-                  <div className="pt-4 border-t">
+                  <div className="pt-4 border-t space-y-3">
+                    {subscribed && (
+                      <Badge
+                        variant="secondary"
+                        className="w-full justify-center bg-gradient-to-r from-catalyst-gold/20 to-catalyst-copper/20 text-catalyst-brown border border-catalyst-gold/40 gap-1 py-1.5"
+                      >
+                        <Crown className="h-3.5 w-3.5" />
+                        {subscriptionTier || 'Premium'} Member — Active
+                      </Badge>
+                    )}
                     <AuthLinks />
                   </div>
                 </nav>
