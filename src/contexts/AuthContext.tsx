@@ -274,7 +274,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const checkSubscription = async () => {
-    if (!session) {
+    // Use the freshest session (avoid stale closure right after sign-in)
+    const { data: { session: freshSession } } = await supabase.auth.getSession();
+    if (!freshSession) {
+      setSubscribed(false);
+      setSubscriptionTier(null);
+      setSubscriptionEnd(null);
+      try { localStorage.removeItem('cm_subscription'); } catch {}
       setIsCheckingSubscription(false);
       return;
     }
@@ -285,12 +291,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) {
         console.error('Error checking subscription:', error);
+        // Don't downgrade the user on a transient error — keep cached state
         return;
       }
 
-      setSubscribed(data.subscribed || false);
-      setSubscriptionTier(data.subscription_tier || null);
-      setSubscriptionEnd(data.subscription_end || null);
+      const next = {
+        subscribed: !!data.subscribed,
+        subscription_tier: data.subscription_tier || null,
+        subscription_end: data.subscription_end || null,
+      };
+      setSubscribed(next.subscribed);
+      setSubscriptionTier(next.subscription_tier);
+      setSubscriptionEnd(next.subscription_end);
+      try { localStorage.setItem('cm_subscription', JSON.stringify(next)); } catch {}
     } catch (error) {
       console.error('Error checking subscription:', error);
     } finally {
