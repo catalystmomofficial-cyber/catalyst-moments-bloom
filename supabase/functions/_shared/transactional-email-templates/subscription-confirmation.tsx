@@ -68,6 +68,20 @@ const SubscriptionConfirmationEmail = ({
           </Section>
 
           <Hr style={hr} />
+
+          <Section style={quickStart}>
+            <Text style={quickStartLabel}>QUICK START</Text>
+            <Text style={quickStartHeading}>Stay Connected</Text>
+            <Text style={text}>
+              Add Catalyst Mom to your home screen for recovery alerts and daily check-ins.{' '}
+              <a href={`${SITE_URL}/pwa-instructions`} style={inlineLink}>
+                See how to install
+              </a>
+              .
+            </Text>
+          </Section>
+
+          <Hr style={hr} />
           <Text style={footer}>
             Questions? Just reply to this email — we read every message.
             <br />
