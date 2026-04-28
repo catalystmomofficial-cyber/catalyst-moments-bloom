@@ -49,6 +49,17 @@ const Navbar = () => {
 
           {/* Auth Links + Notifications - Desktop */}
           <div className="hidden md:flex items-center gap-2">
+            {subscribed && (
+              <Link to="/profile" aria-label="Manage subscription">
+                <Badge
+                  variant="secondary"
+                  className="bg-gradient-to-r from-catalyst-gold/20 to-catalyst-copper/20 text-catalyst-brown border border-catalyst-gold/40 hover:from-catalyst-gold/30 hover:to-catalyst-copper/30 transition-colors gap-1 px-2.5 py-1"
+                >
+                  <Crown className="h-3.5 w-3.5" />
+                  {subscriptionTier || 'Premium'} Member
+                </Badge>
+              </Link>
+            )}
             <NotificationSystem />
             <AuthLinks />
           </div>
