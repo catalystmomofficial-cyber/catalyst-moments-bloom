@@ -19,7 +19,7 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   const location = useLocation();
   
   // Routes that should NOT trigger the subscription modal
-  const publicRoutes = ['/', '/auth', '/login', '/register', '/forgot-password', '/reset-password'];
+  const publicRoutes = ['/', '/auth', '/login', '/register', '/forgot-password', '/reset-password', '/subscription-success', '/credit-purchase-success'];
   
   // Check if user just completed a successful payment
   useEffect(() => {

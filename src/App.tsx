@@ -66,6 +66,7 @@ import AssessmentResults from "./pages/AssessmentResults";
 import BirthBallCommunityFeed from "./pages/BirthBallCommunityFeed";
 import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
 import CreditPurchaseSuccess from "./pages/CreditPurchaseSuccess";
+import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import About from "./pages/About";
 import Unsubscribe from "./pages/Unsubscribe";
 import { HelmetProvider, Helmet } from "react-helmet-async";
@@ -364,6 +365,7 @@ function AppContent() {
           </PrivateRoute>
         } />
         <Route path="/credit-purchase-success" element={<CreditPurchaseSuccess />} />
+        <Route path="/subscription-success" element={<SubscriptionSuccess />} />
         
         {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />
