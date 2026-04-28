@@ -142,6 +142,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setSubscribed(false);
           setSubscriptionTier(null);
           setSubscriptionEnd(null);
+          try { localStorage.removeItem('cm_subscription'); } catch {}
         }
       }
     );
