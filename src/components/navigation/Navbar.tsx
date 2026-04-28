@@ -2,13 +2,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Menu, Crown } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import AuthLinks from './AuthLinks';
 import { NotificationSystem } from '@/components/notifications/NotificationSystem';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { subscribed, subscriptionTier } = useAuth();
 
   const links = [
     { name: 'Home', href: '/' },
