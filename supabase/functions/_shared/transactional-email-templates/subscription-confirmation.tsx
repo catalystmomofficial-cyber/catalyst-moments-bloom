@@ -131,3 +131,13 @@ const button = {
 }
 const hr = { borderColor: '#e8d5bf', margin: '32px 0 16px' }
 const footer = { fontSize: '12px', color: '#71717a', lineHeight: '1.6', textAlign: 'center' as const }
+const quickStart = {
+  backgroundColor: '#fdf6ee',
+  border: '1px solid #e8d5bf',
+  borderRadius: '12px',
+  padding: '20px 24px',
+  margin: '20px 0',
+}
+const quickStartLabel = { fontSize: '11px', color: '#9c6f4d', letterSpacing: '0.08em', margin: '0 0 4px', fontWeight: 600 }
+const quickStartHeading = { fontSize: '18px', color: '#7c4a2d', fontWeight: 'bold', margin: '0 0 8px' }
+const inlineLink = { color: '#b87333', textDecoration: 'underline', fontWeight: 600 }
