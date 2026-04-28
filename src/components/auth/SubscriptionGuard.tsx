@@ -11,31 +11,33 @@ interface SubscriptionGuardProps {
 }
 
 const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
-  const { subscribed, checkSubscription, user } = useAuth();
+  const { subscribed, checkSubscription, user, isCheckingSubscription } = useAuth();
   const bypass = useDevBypass();
   const { isAdmin } = useAdminAuth();
   const [showModal, setShowModal] = useState(false);
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  
+
   // Routes that should NOT trigger the subscription modal
   const publicRoutes = ['/', '/auth', '/login', '/register', '/forgot-password', '/reset-password', '/subscription-success', '/credit-purchase-success'];
-  
+
   // Check if user just completed a successful payment
   useEffect(() => {
-    if (searchParams.get('success') === 'true') {
-      console.log('[SUBSCRIPTION_GUARD] Success redirect detected, refreshing subscription status');
+    if (searchParams.get('success') === 'true' || searchParams.get('session_id')) {
+      console.log('[SUBSCRIPTION_GUARD] Success/session redirect detected, refreshing subscription status');
       checkSubscription();
     }
   }, [searchParams, checkSubscription]);
 
-  // Show modal immediately when accessing protected routes
+  // Show modal only when we KNOW the user isn't subscribed (not while checking)
   useEffect(() => {
-    if (user && !subscribed && !bypass) {
+    if (user && !subscribed && !bypass && !isCheckingSubscription) {
       const isPublicRoute = publicRoutes.includes(location.pathname);
       setShowModal(!isPublicRoute);
+    } else {
+      setShowModal(false);
     }
-  }, [user, subscribed, bypass, location.pathname]);
+  }, [user, subscribed, bypass, isCheckingSubscription, location.pathname]);
   
   console.log('[SUBSCRIPTION_GUARD] Subscription state:', { subscribed, bypass, isAdmin, route: location.pathname });
   
