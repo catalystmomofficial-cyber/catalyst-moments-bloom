@@ -1,0 +1,2 @@
+CREATE POLICY "admins_view_all_subscriptions" ON public.subscribers FOR SELECT USING (public.is_admin(auth.uid()));
+CREATE POLICY "admins_update_subscriptions" ON public.subscribers FOR UPDATE USING (public.is_admin(auth.uid()));
