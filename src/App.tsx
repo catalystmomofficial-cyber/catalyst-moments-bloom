@@ -29,6 +29,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import SubscriptionGuard from "./components/auth/SubscriptionGuard";
+import SubscriptionRefresher from "./components/auth/SubscriptionRefresher";
 import FoodCalorieChecker from "./pages/FoodCalorieChecker";
 import Questionnaire from "./pages/Questionnaire";
 import MealPlan from "./pages/MealPlan";
@@ -90,6 +91,7 @@ function AppContent() {
           <meta property="og:url" content={window.location.href} />
         </Helmet>
         <ScrollToTop />
+        <SubscriptionRefresher />
         <GoogleAuthOnboarding />
         <Toaster />
         <Sonner />
