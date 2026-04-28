@@ -39,47 +39,9 @@ export const useWellnessData = () => {
       const storedWellness = localStorage.getItem(`wellness_${user.id}`);
       const storedWorkouts = localStorage.getItem(`workouts_${user.id}`);
       
-      const wellness = storedWellness ? JSON.parse(storedWellness) : [
-        // Default sample data to show functionality  
-        {
-          id: '1',
-          mood_score: 7,
-          energy_level: 6,
-          sleep_hours: 7.5,
-          stress_level: 4,
-          self_care_completed: true,
-          hydration_glasses: 6,
-          created_at: new Date().toISOString(),
-          notes: 'Feeling good today after morning meditation'
-        }
-      ];
-      const workouts = storedWorkouts ? JSON.parse(storedWorkouts) : [
-        // Default sample data to show functionality
-        {
-          id: '1',
-          workout_type: 'Postpartum Core',
-          duration_minutes: 15,
-          intensity_level: 6,
-          calories_burned: 45,
-          completed_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: '2',
-          workout_type: 'Prenatal Yoga',
-          duration_minutes: 20,
-          intensity_level: 4,
-          calories_burned: 35,
-          completed_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-        {
-          id: '3',
-          workout_type: 'Energy Boost',
-          duration_minutes: 10,
-          intensity_level: 7,
-          calories_burned: 25,
-          completed_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-      ];
+      // New accounts start empty — only show real, user-logged data
+      const wellness = storedWellness ? JSON.parse(storedWellness) : [];
+      const workouts = storedWorkouts ? JSON.parse(storedWorkouts) : [];
 
       setWellnessEntries(wellness);
       setWorkoutSessions(workouts);
