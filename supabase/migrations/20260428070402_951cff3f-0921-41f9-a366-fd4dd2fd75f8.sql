@@ -1,0 +1,1 @@
+CREATE POLICY "admins_view_all_profiles" ON public.profiles FOR SELECT USING (public.is_admin(auth.uid()));
