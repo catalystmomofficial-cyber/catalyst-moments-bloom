@@ -25,6 +25,7 @@ interface AuthContextType {
   subscribed: boolean;
   subscriptionTier: string | null;
   subscriptionEnd: string | null;
+  isCheckingSubscription: boolean;
   showCheckoutModal: boolean;
   setShowCheckoutModal: (show: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
@@ -44,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [subscriptionTier, setSubscriptionTier] = useState<string | null>(null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+  const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
   // Fetch user profile from the profiles table
@@ -265,21 +267,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const checkSubscription = async () => {
-    if (!session) return;
-    
+    if (!session) {
+      setIsCheckingSubscription(false);
+      return;
+    }
+
+    setIsCheckingSubscription(true);
     try {
       const { data, error } = await supabase.functions.invoke('check-subscription');
-      
+
       if (error) {
         console.error('Error checking subscription:', error);
         return;
       }
-      
+
       setSubscribed(data.subscribed || false);
       setSubscriptionTier(data.subscription_tier || null);
       setSubscriptionEnd(data.subscription_end || null);
     } catch (error) {
       console.error('Error checking subscription:', error);
+    } finally {
+      setIsCheckingSubscription(false);
     }
   };
 
