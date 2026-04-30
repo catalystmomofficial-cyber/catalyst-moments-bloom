@@ -26,6 +26,7 @@ import { PersonalizedRecommendations } from '@/components/wellness/PersonalizedR
 import { QuickSelfCareIdeas } from '@/components/wellness/QuickSelfCareIdeas';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { useAssessmentData } from '@/hooks/useAssessmentData';
 
 const Wellness = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
