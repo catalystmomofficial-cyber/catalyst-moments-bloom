@@ -97,7 +97,7 @@ export const PersonalizedRecommendations = () => {
 
   useEffect(() => {
     generateRecommendations();
-  }, [user, wellnessEntries, currentJourney, currentStage]);
+  }, [user, wellnessEntries, currentJourney, currentStage, assessmentData]);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
