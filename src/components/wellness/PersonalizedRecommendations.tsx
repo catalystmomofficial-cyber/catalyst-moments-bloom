@@ -50,8 +50,8 @@ export const PersonalizedRecommendations = () => {
       const recentWorkouts = workoutSessions.slice(0, 3);
 
       const profile = {
-        journey: currentJourney || 'general',
-        stage: currentStage || 'general',
+        journey: currentJourney || (assessmentData?.stage as string) || 'general',
+        stage: currentStage || (assessmentData?.stage as string) || 'general',
         moodScore: latestWellness?.mood_score || 5,
         energyLevel: latestWellness?.energy_level || 5,
         stressLevel: latestWellness?.stress_level || 5,
@@ -59,7 +59,13 @@ export const PersonalizedRecommendations = () => {
         hydrationGlasses: latestWellness?.hydration_glasses || 0,
         selfCareCompleted: latestWellness?.self_care_completed || false,
         recentActivities: recentWorkouts.map(w => w.workout_type),
-        preferences: [] // Could be expanded later
+        preferences: [
+          assessmentData?.primary_goal && `goal:${assessmentData.primary_goal}`,
+          assessmentData?.biggest_obstacle && `obstacle:${assessmentData.biggest_obstacle}`,
+          assessmentData?.birth_experience && `birth:${assessmentData.birth_experience}`,
+          assessmentData?.tier && `tier:${assessmentData.tier}`,
+          assessmentScore !== null && `baseline_score:${assessmentScore}`,
+        ].filter(Boolean) as string[],
       };
 
       const [newRecommendations, newInsights] = await Promise.all([
