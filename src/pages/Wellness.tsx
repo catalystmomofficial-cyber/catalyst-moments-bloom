@@ -26,16 +26,24 @@ import { PersonalizedRecommendations } from '@/components/wellness/PersonalizedR
 import { QuickSelfCareIdeas } from '@/components/wellness/QuickSelfCareIdeas';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { useAssessmentData } from '@/hooks/useAssessmentData';
 
 const Wellness = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [activeTab, setActiveTab] = useState("insights");
   const { wellnessEntries, wellnessScore, loading } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
+  const { assessmentData, scoreNumber: assessmentScore } = useAssessmentData();
   
   // Get latest wellness data for display
   const latestEntry = wellnessEntries[0];
-  const moodDisplay = latestEntry ? `${latestEntry.mood_score}/10` : "Not tracked";
+  // Use assessment score as baseline if user has no logged wellness data yet
+  const baselineFromAssessment = assessmentScore !== null && !latestEntry;
+  const moodDisplay = latestEntry
+    ? `${latestEntry.mood_score}/10`
+    : baselineFromAssessment
+      ? `${Math.round(assessmentScore!)}/100`
+      : "Not tracked";
   const sleepDisplay = latestEntry ? `${latestEntry.sleep_hours}h` : "Not tracked";
   const selfCareDisplay = latestEntry ? (latestEntry.self_care_completed ? "✓ Done" : "Pending") : "Not tracked";
   const hydrationDisplay = latestEntry ? `${latestEntry.hydration_glasses}/8` : "0/8";
@@ -64,7 +72,13 @@ const Wellness = () => {
             title="Mood"
             icon={<SmilePlus className="h-5 w-5 text-primary" />}
             value={moodDisplay}
-            trend={wellnessScore ? `Wellness Score: ${wellnessScore}%` : "Complete mood check-in"}
+            trend={
+              wellnessScore
+                ? `Wellness Score: ${wellnessScore}%`
+                : baselineFromAssessment
+                  ? `Assessment baseline${assessmentData?.tier ? ` · ${assessmentData.tier}` : ''}`
+                  : "Complete mood check-in"
+            }
             color="bg-yellow-100"
           />
           <WellnessQuickCard
@@ -136,6 +150,28 @@ const Wellness = () => {
                         <div className="text-center text-sm text-muted-foreground">
                           📈 Your wellness has improved 15% this week
                         </div>
+                      </div>
+                    ) : assessmentData ? (
+                      <div className="h-full flex flex-col justify-center space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          {assessmentScore !== null && (
+                            <div className="text-center">
+                              <div className="text-2xl font-bold text-primary">{Math.round(assessmentScore)}/100</div>
+                              <div className="text-sm text-muted-foreground">Assessment Baseline</div>
+                            </div>
+                          )}
+                          {assessmentData.tier && (
+                            <div className="text-center">
+                              <div className="text-2xl font-bold text-primary capitalize">{String(assessmentData.tier)}</div>
+                              <div className="text-sm text-muted-foreground">Your Tier</div>
+                            </div>
+                          )}
+                        </div>
+                        {assessmentData.biggest_obstacle && (
+                          <div className="text-center text-sm text-muted-foreground">
+                            🎯 Priority gap: <span className="font-medium text-foreground">{String(assessmentData.biggest_obstacle)}</span>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="h-full flex items-center justify-center">

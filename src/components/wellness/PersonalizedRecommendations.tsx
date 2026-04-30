@@ -6,6 +6,7 @@ import { Loader2, RefreshCw, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { useAssessmentData } from '@/hooks/useAssessmentData';
 import { wellnessAI } from '@/services/wellnessAI';
 import { useToast } from '@/hooks/use-toast';
 
@@ -26,6 +27,7 @@ export const PersonalizedRecommendations = () => {
   const { user } = useAuth();
   const { wellnessEntries, workoutSessions } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
+  const { assessmentData, scoreNumber: assessmentScore } = useAssessmentData();
   const { toast } = useToast();
   
   const [recommendations, setRecommendations] = useState<PersonalizedRecommendation[]>([]);
@@ -48,8 +50,8 @@ export const PersonalizedRecommendations = () => {
       const recentWorkouts = workoutSessions.slice(0, 3);
 
       const profile = {
-        journey: currentJourney || 'general',
-        stage: currentStage || 'general',
+        journey: currentJourney || (assessmentData?.stage as string) || 'general',
+        stage: currentStage || (assessmentData?.stage as string) || 'general',
         moodScore: latestWellness?.mood_score || 5,
         energyLevel: latestWellness?.energy_level || 5,
         stressLevel: latestWellness?.stress_level || 5,
@@ -57,7 +59,13 @@ export const PersonalizedRecommendations = () => {
         hydrationGlasses: latestWellness?.hydration_glasses || 0,
         selfCareCompleted: latestWellness?.self_care_completed || false,
         recentActivities: recentWorkouts.map(w => w.workout_type),
-        preferences: [] // Could be expanded later
+        preferences: [
+          assessmentData?.primary_goal && `goal:${assessmentData.primary_goal}`,
+          assessmentData?.biggest_obstacle && `obstacle:${assessmentData.biggest_obstacle}`,
+          assessmentData?.birth_experience && `birth:${assessmentData.birth_experience}`,
+          assessmentData?.tier && `tier:${assessmentData.tier}`,
+          assessmentScore !== null && `baseline_score:${assessmentScore}`,
+        ].filter(Boolean) as string[],
       };
 
       const [newRecommendations, newInsights] = await Promise.all([
@@ -89,7 +97,7 @@ export const PersonalizedRecommendations = () => {
 
   useEffect(() => {
     generateRecommendations();
-  }, [user, wellnessEntries, currentJourney, currentStage]);
+  }, [user, wellnessEntries, currentJourney, currentStage, assessmentData]);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -191,6 +199,24 @@ export const PersonalizedRecommendations = () => {
           </Button>
         </CardHeader>
         <CardContent>
+          {assessmentData?.biggest_obstacle && (
+            <div className="mb-4 p-4 rounded-lg border-l-4 border-primary bg-primary/5">
+              <div className="flex items-start gap-2 mb-1">
+                <Badge className="bg-destructive text-destructive-foreground">Priority Gap</Badge>
+                {assessmentData?.tier && (
+                  <Badge variant="outline" className="capitalize">{String(assessmentData.tier)} tier</Badge>
+                )}
+              </div>
+              <h3 className="font-semibold mt-2 break-words">
+                Focus area: {String(assessmentData.biggest_obstacle)}
+              </h3>
+              {assessmentData?.primary_goal && (
+                <p className="text-sm text-muted-foreground mt-1 break-words">
+                  Aligned with your goal: <span className="font-medium text-foreground">{String(assessmentData.primary_goal)}</span>
+                </p>
+              )}
+            </div>
+          )}
           <div className="space-y-4">
             {recommendations.map((rec) => {
               // Icon may come back as a name string (e.g. "water-outline") instead of an emoji.
