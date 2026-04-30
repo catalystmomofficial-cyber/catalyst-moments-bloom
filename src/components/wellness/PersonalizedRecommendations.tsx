@@ -199,6 +199,24 @@ export const PersonalizedRecommendations = () => {
           </Button>
         </CardHeader>
         <CardContent>
+          {assessmentData?.biggest_obstacle && (
+            <div className="mb-4 p-4 rounded-lg border-l-4 border-primary bg-primary/5">
+              <div className="flex items-start gap-2 mb-1">
+                <Badge className="bg-destructive text-destructive-foreground">Priority Gap</Badge>
+                {assessmentData?.tier && (
+                  <Badge variant="outline" className="capitalize">{String(assessmentData.tier)} tier</Badge>
+                )}
+              </div>
+              <h3 className="font-semibold mt-2 break-words">
+                Focus area: {String(assessmentData.biggest_obstacle)}
+              </h3>
+              {assessmentData?.primary_goal && (
+                <p className="text-sm text-muted-foreground mt-1 break-words">
+                  Aligned with your goal: <span className="font-medium text-foreground">{String(assessmentData.primary_goal)}</span>
+                </p>
+              )}
+            </div>
+          )}
           <div className="space-y-4">
             {recommendations.map((rec) => {
               // Icon may come back as a name string (e.g. "water-outline") instead of an emoji.
