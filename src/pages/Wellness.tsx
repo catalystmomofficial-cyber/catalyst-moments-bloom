@@ -33,10 +33,17 @@ const Wellness = () => {
   const [activeTab, setActiveTab] = useState("insights");
   const { wellnessEntries, wellnessScore, loading } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
+  const { assessmentData, scoreNumber: assessmentScore } = useAssessmentData();
   
   // Get latest wellness data for display
   const latestEntry = wellnessEntries[0];
-  const moodDisplay = latestEntry ? `${latestEntry.mood_score}/10` : "Not tracked";
+  // Use assessment score as baseline if user has no logged wellness data yet
+  const baselineFromAssessment = assessmentScore !== null && !latestEntry;
+  const moodDisplay = latestEntry
+    ? `${latestEntry.mood_score}/10`
+    : baselineFromAssessment
+      ? `${Math.round(assessmentScore!)}/100`
+      : "Not tracked";
   const sleepDisplay = latestEntry ? `${latestEntry.sleep_hours}h` : "Not tracked";
   const selfCareDisplay = latestEntry ? (latestEntry.self_care_completed ? "✓ Done" : "Pending") : "Not tracked";
   const hydrationDisplay = latestEntry ? `${latestEntry.hydration_glasses}/8` : "0/8";
