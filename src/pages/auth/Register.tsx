@@ -74,6 +74,18 @@ const Register = () => {
     
     try {
       await register(name, email, password, motherhoodStage, referralCode);
+
+      // Persist assessment data to the user's profile if present
+      if (assessmentData) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase
+            .from('profiles')
+            .update({ assessment_data: assessmentData })
+            .eq('user_id', user.id);
+        }
+      }
+
       navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to register");
