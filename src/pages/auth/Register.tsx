@@ -167,8 +167,7 @@ const Register = () => {
                     <SelectContent>
                       <SelectItem value="ttc">Trying to Conceive</SelectItem>
                       <SelectItem value="pregnant">Pregnant</SelectItem>
-                      <SelectItem value="postpartum">Postpartum (0-12 months)</SelectItem>
-                      <SelectItem value="toddler">Toddler Mom</SelectItem>
+                      <SelectItem value="postpartum">Postpartum</SelectItem>
                       <SelectItem value="none">Prefer not to say</SelectItem>
                     </SelectContent>
                   </Select>
