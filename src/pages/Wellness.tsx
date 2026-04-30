@@ -151,6 +151,28 @@ const Wellness = () => {
                           📈 Your wellness has improved 15% this week
                         </div>
                       </div>
+                    ) : assessmentData ? (
+                      <div className="h-full flex flex-col justify-center space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          {assessmentScore !== null && (
+                            <div className="text-center">
+                              <div className="text-2xl font-bold text-primary">{Math.round(assessmentScore)}/100</div>
+                              <div className="text-sm text-muted-foreground">Assessment Baseline</div>
+                            </div>
+                          )}
+                          {assessmentData.tier && (
+                            <div className="text-center">
+                              <div className="text-2xl font-bold text-primary capitalize">{String(assessmentData.tier)}</div>
+                              <div className="text-sm text-muted-foreground">Your Tier</div>
+                            </div>
+                          )}
+                        </div>
+                        {assessmentData.biggest_obstacle && (
+                          <div className="text-center text-sm text-muted-foreground">
+                            🎯 Priority gap: <span className="font-medium text-foreground">{String(assessmentData.biggest_obstacle)}</span>
+                          </div>
+                        )}
+                      </div>
                     ) : (
                       <div className="h-full flex items-center justify-center">
                         <p className="text-muted-foreground text-sm">
