@@ -72,7 +72,13 @@ const Wellness = () => {
             title="Mood"
             icon={<SmilePlus className="h-5 w-5 text-primary" />}
             value={moodDisplay}
-            trend={wellnessScore ? `Wellness Score: ${wellnessScore}%` : "Complete mood check-in"}
+            trend={
+              wellnessScore
+                ? `Wellness Score: ${wellnessScore}%`
+                : baselineFromAssessment
+                  ? `Assessment baseline${assessmentData?.tier ? ` · ${assessmentData.tier}` : ''}`
+                  : "Complete mood check-in"
+            }
             color="bg-yellow-100"
           />
           <WellnessQuickCard
