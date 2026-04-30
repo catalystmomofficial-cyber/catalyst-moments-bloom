@@ -6,6 +6,7 @@ import { Loader2, RefreshCw, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { useAssessmentData } from '@/hooks/useAssessmentData';
 import { wellnessAI } from '@/services/wellnessAI';
 import { useToast } from '@/hooks/use-toast';
 
