@@ -1088,6 +1088,7 @@ export type Database = {
       profiles: {
         Row: {
           approved: boolean
+          assessment_data: Json | null
           avatar_url: string | null
           bio: string | null
           created_at: string
@@ -1101,6 +1102,7 @@ export type Database = {
         }
         Insert: {
           approved?: boolean
+          assessment_data?: Json | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
@@ -1114,6 +1116,7 @@ export type Database = {
         }
         Update: {
           approved?: boolean
+          assessment_data?: Json | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string

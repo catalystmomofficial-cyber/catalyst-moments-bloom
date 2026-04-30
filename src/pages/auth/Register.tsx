@@ -24,18 +24,42 @@ const Register = () => {
   const [error, setError] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
   const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [assessmentData, setAssessmentData] = useState<Record<string, string> | null>(null);
 
   // Read URL parameters on mount
   useEffect(() => {
     const emailParam = searchParams.get('email');
+    const nameParam = searchParams.get('name');
+    const stageParam = searchParams.get('stage');
     const refParam = searchParams.get('ref');
-    
-    if (emailParam) {
-      setEmail(emailParam);
+
+    if (emailParam) setEmail(emailParam);
+    if (nameParam) setName(nameParam);
+
+    if (stageParam) {
+      const normalized = stageParam.toLowerCase();
+      const stageMap: Record<string, MotherhoodStage> = {
+        ttc: 'ttc',
+        pregnancy: 'pregnant',
+        pregnant: 'pregnant',
+        postpartum: 'postpartum',
+      };
+      if (stageMap[normalized]) {
+        setMotherhoodStage(stageMap[normalized]);
+      }
     }
-    
-    if (refParam) {
-      setReferralCode(refParam);
+
+    if (refParam) setReferralCode(refParam);
+
+    // Collect assessment-related params to persist after signup
+    const assessmentKeys = ['score', 'tier', 'stage', 'primary_goal', 'biggest_obstacle', 'birth_experience'];
+    const collected: Record<string, string> = {};
+    assessmentKeys.forEach((key) => {
+      const value = searchParams.get(key);
+      if (value) collected[key] = value;
+    });
+    if (Object.keys(collected).length > 0) {
+      setAssessmentData(collected);
     }
   }, [searchParams]);
 
