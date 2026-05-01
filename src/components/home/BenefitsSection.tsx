@@ -12,7 +12,7 @@ const BenefitsSection = () => {
       <div className="container container-padding mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
-            <Badge variant="outline" className="mb-4 px-3 py-1 border-primary/30 text-primary">
+            <Badge variant="outline" className="mb-4 px-3 py-1 border-primary/30 text-primary dark:text-catalyst-gold dark:border-catalyst-gold/40">
               Why Choose Us
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Designed With You in Mind</h2>
