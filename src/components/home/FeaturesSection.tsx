@@ -7,13 +7,13 @@ import FeatureCard from './FeatureCard';
 
 const FeaturesSection = () => {
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-white dark:bg-background">
       <div className="container container-padding mx-auto">
         <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-4 px-3 py-1 border-primary/30 text-primary">
+          <Badge variant="outline" className="mb-4 px-3 py-1 border-primary/30 text-primary dark:text-catalyst-gold dark:border-catalyst-gold/40">
             Features
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything You Need in One Place</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Everything You Need in One Place</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Everything built specifically for TTC, Pregnancy, and Postpartum — personalised to where you actually are right now.
           </p>
