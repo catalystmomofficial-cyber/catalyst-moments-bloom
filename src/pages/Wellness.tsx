@@ -27,13 +27,14 @@ import { QuickSelfCareIdeas } from '@/components/wellness/QuickSelfCareIdeas';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useContentFilter } from '@/hooks/useContentFilter';
 import { useAssessmentData } from '@/hooks/useAssessmentData';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Wellness = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [activeTab, setActiveTab] = useState("insights");
   const { wellnessEntries, wellnessScore, loading } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
-  const { assessmentData, scoreNumber: assessmentScore } = useAssessmentData();
+  const { assessmentData, scoreNumber: assessmentScore, loading: assessmentLoading } = useAssessmentData();
   
   // Get latest wellness data for display
   const latestEntry = wellnessEntries[0];
@@ -71,9 +72,11 @@ const Wellness = () => {
           <WellnessQuickCard
             title="Mood"
             icon={<SmilePlus className="h-5 w-5 text-primary" />}
-            value={moodDisplay}
+            value={assessmentLoading && !latestEntry ? <Skeleton className="h-7 w-20" /> : moodDisplay}
             trend={
-              wellnessScore
+              assessmentLoading && !latestEntry ? (
+                <Skeleton className="h-4 w-32" />
+              ) : wellnessScore
                 ? `Wellness Score: ${wellnessScore}%`
                 : baselineFromAssessment
                   ? `Assessment baseline${assessmentData?.tier ? ` · ${assessmentData.tier}` : ''}`
@@ -150,6 +153,20 @@ const Wellness = () => {
                         <div className="text-center text-sm text-muted-foreground">
                           📈 Your wellness has improved 15% this week
                         </div>
+                      </div>
+                    ) : assessmentLoading ? (
+                      <div className="h-full flex flex-col justify-center space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="text-center space-y-2">
+                            <Skeleton className="h-8 w-24 mx-auto" />
+                            <Skeleton className="h-4 w-32 mx-auto" />
+                          </div>
+                          <div className="text-center space-y-2">
+                            <Skeleton className="h-8 w-24 mx-auto" />
+                            <Skeleton className="h-4 w-32 mx-auto" />
+                          </div>
+                        </div>
+                        <Skeleton className="h-4 w-2/3 mx-auto" />
                       </div>
                     ) : assessmentData ? (
                       <div className="h-full flex flex-col justify-center space-y-4">
@@ -381,8 +398,8 @@ const Wellness = () => {
 interface WellnessQuickCardProps {
   title: string;
   icon: React.ReactNode;
-  value: string;
-  trend: string;
+  value: React.ReactNode;
+  trend: React.ReactNode;
   color: string;
 }
 

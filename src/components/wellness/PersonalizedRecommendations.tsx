@@ -9,6 +9,7 @@ import { useContentFilter } from '@/hooks/useContentFilter';
 import { useAssessmentData } from '@/hooks/useAssessmentData';
 import { wellnessAI } from '@/services/wellnessAI';
 import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface PersonalizedRecommendation {
   id: string;
@@ -27,7 +28,7 @@ export const PersonalizedRecommendations = () => {
   const { user } = useAuth();
   const { wellnessEntries, workoutSessions } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
-  const { assessmentData, scoreNumber: assessmentScore } = useAssessmentData();
+  const { assessmentData, scoreNumber: assessmentScore, loading: assessmentLoading } = useAssessmentData();
   const { toast } = useToast();
   
   const [recommendations, setRecommendations] = useState<PersonalizedRecommendation[]>([]);
@@ -199,7 +200,17 @@ export const PersonalizedRecommendations = () => {
           </Button>
         </CardHeader>
         <CardContent>
-          {assessmentData?.biggest_obstacle && (
+          {assessmentLoading ? (
+            <div className="mb-4 p-4 rounded-lg border-l-4 border-primary bg-primary/5 space-y-2">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-5 w-24" />
+                <Skeleton className="h-5 w-20" />
+              </div>
+              <Skeleton className="h-5 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          ) : null}
+          {!assessmentLoading && assessmentData?.biggest_obstacle && (
             <div className="mb-4 p-4 rounded-lg border-l-4 border-primary bg-primary/5">
               <div className="flex items-start gap-2 mb-1">
                 <Badge className="bg-destructive text-destructive-foreground">Priority Gap</Badge>
