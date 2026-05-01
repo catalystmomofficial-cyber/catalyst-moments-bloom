@@ -3,15 +3,28 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Menu, Crown } from 'lucide-react';
+import { Menu, Crown, Moon, Sun } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import AuthLinks from './AuthLinks';
 import { NotificationSystem } from '@/components/notifications/NotificationSystem';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/components/theme-provider';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { subscribed, subscriptionTier } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+
+  const ThemeToggle = () => (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggleTheme}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+    </Button>
+  );
 
   const links = [
     { name: 'Home', href: '/' },
@@ -61,11 +74,13 @@ const Navbar = () => {
               </Link>
             )}
             <NotificationSystem />
+            <ThemeToggle />
             <AuthLinks />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center gap-1">
+            <ThemeToggle />
             <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Menu">
