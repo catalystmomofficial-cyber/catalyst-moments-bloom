@@ -80,6 +80,7 @@ const PWAInstallBanner = () => {
                 <X className="w-5 h-5" />
               </button>
             </div>
+            <p className="text-xs text-muted-foreground mb-3 italic">Install the app for exclusive features including Night Mode</p>
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shrink-0">
