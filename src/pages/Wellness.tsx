@@ -72,9 +72,11 @@ const Wellness = () => {
           <WellnessQuickCard
             title="Mood"
             icon={<SmilePlus className="h-5 w-5 text-primary" />}
-            value={moodDisplay}
+            value={assessmentLoading && !latestEntry ? <Skeleton className="h-7 w-20" /> : moodDisplay}
             trend={
-              wellnessScore
+              assessmentLoading && !latestEntry ? (
+                <Skeleton className="h-4 w-32" />
+              ) : wellnessScore
                 ? `Wellness Score: ${wellnessScore}%`
                 : baselineFromAssessment
                   ? `Assessment baseline${assessmentData?.tier ? ` · ${assessmentData.tier}` : ''}`
