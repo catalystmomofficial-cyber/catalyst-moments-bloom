@@ -64,90 +64,121 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
 
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      fetchAssessmentData();
-      startPersonalizedConversation();
+      // Fetch assessment first, then greet using all available data
+      (async () => {
+        const data = await fetchAssessmentData();
+        startPersonalizedConversation(data);
+      })();
     }
   }, [isOpen]);
 
   const fetchAssessmentData = async () => {
-    if (!user?.id) return;
-    
+    if (!user?.id) return null;
+
     try {
-      const { data, error } = await supabase
+      // Try the structured lead_responses first (assessment quiz)
+      const { data: lead } = await supabase
         .from('lead_responses')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
-      if (data && !error) {
-        setAssessmentData(data);
-        console.log('Found assessment data for wellness coach');
+      // Also pull profile.assessment_data as a fallback / supplement
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('assessment_data')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      const merged = lead || (prof?.assessment_data ? { ...(prof.assessment_data as any), _fromProfile: true } : null);
+      if (merged) {
+        setAssessmentData(merged);
+        console.log('[WellnessCoach] Loaded personalization data');
       }
+      return merged;
     } catch (error) {
       console.error('Error fetching assessment data:', error);
+      return null;
     }
   };
 
-  const startPersonalizedConversation = async () => {
-    let greeting = '';
-    const displayName = profile?.display_name || 'there';
-    
-    // Include assessment insights if available
-    if (assessmentData && assessmentData.special_notes) {
-      const score = assessmentData.special_notes.overall_score;
-      const tier = assessmentData.special_notes.tier;
-      const topGap = Object.entries(assessmentData.special_notes.category_scores || {})
-        .sort(([, a], [, b]) => (a as number) - (b as number))[0];
+  // Friendly stage label without asking the user
+  const getFriendlyStageLabel = (stage?: string | null): string | null => {
+    if (!stage) return null;
+    const s = stage.toLowerCase();
+    if (s.includes('ttc')) return 'your TTC journey';
+    if (s.includes('trimester_1') || s === 'pregnant_1') return 'your first trimester';
+    if (s.includes('trimester_2') || s === 'pregnant_2') return 'your second trimester';
+    if (s.includes('trimester_3') || s === 'pregnant_3') return 'your third trimester';
+    if (s.includes('postpartum_0-6') || s.includes('postpartum_0_6')) return 'your early postpartum recovery';
+    if (s.includes('postpartum')) return 'your postpartum journey';
+    if (s.includes('toddler')) return 'toddler-mom life';
+    if (s.includes('pregnan')) return 'your pregnancy';
+    return null;
+  };
 
-      greeting = `Hi ${displayName}! 👋 I'm Coach Sarah, and I've reviewed your wellness assessment.
+  const startPersonalizedConversation = (asmt?: any) => {
+    const data = asmt ?? assessmentData;
+    const displayName = profile?.display_name || user?.email?.split('@')[0] || 'mama';
+    const stageLabel = getFriendlyStageLabel(profile?.motherhood_stage);
 
-I noticed you scored ${score}/100, with ${topGap ? topGap[0].replace(/_/g, ' ') : 'some areas'} as a key focus area. I'm here to help you improve in exactly these areas!
+    // Pull insights from whichever assessment source we have
+    const special = data?.special_notes && typeof data.special_notes === 'object' ? data.special_notes : data || {};
+    const overallScore = special.overall_score ?? data?.overall_score ?? data?.score;
+    const tier = special.tier ?? data?.tier;
+    const categoryScores = special.category_scores ?? data?.category_scores ?? {};
+    const primaryGoal = data?.primary_goal ?? special.primary_goal;
+    const dietary = data?.dietary_preferences ?? special.dietary_preferences;
+    const activity = data?.activity_level ?? special.activity_level;
+    const equipment = data?.equipment ?? special.equipment;
+    const mainConcern = special.main_concern ?? data?.biggest_obstacle;
 
-Your primary goal: ${assessmentData.primary_goal}
+    const sortedGaps = Object.entries(categoryScores)
+      .sort(([, a], [, b]) => (Number(a) || 0) - (Number(b) || 0))
+      .slice(0, 2)
+      .map(([k]) => k.replace(/_/g, ' '));
 
-I'm ready to support you with:
-🥗 Nutrition plans based on your preferences
-💡 Expert guidance for your specific needs  
-📋 Custom programs that address your priority areas
-🎯 Tools that evolve with your progress
+    const lines: string[] = [];
+    lines.push(`Hi ${displayName} 💚 I'm Coach Sarah — and I already have everything I need to support you.`);
+    lines.push('');
 
-What would you like to work on first?`;
-    } else if (!profile?.motherhood_stage) {
-      greeting = `Hi ${displayName}! 👋 I'm Coach Sarah, your personal wellness guide at Catalyst Mom.
-
-I'm here to provide you with:
-✨ Nutrition guidance tailored to your needs
-🎯 Expert advice backed by science
-📋 Personalized plans that evolve with you
-🌱 Tools that grow as you progress
-
-To give you the best support, I'd love to know - where are you in your motherhood journey?
-• Trying to conceive?
-• Pregnant? (Which trimester?)
-• Postpartum?
-• Toddler mom?
-
-This helps me create a truly personalized experience for you!`;
-    } else {
-      const stageGreeting = getStageGreeting(profile.motherhood_stage);
-      greeting = `Hi ${displayName}! 👋 I'm Coach Sarah, your wellness companion.
-
-${stageGreeting}
-
-I'm ready to help you with:
-🥗 Nutrition guidance for your stage
-💡 Expert advice on what matters most
-📋 Personalized plans built just for you
-🎯 Smart tools that adapt as you grow
-
-What would you like help with today?`;
+    // Build a single warm "what I see about you" paragraph from real data
+    const insightBits: string[] = [];
+    if (stageLabel) insightBits.push(`I see you're navigating ${stageLabel}`);
+    if (overallScore !== undefined && overallScore !== null) {
+      insightBits.push(`your wellness score is ${overallScore}${typeof overallScore === 'number' && overallScore <= 10 ? '/10' : '/100'}${tier ? ` (${tier} tier)` : ''}`);
     }
+    if (primaryGoal) insightBits.push(`your top goal is ${String(primaryGoal).toLowerCase()}`);
+    if (mainConcern) insightBits.push(`your biggest hurdle right now is ${String(mainConcern).toLowerCase()}`);
+    if (sortedGaps.length) insightBits.push(`the areas that need the most love are ${sortedGaps.join(' and ')}`);
+    if (activity) insightBits.push(`you're at a ${String(activity).toLowerCase()} activity level`);
+    if (dietary) insightBits.push(`your eating style is ${String(dietary).toLowerCase()}`);
+    if (equipment) insightBits.push(`you have ${String(equipment).toLowerCase()} to work with`);
+
+    if (insightBits.length) {
+      lines.push(`Here's what I'm working with: ${insightBits.join(', ')}.`);
+      lines.push('');
+    }
+
+    // Concrete first move — never a question
+    if (sortedGaps[0]) {
+      lines.push(`Based on this, I'm starting you on ${sortedGaps[0]} first — that's where you'll feel the biggest shift fastest.`);
+    } else if (primaryGoal) {
+      lines.push(`Based on this, I'm building everything around your goal: ${primaryGoal}.`);
+    } else if (stageLabel) {
+      lines.push(`I'll tailor everything to ${stageLabel} from here on out.`);
+    } else {
+      lines.push(`I'll personalize every plan to you as we go.`);
+    }
+
+    lines.push('');
+    lines.push(`Just tell me what you want first — a meal plan, a workout program, or quick advice — and I'll create it for you right now. 💪`);
 
     const welcomeMessage: Message = {
       id: Date.now().toString(),
-      content: greeting,
+      content: lines.join('\n'),
       sender: 'coach',
       timestamp: new Date(),
       type: 'text'
