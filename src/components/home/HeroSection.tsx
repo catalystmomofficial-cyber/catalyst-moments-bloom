@@ -17,7 +17,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
       <div className="container px-4 mx-auto">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-12 md:mb-0">
-            <Badge variant="outline" className="mb-4 px-4 py-1.5 border-primary/30 text-primary">
+            <Badge variant="outline" className="mb-4 px-4 py-1.5 border-primary/30 text-primary dark:text-catalyst-peach dark:border-catalyst-peach/40">
               Made for Every Stage of Motherhood
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
