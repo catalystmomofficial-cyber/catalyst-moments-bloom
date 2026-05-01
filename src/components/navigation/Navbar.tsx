@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,13 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { subscribed, subscriptionTier } = useAuth();
   const { theme, toggleTheme } = useTheme();
+
+  // Allow other components (e.g., paywall X button) to open the mobile menu
+  useEffect(() => {
+    const handler = () => setIsMenuOpen(true);
+    window.addEventListener('open-mobile-menu', handler);
+    return () => window.removeEventListener('open-mobile-menu', handler);
+  }, []);
 
   const ThemeToggle = () => (
     <Button
