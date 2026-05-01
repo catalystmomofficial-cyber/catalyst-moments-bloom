@@ -30,7 +30,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
                 <Link to="/dashboard">Get Started</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5">
+              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
                 <Link to="/about" className="flex items-center">
                   Learn More <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
