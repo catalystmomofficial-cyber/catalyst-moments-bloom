@@ -111,12 +111,12 @@ const Dashboard = () => {
                    'Your wellness overview'}
                 </p>
               </div>
-              <div className="mt-4 md:mt-0 flex items-center gap-2">
+              <div className="mt-4 md:mt-0 flex items-center gap-2 w-full md:w-auto">
                 <Dialog open={isJourneySelectorOpen} onOpenChange={setIsJourneySelectorOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Baby className="h-4 w-4" /> 
-                      {stageInfo?.phase || 'Update Journey'}
+                    <Button variant="outline" size="sm" className="gap-2 w-full md:w-auto justify-center min-w-0">
+                      <Baby className="h-4 w-4 shrink-0" /> 
+                      <span className="truncate">{stageInfo?.phase || 'Update Journey'}</span>
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
