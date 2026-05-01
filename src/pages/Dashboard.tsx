@@ -132,13 +132,13 @@ const Dashboard = () => {
             {/* Subscription Status - Simplified & Compact */}
             <div className="mb-8">
               {subscribed ? (
-                <div className="flex items-center justify-between p-4 rounded-lg border border-primary/20 bg-gradient-to-r from-primary/5 to-transparent">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-lg">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-lg border border-primary/20 bg-gradient-to-r from-primary/5 to-transparent">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="bg-primary/10 p-2 rounded-lg shrink-0">
                       <Crown className="h-5 w-5 text-primary" />
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-semibold">Premium</h3>
                         <div className="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
                           <CheckCircle className="h-3 w-3" />
@@ -152,7 +152,7 @@ const Dashboard = () => {
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -167,17 +167,17 @@ const Dashboard = () => {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center justify-between p-4 rounded-lg border border-amber-200 dark:border-amber-900/30 bg-gradient-to-r from-amber-50 to-transparent dark:from-amber-950/20">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-lg border border-amber-200 dark:border-amber-900/30 bg-gradient-to-r from-amber-50 to-transparent dark:from-amber-950/20">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg shrink-0">
                       <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-500" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <h3 className="font-semibold">Free Plan</h3>
                       <p className="text-xs text-muted-foreground">Limited access to features</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
                     <SubscriptionButton />
                     <AffiliateButton variant="ghost" size="sm" />
                   </div>
