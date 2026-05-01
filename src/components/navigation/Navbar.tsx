@@ -22,16 +22,29 @@ const Navbar = () => {
     return () => window.removeEventListener('open-mobile-menu', handler);
   }, []);
 
-  const ThemeToggle = () => (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={toggleTheme}
-      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-    >
-      {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-    </Button>
-  );
+  // Detect PWA standalone mode (only show theme toggle when installed as PWA)
+  const [isStandalone, setIsStandalone] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia('(display-mode: standalone)');
+    const update = () => setIsStandalone(mql.matches || (navigator as any).standalone === true);
+    update();
+    mql.addEventListener?.('change', update);
+    return () => mql.removeEventListener?.('change', update);
+  }, []);
+
+  const ThemeToggle = () => {
+    if (!isStandalone) return null;
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={toggleTheme}
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+      </Button>
+    );
+  };
 
   const links = [
     { name: 'Home', href: '/' },
