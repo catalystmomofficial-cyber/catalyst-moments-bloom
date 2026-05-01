@@ -107,6 +107,11 @@
   .hero-gradient {
     @apply bg-gradient-to-br from-catalyst-copper/10 via-white to-catalyst-peach/30;
   }
+
+  .dark .hero-gradient {
+    background-color: #1A1008;
+    background-image: radial-gradient(circle at center, hsla(28, 72%, 41%, 0.20) 0%, transparent 60%);
+  }
   
   .card-hover {
     @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
