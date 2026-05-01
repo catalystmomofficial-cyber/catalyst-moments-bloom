@@ -84,7 +84,7 @@ const Dashboard = () => {
   
   return (
     <PageLayout>
-      <div className="container px-4 mx-auto">
+      <div className="container px-3 sm:px-4 mx-auto max-w-full overflow-x-hidden">
         {!hasJourney ? (
           <div className="min-h-[60vh] flex items-center justify-center">
             <JourneySelector 
