@@ -41,15 +41,15 @@ const TestimonialsSection = () => {
           {testimonials.map((t, i) => (
             <Card
               key={i}
-              className="border-0 shadow-soft rounded-2xl bg-catalyst-cream/40 hover:shadow-md transition-shadow"
+              className="border-0 shadow-soft rounded-2xl bg-catalyst-cream/40 dark:bg-card dark:border dark:border-catalyst-copper/20 hover:shadow-md transition-shadow"
             >
               <CardContent className="p-7">
-                <div className="text-catalyst-copper text-4xl leading-none font-playfair mb-3">"</div>
-                <p className="text-foreground/90 italic leading-relaxed mb-5">
+                <div className="text-catalyst-copper dark:text-catalyst-gold text-4xl leading-none font-playfair mb-3">"</div>
+                <p className="text-foreground/90 dark:text-foreground italic leading-relaxed mb-5">
                   {t.quote}
                 </p>
-                <div className="pt-4 border-t border-catalyst-copper/15">
-                  <p className="text-sm font-semibold text-catalyst-copper">
+                <div className="pt-4 border-t border-catalyst-copper/15 dark:border-catalyst-copper/30">
+                  <p className="text-sm font-semibold text-catalyst-copper dark:text-catalyst-gold">
                     — {t.author}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
