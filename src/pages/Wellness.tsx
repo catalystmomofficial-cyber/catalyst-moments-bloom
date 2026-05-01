@@ -34,7 +34,7 @@ const Wellness = () => {
   const [activeTab, setActiveTab] = useState("insights");
   const { wellnessEntries, wellnessScore, loading } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
-  const { assessmentData, scoreNumber: assessmentScore } = useAssessmentData();
+  const { assessmentData, scoreNumber: assessmentScore, loading: assessmentLoading } = useAssessmentData();
   
   // Get latest wellness data for display
   const latestEntry = wellnessEntries[0];
