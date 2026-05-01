@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 type Theme = "light" | "dark";
 
@@ -23,15 +24,77 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return stored === "dark" || stored === "light" ? stored : "light";
   });
 
+  // Track current user so theme follows the account across reinstalls/devices.
+  const userIdRef = useRef<string | null>(null);
+  const hydratedFromServerRef = useRef(false);
+
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
   }, [theme]);
 
+  // On auth changes, hydrate theme from the user's profile (server-side persistence).
+  useEffect(() => {
+    const hydrateFromProfile = async (userId: string) => {
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("theme_preference")
+          .eq("user_id", userId)
+          .maybeSingle();
+        if (error) return;
+        const remote = (data as any)?.theme_preference as Theme | null;
+        if (remote === "light" || remote === "dark") {
+          hydratedFromServerRef.current = true;
+          localStorage.setItem(STORAGE_KEY, remote);
+          setThemeState(remote);
+        } else {
+          // No remote preference yet — push current local theme up so it persists.
+          const local = (localStorage.getItem(STORAGE_KEY) as Theme | null) || theme;
+          await supabase
+            .from("profiles")
+            .update({ theme_preference: local })
+            .eq("user_id", userId);
+          hydratedFromServerRef.current = true;
+        }
+      } catch {
+        /* non-fatal */
+      }
+    };
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      const uid = session?.user?.id ?? null;
+      userIdRef.current = uid;
+      if (uid) {
+        // Defer to avoid blocking auth callback.
+        setTimeout(() => hydrateFromProfile(uid), 0);
+      } else {
+        hydratedFromServerRef.current = false;
+      }
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const uid = session?.user?.id ?? null;
+      userIdRef.current = uid;
+      if (uid) hydrateFromProfile(uid);
+    });
+
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
   const setTheme = (t: Theme) => {
     localStorage.setItem(STORAGE_KEY, t);
     setThemeState(t);
+    const uid = userIdRef.current;
+    if (uid) {
+      // Persist to profile so it survives reinstall and follows the user across devices.
+      supabase
+        .from("profiles")
+        .update({ theme_preference: t })
+        .eq("user_id", uid)
+        .then(() => {});
+    }
   };
 
   return (
