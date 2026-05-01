@@ -74,6 +74,7 @@ const Navbar = () => {
               </Link>
             )}
             <NotificationSystem />
+            <ThemeToggle />
             <AuthLinks />
           </div>
 
