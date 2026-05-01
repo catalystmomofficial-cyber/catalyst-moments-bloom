@@ -15,6 +15,13 @@ const Navbar = () => {
   const { subscribed, subscriptionTier } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  // Allow other components (e.g., paywall X button) to open the mobile menu
+  useEffect(() => {
+    const handler = () => setIsMenuOpen(true);
+    window.addEventListener('open-mobile-menu', handler);
+    return () => window.removeEventListener('open-mobile-menu', handler);
+  }, []);
+
   const ThemeToggle = () => (
     <Button
       variant="ghost"
