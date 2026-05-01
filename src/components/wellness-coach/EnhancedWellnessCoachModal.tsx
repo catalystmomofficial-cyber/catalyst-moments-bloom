@@ -127,58 +127,116 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
     // Pull insights from whichever assessment source we have
     const special = data?.special_notes && typeof data.special_notes === 'object' ? data.special_notes : data || {};
     const overallScore = special.overall_score ?? data?.overall_score ?? data?.score;
-    const tier = special.tier ?? data?.tier;
+    const tier = (special.tier ?? data?.tier ?? '').toString().toLowerCase();
     const categoryScores = special.category_scores ?? data?.category_scores ?? {};
-    const primaryGoal = data?.primary_goal ?? special.primary_goal;
-    const dietary = data?.dietary_preferences ?? special.dietary_preferences;
-    const activity = data?.activity_level ?? special.activity_level;
-    const equipment = data?.equipment ?? special.equipment;
-    const mainConcern = special.main_concern ?? data?.biggest_obstacle;
+    const primaryGoal = (data?.primary_goal ?? special.primary_goal ?? '').toString().toLowerCase();
+    const dietary = (data?.dietary_preferences ?? special.dietary_preferences ?? '').toString().toLowerCase();
+    const activity = (data?.activity_level ?? special.activity_level ?? '').toString().toLowerCase();
+    const equipment = (data?.equipment ?? special.equipment ?? '').toString().toLowerCase();
+    const mainConcern = (special.main_concern ?? data?.biggest_obstacle ?? '').toString().toLowerCase();
 
     const sortedGaps = Object.entries(categoryScores)
       .sort(([, a], [, b]) => (Number(a) || 0) - (Number(b) || 0))
       .slice(0, 2)
-      .map(([k]) => k.replace(/_/g, ' '));
+      .map(([k]) => k.replace(/_/g, ' ').toLowerCase());
 
-    const lines: string[] = [];
-    lines.push(`Hi ${displayName} 💚 I'm Coach Sarah — and I already have everything I need to support you.`);
-    lines.push('');
+    // ── Paraphrase into a natural insight, not a list ──
 
-    // Build a single warm "what I see about you" paragraph from real data
-    const insightBits: string[] = [];
-    if (stageLabel) insightBits.push(`I see you're navigating ${stageLabel}`);
-    if (overallScore !== undefined && overallScore !== null) {
-      insightBits.push(`your wellness score is ${overallScore}${typeof overallScore === 'number' && overallScore <= 10 ? '/10' : '/100'}${tier ? ` (${tier} tier)` : ''}`);
-    }
-    if (primaryGoal) insightBits.push(`your top goal is ${String(primaryGoal).toLowerCase()}`);
-    if (mainConcern) insightBits.push(`your biggest hurdle right now is ${String(mainConcern).toLowerCase()}`);
-    if (sortedGaps.length) insightBits.push(`the areas that need the most love are ${sortedGaps.join(' and ')}`);
-    if (activity) insightBits.push(`you're at a ${String(activity).toLowerCase()} activity level`);
-    if (dietary) insightBits.push(`your eating style is ${String(dietary).toLowerCase()}`);
-    if (equipment) insightBits.push(`you have ${String(equipment).toLowerCase()} to work with`);
+    // Tone read from score/tier
+    const scoreNum = typeof overallScore === 'number' ? overallScore : Number(overallScore);
+    const isHundred = !isNaN(scoreNum) && scoreNum > 10;
+    const norm = !isNaN(scoreNum) ? (isHundred ? scoreNum : scoreNum * 10) : null;
 
-    if (insightBits.length) {
-      lines.push(`Here's what I'm working with: ${insightBits.join(', ')}.`);
-      lines.push('');
-    }
-
-    // Concrete first move — never a question
-    if (sortedGaps[0]) {
-      lines.push(`Based on this, I'm starting you on ${sortedGaps[0]} first — that's where you'll feel the biggest shift fastest.`);
-    } else if (primaryGoal) {
-      lines.push(`Based on this, I'm building everything around your goal: ${primaryGoal}.`);
-    } else if (stageLabel) {
-      lines.push(`I'll tailor everything to ${stageLabel} from here on out.`);
+    let toneOpener = '';
+    if (norm !== null) {
+      if (norm >= 75) toneOpener = `you're already in a really strong place`;
+      else if (norm >= 55) toneOpener = `you've built a solid foundation with real room to grow`;
+      else if (norm >= 35) toneOpener = `you're stretched thin in a few spots, and that's exactly what we'll fix`;
+      else toneOpener = `you've been carrying a lot, and it shows — but that also means quick wins are right in front of us`;
+    } else if (tier) {
+      toneOpener = tier.includes('high') || tier.includes('gold')
+        ? `you're already in a strong place`
+        : `you're ready for a real reset`;
     } else {
-      lines.push(`I'll personalize every plan to you as we go.`);
+      toneOpener = `there's a clear path forward for you`;
     }
 
-    lines.push('');
-    lines.push(`Just tell me what you want first — a meal plan, a workout program, or quick advice — and I'll create it for you right now. 💪`);
+    // Translate raw goal text into a warmer phrase
+    const phraseGoal = (g: string): string => {
+      if (!g) return '';
+      if (/energy|tired|fatigue/.test(g)) return 'feel awake and clear-headed again';
+      if (/weight|fat|tone|lean/.test(g)) return 'feel strong and at home in your body';
+      if (/strength|muscle|tone/.test(g)) return 'rebuild real strength';
+      if (/sleep/.test(g)) return 'sleep deeply again';
+      if (/stress|anxi|mood|mental/.test(g)) return 'feel calmer and more like yourself';
+      if (/fertil|conceiv|ttc/.test(g)) return 'support your body for conception';
+      if (/recover|heal|postpartum/.test(g)) return 'recover fully and feel whole again';
+      if (/glow|skin|hair/.test(g)) return 'glow from the inside out';
+      return g.replace(/[_-]/g, ' ');
+    };
+
+    const phraseConcern = (c: string): string => {
+      if (!c) return '';
+      if (/time|busy|kids|schedule/.test(c)) return `between everything you're juggling, time is the real enemy`;
+      if (/motivat|consist/.test(c)) return `staying consistent on hard days is the part that trips you up`;
+      if (/knowledge|know|where to start/.test(c)) return `the missing piece has been knowing where to actually start`;
+      if (/equip|gym|space/.test(c)) return `working out at home with what you have is the realistic move`;
+      if (/food|cook|meal/.test(c)) return `figuring out what to eat — and actually making it — is the daily struggle`;
+      return `the biggest pull-back has been ${c}`;
+    };
+
+    const phraseGap = (g: string): string => {
+      if (/nutri|food|eat|diet/.test(g)) return 'how you fuel your body';
+      if (/sleep/.test(g)) return 'your sleep and recovery';
+      if (/stress|mental|mood/.test(g)) return 'your nervous system';
+      if (/move|exer|fit|workout|strength/.test(g)) return 'rebuilding strength';
+      if (/hydr|water/.test(g)) return 'hydration';
+      if (/mind|focus/.test(g)) return 'your headspace';
+      if (/social|connect/.test(g)) return 'feeling supported';
+      return g;
+    };
+
+    const goalPhrase = phraseGoal(primaryGoal);
+    const concernPhrase = phraseConcern(mainConcern);
+    const gapPhrase = sortedGaps[0] ? phraseGap(sortedGaps[0]) : '';
+
+    // ── Compose 2 short paragraphs ──
+    const para1Parts: string[] = [];
+    para1Parts.push(`Hi ${displayName} 💚`);
+    if (stageLabel) {
+      para1Parts.push(`Looking at where you are with ${stageLabel}, ${toneOpener}.`);
+    } else {
+      para1Parts.push(`From everything you've shared with me, ${toneOpener}.`);
+    }
+    if (concernPhrase) para1Parts.push(`${concernPhrase.charAt(0).toUpperCase()}${concernPhrase.slice(1)}.`);
+
+    const para2Parts: string[] = [];
+    if (goalPhrase && gapPhrase) {
+      para2Parts.push(`What you're really after is to ${goalPhrase}, and the door into that is ${gapPhrase}.`);
+    } else if (goalPhrase) {
+      para2Parts.push(`What you're really after is to ${goalPhrase} — and I know exactly how to get you there.`);
+    } else if (gapPhrase) {
+      para2Parts.push(`The fastest unlock for you is ${gapPhrase}, so that's where I'll start.`);
+    }
+
+    // Subtle nod to context without listing
+    const contextNod: string[] = [];
+    if (activity) contextNod.push(`I'll keep things ${activity}-friendly`);
+    if (equipment && !/none|nothing|no equipment/.test(equipment)) contextNod.push(`built around the ${equipment} you actually have`);
+    else if (equipment) contextNod.push(`zero-equipment`);
+    if (dietary && !/none|any|no preference/.test(dietary)) contextNod.push(`and aligned with how you eat (${dietary})`);
+
+    if (contextNod.length) {
+      para2Parts.push(`${contextNod.join(', ')}.`);
+    }
+
+    para2Parts.push(`Tell me what you want first — a meal plan, a workout program, or quick advice — and I'll build it for you right now. 💪`);
+
+    const content = [para1Parts.join(' '), '', para2Parts.join(' ')].filter(Boolean).join('\n');
 
     const welcomeMessage: Message = {
       id: Date.now().toString(),
-      content: lines.join('\n'),
+      content,
       sender: 'coach',
       timestamp: new Date(),
       type: 'text'
