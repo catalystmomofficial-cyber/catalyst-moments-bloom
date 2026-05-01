@@ -154,6 +154,20 @@ const Wellness = () => {
                           📈 Your wellness has improved 15% this week
                         </div>
                       </div>
+                    ) : assessmentLoading ? (
+                      <div className="h-full flex flex-col justify-center space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="text-center space-y-2">
+                            <Skeleton className="h-8 w-24 mx-auto" />
+                            <Skeleton className="h-4 w-32 mx-auto" />
+                          </div>
+                          <div className="text-center space-y-2">
+                            <Skeleton className="h-8 w-24 mx-auto" />
+                            <Skeleton className="h-4 w-32 mx-auto" />
+                          </div>
+                        </div>
+                        <Skeleton className="h-4 w-2/3 mx-auto" />
+                      </div>
                     ) : assessmentData ? (
                       <div className="h-full flex flex-col justify-center space-y-4">
                         <div className="grid grid-cols-2 gap-4">
