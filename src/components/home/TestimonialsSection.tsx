@@ -23,10 +23,10 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-white dark:bg-background">
       <div className="container container-padding mx-auto">
         <div className="text-center mb-12 max-w-3xl mx-auto">
-          <Badge variant="outline" className="mb-4 px-3 py-1 border-catalyst-copper/40 text-catalyst-copper">
+          <Badge variant="outline" className="mb-4 px-3 py-1 border-catalyst-copper/40 text-catalyst-copper dark:text-catalyst-gold dark:border-catalyst-gold/40">
             Real Mamas. Real Results.
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 font-playfair">
@@ -41,15 +41,15 @@ const TestimonialsSection = () => {
           {testimonials.map((t, i) => (
             <Card
               key={i}
-              className="border-0 shadow-soft rounded-2xl bg-catalyst-cream/40 hover:shadow-md transition-shadow"
+              className="border-0 shadow-soft rounded-2xl bg-catalyst-cream/40 dark:bg-card dark:border dark:border-catalyst-copper/20 hover:shadow-md transition-shadow"
             >
               <CardContent className="p-7">
-                <div className="text-catalyst-copper text-4xl leading-none font-playfair mb-3">"</div>
-                <p className="text-foreground/90 italic leading-relaxed mb-5">
+                <div className="text-catalyst-copper dark:text-catalyst-gold text-4xl leading-none font-playfair mb-3">"</div>
+                <p className="text-foreground/90 dark:text-foreground italic leading-relaxed mb-5">
                   {t.quote}
                 </p>
-                <div className="pt-4 border-t border-catalyst-copper/15">
-                  <p className="text-sm font-semibold text-catalyst-copper">
+                <div className="pt-4 border-t border-catalyst-copper/15 dark:border-catalyst-copper/30">
+                  <p className="text-sm font-semibold text-catalyst-copper dark:text-catalyst-gold">
                     — {t.author}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
