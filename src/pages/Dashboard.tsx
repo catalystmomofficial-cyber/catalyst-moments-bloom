@@ -102,7 +102,7 @@ const Dashboard = () => {
             {/* Header Section - More Compact */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
               <div>
-                <h1 className="text-3xl font-bold mb-1">Welcome back, {profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}!</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1 break-words">Welcome back, <span className="break-all">{profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}</span>!</h1>
                 <p className="text-muted-foreground text-sm">
                   {isTTC ? 'Your TTC journey tracker' : 
                    isPregnant ? 'Your pregnancy companion' :
