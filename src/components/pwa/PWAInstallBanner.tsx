@@ -116,7 +116,7 @@ const PWAInstallBanner = () => {
           />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-foreground truncate">Install the Catalyst Mom App</p>
-            <p className="text-xs text-muted-foreground">Fast access from your home screen</p>
+            <p className="text-xs text-muted-foreground">Install the app for exclusive features including Night Mode</p>
           </div>
           <Button size="sm" onClick={handleInstall} className="shrink-0 gap-1.5">
             <Download className="w-4 h-4" />
