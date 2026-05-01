@@ -13,6 +13,18 @@ import { useTheme } from '@/components/theme-provider';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { subscribed, subscriptionTier } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+
+  const ThemeToggle = () => (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggleTheme}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+    </Button>
+  );
 
   const links = [
     { name: 'Home', href: '/' },
