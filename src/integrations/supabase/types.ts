@@ -1097,6 +1097,7 @@ export type Database = {
           motherhood_stage: string | null
           referral_code: string | null
           referred_by_code: string | null
+          theme_preference: string | null
           updated_at: string
           user_id: string
         }
@@ -1111,6 +1112,7 @@ export type Database = {
           motherhood_stage?: string | null
           referral_code?: string | null
           referred_by_code?: string | null
+          theme_preference?: string | null
           updated_at?: string
           user_id: string
         }
@@ -1125,6 +1127,7 @@ export type Database = {
           motherhood_stage?: string | null
           referral_code?: string | null
           referred_by_code?: string | null
+          theme_preference?: string | null
           updated_at?: string
           user_id?: string
         }
