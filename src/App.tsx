@@ -10,6 +10,7 @@ import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
 import { GoogleAuthOnboarding } from "./components/onboarding/GoogleAuthOnboarding";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { VideoPlayerProvider } from "@/contexts/VideoPlayerContext";
+import { ThemeProvider } from "@/components/theme-provider";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
