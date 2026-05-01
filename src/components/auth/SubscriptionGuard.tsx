@@ -74,7 +74,7 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
         </div>
         <CheckoutModal 
           isOpen={true} 
-          onClose={() => window.location.href = '/'} 
+          onClose={() => window.dispatchEvent(new CustomEvent('open-mobile-menu'))} 
         />
       </>
     );
