@@ -23,7 +23,7 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-white dark:bg-background">
       <div className="container container-padding mx-auto">
         <div className="text-center mb-12 max-w-3xl mx-auto">
           <Badge variant="outline" className="mb-4 px-3 py-1 border-catalyst-copper/40 text-catalyst-copper">
