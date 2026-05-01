@@ -28,7 +28,7 @@ export const PersonalizedRecommendations = () => {
   const { user } = useAuth();
   const { wellnessEntries, workoutSessions } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
-  const { assessmentData, scoreNumber: assessmentScore } = useAssessmentData();
+  const { assessmentData, scoreNumber: assessmentScore, loading: assessmentLoading } = useAssessmentData();
   const { toast } = useToast();
   
   const [recommendations, setRecommendations] = useState<PersonalizedRecommendation[]>([]);
