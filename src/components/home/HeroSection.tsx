@@ -17,11 +17,11 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
       <div className="container px-4 mx-auto">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-12 md:mb-0">
-            <Badge variant="outline" className="mb-4 px-4 py-1.5 border-primary/30 text-primary">
+            <Badge variant="outline" className="mb-4 px-4 py-1.5 border-primary/30 text-primary dark:text-catalyst-peach dark:border-catalyst-peach/40">
               Made for Every Stage of Motherhood
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
-              Your Wellness <span className="text-catalyst-copper">Journey</span> Through Motherhood
+              Your Wellness <span className="text-catalyst-copper dark:text-catalyst-gold">Journey</span> Through Motherhood
             </h1>
             <p className="text-lg mb-8 text-muted-foreground max-w-lg leading-relaxed">
               Whether you are trying to conceive, growing a baby, or healing postpartum Catalyst Mom gives you personalised fitness, nutrition, and a community that actually gets it.
@@ -30,7 +30,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
                 <Link to="/dashboard">Get Started</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5">
+              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
                 <Link to="/about" className="flex items-center">
                   Learn More <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
