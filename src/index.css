@@ -79,6 +79,23 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  /* Smooth theme transition */
+  html.light, html.dark {
+    transition: background-color 300ms ease, color 300ms ease;
+  }
+  html.light *, html.dark * {
+    transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, fill 300ms ease, stroke 300ms ease;
+  }
+
+  /* Dark mode glassmorphism for dashboard cards */
+  .dark [data-dashboard-card],
+  .dark .dashboard-card-glass {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(181, 101, 29, 0.2) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
   
   /* Custom scrollbar */
   ::-webkit-scrollbar {
@@ -106,6 +123,11 @@
   
   .hero-gradient {
     @apply bg-gradient-to-br from-catalyst-copper/10 via-white to-catalyst-peach/30;
+  }
+
+  .dark .hero-gradient {
+    background-color: #1A1008;
+    background-image: radial-gradient(circle at center, hsla(28, 72%, 41%, 0.20) 0%, transparent 60%);
   }
   
   .card-hover {

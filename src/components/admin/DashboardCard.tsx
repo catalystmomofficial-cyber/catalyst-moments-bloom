@@ -39,7 +39,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 
   return (
     <motion.div
-      className={`relative overflow-hidden h-full bg-background/50 backdrop-blur-sm rounded-lg border border-border/50 ${className}`}
+      className={`relative overflow-hidden h-full bg-background/50 backdrop-blur-sm rounded-lg border border-border/50 dashboard-card-glass ${className}`}
+      data-dashboard-card
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay }}
