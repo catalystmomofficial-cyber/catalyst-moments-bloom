@@ -13,12 +13,12 @@ interface CTASectionProps {
 
 const CTASection = ({ onWatchDemo }: CTASectionProps) => {
   return (
-    <section className="py-20 bg-gradient-to-br from-catalyst-copper/10 to-white">
+    <section className="py-20 bg-gradient-to-br from-catalyst-copper/10 to-white dark:from-catalyst-copper/15 dark:to-background">
       <div className="container container-padding mx-auto text-center">
-        <Badge variant="outline" className="mb-6 px-3 py-1 border-primary/30 text-primary">
+        <Badge variant="outline" className="mb-6 px-3 py-1 border-primary/30 text-primary dark:text-catalyst-gold dark:border-catalyst-gold/40">
           Join Us Today
         </Badge>
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Wellness Journey?</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">Ready to Start Your Wellness Journey?</h2>
         <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
           Join thousands of moms who are prioritizing their well-being and finding balance in motherhood.
         </p>
