@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Menu, Crown } from 'lucide-react';
+import { Menu, Crown, Moon, Sun } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import AuthLinks from './AuthLinks';
 import { NotificationSystem } from '@/components/notifications/NotificationSystem';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/components/theme-provider';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
