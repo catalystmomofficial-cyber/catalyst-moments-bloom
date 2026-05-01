@@ -73,15 +73,15 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
 
   return (
     <>
-      <Button 
-        variant={variant} 
-        size={size} 
-        className={`gap-2 ${className}`}
+      <Button
+        variant={variant}
+        size={size}
+        className={`gap-2 min-w-0 max-w-full ${className}`}
         onClick={handleClick}
         disabled={isDisabled}
       >
-        <DollarSign className="h-4 w-4" />
-        {getButtonText()}
+        <DollarSign className="h-4 w-4 shrink-0" />
+        <span className="truncate">{getButtonText()}</span>
       </Button>
       
       <AffiliateInfoModal 
