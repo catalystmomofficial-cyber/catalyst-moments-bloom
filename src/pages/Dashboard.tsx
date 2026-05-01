@@ -84,7 +84,7 @@ const Dashboard = () => {
   
   return (
     <PageLayout>
-      <div className="container px-4 mx-auto">
+      <div className="container px-3 sm:px-4 mx-auto max-w-full overflow-x-hidden">
         {!hasJourney ? (
           <div className="min-h-[60vh] flex items-center justify-center">
             <JourneySelector 
@@ -102,7 +102,7 @@ const Dashboard = () => {
             {/* Header Section - More Compact */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
               <div>
-                <h1 className="text-3xl font-bold mb-1">Welcome back, {profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}!</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-1 break-words">Welcome back, <span className="break-all">{profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}</span>!</h1>
                 <p className="text-muted-foreground text-sm">
                   {isTTC ? 'Your TTC journey tracker' : 
                    isPregnant ? 'Your pregnancy companion' :
@@ -111,12 +111,12 @@ const Dashboard = () => {
                    'Your wellness overview'}
                 </p>
               </div>
-              <div className="mt-4 md:mt-0 flex items-center gap-2">
+              <div className="mt-4 md:mt-0 flex items-center gap-2 w-full md:w-auto">
                 <Dialog open={isJourneySelectorOpen} onOpenChange={setIsJourneySelectorOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Baby className="h-4 w-4" /> 
-                      {stageInfo?.phase || 'Update Journey'}
+                    <Button variant="outline" size="sm" className="gap-2 w-full md:w-auto justify-center min-w-0">
+                      <Baby className="h-4 w-4 shrink-0" /> 
+                      <span className="truncate">{stageInfo?.phase || 'Update Journey'}</span>
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -351,13 +351,13 @@ const Dashboard = () => {
 const StatsCard = ({ title, value, description, icon, color }: StatsCardProps) => (
   <Card>
     <CardContent className="pt-6">
-      <div className="flex items-start justify-between">
-        <div className="space-y-1 flex-1">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className="text-3xl font-bold">{value}</p>
-          <p className="text-xs text-muted-foreground">{description}</p>
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1 flex-1 min-w-0">
+          <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+          <p className="text-2xl sm:text-3xl font-bold break-words">{value}</p>
+          <p className="text-xs text-muted-foreground truncate">{description}</p>
         </div>
-        <div className={`${color} rounded-full p-3`}>
+        <div className={`${color} rounded-full p-3 shrink-0`}>
           {icon}
         </div>
       </div>
