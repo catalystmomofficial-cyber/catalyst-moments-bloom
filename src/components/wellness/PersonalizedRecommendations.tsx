@@ -9,6 +9,7 @@ import { useContentFilter } from '@/hooks/useContentFilter';
 import { useAssessmentData } from '@/hooks/useAssessmentData';
 import { wellnessAI } from '@/services/wellnessAI';
 import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface PersonalizedRecommendation {
   id: string;
