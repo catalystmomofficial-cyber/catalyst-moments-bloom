@@ -384,8 +384,8 @@ const Wellness = () => {
 interface WellnessQuickCardProps {
   title: string;
   icon: React.ReactNode;
-  value: string;
-  trend: string;
+  value: React.ReactNode;
+  trend: React.ReactNode;
   color: string;
 }
 
