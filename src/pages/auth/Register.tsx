@@ -215,7 +215,7 @@ const Register = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="motherhood-stage">Motherhood Stage</Label>
-                  <Select onValueChange={handleStageChange} defaultValue={motherhoodStage}>
+                  <Select onValueChange={handleStageChange} value={motherhoodStage === 'none' ? undefined : motherhoodStage}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your stage" />
                     </SelectTrigger>
