@@ -25,43 +25,95 @@ const Register = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [assessmentData, setAssessmentData] = useState<Record<string, string> | null>(null);
+  const [paramWarning, setParamWarning] = useState<string>("");
 
-  // Read URL parameters on mount
+  // Read & validate URL parameters on mount
   useEffect(() => {
     const emailParam = searchParams.get('email');
     const nameParam = searchParams.get('name');
     const stageParam = searchParams.get('stage');
     const refParam = searchParams.get('ref');
+    const scoreParam = searchParams.get('score');
+    const tierParam = searchParams.get('tier');
+    const goalParam = searchParams.get('primary_goal');
+    const obstacleParam = searchParams.get('biggest_obstacle');
+    const birthParam = searchParams.get('birth_experience');
 
-    if (emailParam) setEmail(emailParam);
-    if (nameParam) setName(nameParam);
+    const issues: string[] = [];
 
-    if (stageParam) {
-      const normalized = stageParam.toLowerCase();
-      const stageMap: Record<string, MotherhoodStage> = {
-        ttc: 'ttc',
-        pregnancy: 'pregnant',
-        pregnant: 'pregnant',
-        postpartum: 'postpartum',
-      };
-      if (stageMap[normalized]) {
-        setMotherhoodStage(stageMap[normalized]);
+    // Name: 1-100 chars, letters/spaces/.'- only
+    if (nameParam) {
+      const trimmed = nameParam.trim();
+      if (trimmed.length < 1 || trimmed.length > 100 || !/^[\p{L}\s.'-]+$/u.test(trimmed)) {
+        issues.push("name");
+      } else {
+        setName(trimmed);
       }
     }
 
-    if (refParam) setReferralCode(refParam);
+    // Email: RFC-ish, max 255
+    if (emailParam) {
+      const trimmed = emailParam.trim();
+      if (trimmed.length > 255 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+        issues.push("email");
+      } else {
+        setEmail(trimmed);
+      }
+    }
 
-    // Collect assessment-related params to persist after signup
+    // Stage: must map to a known value
+    const stageMap: Record<string, MotherhoodStage> = {
+      ttc: 'ttc',
+      pregnancy: 'pregnant',
+      pregnant: 'pregnant',
+      postpartum: 'postpartum',
+    };
+    if (stageParam) {
+      const mapped = stageMap[stageParam.toLowerCase()];
+      if (mapped) setMotherhoodStage(mapped);
+      else issues.push("stage");
+    }
+
+    // Score: numeric 0-100
+    if (scoreParam) {
+      const n = Number(scoreParam);
+      if (!Number.isFinite(n) || n < 0 || n > 100) issues.push("score");
+    }
+
+    // Tier: short alphanumeric label
+    if (tierParam && !/^[a-zA-Z0-9_\- ]{1,40}$/.test(tierParam)) issues.push("tier");
+
+    // Free-text assessment fields: max 300 chars, no angle brackets
+    const validateText = (val: string | null, key: string) => {
+      if (val && (val.length > 300 || /[<>]/.test(val))) issues.push(key);
+    };
+    validateText(goalParam, "primary_goal");
+    validateText(obstacleParam, "biggest_obstacle");
+    validateText(birthParam, "birth_experience");
+
+    // Referral code: alphanumeric, max 32
+    if (refParam) {
+      if (/^[a-zA-Z0-9_-]{1,32}$/.test(refParam)) setReferralCode(refParam);
+      else issues.push("ref");
+    }
+
+    // Collect only valid assessment params to persist after signup
     const assessmentKeys = ['score', 'tier', 'stage', 'primary_goal', 'biggest_obstacle', 'birth_experience'];
     const collected: Record<string, string> = {};
     assessmentKeys.forEach((key) => {
+      if (issues.includes(key)) return;
       const value = searchParams.get(key);
       if (value) collected[key] = value;
     });
-    if (Object.keys(collected).length > 0) {
-      setAssessmentData(collected);
+    if (Object.keys(collected).length > 0) setAssessmentData(collected);
+
+    if (issues.length > 0) {
+      setParamWarning(
+        `Some link details look off and were ignored: ${issues.join(", ")}. You can still sign up below.`
+      );
     }
   }, [searchParams]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,6 +185,11 @@ const Register = () => {
             {error && (
               <div className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-sm">
                 {error}
+              </div>
+            )}
+            {paramWarning && !error && (
+              <div className="bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 p-3 rounded-md mb-4 text-sm">
+                {paramWarning}
               </div>
             )}
             <form onSubmit={handleSubmit}>
