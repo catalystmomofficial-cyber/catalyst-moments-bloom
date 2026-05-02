@@ -61,11 +61,16 @@ const Register = () => {
       }
     }
 
-    // Stage: fuzzy match to a known value
+    // Stage: map to a known dropdown value
     if (stageParam) {
       const s = stageParam.toLowerCase().trim();
       let mapped: MotherhoodStage | null = null;
-      if (s.includes('ttc')) mapped = 'ttc';
+      // Exact matches first
+      if (s === 'ttc') mapped = 'ttc';
+      else if (s === 'pregnant') mapped = 'pregnant';
+      else if (s === 'postpartum') mapped = 'postpartum';
+      // Fuzzy fallbacks
+      else if (s.includes('ttc')) mapped = 'ttc';
       else if (s.includes('pregnancy') || s.includes('pregnant') || s.includes('trimester')) mapped = 'pregnant';
       else if (s.includes('postpartum') || /\d+\s*-\s*\d+/.test(s) || /\d/.test(s)) mapped = 'postpartum';
       if (mapped) setMotherhoodStage(mapped);
