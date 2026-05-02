@@ -61,15 +61,13 @@ const Register = () => {
       }
     }
 
-    // Stage: must map to a known value
-    const stageMap: Record<string, MotherhoodStage> = {
-      ttc: 'ttc',
-      pregnancy: 'pregnant',
-      pregnant: 'pregnant',
-      postpartum: 'postpartum',
-    };
+    // Stage: fuzzy match to a known value
     if (stageParam) {
-      const mapped = stageMap[stageParam.toLowerCase()];
+      const s = stageParam.toLowerCase().trim();
+      let mapped: MotherhoodStage | null = null;
+      if (s.includes('ttc')) mapped = 'ttc';
+      else if (s.includes('pregnancy') || s.includes('pregnant') || s.includes('trimester')) mapped = 'pregnant';
+      else if (s.includes('postpartum') || /\d+\s*-\s*\d+/.test(s) || /\d/.test(s)) mapped = 'postpartum';
       if (mapped) setMotherhoodStage(mapped);
       else issues.push("stage");
     }
@@ -225,7 +223,6 @@ const Register = () => {
                       <SelectItem value="ttc">Trying to Conceive</SelectItem>
                       <SelectItem value="pregnant">Pregnant</SelectItem>
                       <SelectItem value="postpartum">Postpartum</SelectItem>
-                      <SelectItem value="none">Prefer not to say</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
