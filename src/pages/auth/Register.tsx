@@ -187,6 +187,11 @@ const Register = () => {
                 {error}
               </div>
             )}
+            {paramWarning && !error && (
+              <div className="bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 p-3 rounded-md mb-4 text-sm">
+                {paramWarning}
+              </div>
+            )}
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div className="space-y-2">
