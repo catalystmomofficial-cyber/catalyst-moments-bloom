@@ -316,11 +316,7 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
 
-                {/* Quick Links */}
-                {isTTC ? <TTCNutritionSection /> : 
-                 isPregnant ? <PregnancyCommunity /> : 
-                 <NutritionSection />}
-                
+
                 {/* Community Preview */}
                 {isTTC ? (
                   <TTCCommunitySection />
