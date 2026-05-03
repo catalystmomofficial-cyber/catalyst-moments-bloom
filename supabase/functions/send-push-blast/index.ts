@@ -87,7 +87,7 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
   try {
-    const { title, body, image_url, url, user_ids, requireAdmin } = await req.json();
+    const { title, body, image_url, url, user_ids, stages, requireAdmin } = await req.json();
 
     if (!title || !body) {
       return new Response(JSON.stringify({ error: 'title and body required' }), {
@@ -129,10 +129,36 @@ serve(async (req) => {
 
     const sa: ServiceAccount = JSON.parse(Deno.env.get('FIREBASE_SERVICE_ACCOUNT')!);
 
+    // Resolve target user IDs from explicit list + stage segments
+    let targetIds: string[] | null = null;
+    if (Array.isArray(user_ids) && user_ids.length > 0) {
+      targetIds = [...user_ids];
+    }
+    if (Array.isArray(stages) && stages.length > 0) {
+      const stageList = stages
+        .filter((s: string) => ['ttc', 'pregnancy', 'postpartum', 'none'].includes(s))
+        .map((s: string) => `"${s}"`)
+        .join(',');
+      if (stageList) {
+        const profRes = await sbFetch(
+          `/rest/v1/profiles?motherhood_stage=in.(${stageList})&select=user_id`
+        );
+        const profs: { user_id: string }[] = await profRes.json();
+        const stageIds = profs.map((p) => p.user_id);
+        targetIds = targetIds ? [...new Set([...targetIds, ...stageIds])] : stageIds;
+      }
+    }
+
+    if (targetIds && targetIds.length === 0) {
+      return new Response(JSON.stringify({ success: true, sent: 0, failed: 0, total: 0 }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     // Build target token list
     let query = `/rest/v1/push_subscriptions?fcm_token=not.is.null&select=user_id,fcm_token`;
-    if (Array.isArray(user_ids) && user_ids.length > 0) {
-      query += `&user_id=in.(${user_ids.join(',')})`;
+    if (targetIds) {
+      query += `&user_id=in.(${targetIds.join(',')})`;
     }
     const subsRes = await sbFetch(query);
     const subs: { user_id: string; fcm_token: string }[] = await subsRes.json();
