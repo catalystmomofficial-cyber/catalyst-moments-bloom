@@ -5,6 +5,16 @@ import { Badge } from '@/components/ui/badge';
 import { Timer, AlertTriangle, Baby, Heart, Wind } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { supabase } from '@/integrations/supabase/client';
+
+type LaborState = 'EARLY' | 'BUILDING' | 'PREPARE' | 'READY';
+
+const STATE_MESSAGES: Record<LaborState, { title: string; message: string; tone: string }> = {
+  EARLY:    { title: 'Early Labor',              message: 'Contractions are irregular. Stay relaxed 💛',         tone: 'muted' },
+  BUILDING: { title: 'Labor Progressing',        message: 'Your contractions are becoming more consistent.',     tone: 'info' },
+  PREPARE:  { title: 'Time to Prepare',          message: 'Consider preparing your hospital bag.',               tone: 'warning' },
+  READY:    { title: 'Strong Pattern Detected',  message: 'It may be time to contact your provider.',            tone: 'destructive' },
+};
 
 interface Contraction {
   id: string;
@@ -36,6 +46,8 @@ export const ContractionTracker = () => {
   const [intensity, setIntensity] = useState(5);
   const [affirmIdx, setAffirmIdx] = useState(0);
   const breathRef = useRef<HTMLDivElement>(null);
+  const [serverState, setServerState] = useState<LaborState | null>(null);
+  const lastServerStateRef = useRef<LaborState | null>(null);
 
   // Restore
   useEffect(() => {
@@ -113,6 +125,35 @@ export const ContractionTracker = () => {
     lastPhaseRef.current = phase.key;
   }, [phase.key]);
 
+  // Server-side labor analysis
+  useEffect(() => {
+    if (contractions.length < 2) { setServerState(null); return; }
+    const payload = contractions.slice(0, 10).map(c => ({
+      startTime: c.startTime, endTime: c.endTime, duration: c.duration,
+    })).reverse();
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('analyze-contractions', {
+          body: { contractions: payload },
+        });
+        if (cancelled || error || !data?.state) return;
+        const next = data.state as LaborState;
+        setServerState(next);
+        if (next !== lastServerStateRef.current && (next === 'PREPARE' || next === 'READY')) {
+          vibrate(next === 'READY' ? 'error' : 'medium');
+          toast({
+            title: STATE_MESSAGES[next].title,
+            description: STATE_MESSAGES[next].message,
+            variant: next === 'READY' ? 'destructive' : 'default',
+          });
+        }
+        lastServerStateRef.current = next;
+      } catch {}
+    })();
+    return () => { cancelled = true; };
+  }, [contractions]);
+
   const intensityColor = (n: number) =>
     n <= 3 ? 'bg-emerald-500' : n <= 6 ? 'bg-catalyst-gold' : n <= 8 ? 'bg-orange-500' : 'bg-destructive';
 
@@ -162,6 +203,17 @@ export const ContractionTracker = () => {
           <Button size="lg" className="w-full" onClick={start}>
             Start a contraction
           </Button>
+        )}
+
+        {/* Server-analyzed labor state */}
+        {serverState && (
+          <div className={`p-3 rounded-lg border ${phaseStyles[STATE_MESSAGES[serverState].tone]}`}>
+            <div className="flex items-center justify-between mb-0.5">
+              <div className="font-semibold text-sm">{STATE_MESSAGES[serverState].title}</div>
+              <Badge variant="outline" className="text-[10px]">Live analysis</Badge>
+            </div>
+            <p className="text-xs">{STATE_MESSAGES[serverState].message}</p>
+          </div>
         )}
 
         {/* Phase guidance */}
