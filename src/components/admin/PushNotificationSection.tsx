@@ -8,32 +8,63 @@ import { Bell, Send, Loader2, Smartphone } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
+type Audience = 'all' | 'segments';
+const STAGE_OPTIONS = [
+  { value: 'ttc', label: 'TTC' },
+  { value: 'pregnancy', label: 'Pregnancy' },
+  { value: 'postpartum', label: 'Postpartum' },
+  { value: 'none', label: 'No stage set' },
+] as const;
+
 export const PushNotificationSection = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [deepLink, setDeepLink] = useState('/dashboard');
+  const [audience, setAudience] = useState<Audience>('all');
+  const [selectedStages, setSelectedStages] = useState<string[]>([]);
+  const [userIdsRaw, setUserIdsRaw] = useState('');
   const [sending, setSending] = useState(false);
-  const [lastResult, setLastResult] = useState<{ sent: number; failed: number } | null>(null);
+  const [lastResult, setLastResult] = useState<{ sent: number; failed: number; total?: number } | null>(null);
+
+  const toggleStage = (stage: string) => {
+    setSelectedStages((prev) =>
+      prev.includes(stage) ? prev.filter((s) => s !== stage) : [...prev, stage]
+    );
+  };
+
+  const parsedUserIds = userIdsRaw
+    .split(/[\s,;\n]+/)
+    .map((s) => s.trim())
+    .filter((s) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s));
 
   const send = async () => {
     if (!title.trim() || !body.trim()) {
       toast.error('Title and body are required');
       return;
     }
+    if (audience === 'segments' && selectedStages.length === 0 && parsedUserIds.length === 0) {
+      toast.error('Pick at least one stage or paste user IDs');
+      return;
+    }
     setSending(true);
     try {
+      const payload: Record<string, unknown> = {
+        title,
+        body,
+        image_url: imageUrl || undefined,
+        url: deepLink || '/',
+        requireAdmin: true,
+      };
+      if (audience === 'segments') {
+        if (selectedStages.length > 0) payload.stages = selectedStages;
+        if (parsedUserIds.length > 0) payload.user_ids = parsedUserIds;
+      }
       const { data, error } = await supabase.functions.invoke('send-push-blast', {
-        body: {
-          title,
-          body,
-          image_url: imageUrl || undefined,
-          url: deepLink || '/',
-          requireAdmin: true,
-        },
+        body: payload,
       });
       if (error) throw error;
-      setLastResult({ sent: data.sent ?? 0, failed: data.failed ?? 0 });
+      setLastResult({ sent: data.sent ?? 0, failed: data.failed ?? 0, total: data.total });
       toast.success(`Sent to ${data.sent ?? 0} devices`);
     } catch (e: any) {
       console.error(e);
