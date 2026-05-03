@@ -205,6 +205,17 @@ export const ContractionTracker = () => {
           </Button>
         )}
 
+        {/* Server-analyzed labor state */}
+        {serverState && (
+          <div className={`p-3 rounded-lg border ${phaseStyles[STATE_MESSAGES[serverState].tone]}`}>
+            <div className="flex items-center justify-between mb-0.5">
+              <div className="font-semibold text-sm">{STATE_MESSAGES[serverState].title}</div>
+              <Badge variant="outline" className="text-[10px]">Live analysis</Badge>
+            </div>
+            <p className="text-xs">{STATE_MESSAGES[serverState].message}</p>
+          </div>
+        )}
+
         {/* Phase guidance */}
         <div className={`p-3 rounded-lg border text-sm ${phaseStyles[phase.tone]}`}>
           <div className="flex items-center gap-2 font-medium mb-0.5">
