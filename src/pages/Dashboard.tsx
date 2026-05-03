@@ -224,14 +224,14 @@ const Dashboard = () => {
                 {/* Today's Focus - Collapsible */}
                 <Card>
                   <Collapsible defaultOpen>
-                    <CollapsibleTrigger className="w-full text-left">
+                    <CollapsibleTrigger className="w-full text-left group">
                       <CardHeader>
                         <CardTitle className="flex items-center justify-between">
                           <span className="flex items-center gap-2">
                             <Timer className="h-5 w-5 text-muted-foreground" />
                             Today's Focus
                           </span>
-                          <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform [&[data-state=open]]:rotate-180" />
+                          <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
                         </CardTitle>
                       </CardHeader>
                     </CollapsibleTrigger>
