@@ -125,6 +125,35 @@ export const ContractionTracker = () => {
     lastPhaseRef.current = phase.key;
   }, [phase.key]);
 
+  // Server-side labor analysis
+  useEffect(() => {
+    if (contractions.length < 2) { setServerState(null); return; }
+    const payload = contractions.slice(0, 10).map(c => ({
+      startTime: c.startTime, endTime: c.endTime, duration: c.duration,
+    })).reverse();
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('analyze-contractions', {
+          body: { contractions: payload },
+        });
+        if (cancelled || error || !data?.state) return;
+        const next = data.state as LaborState;
+        setServerState(next);
+        if (next !== lastServerStateRef.current && (next === 'PREPARE' || next === 'READY')) {
+          vibrate(next === 'READY' ? 'error' : 'medium');
+          toast({
+            title: STATE_MESSAGES[next].title,
+            description: STATE_MESSAGES[next].message,
+            variant: next === 'READY' ? 'destructive' : 'default',
+          });
+        }
+        lastServerStateRef.current = next;
+      } catch {}
+    })();
+    return () => { cancelled = true; };
+  }, [contractions]);
+
   const intensityColor = (n: number) =>
     n <= 3 ? 'bg-emerald-500' : n <= 6 ? 'bg-catalyst-gold' : n <= 8 ? 'bg-orange-500' : 'bg-destructive';
 
