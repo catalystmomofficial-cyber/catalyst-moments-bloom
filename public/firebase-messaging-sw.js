@@ -3,12 +3,13 @@ importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyBWanXNXNO8ROsndyUaOr1tYUwNHWWT7es',
-  authDomain: 'catalyst-mom-app.firebaseapp.com',
-  projectId: 'catalyst-mom-app',
-  storageBucket: 'catalyst-mom-app.firebasestorage.app',
-  messagingSenderId: '99975504315',
-  appId: '1:99975504315:web:c166abb3dfc50a46f6e49e',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 });
 
 const messaging = firebase.messaging();
