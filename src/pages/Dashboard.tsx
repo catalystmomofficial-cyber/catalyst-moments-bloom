@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Calendar } from "@/components/ui/calendar";
-import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle } from 'lucide-react';
+import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, ChevronDown, Heart, LineChart, Smile, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
