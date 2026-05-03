@@ -1,425 +1,285 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Heart, Timer, RotateCcw, TrendingUp, AlertTriangle, Calendar, BarChart3 } from 'lucide-react';
+import { Heart, Timer, RotateCcw, TrendingUp, AlertTriangle, Sparkles, Sun, Moon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 
 interface KickSession {
   id: string;
   date: string;
   startTime: string;
   endTime: string;
+  startedAt: number;
   kickCount: number;
-  duration: number; // in minutes
+  duration: number; // minutes
 }
 
-interface DailyData {
-  date: string;
-  totalKicks: number;
-  sessions: number;
-  avgDuration: number;
-}
+const AFFIRMATIONS = [
+  "You and baby are connected 💛",
+  "Every flutter is a hello",
+  "You're doing beautifully",
+  "Trust your body, trust baby",
+  "Breathe. Feel. Notice.",
+];
 
 export const BabyKickCounter = () => {
   const { toast } = useToast();
+  const { vibrate } = useHapticFeedback();
   const [isTracking, setIsTracking] = useState(false);
   const [kickCount, setKickCount] = useState(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
-  const [duration, setDuration] = useState(0);
+  const [elapsedSec, setElapsedSec] = useState(0);
   const [sessions, setSessions] = useState<KickSession[]>([]);
-  const [showCharts, setShowCharts] = useState(false);
+  const [ripples, setRipples] = useState<number[]>([]);
+  const [affirmation, setAffirmation] = useState(AFFIRMATIONS[0]);
+  const [lastKickAt, setLastKickAt] = useState<number | null>(null);
+  const [milestoneShown, setMilestoneShown] = useState(false);
+  const audioRef = useRef<AudioContext | null>(null);
 
-  // Load saved sessions from localStorage
+  // Load sessions
   useEffect(() => {
-    const savedSessions = localStorage.getItem('kickCounterSessions');
-    if (savedSessions) {
-      setSessions(JSON.parse(savedSessions));
-    }
+    const saved = localStorage.getItem('kickCounterSessions');
+    if (saved) try { setSessions(JSON.parse(saved)); } catch {}
   }, []);
 
-  // Save sessions to localStorage whenever sessions change
   useEffect(() => {
-    if (sessions.length > 0) {
-      localStorage.setItem('kickCounterSessions', JSON.stringify(sessions));
-    }
+    if (sessions.length) localStorage.setItem('kickCounterSessions', JSON.stringify(sessions));
   }, [sessions]);
 
-  // Timer for tracking duration
+  // Live timer (1s)
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isTracking && startTime) {
-      interval = setInterval(() => {
-        const now = new Date();
-        const diff = Math.floor((now.getTime() - startTime.getTime()) / 1000 / 60);
-        setDuration(diff);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
+    if (!isTracking || !startTime) return;
+    const i = setInterval(() => {
+      setElapsedSec(Math.floor((Date.now() - startTime.getTime()) / 1000));
+    }, 1000);
+    return () => clearInterval(i);
   }, [isTracking, startTime]);
+
+  // Rotate affirmations during a session
+  useEffect(() => {
+    if (!isTracking) return;
+    const i = setInterval(() => {
+      setAffirmation(prev => {
+        const next = AFFIRMATIONS[(AFFIRMATIONS.indexOf(prev) + 1) % AFFIRMATIONS.length];
+        return next;
+      });
+    }, 9000);
+    return () => clearInterval(i);
+  }, [isTracking]);
+
+  const playChime = () => {
+    try {
+      if (!audioRef.current) audioRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const ctx = audioRef.current;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.frequency.value = 880;
+      g.gain.value = 0.05;
+      o.connect(g); g.connect(ctx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+      o.stop(ctx.currentTime + 0.26);
+    } catch {}
+  };
 
   const startTracking = () => {
     const now = new Date();
     setIsTracking(true);
     setStartTime(now);
     setKickCount(0);
-    setDuration(0);
-    toast({
-      title: "Kick counting started",
-      description: "Tap the heart when you feel baby move!",
+    setElapsedSec(0);
+    setMilestoneShown(false);
+    setLastKickAt(null);
+    toast({ title: 'Counting started 💛', description: 'Tap the heart with each movement.' });
+  };
+
+  const recordKick = () => {
+    if (!isTracking) return;
+    vibrate('light');
+    const id = Date.now();
+    setRipples(r => [...r, id]);
+    setTimeout(() => setRipples(r => r.filter(x => x !== id)), 700);
+    setLastKickAt(Date.now());
+    setKickCount(prev => {
+      const next = prev + 1;
+      if (next === 10 && !milestoneShown) {
+        setMilestoneShown(true);
+        playChime();
+        vibrate('success');
+        toast({ title: '🎉 10 movements!', description: `Beautiful — in just ${Math.max(1, Math.floor(elapsedSec/60))} minute(s).` });
+      }
+      return next;
     });
   };
 
   const stopTracking = () => {
     if (!startTime) return;
-    
     const endTime = new Date();
-    const sessionDuration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000 / 60);
-    
-    const newSession: KickSession = {
-      id: Date.now().toString(),
+    const dur = Math.max(1, Math.floor((endTime.getTime() - startTime.getTime()) / 1000 / 60));
+    const session: KickSession = {
+      id: String(Date.now()),
       date: startTime.toDateString(),
       startTime: startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       endTime: endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      startedAt: startTime.getTime(),
       kickCount,
-      duration: sessionDuration
+      duration: dur,
     };
-
-    setSessions(prev => [newSession, ...prev].slice(0, 10)); // Keep last 10 sessions
+    setSessions(prev => [session, ...prev].slice(0, 30));
     setIsTracking(false);
     setStartTime(null);
-    setDuration(0);
-    
-    // Provide feedback based on results
-    if (kickCount >= 10) {
-      toast({
-        title: "Great session!",
-        description: `Counted ${kickCount} movements in ${sessionDuration} minutes. Baby is active!`,
-      });
-    } else if (sessionDuration >= 60) {
-      toast({
-        title: "Session completed",
-        description: `${kickCount} movements in 1 hour. This is within normal range.`,
-      });
-    } else {
-      toast({
-        title: "Session saved",
-        description: `${kickCount} movements tracked. Continue monitoring as recommended.`,
-      });
-    }
+    setElapsedSec(0);
+    toast({ title: 'Session saved', description: `${kickCount} movements in ${dur} min.` });
   };
 
-  const recordKick = () => {
-    if (!isTracking) return;
-    
-    // Add haptic vibration
-    if (navigator.vibrate) {
-      navigator.vibrate(100);
-    }
-    
-    setKickCount(prev => prev + 1);
-    
-    // Check if we've reached 10 kicks
-    if (kickCount + 1 === 10 && duration < 60) {
-      toast({
-        title: "10 kicks reached!",
-        description: `Great! Baby reached 10 movements in ${duration} minutes.`,
-      });
-    }
-  };
+  const resetSession = () => { setIsTracking(false); setKickCount(0); setStartTime(null); setElapsedSec(0); };
 
-  const resetSession = () => {
-    setIsTracking(false);
-    setKickCount(0);
-    setStartTime(null);
-    setDuration(0);
-  };
+  // Live status
+  const sinceLast = lastKickAt ? Math.floor((Date.now() - lastKickAt) / 1000) : null;
+  const liveStatus = useMemo(() => {
+    if (!isTracking) return null;
+    if (kickCount === 0) return { tone: 'calm', text: 'Get cozy. Breathe slowly. Wait for the first hello.' };
+    if (kickCount >= 10) return { tone: 'great', text: `Goal reached. Baby is wonderfully active.` };
+    if (sinceLast !== null && sinceLast > 600) return { tone: 'gentle', text: 'Quiet stretch. Sip cold water, lie on your left side.' };
+    if (kickCount >= 6) return { tone: 'good', text: 'Strong rhythm — almost there.' };
+    return { tone: 'flow', text: 'Beautiful. Keep noticing each movement.' };
+  }, [isTracking, kickCount, sinceLast]);
 
-  const getAverageKicks = () => {
-    if (sessions.length === 0) return 0;
-    const total = sessions.reduce((sum, session) => sum + session.kickCount, 0);
-    return Math.round(total / sessions.length);
-  };
+  // Pattern detection on history
+  const pattern = useMemo(() => {
+    const last3 = sessions.slice(0, 3);
+    if (last3.length < 2) return null;
+    const low = last3.filter(s => s.kickCount < 10).length;
+    if (low >= 2) return { kind: 'concern' as const, msg: 'Recent sessions are lower than usual. If this continues, contact your provider.' };
+    if (last3.every(s => s.kickCount >= 10)) return { kind: 'great' as const, msg: 'Consistently strong movement. Beautiful pattern.' };
+    return { kind: 'normal' as const, msg: 'Movement is in a normal range.' };
+  }, [sessions]);
 
-  const getProgressColor = () => {
-    if (kickCount >= 10) return "bg-green-500";
-    if (kickCount >= 6) return "bg-yellow-500";
-    return "bg-blue-500";
-  };
-
-  // Prepare chart data
-  const getDailyData = (): DailyData[] => {
-    const dailyMap = new Map<string, { kicks: number; sessions: number; totalDuration: number }>();
-    
-    sessions.forEach(session => {
-      const date = new Date(session.date).toLocaleDateString();
-      const existing = dailyMap.get(date) || { kicks: 0, sessions: 0, totalDuration: 0 };
-      dailyMap.set(date, {
-        kicks: existing.kicks + session.kickCount,
-        sessions: existing.sessions + 1,
-        totalDuration: existing.totalDuration + session.duration
-      });
+  // Most active time-of-day
+  const activeWindow = useMemo(() => {
+    if (sessions.length < 3) return null;
+    const buckets = { morning: 0, afternoon: 0, evening: 0, night: 0 };
+    sessions.forEach(s => {
+      const h = new Date(s.startedAt).getHours();
+      const k = h < 12 ? 'morning' : h < 17 ? 'afternoon' : h < 21 ? 'evening' : 'night';
+      (buckets as any)[k] += s.kickCount;
     });
+    const top = Object.entries(buckets).sort((a,b)=>b[1]-a[1])[0];
+    return top[1] > 0 ? top[0] : null;
+  }, [sessions]);
 
-    return Array.from(dailyMap.entries())
-      .map(([date, data]) => ({
-        date: date.split('/').slice(0, 2).join('/'), // MM/DD format
-        totalKicks: data.kicks,
-        sessions: data.sessions,
-        avgDuration: Math.round(data.totalDuration / data.sessions)
-      }))
-      .slice(-7); // Last 7 days
-  };
-
-  const checkMovementPattern = () => {
-    const recentSessions = sessions.slice(0, 3);
-    const lowMovementSessions = recentSessions.filter(s => s.kickCount < 10);
-    
-    if (lowMovementSessions.length >= 2) {
-      return 'concern';
-    } else if (recentSessions.length > 0 && recentSessions.every(s => s.kickCount >= 10)) {
-      return 'excellent';
-    }
-    return 'normal';
-  };
-
-  const chartConfig = {
-    totalKicks: {
-      label: "Total Kicks",
-      color: "hsl(var(--primary))",
-    },
-    sessions: {
-      label: "Sessions",
-      color: "hsl(var(--secondary))",
-    },
-  };
+  const progress = Math.min(100, (kickCount / 10) * 100);
+  const mins = Math.floor(elapsedSec / 60);
+  const secs = (elapsedSec % 60).toString().padStart(2, '0');
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Heart className="mr-2 h-5 w-5 text-pink-500" />
-            Baby Kick Counter
-          </div>
+          <div className="flex items-center"><Heart className="mr-2 h-5 w-5 text-catalyst-copper" />Baby Kick Counter</div>
           {isTracking && (
-            <Badge variant="outline" className="bg-pink-50 border-pink-200">
-              <Timer className="mr-1 h-3 w-3" />
-              {duration}m
+            <Badge variant="outline" className="border-catalyst-copper/40 text-catalyst-brown">
+              <Timer className="mr-1 h-3 w-3" />{mins}:{secs}
             </Badge>
           )}
         </CardTitle>
-        <CardDescription>
-          Track your baby's movements. Aim for 10 kicks in 2 hours or less.
-        </CardDescription>
+        <CardDescription>Aim for 10 movements within 2 hours. Get quiet, lie on your side, and listen.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Current Session */}
-        <div className="text-center space-y-4">
-          <div className="text-6xl font-bold text-pink-500">
-            {kickCount}
-          </div>
-          <div className="text-sm text-muted-foreground">
-            {isTracking ? "Movements counted" : "Ready to start counting"}
-          </div>
-          
-          {isTracking && (
-            <div className="space-y-2">
-              <Progress 
-                value={(kickCount / 10) * 100} 
-                className="h-2"
-              />
-              <div className="text-xs text-muted-foreground">
-                {kickCount}/10 movements • {duration} minutes
-              </div>
+      <CardContent className="space-y-5">
+        {/* Conic progress ring with pulsing heart */}
+        <div className="flex justify-center">
+          <button
+            onClick={isTracking ? recordKick : startTracking}
+            className="relative h-52 w-52 rounded-full flex items-center justify-center transition-transform active:scale-95 focus:outline-none focus:ring-4 focus:ring-catalyst-copper/30"
+            style={{ background: `conic-gradient(hsl(var(--primary)) ${progress}%, hsl(var(--muted)) 0%)` }}
+            aria-label={isTracking ? 'Log a kick' : 'Start counting'}
+          >
+            <div className="absolute inset-3 rounded-full bg-card shadow-inner flex flex-col items-center justify-center">
+              <div className={`text-5xl font-bold text-catalyst-brown ${isTracking ? 'animate-pulse' : ''}`}>{kickCount}</div>
+              <div className="text-xs text-muted-foreground mt-1">{isTracking ? 'tap for each move' : 'tap to begin'}</div>
             </div>
-          )}
+            {ripples.map(r => (
+              <span key={r} className="absolute inset-0 rounded-full border-2 border-catalyst-copper/60 animate-ping" />
+            ))}
+          </button>
         </div>
 
-        {/* Action Buttons */}
-        <div className="space-y-2">
-          {!isTracking ? (
-            <Button 
-              onClick={startTracking}
-              className="w-full bg-pink-500 hover:bg-pink-600"
-              size="lg"
-            >
-              Start Kick Counting
-            </Button>
-          ) : (
-            <div className="grid grid-cols-3 gap-2">
-              <Button
-                onClick={recordKick}
-                className="bg-pink-500 hover:bg-pink-600"
-                size="lg"
-              >
-                <Heart className="h-4 w-4" />
-              </Button>
-              <Button
-                onClick={stopTracking}
-                variant="outline"
-                size="lg"
-              >
-                Stop
-              </Button>
-              <Button
-                onClick={resetSession}
-                variant="outline"
-                size="lg"
-              >
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {/* Charts Toggle */}
-        {sessions.length > 3 && (
-          <div className="flex justify-center pt-4 border-t">
-            <Button
-              onClick={() => setShowCharts(!showCharts)}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <BarChart3 className="h-4 w-4" />
-              {showCharts ? 'Hide Charts' : 'View Trends'}
-            </Button>
-          </div>
-        )}
-
-        {/* Movement Pattern Alert */}
-        {sessions.length > 2 && (
-          <div className={`p-3 rounded-lg text-sm ${
-            checkMovementPattern() === 'concern' 
-              ? 'bg-red-50 border border-red-200' 
-              : checkMovementPattern() === 'excellent'
-              ? 'bg-green-50 border border-green-200'
-              : 'bg-blue-50 border border-blue-200'
-          }`}>
-            <div className="flex items-center mb-1">
-              {checkMovementPattern() === 'concern' && (
-                <AlertTriangle className="h-4 w-4 text-red-600 mr-2" />
-              )}
-              <p className="font-medium">
-                {checkMovementPattern() === 'concern' && 'Movement Pattern Notice'}
-                {checkMovementPattern() === 'excellent' && 'Excellent Movement Pattern!'}
-                {checkMovementPattern() === 'normal' && 'Normal Movement Pattern'}
+        {/* Live affirmation + status */}
+        {isTracking && (
+          <div className="text-center space-y-2 animate-fade-in">
+            <p className="text-sm font-medium text-catalyst-brown flex items-center justify-center gap-1">
+              <Sparkles className="h-3.5 w-3.5" />{affirmation}
+            </p>
+            {liveStatus && (
+              <p className={`text-xs ${liveStatus.tone === 'gentle' ? 'text-amber-700' : liveStatus.tone === 'great' ? 'text-emerald-700' : 'text-muted-foreground'}`}>
+                {liveStatus.text}
               </p>
-            </div>
-            <div className="text-xs">
-              {checkMovementPattern() === 'concern' && (
-                <span className="text-red-700">
-                  Your recent sessions show fewer movements than usual. Consider contacting your healthcare provider if this pattern continues.
-                </span>
-              )}
-              {checkMovementPattern() === 'excellent' && (
-                <span className="text-green-700">
-                  Your baby is showing consistent, healthy movement patterns. Keep up the great monitoring!
-                </span>
-              )}
-              {checkMovementPattern() === 'normal' && (
-                <span className="text-blue-700">
-                  Your baby's movement pattern appears normal. Continue regular monitoring as recommended.
-                </span>
-              )}
-            </div>
+            )}
+            {sinceLast !== null && kickCount > 0 && (
+              <p className="text-[11px] text-muted-foreground">last movement {sinceLast < 60 ? `${sinceLast}s` : `${Math.floor(sinceLast/60)}m`} ago</p>
+            )}
           </div>
         )}
 
-        {/* Charts Section */}
-        {showCharts && sessions.length > 3 && (
-          <div className="space-y-4 pt-4 border-t">
-            <div>
-              <h4 className="text-sm font-medium mb-3 flex items-center">
-                <Calendar className="h-4 w-4 mr-2" />
-                Daily Movement Trends (Last 7 Days)
-              </h4>
-              <ChartContainer config={chartConfig} className="h-[200px]">
-                <LineChart data={getDailyData()}>
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Line 
-                    type="monotone" 
-                    dataKey="totalKicks" 
-                    stroke="hsl(var(--primary))" 
-                    strokeWidth={2}
-                    dot={{ fill: 'hsl(var(--primary))' }}
-                  />
-                </LineChart>
-              </ChartContainer>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-medium mb-3">Sessions Per Day</h4>
-              <ChartContainer config={chartConfig} className="h-[150px]">
-                <BarChart data={getDailyData()}>
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar 
-                    dataKey="sessions" 
-                    fill="hsl(var(--secondary))" 
-                    radius={[2, 2, 0, 0]}
-                  />
-                </BarChart>
-              </ChartContainer>
-            </div>
+        {/* Action row */}
+        {isTracking ? (
+          <div className="grid grid-cols-2 gap-2">
+            <Button onClick={stopTracking} variant="outline">Finish session</Button>
+            <Button onClick={resetSession} variant="ghost"><RotateCcw className="h-4 w-4 mr-1" />Reset</Button>
           </div>
+        ) : (
+          <Button onClick={startTracking} className="w-full" size="lg">Start Kick Counting</Button>
         )}
 
-        {/* Quick Stats */}
-        {sessions.length > 0 && (
-          <div className="grid grid-cols-3 gap-3 pt-4 border-t">
-            <div className="text-center p-3 bg-muted/30 rounded-lg">
-              <div className="flex items-center justify-center mb-1">
-                <TrendingUp className="h-4 w-4 text-green-600 mr-1" />
-                <span className="font-medium">{getAverageKicks()}</span>
+        {/* Pattern + active window */}
+        {(pattern || activeWindow) && (
+          <div className="grid sm:grid-cols-2 gap-2">
+            {pattern && (
+              <div className={`p-3 rounded-lg text-sm border ${
+                pattern.kind === 'concern' ? 'bg-destructive/5 border-destructive/30 text-destructive' :
+                pattern.kind === 'great' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' :
+                'bg-muted/40 border-border text-foreground/80'
+              }`}>
+                <div className="flex items-center gap-2 font-medium mb-0.5">
+                  {pattern.kind === 'concern' ? <AlertTriangle className="h-4 w-4" /> : <TrendingUp className="h-4 w-4" />}
+                  Pattern
+                </div>
+                <p className="text-xs">{pattern.msg}</p>
               </div>
-              <p className="text-xs text-muted-foreground">Avg kicks</p>
-            </div>
-            <div className="text-center p-3 bg-muted/30 rounded-lg">
-              <div className="font-medium">{sessions.length}</div>
-              <p className="text-xs text-muted-foreground">Sessions</p>
-            </div>
-            <div className="text-center p-3 bg-muted/30 rounded-lg">
-              <div className="font-medium">
-                {sessions.reduce((sum, s) => sum + s.kickCount, 0)}
+            )}
+            {activeWindow && (
+              <div className="p-3 rounded-lg text-sm bg-catalyst-cream border border-catalyst-tan">
+                <div className="flex items-center gap-2 font-medium mb-0.5 text-catalyst-brown">
+                  {activeWindow === 'night' || activeWindow === 'evening' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                  Most active in the {activeWindow}
+                </div>
+                <p className="text-xs text-muted-foreground">Try counting then for the strongest signal.</p>
               </div>
-              <p className="text-xs text-muted-foreground">Total kicks</p>
-            </div>
+            )}
           </div>
         )}
 
-        {/* Recent Sessions */}
+        {/* Recent strip */}
         {sessions.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium">Recent Sessions</h4>
-            <div className="space-y-2 max-h-32 overflow-y-auto">
-              {sessions.slice(0, 3).map((session) => (
-                <div key={session.id} className="flex justify-between items-center p-2 bg-muted/20 rounded text-xs">
-                  <span>{new Date(session.date).toLocaleDateString()}</span>
-                  <span>{session.kickCount} kicks in {session.duration}m</span>
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-medium">Recent sessions</h4>
+              <span className="text-xs text-muted-foreground">{sessions.length} logged</span>
+            </div>
+            <div className="flex gap-1 items-end h-16">
+              {sessions.slice(0, 14).reverse().map(s => (
+                <div key={s.id} className="flex-1 flex flex-col items-center gap-1" title={`${s.kickCount} kicks · ${s.duration}m`}>
+                  <div
+                    className={`w-full rounded-t-md transition-all ${s.kickCount >= 10 ? 'bg-catalyst-copper' : s.kickCount >= 6 ? 'bg-catalyst-gold' : 'bg-muted-foreground/40'}`}
+                    style={{ height: `${Math.min(100, (s.kickCount / 12) * 100)}%` }}
+                  />
                 </div>
               ))}
             </div>
           </div>
         )}
-
-        {/* Tips */}
-        <div className="p-3 bg-blue-50 rounded-lg text-sm">
-          <p className="font-medium mb-1">💡 Tips for kick counting:</p>
-          <ul className="text-xs space-y-1 text-muted-foreground">
-            <li>• Count when baby is usually active (after meals/evening)</li>
-            <li>• Lie on your side in a quiet place</li>
-            <li>• Count movements, kicks, flutters, or rolls</li>
-            <li>• Contact your provider if fewer than 10 in 2 hours</li>
-          </ul>
-        </div>
       </CardContent>
     </Card>
   );
