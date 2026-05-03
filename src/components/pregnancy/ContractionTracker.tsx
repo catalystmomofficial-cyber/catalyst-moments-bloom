@@ -135,7 +135,7 @@ export const ContractionTracker = () => {
     (async () => {
       try {
         const { data, error } = await supabase.functions.invoke('analyze-contractions', {
-          body: { contractions: payload },
+          body: { contractions: payload, lastNotifiedState: lastServerStateRef.current },
         });
         if (cancelled || error || !data?.state) return;
         const next = data.state as LaborState;
