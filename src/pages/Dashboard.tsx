@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Calendar } from "@/components/ui/calendar";
-import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle } from 'lucide-react';
+import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, ChevronDown, Heart, LineChart, Smile, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
@@ -97,6 +98,12 @@ const Dashboard = () => {
             {/* Push Notification Prompt */}
             <div className="mb-4">
               <PushNotificationPrompt />
+            </div>
+
+            {/* Priority 1: Profile Completion + Weekly Workout Progress */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+              <ProfileCompletionWidget />
+              <WeeklyProgress />
             </div>
 
             {/* Header Section - More Compact */}
@@ -214,38 +221,49 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column - Primary Actions */}
               <div className="lg:col-span-2 space-y-6">
-                {/* Today's Focus */}
+                {/* Today's Focus - Collapsible */}
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>Today's Focus</span>
-                      <Timer className="h-5 w-5 text-muted-foreground" />
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {isTTC ? <TTCTracker /> : 
-                       isPregnant ? <PregnancyTracker /> : (
-                        <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
-                          <DialogTrigger asChild>
-                            <Card className="p-6 cursor-pointer hover:shadow-md transition-shadow border-dashed border-2">
-                              <div className="flex flex-col items-center justify-center space-y-3 h-full min-h-[100px]">
-                                <CheckCircle className="h-7 w-7 text-primary" />
-                                <div className="text-center">
-                                  <h3 className="font-semibold text-sm">Weekly Check-In</h3>
-                                  <p className="text-xs text-muted-foreground">Track progress</p>
-                                </div>
-                              </div>
-                            </Card>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-                            <WeeklyCheckIn />
-                          </DialogContent>
-                        </Dialog>
-                      )}
-                      {isPregnant ? <PregnancyWellnessDigest /> : <MoodCheckIn />}
-                    </div>
-                  </CardContent>
+                  <Collapsible defaultOpen>
+                    <CollapsibleTrigger className="w-full text-left group">
+                      <CardHeader>
+                        <CardTitle className="flex items-center justify-between">
+                          <span className="flex items-center gap-2">
+                            <Timer className="h-5 w-5 text-muted-foreground" />
+                            Today's Focus
+                          </span>
+                          <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                        </CardTitle>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {isTTC ? <TTCTracker /> :
+                           isPregnant ? <PregnancyTracker /> : (
+                            <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
+                              <DialogTrigger asChild>
+                                <Card className="p-6 cursor-pointer hover:shadow-md transition-shadow border-dashed border-2">
+                                  <div className="flex flex-col items-center justify-center space-y-3 h-full min-h-[100px]">
+                                    <CheckCircle className="h-7 w-7 text-primary" />
+                                    <div className="text-center">
+                                      <h3 className="font-semibold text-sm">Check In Now</h3>
+                                      <p className="text-xs text-muted-foreground">
+                                        {wellnessScore ? 'Track this week\'s progress' : 'No check-ins yet — start your first one'}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </Card>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                                <WeeklyCheckIn />
+                              </DialogContent>
+                            </Dialog>
+                          )}
+                          {isPregnant ? <PregnancyWellnessDigest /> : <MoodCheckIn />}
+                        </div>
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Collapsible>
                 </Card>
 
                 {/* Recommended Activity */}
@@ -256,26 +274,28 @@ const Dashboard = () => {
                   </div>
                 ) : (
                   <PlanCard
-                    title={isTTC ? "Fertility Flow Yoga" : "10-Minute Core Workout"}
+                    title={isTTC ? "Fertility Flow Yoga" : "Transform Your Postpartum Journey"}
                     category="Workout"
-                    description={isTTC ? "Gentle yoga to support reproductive health" : "Gentle core strengthening"}
+                    description={isTTC ? "Gentle yoga to support reproductive health" : "30 Days Glow Up Challenge — rebuild strength safely"}
                     completed={false}
                     icon={<Activity className="h-5 w-5" />}
-                    time={isTTC ? "20 mins" : "10 mins"}
-                    link={isTTC ? "/workouts/fertility-flow-yoga" : "/workouts/postpartum-core"}
+                    time={isTTC ? "20 mins" : "15-20 mins"}
+                    link={isTTC ? "/workouts/fertility-flow-yoga" : "/course/266ae389-409f-4847-9a10-e29a2f3eb3f9"}
                     buttonText="Start Workout"
                     progress={0}
-                    tags={isTTC ? ["TTC", "Fertility"] : ["Postpartum", "Core"]}
+                    tags={isTTC ? ["TTC", "Fertility"] : ["Postpartum", "4-Week Program"]}
                   />
                 )}
 
-                {/* Challenge & Achievements - Collapsible */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <MonthlyChallenge />
-                  <ProfileCompletionWidget />
-                </div>
+                {/* Nutrition - Quick Breakfast */}
+                {isTTC ? <TTCNutritionSection /> :
+                 isPregnant ? <PregnancyCommunity /> :
+                 <NutritionSection />}
+
+                {/* Monthly Challenge */}
+                <MonthlyChallenge />
               </div>
-              
+
               {/* Right Column - Quick Access */}
               <div className="space-y-6">
                 {/* Calendar */}
@@ -296,11 +316,7 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
 
-                {/* Quick Links */}
-                {isTTC ? <TTCNutritionSection /> : 
-                 isPregnant ? <PregnancyCommunity /> : 
-                 <NutritionSection />}
-                
+
                 {/* Community Preview */}
                 {isTTC ? (
                   <TTCCommunitySection />
