@@ -2,13 +2,13 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage, isSupported, type Messaging } from 'firebase/messaging';
 
 export const firebaseConfig = {
-  apiKey: 'AIzaSyBWanXNXNO8ROsndyUaOr1tYUwNHWWT7es',
-  authDomain: 'catalyst-mom-app.firebaseapp.com',
-  projectId: 'catalyst-mom-app',
-  storageBucket: 'catalyst-mom-app.firebasestorage.app',
-  messagingSenderId: '99975504315',
-  appId: '1:99975504315:web:c166abb3dfc50a46f6e49e',
-  measurementId: 'G-238DJM9X32',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 export const VAPID_KEY = 'BNE3CbrZIF5fS_HMByom1M9MuwcEn_aRiIJS3LFQRJdp7plk40tKMqHQMH07zSm1ZgkKxTVAsVDTfk7ofy3BfM0';
