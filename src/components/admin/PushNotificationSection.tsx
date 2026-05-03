@@ -139,6 +139,79 @@ export const PushNotificationSection = () => {
             />
           </div>
 
+          {/* Audience */}
+          <div className="space-y-3 rounded-lg border p-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Audience</Label>
+              <div className="flex gap-1 rounded-md bg-muted p-1 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setAudience('all')}
+                  className={`px-3 py-1 rounded ${audience === 'all' ? 'bg-background shadow-sm' : 'text-muted-foreground'}`}
+                >
+                  All opted-in
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAudience('segments')}
+                  className={`px-3 py-1 rounded ${audience === 'segments' ? 'bg-background shadow-sm' : 'text-muted-foreground'}`}
+                >
+                  Targeted
+                </button>
+              </div>
+            </div>
+
+            {audience === 'segments' && (
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1.5">Stages</p>
+                  <div className="flex flex-wrap gap-2">
+                    {STAGE_OPTIONS.map((s) => {
+                      const active = selectedStages.includes(s.value);
+                      return (
+                        <button
+                          key={s.value}
+                          type="button"
+                          onClick={() => toggleStage(s.value)}
+                          className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+                            active
+                              ? 'bg-primary text-primary-foreground border-primary'
+                              : 'bg-background border-border hover:bg-muted'
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="push-user-ids" className="text-xs text-muted-foreground">
+                    User IDs (UUIDs, comma/newline separated)
+                  </Label>
+                  <Textarea
+                    id="push-user-ids"
+                    value={userIdsRaw}
+                    onChange={(e) => setUserIdsRaw(e.target.value)}
+                    placeholder="00000000-0000-0000-0000-000000000000"
+                    rows={2}
+                    className="mt-1 font-mono text-xs"
+                  />
+                  {userIdsRaw && (
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                      {parsedUserIds.length} valid UUID{parsedUserIds.length === 1 ? '' : 's'} detected
+                    </p>
+                  )}
+                </div>
+
+                <p className="text-[11px] text-muted-foreground">
+                  Stages and user IDs are combined (union). Only users with an active push subscription receive it.
+                </p>
+              </div>
+            )}
+          </div>
+
           <Button onClick={send} disabled={sending} className="w-full" size="lg">
             {sending ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -150,7 +223,9 @@ export const PushNotificationSection = () => {
 
           {lastResult && (
             <p className="text-sm text-muted-foreground">
-              Last blast: {lastResult.sent} delivered, {lastResult.failed} failed.
+              Last blast: {lastResult.sent} delivered
+              {typeof lastResult.total === 'number' ? ` / ${lastResult.total} targeted` : ''},{' '}
+              {lastResult.failed} failed.
             </p>
           )}
 
