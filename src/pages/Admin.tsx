@@ -10,7 +10,8 @@ import { AnalyticsSection } from '@/components/admin/AnalyticsSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles, CreditCard, FileText } from 'lucide-react';
+import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles, CreditCard, FileText, Bell } from 'lucide-react';
+import { PushNotificationSection } from '@/components/admin/PushNotificationSection';
 import { BlogPostGenerator } from '@/components/admin/BlogPostGenerator';
 import { BlogPostManager } from '@/components/admin/BlogPostManager';
 import { BlogAnalyticsDashboard } from '@/components/admin/BlogAnalyticsDashboard';
@@ -35,7 +36,7 @@ const Admin = () => {
           </div>
 
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-8">
+            <TabsList className="grid w-full grid-cols-9">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <Shield className="h-4 w-4" />
                 Overview
@@ -67,6 +68,10 @@ const Admin = () => {
               <TabsTrigger value="blog-analytics" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
                 Blog Analytics
+              </TabsTrigger>
+              <TabsTrigger value="push" className="flex items-center gap-2">
+                <Bell className="h-4 w-4" />
+                Push
               </TabsTrigger>
             </TabsList>
 
@@ -106,6 +111,10 @@ const Admin = () => {
 
             <TabsContent value="blog-analytics">
               <BlogAnalyticsDashboard />
+            </TabsContent>
+
+            <TabsContent value="push">
+              <PushNotificationSection />
             </TabsContent>
           </Tabs>
         </div>
