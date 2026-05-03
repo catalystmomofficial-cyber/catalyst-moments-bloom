@@ -46,6 +46,8 @@ export const ContractionTracker = () => {
   const [intensity, setIntensity] = useState(5);
   const [affirmIdx, setAffirmIdx] = useState(0);
   const breathRef = useRef<HTMLDivElement>(null);
+  const [serverState, setServerState] = useState<LaborState | null>(null);
+  const lastServerStateRef = useRef<LaborState | null>(null);
 
   // Restore
   useEffect(() => {
