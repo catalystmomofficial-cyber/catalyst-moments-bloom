@@ -5,6 +5,16 @@ import { Badge } from '@/components/ui/badge';
 import { Timer, AlertTriangle, Baby, Heart, Wind } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { supabase } from '@/integrations/supabase/client';
+
+type LaborState = 'EARLY' | 'BUILDING' | 'PREPARE' | 'READY';
+
+const STATE_MESSAGES: Record<LaborState, { title: string; message: string; tone: string }> = {
+  EARLY:    { title: 'Early Labor',              message: 'Contractions are irregular. Stay relaxed 💛',         tone: 'muted' },
+  BUILDING: { title: 'Labor Progressing',        message: 'Your contractions are becoming more consistent.',     tone: 'info' },
+  PREPARE:  { title: 'Time to Prepare',          message: 'Consider preparing your hospital bag.',               tone: 'warning' },
+  READY:    { title: 'Strong Pattern Detected',  message: 'It may be time to contact your provider.',            tone: 'destructive' },
+};
 
 interface Contraction {
   id: string;
