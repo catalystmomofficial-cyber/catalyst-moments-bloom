@@ -15,6 +15,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import ProfilePushToggle from "@/components/profile/ProfilePushToggle";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -358,6 +359,10 @@ const Profile = () => {
               </form>
             </CardContent>
           </Card>
+        </div>
+
+        <div className="mt-6">
+          <ProfilePushToggle />
         </div>
       </div>
     </PageLayout>
