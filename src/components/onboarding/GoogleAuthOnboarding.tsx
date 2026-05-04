@@ -143,7 +143,30 @@ export const GoogleAuthOnboarding = () => {
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <AnimatePresence mode="wait">
-          {showIntro ? (
+          {showNotifStep ? (
+            <motion.div
+              key="notif"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <DialogHeader>
+                <DialogTitle className="text-2xl">One last thing</DialogTitle>
+                <DialogDescription>
+                  Turn on push notifications so we can support you in real time.
+                </DialogDescription>
+              </DialogHeader>
+              <OnboardingNotificationStep
+                onComplete={() => {
+                  setShowNotifStep(false);
+                  setOpen(true);
+                  setOpen(false);
+                  navigate('/dashboard');
+                }}
+              />
+            </motion.div>
+          ) : showIntro ? (
             <motion.div
               key="intro"
               initial={{ opacity: 0, x: -20 }}
