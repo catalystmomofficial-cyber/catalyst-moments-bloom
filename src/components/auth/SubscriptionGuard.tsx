@@ -11,7 +11,7 @@ interface SubscriptionGuardProps {
 }
 
 const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
-  const { subscribed, checkSubscription, user, isCheckingSubscription } = useAuth();
+  const { subscribed, isReturningCustomer, checkSubscription, user, isCheckingSubscription } = useAuth();
   const bypass = useDevBypass();
   const { isAdmin } = useAdminAuth();
   const [showModal, setShowModal] = useState(false);
@@ -21,6 +21,10 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   // Routes that should NOT trigger the subscription modal
   const publicRoutes = ['/', '/auth', '/login', '/register', '/forgot-password', '/reset-password', '/subscription-success', '/credit-purchase-success'];
 
+  // Returning customers (previously purchased) keep dashboard + content access even when expired.
+  // Premium tools are gated separately by PremiumToolGuard.
+  const hasDashboardAccess = subscribed || isReturningCustomer;
+
   // Check if user just completed a successful payment
   useEffect(() => {
     if (searchParams.get('success') === 'true' || searchParams.get('session_id')) {
@@ -29,57 +33,57 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
     }
   }, [searchParams, checkSubscription]);
 
-  // Show modal only when we KNOW the user isn't subscribed (not while checking)
+  // Show modal only when we KNOW the user has no access (not while checking)
   useEffect(() => {
-    if (user && !subscribed && !bypass && !isCheckingSubscription) {
+    if (user && !hasDashboardAccess && !bypass && !isCheckingSubscription) {
       const isPublicRoute = publicRoutes.includes(location.pathname);
       setShowModal(!isPublicRoute);
     } else {
       setShowModal(false);
     }
-  }, [user, subscribed, bypass, isCheckingSubscription, location.pathname]);
-  
-  console.log('[SUBSCRIPTION_GUARD] Subscription state:', { subscribed, bypass, isAdmin, route: location.pathname });
-  
-  // Admins get free access
+  }, [user, hasDashboardAccess, bypass, isCheckingSubscription, location.pathname]);
+
+  console.log('[SUBSCRIPTION_GUARD] State:', { subscribed, isReturningCustomer, bypass, isAdmin, route: location.pathname });
+
+  // Admins and dev bypass get free access
   if (isAdmin || bypass) {
     return <>{children}</>;
   }
-  
-  // While we're verifying with the server, render content normally — never flash the paywall.
-  if (!subscribed && isCheckingSubscription) {
+
+  // While verifying with the server, render content normally — never flash the paywall.
+  if (!hasDashboardAccess && isCheckingSubscription) {
     return <>{children}</>;
   }
 
-  if (!subscribed) {
-    console.log('[SUBSCRIPTION_GUARD] Not subscribed, showing modal:', showModal);
-    
+  if (!hasDashboardAccess) {
+    console.log('[SUBSCRIPTION_GUARD] Brand-new user (no purchase history), showing paywall:', showModal);
+
     const isPublicRoute = publicRoutes.includes(location.pathname);
-    
+
     // If on public route, show content normally
     if (isPublicRoute) {
       return <>{children}</>;
     }
-    
+
     // If on protected route, show fallback or modal only (no content access)
     if (fallback) {
       return <>{fallback}</>;
     }
-    
+
     // Show the subscription modal with dimmed background content
     return (
       <>
         <div className="opacity-50 pointer-events-none">
           {children}
         </div>
-        <CheckoutModal 
-          isOpen={true} 
-          onClose={() => window.dispatchEvent(new CustomEvent('open-mobile-menu'))} 
+        <CheckoutModal
+          isOpen={true}
+          onClose={() => window.dispatchEvent(new CustomEvent('open-mobile-menu'))}
         />
       </>
     );
   }
-  
+
   return <>{children}</>;
 };
 
