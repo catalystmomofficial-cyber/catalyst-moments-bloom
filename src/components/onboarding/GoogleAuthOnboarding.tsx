@@ -116,10 +116,8 @@ export const GoogleAuthOnboarding = () => {
           : 'Your profile has been updated successfully.',
       });
 
-      setOpen(false);
-      
-      // Navigate to dashboard to trigger subscription flow
-      navigate('/dashboard');
+      // Move to push notifications opt-in step before closing
+      setShowNotifStep(true);
     } catch (error) {
       toast({
         title: 'Error updating profile',
