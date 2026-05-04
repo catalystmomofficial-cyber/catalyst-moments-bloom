@@ -23,6 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
+import { OnboardingNotificationStep } from './OnboardingNotificationStep';
 
 export const GoogleAuthOnboarding = () => {
   const { user, profile, updateProfile } = useAuth();
@@ -34,6 +35,7 @@ export const GoogleAuthOnboarding = () => {
   const [loading, setLoading] = useState(false);
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
+  const [showNotifStep, setShowNotifStep] = useState(false);
 
 
   // Calculate profile completion percentage
@@ -114,10 +116,8 @@ export const GoogleAuthOnboarding = () => {
           : 'Your profile has been updated successfully.',
       });
 
-      setOpen(false);
-      
-      // Navigate to dashboard to trigger subscription flow
-      navigate('/dashboard');
+      // Move to push notifications opt-in step before closing
+      setShowNotifStep(true);
     } catch (error) {
       toast({
         title: 'Error updating profile',
@@ -143,7 +143,30 @@ export const GoogleAuthOnboarding = () => {
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <AnimatePresence mode="wait">
-          {showIntro ? (
+          {showNotifStep ? (
+            <motion.div
+              key="notif"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <DialogHeader>
+                <DialogTitle className="text-2xl">One last thing</DialogTitle>
+                <DialogDescription>
+                  Turn on push notifications so we can support you in real time.
+                </DialogDescription>
+              </DialogHeader>
+              <OnboardingNotificationStep
+                onComplete={() => {
+                  setShowNotifStep(false);
+                  setOpen(true);
+                  setOpen(false);
+                  navigate('/dashboard');
+                }}
+              />
+            </motion.div>
+          ) : showIntro ? (
             <motion.div
               key="intro"
               initial={{ opacity: 0, x: -20 }}
