@@ -141,6 +141,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setSubscribed(false);
           setSubscriptionTier(null);
           setSubscriptionEnd(null);
+          setIsReturningCustomer(false);
           try { localStorage.removeItem('cm_subscription'); } catch {}
         }
       }
@@ -280,6 +281,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSubscribed(false);
       setSubscriptionTier(null);
       setSubscriptionEnd(null);
+      setIsReturningCustomer(false);
       try { localStorage.removeItem('cm_subscription'); } catch {}
       setIsCheckingSubscription(false);
       return;
@@ -299,10 +301,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         subscribed: !!data.subscribed,
         subscription_tier: data.subscription_tier || null,
         subscription_end: data.subscription_end || null,
+        is_returning_customer: !!data.is_returning_customer,
       };
       setSubscribed(next.subscribed);
       setSubscriptionTier(next.subscription_tier);
       setSubscriptionEnd(next.subscription_end);
+      setIsReturningCustomer(next.is_returning_customer);
       try { localStorage.setItem('cm_subscription', JSON.stringify(next)); } catch {}
     } catch (error) {
       console.error('Error checking subscription:', error);
@@ -318,6 +322,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isLoading,
     isAuthenticated: !!session?.user,
     subscribed,
+    isReturningCustomer,
     subscriptionTier,
     subscriptionEnd,
     isCheckingSubscription,
