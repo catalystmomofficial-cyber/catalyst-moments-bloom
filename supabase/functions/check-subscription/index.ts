@@ -57,7 +57,10 @@ serve(async (req) => {
         subscription_end: null,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'email' });
-      return new Response(JSON.stringify({ subscribed: false }), {
+      return new Response(JSON.stringify({
+        subscribed: false,
+        is_returning_customer: false,
+      }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
       });
@@ -165,10 +168,12 @@ serve(async (req) => {
       }
     }
 
+    // Returning customer = has ever existed as a Stripe customer (purchased at least once)
     return new Response(JSON.stringify({
       subscribed: hasActiveSub,
       subscription_tier: subscriptionTier,
-      subscription_end: subscriptionEnd
+      subscription_end: subscriptionEnd,
+      is_returning_customer: true,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
