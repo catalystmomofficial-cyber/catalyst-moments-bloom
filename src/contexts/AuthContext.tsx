@@ -25,6 +25,7 @@ interface AuthContextType {
   subscribed: boolean;
   subscriptionTier: string | null;
   subscriptionEnd: string | null;
+  isReturningCustomer: boolean;
   isCheckingSubscription: boolean;
   showCheckoutModal: boolean;
   setShowCheckoutModal: (show: boolean) => void;
@@ -52,6 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [subscribed, setSubscribed] = useState<boolean>(cachedSub?.subscribed ?? false);
   const [subscriptionTier, setSubscriptionTier] = useState<string | null>(cachedSub?.subscription_tier ?? null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(cachedSub?.subscription_end ?? null);
+  const [isReturningCustomer, setIsReturningCustomer] = useState<boolean>(cachedSub?.is_returning_customer ?? false);
   const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
