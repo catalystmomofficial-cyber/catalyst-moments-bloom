@@ -23,6 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
+import { OnboardingNotificationStep } from './OnboardingNotificationStep';
 
 export const GoogleAuthOnboarding = () => {
   const { user, profile, updateProfile } = useAuth();
