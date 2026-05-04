@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter } from '@/hooks/useContentFilter';
 import { BabyKickCounter } from './BabyKickCounter';
 import { ContractionTracker } from './ContractionTracker';
+import { PremiumToolGuard } from '@/components/subscription/PremiumToolGuard';
 
 interface PregnancyData {
   week: number;
@@ -261,21 +262,36 @@ export const PregnancyTracker = () => {
             </div>
           </TabsContent>
 
-          {/* Baby Kick Counter - 2nd & 3rd Trimester */}
+          {/* Baby Kick Counter - 2nd & 3rd Trimester (Premium) */}
           {pregnancyData.trimester >= 2 && (
             <TabsContent value="kicks" className="space-y-4">
-              <BabyKickCounter />
+              <PremiumToolGuard
+                toolName="Baby Kick Counter"
+                description="Track your baby's movements with real-time pattern detection. Renew your subscription to continue using this tool."
+              >
+                <BabyKickCounter />
+              </PremiumToolGuard>
             </TabsContent>
           )}
 
-          {/* Contraction Tracker - 3rd Trimester Only */}
+          {/* Contraction Tracker - 3rd Trimester Only (Premium) */}
           {pregnancyData.trimester === 3 && (
             <TabsContent value="contractions" className="space-y-4">
-              <ContractionTracker />
+              <PremiumToolGuard
+                toolName="Contraction Tracker"
+                description="Get live labor analysis and smart push alerts. Renew your subscription to continue using this tool."
+              >
+                <ContractionTracker />
+              </PremiumToolGuard>
             </TabsContent>
           )}
 
           <TabsContent value="insights" className="space-y-4">
+            <PremiumToolGuard
+              toolName="AI Pregnancy Insights"
+              description="Personalized weekly insights powered by AI. Renew your subscription to unlock again."
+              preview
+            >
             <div className="space-y-3">
               <div className="p-4 bg-blue-50 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Week {pregnancyData.week} Development</h4>
