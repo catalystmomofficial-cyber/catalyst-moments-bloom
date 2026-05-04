@@ -329,6 +329,7 @@ export const PregnancyTracker = () => {
                 </p>
               </div>
             </div>
+            </PremiumToolGuard>
           </TabsContent>
         </Tabs>
       </CardContent>
