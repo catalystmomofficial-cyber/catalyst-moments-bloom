@@ -35,6 +35,7 @@ export const GoogleAuthOnboarding = () => {
   const [loading, setLoading] = useState(false);
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
+  const [showNotifStep, setShowNotifStep] = useState(false);
 
 
   // Calculate profile completion percentage
