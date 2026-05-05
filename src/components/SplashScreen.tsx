@@ -45,8 +45,24 @@ const playSplashChime = () => {
 
 const SplashScreen = ({ fadeOut }: SplashScreenProps) => {
   useEffect(() => {
-    const t = setTimeout(playSplashChime, 250);
-    return () => clearTimeout(t);
+    let played = false;
+    const tryPlay = () => {
+      if (played) return;
+      played = true;
+      playSplashChime();
+    };
+    const t = setTimeout(tryPlay, 250);
+    // Fallback: if browser blocked autoplay, play on first user gesture.
+    const onGesture = () => tryPlay();
+    window.addEventListener('pointerdown', onGesture, { once: true });
+    window.addEventListener('keydown', onGesture, { once: true });
+    window.addEventListener('touchstart', onGesture, { once: true });
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('pointerdown', onGesture);
+      window.removeEventListener('keydown', onGesture);
+      window.removeEventListener('touchstart', onGesture);
+    };
   }, []);
 
   return (
