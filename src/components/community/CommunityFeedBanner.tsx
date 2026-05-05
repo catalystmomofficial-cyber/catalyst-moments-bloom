@@ -22,6 +22,14 @@ export const CommunityFeedBanner = ({
       <div className="cm-vignette" />
       <div className="cm-warmth" />
 
+      <div className="cm-headline">
+        <h1>
+          Welcome to Our
+          <span>Community</span>
+        </h1>
+        <p>Connect with amazing mothers on similar journeys. Share experiences, get support, and grow together.</p>
+      </div>
+
       <button type="button" className="cm-join-btn" onClick={onJoinClick}>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
