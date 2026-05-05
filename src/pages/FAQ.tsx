@@ -225,7 +225,7 @@ const FAQ = () => {
               <p>
                 <strong>Still have a question?</strong> We are here to help. Reach out at admin@catalystmom.online and we will get back to you within 24 hours.
               </p>
-              <Link to="/auth/register" className="faq-btn">Get Started</Link>
+              <Link to="/register" className="faq-btn">Get Started</Link>
               <Link to="/questionnaire" className="faq-btn-ghost">Take the Free Assessment</Link>
             </div>
           </div>

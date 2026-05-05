@@ -94,7 +94,7 @@ const PremiumGuard = ({ children, fallback }: PremiumGuardProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
-          <Button onClick={() => window.location.href = '/auth/login'}>
+          <Button onClick={() => window.location.href = '/login'}>
             Sign In
           </Button>
         </CardContent>

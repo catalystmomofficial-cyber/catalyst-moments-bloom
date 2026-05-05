@@ -43,7 +43,7 @@ export const PremiumToolGuard = ({
 
   const handleRenew = async () => {
     if (!user) {
-      window.location.href = '/auth/login';
+      window.location.href = '/login';
       return;
     }
     try {

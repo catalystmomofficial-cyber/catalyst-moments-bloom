@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import glowUpCover from "@/assets/30-days-glow-up-professional-cover.jpg";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,8 @@ interface UserProgress {
 
 export default function CourseDetail() {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const startWeekParam = parseInt(searchParams.get('startWeek') || '0', 10);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -355,7 +357,7 @@ export default function CourseDetail() {
             </div>
 
             {/* Course Content */}
-            <Tabs defaultValue="overview" className="space-y-6">
+            <Tabs defaultValue={startWeekParam > 0 ? "curriculum" : "overview"} className="space-y-6">
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
