@@ -66,11 +66,18 @@ const stageLabel = (stage: CoachStage): string => {
 };
 
 // Map a gap → a deep-link route + label + premium flag.
-// Routes use stage-aware filters so the user lands on content matched to their gap.
+// Every route below has been verified to exist in App.tsx and the destination
+// page reads the relevant query param so the user lands on the correct view.
+const stageToMealParam = (stage: CoachStage): string => {
+  if (stage === 'pregnancy') return 'pregnancy';
+  if (stage === 'postpartum') return 'postpartum';
+  return 'ttc';
+};
+
 const routeForGap = (gap: CoachGap | null, stage: CoachStage): SuggestedAction => {
-  // Pregnant users with no clear gap → kick counter (premium tracking tool)
+  // Pregnant users with no clear gap → pregnancy tracker (Kicks tab)
   if (stage === 'pregnancy' && (gap === 'recovery' || !gap)) {
-    return { label: 'Open Kick Counter', to: '/dashboard?tool=kick-counter', locked: true };
+    return { label: 'Open Kick Counter', to: '/dashboard?tool=kick-counter', locked: false };
   }
 
   switch (gap) {
@@ -81,15 +88,16 @@ const routeForGap = (gap: CoachGap | null, stage: CoachStage): SuggestedAction =
           ? { label: 'Postpartum workouts', to: '/workouts?stage=postpartum', locked: false }
           : { label: 'TTC workouts', to: '/workouts?stage=ttc', locked: false };
     case 'nutrition':
-      return { label: 'View your meal plan', to: `/meal-plan?focus=${stage}`, locked: false };
+      return { label: 'View your meal plan', to: `/meal-plan?stage=${stageToMealParam(stage)}`, locked: false };
     case 'stress':
-      return { label: 'Self-care tools', to: '/wellness/self-care', locked: false };
+      return { label: 'Self-care tools', to: '/wellness?tab=selfcare', locked: false };
     case 'sleep':
       return { label: 'Sleep & rest tools', to: '/wellness?tab=sleep', locked: false };
     case 'recovery':
       return stage === 'postpartum'
-        ? { label: 'Postpartum recovery', to: '/wellness/resources?topic=recovery', locked: false }
-        : { label: 'Recovery tools', to: '/wellness', locked: false };
+        // 30 Days Glow Up Challenge — postpartum recovery program
+        ? { label: 'Postpartum recovery program', to: '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9', locked: false }
+        : { label: 'Wellness resources', to: '/wellness/resources', locked: false };
     default:
       return { label: 'Go to dashboard', to: '/dashboard', locked: false };
   }
