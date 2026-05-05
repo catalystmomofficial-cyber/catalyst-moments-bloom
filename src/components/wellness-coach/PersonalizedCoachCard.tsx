@@ -25,7 +25,7 @@ interface Props {
 }
 
 export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
-  const { user, profile, subscriptionStatus } = useAuth();
+  const { user, profile, subscribed } = useAuth();
   const { wellnessScore } = useWellnessData();
   const navigate = useNavigate();
 
@@ -35,9 +35,9 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
       stage: stageMap(profile?.motherhood_stage),
       score: score ?? wellnessScore ?? 60,
       gaps: gaps ?? deriveGaps(wellnessScore),
-      subscriptionStatus: subscriptionStatus?.subscribed ? 'active' : 'inactive',
+      subscriptionStatus: subscribed ? 'active' : 'inactive',
     });
-  }, [user, profile, subscriptionStatus, wellnessScore, score, gaps]);
+  }, [user, profile, subscribed, wellnessScore, score, gaps]);
 
   const urgencyTone = {
     low: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
