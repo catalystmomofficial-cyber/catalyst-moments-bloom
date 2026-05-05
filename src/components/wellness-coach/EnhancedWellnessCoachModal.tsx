@@ -419,13 +419,43 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
 
       // Audio disabled to avoid API quota issues
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending message:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
+      const ctx = error?.context;
+      let status: number | undefined;
+      try {
+        if (ctx && typeof ctx.json === 'function') {
+          const body = await ctx.json();
+          status = ctx.status;
+          if (status === 402 || /credits|payment_required/i.test(JSON.stringify(body))) {
+            toast({
+              title: "AI credits exhausted",
+              description: "The Wellness Coach is temporarily unavailable — top up Lovable AI credits in Settings to continue.",
+              variant: "destructive",
+            });
+          } else if (status === 429) {
+            toast({
+              title: "Slow down",
+              description: "Too many requests. Please wait a moment and try again.",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Coach unavailable",
+              description: body?.error || "Failed to send message. Please try again.",
+              variant: "destructive",
+            });
+          }
+        } else {
+          throw error;
+        }
+      } catch {
+        toast({
+          title: "Error",
+          description: "Failed to send message. Please try again.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

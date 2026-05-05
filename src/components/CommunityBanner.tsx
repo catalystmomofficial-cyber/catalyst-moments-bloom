@@ -137,7 +137,11 @@ const styles = `
   }
 `;
 
-export default function CommunityBanner() {
+interface CommunityBannerProps {
+  onJoinClick?: () => void;
+}
+
+export default function CommunityBanner({ onJoinClick }: CommunityBannerProps = {}) {
   return (
     <>
       <style>{styles}</style>
@@ -163,7 +167,14 @@ export default function CommunityBanner() {
         <div className="cm-sparkle sp11" />
         <div className="cm-sparkle sp12" />
 
-        <a className="cm-join-btn" href="#">
+        <button
+          type="button"
+          className="cm-join-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            onJoinClick?.();
+          }}
+        >
           <svg
             viewBox="0 0 24 24"
             width="17"
@@ -181,7 +192,7 @@ export default function CommunityBanner() {
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg>
           Join Discussions
-        </a>
+        </button>
 
         <div className="cm-stats">
           <div className="cm-stat">
