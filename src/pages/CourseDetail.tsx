@@ -40,6 +40,8 @@ interface UserProgress {
 
 export default function CourseDetail() {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const startWeekParam = parseInt(searchParams.get('startWeek') || '0', 10);
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
