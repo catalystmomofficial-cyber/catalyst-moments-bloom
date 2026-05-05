@@ -255,22 +255,22 @@ const Dashboard = () => {
                     <PostpartumPrepGuide />
                   </div>
                 ) : (
-                  {(() => {
+                  (() => {
                     // Smart entry into 30 Days Glow Up based on wellness score
                     const glowUpId = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
                     const score = wellnessScore ?? 60;
                     const startWeek = score < 50 ? 1 : score <= 70 ? 2 : score <= 85 ? 3 : 4;
-                    const weekCopy = {
+                    const weekCopy: Record<number, string> = {
                       1: 'Start gently — Week 1: foundations & breath',
                       2: 'Build momentum — Week 2: core reconnection',
                       3: 'Step it up — Week 3: strength & stability',
                       4: 'Glow phase — Week 4: full-body transformation',
-                    }[startWeek];
+                    };
                     return (
                       <PlanCard
                         title={isTTC ? "Fertility Flow Yoga" : "30 Days Glow Up Challenge"}
                         category={isTTC ? "Workout" : "Postpartum Recovery Program"}
-                        description={isTTC ? "Gentle yoga to support reproductive health" : weekCopy}
+                        description={isTTC ? "Gentle yoga to support reproductive health" : weekCopy[startWeek]}
                         completed={false}
                         icon={<Activity className="h-5 w-5" />}
                         time={isTTC ? "20 mins" : "10–20 mins/day"}
@@ -280,7 +280,7 @@ const Dashboard = () => {
                         tags={isTTC ? ["TTC", "Fertility"] : ["Postpartum", "Recovery", `Week ${startWeek}`]}
                       />
                     );
-                  })()}
+                  })()
                 )}
 
                 {/* Challenge & Achievements - Collapsible */}
