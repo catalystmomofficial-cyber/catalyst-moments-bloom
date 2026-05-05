@@ -31,8 +31,18 @@ import { useAssessmentData } from '@/hooks/useAssessmentData';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const Wellness = () => {
+  const [searchParams] = useSearchParams();
+  const validTabs = ['insights', 'mood', 'sleep', 'selfcare'] as const;
+  const initialTab = (() => {
+    const t = (searchParams.get('tab') || '').toLowerCase();
+    return (validTabs as readonly string[]).includes(t) ? t : 'insights';
+  })();
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [activeTab, setActiveTab] = useState("insights");
+  const [activeTab, setActiveTab] = useState<string>(initialTab);
+  useEffect(() => {
+    const t = (searchParams.get('tab') || '').toLowerCase();
+    if ((validTabs as readonly string[]).includes(t)) setActiveTab(t);
+  }, [searchParams]);
   const { wellnessEntries, wellnessScore, loading } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
   const { assessmentData, scoreNumber: assessmentScore, loading: assessmentLoading } = useAssessmentData();
