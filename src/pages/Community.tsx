@@ -77,28 +77,9 @@ const Community = () => {
   
   return (
     <PageLayout>
-      {/* Hero Section */}
-      <div className="relative h-[60vh] min-h-[400px] overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={communityCover} alt="CatalystMom Community" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/30" />
-        </div>
-        <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-2xl text-white">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
-              Welcome to Our
-              <span className="block bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">Community</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-200 animate-fade-in">
-              Connect with amazing mothers on similar journeys. Share experiences, get support, and grow together.
-            </p>
-            <div className="flex flex-wrap gap-4 animate-fade-in">
-              <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90" onClick={() => handleInteractionClick('join')}>
-                <Users className="h-5 w-5 mr-2" /> Join Discussions
-              </Button>
-            </div>
-          </div>
-        </div>
+      {/* Hero Banner */}
+      <div className="container mx-auto px-4 pt-6">
+        <CommunityFeedBanner onJoinClick={() => handleInteractionClick('join')} />
       </div>
 
       <div className="container mx-auto px-4 py-12">
@@ -146,7 +127,6 @@ const Community = () => {
           <TabsContent value="feed" className="mt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-2/3 space-y-6">
-                <CommunityFeedBanner onJoinClick={() => handleInteractionClick('join')} />
                 <DynamicCommunityFeed groupSlug="mom-life-general-general" />
               </div>
               
