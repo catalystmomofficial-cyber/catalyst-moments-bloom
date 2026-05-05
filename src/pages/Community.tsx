@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, MessageCircle, Users, Search, Star, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
-import { CommunityFeedBanner } from '@/components/community/CommunityFeedBanner';
+import CommunityBanner from '@/components/CommunityBanner';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
 import CheckoutModal from '@/components/subscription/CheckoutModal';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -79,28 +79,10 @@ const Community = () => {
     <PageLayout>
       {/* Hero Banner */}
       <div className="container mx-auto px-4 pt-6">
-        <CommunityFeedBanner onJoinClick={() => handleInteractionClick('join')} />
+        <CommunityBanner />
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-          {[
-            { icon: Users, value: '2,847', label: 'Community Members' },
-            { icon: MessageCircle, value: '12,435', label: 'Conversations' },
-            { icon: Heart, value: '48,921', label: 'Hearts Given' },
-            { icon: Star, value: '1,256', label: 'Success Stories' },
-          ].map(({ icon: Icon, value, label }) => (
-            <Card key={label} className="text-center hover-scale">
-              <CardContent className="pt-6">
-                <Icon className="h-12 w-12 mx-auto mb-4 text-primary" />
-                <div className="text-3xl font-bold gradient-text mb-2">{value}</div>
-                <p className="text-muted-foreground">{label}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
           <div>
             <h2 className="text-3xl font-bold mb-2 gradient-text">Community Hub</h2>
