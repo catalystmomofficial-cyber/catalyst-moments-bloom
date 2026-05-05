@@ -27,6 +27,18 @@ export const PregnancyTracker = () => {
   const { toast } = useToast();
   const { profile } = useAuth();
   const { stageInfo } = useContentFilter();
+  const [searchParams] = useSearchParams();
+  const tool = (searchParams.get('tool') || '').toLowerCase();
+  const initialTab =
+    tool === 'kick-counter' ? 'kicks' :
+    tool === 'contractions' ? 'contractions' :
+    tool === 'symptoms' ? 'symptoms' :
+    tool === 'insights' ? 'insights' : 'today';
+  const [activeTab, setActiveTab] = useState<string>(initialTab);
+  useEffect(() => {
+    if (tool === 'kick-counter') setActiveTab('kicks');
+    else if (tool === 'contractions') setActiveTab('contractions');
+  }, [tool]);
   
   // Determine trimester from user's profile
   const getCurrentTrimester = () => {
