@@ -66,10 +66,10 @@ export const PremiumToolGuard = ({
         </div>
         <div className="space-y-1">
           <h3 className="text-lg font-semibold text-amber-900">
-            {toolName} is a premium tool
+            Renew to unlock {toolName.toLowerCase()}
           </h3>
           <p className="text-sm text-amber-800/80 max-w-sm mx-auto">
-            {description}
+            Your subscription has expired. {description} You still have full access to your dashboard and any programs you've already purchased 💛
           </p>
         </div>
         <Button
