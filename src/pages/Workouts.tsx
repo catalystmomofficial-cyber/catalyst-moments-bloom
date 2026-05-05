@@ -40,11 +40,36 @@ const Workouts = () => {
   const { user, profile } = useAuth();
   const { filterContent, stageInfo, hasJourney, currentStage } = useContentFilter();
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { toast } = useToast();
 
-  // Deep-link params from coach card: ?stage=pregnancy|postpartum|ttc&focus=...
-  const stageParam = (searchParams.get('stage') || '').toLowerCase();
-  const focusParam = (searchParams.get('focus') || '').toLowerCase();
+  // Deep-link params from coach card: ?stage=pregnancy|postpartum|ttc&focus=quick
+  const VALID_STAGES = new Set(['pregnancy', 'pregnant', 'postpartum', 'ttc']);
+  const VALID_FOCUS = new Set(['quick']);
+
+  const rawStage = (searchParams.get('stage') || '').toLowerCase().trim();
+  const rawFocus = (searchParams.get('focus') || '').toLowerCase().trim();
+
+  const stageValid = !rawStage || VALID_STAGES.has(rawStage);
+  const focusValid = !rawFocus || VALID_FOCUS.has(rawFocus);
+
+  const stageParam = stageValid ? rawStage : '';
+  const focusParam = focusValid ? rawFocus : '';
+
+  // Friendly fallback: notify and strip unknown params from URL
+  useEffect(() => {
+    if (stageValid && focusValid) return;
+    const unknown = [!stageValid && `stage=${rawStage}`, !focusValid && `focus=${rawFocus}`]
+      .filter(Boolean).join(', ');
+    toast({
+      title: 'Showing recommended workouts',
+      description: `We didn't recognize ${unknown}. Browse all workouts below.`,
+    });
+    const next = new URLSearchParams(searchParams);
+    if (!stageValid) next.delete('stage');
+    if (!focusValid) next.delete('focus');
+    setSearchParams(next, { replace: true });
+  }, [stageValid, focusValid, rawStage, rawFocus]);
 
   // Map external stage param → internal tab
   const defaultTab = useMemo(() => {
