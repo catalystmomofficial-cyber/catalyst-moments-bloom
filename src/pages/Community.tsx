@@ -145,6 +145,7 @@ const Community = () => {
           <TabsContent value="feed" className="mt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-2/3 space-y-6">
+                <CommunityFeedBanner onJoinClick={() => handleInteractionClick('join')} />
                 <DynamicCommunityFeed groupSlug="mom-life-general-general" />
               </div>
               
