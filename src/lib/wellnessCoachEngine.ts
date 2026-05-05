@@ -65,26 +65,31 @@ const stageLabel = (stage: CoachStage): string => {
   }
 };
 
-// Map a gap → a route + label + whether it's a premium tool
+// Map a gap → a deep-link route + label + premium flag.
+// Routes use stage-aware filters so the user lands on content matched to their gap.
 const routeForGap = (gap: CoachGap | null, stage: CoachStage): SuggestedAction => {
-  // Pregnant users get tracking tools prioritized
-  if (stage === 'pregnancy' && (gap === 'stress' || gap === 'recovery' || !gap)) {
+  // Pregnant users with no clear gap → kick counter (premium tracking tool)
+  if (stage === 'pregnancy' && (gap === 'recovery' || !gap)) {
     return { label: 'Open Kick Counter', to: '/dashboard?tool=kick-counter', locked: true };
   }
 
   switch (gap) {
     case 'fitness':
-      return { label: 'Start a workout', to: '/workouts', locked: false };
+      return stage === 'pregnancy'
+        ? { label: 'Prenatal workouts', to: '/workouts?stage=pregnancy', locked: false }
+        : stage === 'postpartum'
+          ? { label: 'Postpartum workouts', to: '/workouts?stage=postpartum', locked: false }
+          : { label: 'TTC workouts', to: '/workouts?stage=ttc', locked: false };
     case 'nutrition':
-      return { label: 'View your meal plan', to: '/meal-plan', locked: false };
+      return { label: 'View your meal plan', to: `/meal-plan?focus=${stage}`, locked: false };
     case 'stress':
-      return { label: 'Open self-care tools', to: '/wellness', locked: false };
+      return { label: 'Self-care tools', to: '/wellness/self-care', locked: false };
     case 'sleep':
-      return { label: 'Try the sleep tracker', to: '/wellness?tab=sleep', locked: false };
+      return { label: 'Sleep & rest tools', to: '/wellness?tab=sleep', locked: false };
     case 'recovery':
       return stage === 'postpartum'
-        ? { label: 'Postpartum recovery guide', to: '/wellness/recovery', locked: false }
-        : { label: 'Open recovery tools', to: '/wellness', locked: false };
+        ? { label: 'Postpartum recovery', to: '/wellness/resources?topic=recovery', locked: false }
+        : { label: 'Recovery tools', to: '/wellness', locked: false };
     default:
       return { label: 'Go to dashboard', to: '/dashboard', locked: false };
   }

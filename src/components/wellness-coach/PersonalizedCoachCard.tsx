@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Sparkles, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWellnessData } from '@/hooks/useWellnessData';
+import { useCoachHistory } from '@/hooks/useCoachHistory';
 import {
   generateCoachOutput,
   type CoachStage,
@@ -28,16 +29,26 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
   const { user, profile, subscribed } = useAuth();
   const { wellnessScore } = useWellnessData();
   const navigate = useNavigate();
+  const { logMessage } = useCoachHistory(1);
+
+  const stage = stageMap(profile?.motherhood_stage);
+  const effectiveScore = score ?? wellnessScore ?? 60;
 
   const output = useMemo(() => {
     return generateCoachOutput({
       name: profile?.display_name || user?.email?.split('@')[0] || 'friend',
-      stage: stageMap(profile?.motherhood_stage),
-      score: score ?? wellnessScore ?? 60,
+      stage,
+      score: effectiveScore,
       gaps: gaps ?? deriveGaps(wellnessScore),
       subscriptionStatus: subscribed ? 'active' : 'inactive',
     });
-  }, [user, profile, subscribed, wellnessScore, score, gaps]);
+  }, [user, profile, subscribed, wellnessScore, score, gaps, stage, effectiveScore]);
+
+  // Persist this rendered message to the user's coach history (deduped inside hook)
+  useEffect(() => {
+    if (user) logMessage(output, stage, effectiveScore);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [output.coachMessage, user?.id]);
 
   const urgencyTone = {
     low: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
