@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,6 +27,18 @@ export const PregnancyTracker = () => {
   const { toast } = useToast();
   const { profile } = useAuth();
   const { stageInfo } = useContentFilter();
+  const [searchParams] = useSearchParams();
+  const tool = (searchParams.get('tool') || '').toLowerCase();
+  const initialTab =
+    tool === 'kick-counter' ? 'kicks' :
+    tool === 'contractions' ? 'contractions' :
+    tool === 'symptoms' ? 'symptoms' :
+    tool === 'insights' ? 'insights' : 'today';
+  const [activeTab, setActiveTab] = useState<string>(initialTab);
+  useEffect(() => {
+    if (tool === 'kick-counter') setActiveTab('kicks');
+    else if (tool === 'contractions') setActiveTab('contractions');
+  }, [tool]);
   
   // Determine trimester from user's profile
   const getCurrentTrimester = () => {
@@ -165,7 +178,7 @@ export const PregnancyTracker = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Tabs defaultValue="today" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="symptoms">Symptoms</TabsTrigger>
