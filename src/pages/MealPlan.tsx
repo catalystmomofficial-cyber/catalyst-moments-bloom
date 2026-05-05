@@ -4,6 +4,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import { MealPlanCard } from '@/components/recipes/JourneySpecificMealPlans';
 import { mealPlans } from '@/data/recipeData';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
 const STAGE_TO_JOURNEY: Record<string, string> = {
   pregnancy: 'pregnant',
@@ -12,12 +13,35 @@ const STAGE_TO_JOURNEY: Record<string, string> = {
   ttc: 'ttc',
 };
 
+const VALID_KEYS = new Set(Object.keys(STAGE_TO_JOURNEY));
+
 const MealPlan = () => {
-  const [searchParams] = useSearchParams();
-  const stageParam = (searchParams.get('stage') || searchParams.get('focus') || '').toLowerCase();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { toast } = useToast();
+
+  const rawStage = (searchParams.get('stage') || '').toLowerCase().trim();
+  const rawFocus = (searchParams.get('focus') || '').toLowerCase().trim();
+  const rawParam = rawStage || rawFocus;
+
+  const isValid = rawParam ? VALID_KEYS.has(rawParam) : true;
+  const stageParam = isValid ? rawParam : '';
   const journeyKey = STAGE_TO_JOURNEY[stageParam];
 
   const recommendedRef = useRef<HTMLElement>(null);
+
+  // Notify and clean up unknown params so the URL stays tidy
+  useEffect(() => {
+    if (rawParam && !isValid) {
+      toast({
+        title: 'Showing all meal plans',
+        description: `We didn't recognize "${rawParam}". Browse every plan below.`,
+      });
+      const next = new URLSearchParams(searchParams);
+      next.delete('stage');
+      next.delete('focus');
+      setSearchParams(next, { replace: true });
+    }
+  }, [rawParam, isValid]);
 
   const recommended = useMemo(() => {
     if (!journeyKey) return [];
@@ -25,6 +49,16 @@ const MealPlan = () => {
       Array.isArray(p.journey) && p.journey.includes(journeyKey)
     );
   }, [journeyKey]);
+
+  // If a valid stage is given but yields no recommendations, gently inform the user
+  useEffect(() => {
+    if (isValid && journeyKey && recommended.length === 0) {
+      toast({
+        title: 'No recommended plans yet',
+        description: `We don't have plans tailored for "${stageParam}" yet — showing all plans instead.`,
+      });
+    }
+  }, [isValid, journeyKey, recommended.length, stageParam]);
 
   useEffect(() => {
     if (recommended.length === 0) return;
