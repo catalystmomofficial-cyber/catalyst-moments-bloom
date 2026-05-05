@@ -188,6 +188,16 @@ const Register = () => {
             {error && (
               <div className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-sm">
                 {error}
+                {error.toLowerCase().includes('already exists') && (
+                  <div className="mt-2">
+                    <Link
+                      to={`/login${email ? `?email=${encodeURIComponent(email)}` : ''}`}
+                      className="font-medium underline"
+                    >
+                      Log in to your existing account →
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
             {paramWarning && !error && (
