@@ -336,6 +336,54 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_messages: {
+        Row: {
+          action_label: string
+          action_to: string
+          coach_message: string
+          created_at: string
+          id: string
+          priority_gap: string | null
+          score: number
+          stage: string
+          time_of_day: string
+          urgency_level: string
+          user_id: string
+          user_state: string
+          was_subscribed: boolean
+        }
+        Insert: {
+          action_label: string
+          action_to: string
+          coach_message: string
+          created_at?: string
+          id?: string
+          priority_gap?: string | null
+          score: number
+          stage: string
+          time_of_day: string
+          urgency_level: string
+          user_id: string
+          user_state: string
+          was_subscribed?: boolean
+        }
+        Update: {
+          action_label?: string
+          action_to?: string
+          coach_message?: string
+          created_at?: string
+          id?: string
+          priority_gap?: string | null
+          score?: number
+          stage?: string
+          time_of_day?: string
+          urgency_level?: string
+          user_id?: string
+          user_state?: string
+          was_subscribed?: boolean
+        }
+        Relationships: []
+      }
       community_post_comments: {
         Row: {
           content: string
