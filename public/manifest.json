@@ -2,7 +2,7 @@
   "name": "Catalyst Mom",
   "short_name": "Catalyst Mom",
   "description": "Wellness, Fitness & Nutrition for Moms",
-  "start_url": "/",
+  "start_url": "/splash.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#b87333",
