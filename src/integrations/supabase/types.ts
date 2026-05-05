@@ -1001,6 +1001,36 @@ export type Database = {
         }
         Relationships: []
       }
+      not_found_logs: {
+        Row: {
+          created_at: string
+          id: string
+          path: string
+          referrer: string | null
+          resolved: boolean
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          path: string
+          referrer?: string | null
+          resolved?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          path?: string
+          referrer?: string | null
+          resolved?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       notification_preferences: {
         Row: {
           achievement_alerts_enabled: boolean
