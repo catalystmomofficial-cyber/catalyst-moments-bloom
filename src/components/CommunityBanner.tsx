@@ -131,7 +131,7 @@ const styles = `
   @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
   @media (max-width: 600px) {
     .cm-banner { border-radius: 12px; }
-    .cm-photo { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; }
+    .cm-photo { width: 100%; height: auto; aspect-ratio: auto; object-fit: contain; }
     .cm-join-btn { top: 10px; right: 10px; padding: 6px 12px; font-size: 10px; gap: 5px; }
     .cm-join-btn svg { width: 12px; height: 12px; }
     .cm-stats { flex-wrap: nowrap; }
