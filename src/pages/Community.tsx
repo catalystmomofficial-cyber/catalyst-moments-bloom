@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, MessageCircle, Users, Search, Star, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
+import { CommunityFeedBanner } from '@/components/community/CommunityFeedBanner';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
 import CheckoutModal from '@/components/subscription/CheckoutModal';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -145,6 +146,7 @@ const Community = () => {
           <TabsContent value="feed" className="mt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-2/3 space-y-6">
+                <CommunityFeedBanner onJoinClick={() => handleInteractionClick('join')} />
                 <DynamicCommunityFeed groupSlug="mom-life-general-general" />
               </div>
               
