@@ -293,7 +293,7 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
       });
       setTimeout(() => {
         onClose();
-        navigate('/auth/register');
+        navigate('/register');
       }, 1000);
     } else {
       navigate('/dashboard');
