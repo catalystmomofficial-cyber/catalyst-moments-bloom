@@ -357,7 +357,7 @@ export default function CourseDetail() {
             </div>
 
             {/* Course Content */}
-            <Tabs defaultValue="overview" className="space-y-6">
+            <Tabs defaultValue={startWeekParam > 0 ? "curriculum" : "overview"} className="space-y-6">
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
