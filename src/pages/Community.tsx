@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, MessageCircle, Users, Search, Star, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
+import { CommunityFeedBanner } from '@/components/community/CommunityFeedBanner';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
 import CheckoutModal from '@/components/subscription/CheckoutModal';
 import { useLocation, useNavigate } from 'react-router-dom';
