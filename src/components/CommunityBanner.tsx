@@ -130,10 +130,17 @@ const styles = `
   }
   @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
   @media (max-width: 600px) {
-    .cm-join-btn { top: 14px; right: 14px; padding: 10px 18px; font-size: 12px; }
-    .cm-stat-num { font-size: 14px; }
+    .cm-banner { border-radius: 12px; }
+    .cm-photo { aspect-ratio: 4/5; width: 100%; height: auto; object-fit: cover; }
+    .cm-join-btn { top: 12px; right: 12px; padding: 8px 14px; font-size: 11px; gap: 6px; }
+    .cm-join-btn svg { width: 14px; height: 14px; }
+    .cm-stats { flex-wrap: wrap; }
+    .cm-stat { flex: 1 1 50%; padding: 8px 6px; border-bottom: 1px solid rgba(181,101,29,0.12); }
+    .cm-stat:nth-child(2) { border-right: none; }
+    .cm-stat:nth-child(3), .cm-stat:nth-child(4) { border-bottom: none; }
+    .cm-stat-num { font-size: 13px; }
+    .cm-stat:last-child .cm-stat-num { font-size: 10px; }
     .cm-stat-label { font-size: 7px; letter-spacing: 0.1em; }
-    .cm-stat { padding: 10px 8px; }
   }
 `;
 
