@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Search, Clock, Dumbbell, Filter, Baby, Heart, Activity, Settings, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
 import PostpartumGlowUpChallenge from '@/components/workouts/PostpartumGlowUpChallenge';
@@ -40,7 +40,30 @@ const Workouts = () => {
   const { user, profile } = useAuth();
   const { filterContent, stageInfo, hasJourney, currentStage } = useContentFilter();
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
-  
+  const [searchParams] = useSearchParams();
+
+  // Deep-link params from coach card: ?stage=pregnancy|postpartum|ttc&focus=...
+  const stageParam = (searchParams.get('stage') || '').toLowerCase();
+  const focusParam = (searchParams.get('focus') || '').toLowerCase();
+
+  // Map external stage param → internal tab
+  const defaultTab = useMemo(() => {
+    if (stageParam === 'pregnancy' || stageParam === 'pregnant') return 'specialized';
+    if (stageParam === 'postpartum') return 'specialized';
+    if (stageParam === 'ttc') return 'specialized';
+    if (focusParam === 'quick') return 'quickWorkouts';
+    return 'recommended';
+  }, [stageParam, focusParam]);
+
+  // Scroll to the recommended programs section when arriving via deep link
+  useEffect(() => {
+    if (!stageParam && !focusParam) return;
+    const t = setTimeout(() => {
+      document.getElementById('featured-programs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 250);
+    return () => clearTimeout(t);
+  }, [stageParam, focusParam]);
+
   const filteredWorkouts = filterContent(allWorkouts);
 
   const levelOrder: Record<string, number> = { 'Beginner': 0, 'All Levels': 1, 'Intermediate': 2, 'Advanced': 3 };
@@ -137,7 +160,7 @@ const Workouts = () => {
             </CardContent>
           </Card>
         ) : (
-          <Tabs defaultValue="recommended" className="mb-8">
+          <Tabs defaultValue={defaultTab} className="mb-8">
             <TabsList>
               <TabsTrigger value="recommended">Recommended</TabsTrigger>
               <TabsTrigger value="specialized">
@@ -227,7 +250,7 @@ const Workouts = () => {
         )}
         
         {hasJourney && (
-          <div className="mb-8">
+          <div className="mb-8 scroll-mt-24" id="featured-programs">
             <h2 className="text-2xl font-bold mb-6">Featured Programs</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {isPregnant && <GlowAndGoPrenatalCard />}
