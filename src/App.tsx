@@ -72,6 +72,8 @@ import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import About from "./pages/About";
 import Unsubscribe from "./pages/Unsubscribe";
 import { HelmetProvider, Helmet } from "react-helmet-async";
+import { useState, useEffect } from "react";
+import SplashScreen from "./components/SplashScreen";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -386,20 +388,38 @@ function AppContent() {
   );
 }
 
-const App = () => (
-  <HelmetProvider>
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <AuthProvider>
-            <VideoPlayerProvider>
-              <AppContent />
-            </VideoPlayerProvider>
-          </AuthProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
-  </HelmetProvider>
-);
+const App = () => {
+  const [showSplash, setShowSplash] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+    const fadeTimer = setTimeout(() => setFadeOut(true), 3800);
+    const removeTimer = setTimeout(() => setShowSplash(false), 4200);
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
+
+  if (showSplash) {
+    return <SplashScreen fadeOut={fadeOut} />;
+  }
+
+  return (
+    <HelmetProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <AuthProvider>
+              <VideoPlayerProvider>
+                <AppContent />
+              </VideoPlayerProvider>
+            </AuthProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </HelmetProvider>
+  );
+};
 
 export default App;
