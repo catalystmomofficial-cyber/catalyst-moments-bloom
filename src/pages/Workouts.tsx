@@ -19,6 +19,7 @@ import { useContentFilter, ContentItem } from '@/hooks/useContentFilter';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import JourneySelector from '@/components/onboarding/JourneySelector';
 import { useEffect, useMemo, useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 interface WorkoutCardProps {
   title: string;
