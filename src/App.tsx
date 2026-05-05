@@ -72,6 +72,8 @@ import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import About from "./pages/About";
 import Unsubscribe from "./pages/Unsubscribe";
 import { HelmetProvider, Helmet } from "react-helmet-async";
+import { useState, useEffect } from "react";
+import SplashScreen from "./components/SplashScreen";
 
 // Create a client
 const queryClient = new QueryClient();
