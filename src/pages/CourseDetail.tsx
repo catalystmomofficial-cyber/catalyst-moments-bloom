@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import glowUpCover from "@/assets/30-days-glow-up-professional-cover.jpg";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
