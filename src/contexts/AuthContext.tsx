@@ -215,13 +215,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (error) {
+        const msg = error.message?.toLowerCase() || '';
+        if (
+          msg.includes('already registered') ||
+          msg.includes('already been registered') ||
+          msg.includes('user already exists') ||
+          msg.includes('duplicate')
+        ) {
+          const friendly = "An account with this email already exists. Please log in instead.";
+          toast.error(friendly);
+          throw new Error(friendly);
+        }
         throw error;
       }
 
       toast.success("Registration successful! Please check your email to verify your account.");
     } catch (error) {
       console.error('Registration error:', error);
-      toast.error(error instanceof Error ? error.message : "Registration failed");
+      if (!(error instanceof Error && error.message.includes('already exists'))) {
+        toast.error(error instanceof Error ? error.message : "Registration failed");
+      }
       throw error;
     } finally {
       setIsLoading(false);
