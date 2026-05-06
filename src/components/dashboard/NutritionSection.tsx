@@ -2,6 +2,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Clock, Users, ChefHat, Leaf } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+
+const stageToParam = (stage?: string | null) => {
+  switch ((stage || '').toLowerCase()) {
+    case 'ttc': return 'ttc';
+    case 'pregnant':
+    case 'pregnancy': return 'pregnant';
+    case 'postpartum': return 'postpartum';
+    default: return '';
+  }
+};
 
 interface Recipe {
   id: string;
