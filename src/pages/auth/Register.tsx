@@ -143,7 +143,9 @@ const Register = () => {
         }
       }
 
-      navigate("/dashboard");
+      // Show confirmation message instead of immediately navigating
+      setSignupEmail(email);
+      setSignupSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to register");
     }
