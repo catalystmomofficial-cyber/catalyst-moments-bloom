@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Heart, MessageCircle, Plus, Clock, Baby, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 
 interface CommunityPost {
   id: string;
