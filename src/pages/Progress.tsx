@@ -227,6 +227,11 @@ const Progress = () => {
           </p>
         </div>
 
+        {/* Profile Completion - relocated from Dashboard */}
+        <div className="mb-8">
+          <ProfileCompletionWidget />
+        </div>
+
         {checkIns.length === 0 ? (
           <Card className="border-2 border-dashed">
             <CardContent className="flex flex-col items-center justify-center py-12">
