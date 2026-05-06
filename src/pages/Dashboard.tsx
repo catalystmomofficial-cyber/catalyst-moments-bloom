@@ -43,7 +43,6 @@ interface StatsCardProps {
 
 const Dashboard = () => {
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
-  const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
   const { user, profile, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
