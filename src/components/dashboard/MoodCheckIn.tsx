@@ -175,6 +175,34 @@ export const MoodCheckIn = () => {
         </DialogHeader>
         
         <div className="space-y-6">
+          <div className="space-y-2">
+            <Label>Check-in Date</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !checkInDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {checkInDate ? format(checkInDate, "PPP") : "Pick a date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={checkInDate}
+                  onSelect={(d) => d && setCheckInDate(d)}
+                  disabled={(date) => date > new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
           <div className="space-y-3">
             <Label className="flex items-center gap-2">
               {getMoodIcon(moodScore[0])}
