@@ -228,13 +228,9 @@ const Progress = () => {
           </p>
         </div>
 
-        {/* Profile Completion - relocated from Dashboard */}
-        <div className="mb-8">
+        {/* Profile Completion + Achievement Badges - relocated from Dashboard */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <ProfileCompletionWidget />
-        </div>
-
-        {/* Achievement Badges - relocated from Dashboard */}
-        <div className="mb-8">
           <AchievementBadges />
         </div>
 
