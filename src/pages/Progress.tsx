@@ -25,7 +25,7 @@ import { ProgressCard } from '@/components/social/ProgressCard';
 import { ShareModal } from '@/components/social/ShareModal';
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
 import { AchievementBadges } from '@/components/profile/AchievementBadges';
-import SubscriptionButton from '@/components/subscription/SubscriptionButton';
+
 
 interface CheckIn {
   id: string;
