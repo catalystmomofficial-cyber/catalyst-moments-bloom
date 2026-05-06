@@ -24,6 +24,7 @@ import { AchievementBadge } from '@/components/social/AchievementBadge';
 import { ProgressCard } from '@/components/social/ProgressCard';
 import { ShareModal } from '@/components/social/ShareModal';
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
+import { AchievementBadges } from '@/components/profile/AchievementBadges';
 
 interface CheckIn {
   id: string;
@@ -230,6 +231,11 @@ const Progress = () => {
         {/* Profile Completion - relocated from Dashboard */}
         <div className="mb-8">
           <ProfileCompletionWidget />
+        </div>
+
+        {/* Achievement Badges - relocated from Dashboard */}
+        <div className="mb-8">
+          <AchievementBadges />
         </div>
 
         {checkIns.length === 0 ? (

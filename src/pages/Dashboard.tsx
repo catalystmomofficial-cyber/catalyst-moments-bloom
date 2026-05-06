@@ -26,7 +26,7 @@ import SubscriptionStatus from '@/components/subscription/SubscriptionStatus';
 import SubscriptionButton from '@/components/subscription/SubscriptionButton';
 import AffiliateButton from '@/components/affiliate/AffiliateButton';
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
-import { AchievementBadges } from '@/components/profile/AchievementBadges';
+
 import { MonthlyChallenge } from '@/components/challenges/MonthlyChallenge';
 import { PushNotificationPrompt } from '@/components/notifications/PushNotificationPrompt';
 
@@ -297,8 +297,6 @@ const Dashboard = () => {
                   </Card>
                 ) : null}
 
-                {/* Badges - Compact */}
-                <AchievementBadges />
               </div>
             </div>
 
