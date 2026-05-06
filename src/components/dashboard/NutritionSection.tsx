@@ -2,6 +2,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Clock, Users, ChefHat, Leaf } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+
+const stageToParam = (stage?: string | null) => {
+  switch ((stage || '').toLowerCase()) {
+    case 'ttc': return 'ttc';
+    case 'pregnant':
+    case 'pregnancy': return 'pregnant';
+    case 'postpartum': return 'postpartum';
+    default: return '';
+  }
+};
 
 interface Recipe {
   id: string;
@@ -45,6 +56,9 @@ const breakfastRecipes: Recipe[] = [
 ];
 
 export const NutritionSection = () => {
+  const { profile } = useAuth();
+  const stageParam = stageToParam(profile?.motherhood_stage);
+  const mealPlanHref = stageParam ? `/meal-plan?stage=${stageParam}` : '/meal-plan';
   return (
     <Card>
       <CardHeader>
@@ -94,16 +108,16 @@ export const NutritionSection = () => {
             </div>
             
             <Button variant="outline" size="sm" className="w-full" asChild>
-              <Link to={`/recipes/${recipe.id}`}>
-                View Recipe
+              <Link to={mealPlanHref}>
+                View Meal Plan
               </Link>
             </Button>
           </div>
         ))}
         
         <Button variant="ghost" className="w-full mt-4" asChild>
-          <Link to="/recipes?category=breakfast">
-            View All Breakfast Recipes →
+          <Link to={mealPlanHref}>
+            View All Meal Plans →
           </Link>
         </Button>
       </CardContent>
