@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { useAuth, MotherhoodStage } from "@/contexts/AuthContext";
 import PageLayout from "@/components/layout/PageLayout";
-import { UserPlus, Loader2 } from "lucide-react";
+import { UserPlus, Loader2, MailCheck } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { Separator } from "@/components/ui/separator";
