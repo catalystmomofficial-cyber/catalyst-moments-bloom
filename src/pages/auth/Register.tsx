@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { useAuth, MotherhoodStage } from "@/contexts/AuthContext";
 import PageLayout from "@/components/layout/PageLayout";
-import { UserPlus, Loader2 } from "lucide-react";
+import { UserPlus, Loader2, MailCheck } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { Separator } from "@/components/ui/separator";
@@ -26,6 +26,8 @@ const Register = () => {
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [assessmentData, setAssessmentData] = useState<Record<string, string> | null>(null);
   const [paramWarning, setParamWarning] = useState<string>("");
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
 
   // Read & validate URL parameters on mount
   useEffect(() => {
@@ -141,7 +143,9 @@ const Register = () => {
         }
       }
 
-      navigate("/dashboard");
+      // Show confirmation message instead of immediately navigating
+      setSignupEmail(email);
+      setSignupSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to register");
     }
@@ -181,10 +185,56 @@ const Register = () => {
       <div className="flex items-center justify-center py-10">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-            <CardDescription>Join the Catalyst Mom community today</CardDescription>
+            <CardTitle className="text-2xl font-bold">
+              {signupSuccess ? "Check Your Email" : "Create Account"}
+            </CardTitle>
+            <CardDescription>
+              {signupSuccess
+                ? "One last step to activate your account"
+                : "Join the Catalyst Mom community today"}
+            </CardDescription>
           </CardHeader>
           <CardContent>
+            {signupSuccess ? (
+              <div className="space-y-4 text-center py-4">
+                <div className="mx-auto w-16 h-16 rounded-full bg-catalyst-copper/10 flex items-center justify-center">
+                  <MailCheck className="h-8 w-8 text-catalyst-copper" />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-base font-medium">
+                    We sent a confirmation link to:
+                  </p>
+                  <p className="text-sm text-catalyst-copper font-semibold break-all">
+                    {signupEmail}
+                  </p>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Please check your inbox (and spam folder) and click the link to verify your email and activate your account.
+                </p>
+                <div className="pt-2 space-y-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => navigate("/login")}
+                  >
+                    Go to Login
+                  </Button>
+                  <button
+                    type="button"
+                    className="text-xs text-muted-foreground hover:text-foreground underline"
+                    onClick={() => {
+                      setSignupSuccess(false);
+                      setPassword("");
+                      setConfirmPassword("");
+                    }}
+                  >
+                    Didn't get it? Try again
+                  </button>
+                </div>
+              </div>
+            ) : (
+            <>
             {error && (
               <div className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-sm">
                 {error}
@@ -313,7 +363,9 @@ const Register = () => {
                   )}
                 </Button>
               </div>
-            </form>
+              </form>
+            </>
+            )}
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">
