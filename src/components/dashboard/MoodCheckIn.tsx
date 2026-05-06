@@ -81,7 +81,7 @@ export const MoodCheckIn = () => {
         mood_score: moodScore[0],
         energy_level: energyLevel[0],
         stress_level: stressLevel[0],
-        timestamp: new Date().toISOString()
+        timestamp: checkInDate.toISOString()
       };
       moodEntries.push(newEntry);
       localStorage.setItem('moodEntries', JSON.stringify(moodEntries));
