@@ -363,7 +363,9 @@ const Register = () => {
                   )}
                 </Button>
               </div>
-            </form>
+              </form>
+            </>
+            )}
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">
