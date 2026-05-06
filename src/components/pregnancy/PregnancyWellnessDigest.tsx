@@ -24,6 +24,12 @@ export const PregnancyWellnessDigest = () => {
   const { toast } = useToast();
   const { profile } = useAuth();
   const { stageInfo } = useContentFilter();
+  const navigate = useNavigate();
+  const handleTipAction = (category: string) => {
+    if (category === 'workout') navigate('/workouts');
+    else if (category === 'nutrition') navigate('/recipes');
+    else navigate('/wellness');
+  };
 
   // Determine trimester from user's profile
   const getCurrentTrimester = () => {
