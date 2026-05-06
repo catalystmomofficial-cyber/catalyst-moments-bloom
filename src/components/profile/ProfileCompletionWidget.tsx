@@ -205,7 +205,7 @@ export const ProfileCompletionWidget = () => {
           </Badge>
         </div>
         <CardDescription>
-          Complete your profile to unlock rewards and personalized features
+          Complete your profile to earn points. Redeem for exclusive digital products and premium services.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
