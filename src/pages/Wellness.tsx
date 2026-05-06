@@ -213,8 +213,12 @@ const Wellness = () => {
                   </div>
                   </CardContent>
                   <CardFooter className="flex justify-between">
-                    <Button variant="outline">Previous Week</Button>
-                    <Button variant="outline">Next Week</Button>
+                    <Button variant="outline" asChild>
+                      <Link to="/progress">View Progress</Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link to="/wellness/resources">More Resources</Link>
+                    </Button>
                   </CardFooter>
                 </Card>
                 
