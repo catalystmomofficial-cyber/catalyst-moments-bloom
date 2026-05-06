@@ -23,6 +23,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { AchievementBadge } from '@/components/social/AchievementBadge';
 import { ProgressCard } from '@/components/social/ProgressCard';
 import { ShareModal } from '@/components/social/ShareModal';
+import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
 
 interface CheckIn {
   id: string;
