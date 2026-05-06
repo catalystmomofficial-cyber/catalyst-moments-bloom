@@ -5,10 +5,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
-import { Smile, Frown, Meh, Heart, Zap, AlertCircle } from 'lucide-react';
+import { Smile, Frown, Meh, Heart, Zap, AlertCircle, CalendarIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { usePoints } from '@/hooks/usePoints';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 export const MoodCheckIn = () => {
   const [open, setOpen] = useState(false);
@@ -16,6 +20,7 @@ export const MoodCheckIn = () => {
   const [energyLevel, setEnergyLevel] = useState([7]);
   const [stressLevel, setStressLevel] = useState([3]);
   const [notes, setNotes] = useState('');
+  const [checkInDate, setCheckInDate] = useState<Date>(new Date());
   const [loading, setLoading] = useState(false);
   
   const { addMoodEntry } = useWellnessData();
@@ -76,7 +81,7 @@ export const MoodCheckIn = () => {
         mood_score: moodScore[0],
         energy_level: energyLevel[0],
         stress_level: stressLevel[0],
-        timestamp: new Date().toISOString()
+        timestamp: checkInDate.toISOString()
       };
       moodEntries.push(newEntry);
       localStorage.setItem('moodEntries', JSON.stringify(moodEntries));
@@ -170,6 +175,34 @@ export const MoodCheckIn = () => {
         </DialogHeader>
         
         <div className="space-y-6">
+          <div className="space-y-2">
+            <Label>Check-in Date</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !checkInDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {checkInDate ? format(checkInDate, "PPP") : "Pick a date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={checkInDate}
+                  onSelect={(d) => d && setCheckInDate(d)}
+                  disabled={(date) => date > new Date()}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
           <div className="space-y-3">
             <Label className="flex items-center gap-2">
               {getMoodIcon(moodScore[0])}
