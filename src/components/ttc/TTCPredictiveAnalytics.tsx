@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { TrendingUp, Calendar, Target, AlertCircle, BarChart3, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface CyclePrediction {
   nextPeriod: Date;
