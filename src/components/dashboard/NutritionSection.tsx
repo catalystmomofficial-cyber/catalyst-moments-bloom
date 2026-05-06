@@ -56,6 +56,9 @@ const breakfastRecipes: Recipe[] = [
 ];
 
 export const NutritionSection = () => {
+  const { profile } = useAuth();
+  const stageParam = stageToParam(profile?.motherhood_stage);
+  const mealPlanHref = stageParam ? `/meal-plan?stage=${stageParam}` : '/meal-plan';
   return (
     <Card>
       <CardHeader>
