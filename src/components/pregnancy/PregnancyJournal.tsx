@@ -254,7 +254,7 @@ export const PregnancyJournal = () => {
         </div>
 
         <div className="p-4 bg-muted/30 rounded-lg text-center">
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => toast({ title: 'Photo uploads coming soon' })}>
             <Camera className="h-4 w-4" />
             Add Photos
           </Button>
