@@ -244,7 +244,7 @@ const WorkoutDetail = () => {
                   </div>
                 </div>
                 
-                <Button className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90">
+                <Button className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90" onClick={() => setVideoModalOpen(true)}>
                   Start Workout
                 </Button>
               </CardContent>
