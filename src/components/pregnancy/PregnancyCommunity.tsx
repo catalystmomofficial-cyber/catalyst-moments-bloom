@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Heart, MessageCircle, Plus, Clock, Baby, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 
 interface CommunityPost {
   id: string;
@@ -251,9 +252,11 @@ export const PregnancyCommunity = () => {
                           {post.likes} {post.isSupported ? 'Supported' : 'Support'}
                         </Button>
                         
-                        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-gray-500">
-                          <MessageCircle className="h-3 w-3 mr-1" />
-                          {post.replies} Replies
+                        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-gray-500" asChild>
+                          <Link to="/community">
+                            <MessageCircle className="h-3 w-3 mr-1" />
+                            {post.replies} Replies
+                          </Link>
                         </Button>
                       </div>
                       

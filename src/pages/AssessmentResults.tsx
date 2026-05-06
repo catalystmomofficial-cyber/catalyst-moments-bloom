@@ -221,7 +221,7 @@ const AssessmentResults = () => {
               <Mail className="h-4 w-4 mr-2" />
               Email
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => window.print()}>
               <Download className="h-4 w-4 mr-2" />
               Download
             </Button>

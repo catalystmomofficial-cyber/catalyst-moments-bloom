@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, BookOpen, Video, Clock, Heart, Brain, Utensils, Dumbbell } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface EducationalResource {
   id: string;
@@ -188,7 +189,7 @@ export const TTCEducationalResources = () => {
                           </div>
                         </div>
                         
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" onClick={() => toast.info('Opening resource...')}>
                           {resource.type === 'video' ? 'Watch' : 'Read'}
                         </Button>
                       </div>
@@ -202,19 +203,19 @@ export const TTCEducationalResources = () => {
 
         {/* Quick Categories */}
         <div className="grid grid-cols-2 gap-3 pt-4 border-t">
-          <Button variant="outline" size="sm" className="justify-start">
+          <Button variant={selectedCategory === 'fertility' ? 'default' : 'outline'} size="sm" className="justify-start" onClick={() => setSelectedCategory('fertility')}>
             <Heart className="mr-2 h-4 w-4" />
             Fertility Basics
           </Button>
-          <Button variant="outline" size="sm" className="justify-start">
+          <Button variant={selectedCategory === 'nutrition' ? 'default' : 'outline'} size="sm" className="justify-start" onClick={() => setSelectedCategory('nutrition')}>
             <Utensils className="mr-2 h-4 w-4" />
             Nutrition Plans
           </Button>
-          <Button variant="outline" size="sm" className="justify-start">
+          <Button variant={selectedCategory === 'stress' ? 'default' : 'outline'} size="sm" className="justify-start" onClick={() => setSelectedCategory('stress')}>
             <Brain className="mr-2 h-4 w-4" />
             Stress Relief
           </Button>
-          <Button variant="outline" size="sm" className="justify-start">
+          <Button variant={selectedCategory === 'exercise' ? 'default' : 'outline'} size="sm" className="justify-start" onClick={() => setSelectedCategory('exercise')}>
             <Dumbbell className="mr-2 h-4 w-4" />
             Exercise Guide
           </Button>

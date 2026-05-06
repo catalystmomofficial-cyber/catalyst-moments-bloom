@@ -7,6 +7,7 @@ import { Activity, Apple, Droplets, Brain, Heart, CheckCircle, Calendar } from '
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { useNavigate } from 'react-router-dom';
 
 interface DailyTip {
   id: string;
@@ -23,6 +24,12 @@ export const PregnancyWellnessDigest = () => {
   const { toast } = useToast();
   const { profile } = useAuth();
   const { stageInfo } = useContentFilter();
+  const navigate = useNavigate();
+  const handleTipAction = (category: string) => {
+    if (category === 'workout') navigate('/workouts');
+    else if (category === 'nutrition') navigate('/recipes');
+    else navigate('/wellness');
+  };
 
   // Determine trimester from user's profile
   const getCurrentTrimester = () => {
@@ -333,7 +340,7 @@ export const PregnancyWellnessDigest = () => {
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-blue-600 font-medium">💪 {tip.benefit}</p>
-                  <Button size="sm" variant="outline" className="text-xs h-8">
+                  <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>
                 </div>
@@ -351,7 +358,7 @@ export const PregnancyWellnessDigest = () => {
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-green-600 font-medium">🌱 {tip.benefit}</p>
-                  <Button size="sm" variant="outline" className="text-xs h-8">
+                  <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>
                 </div>
@@ -369,7 +376,7 @@ export const PregnancyWellnessDigest = () => {
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-purple-600 font-medium">🧘 {tip.benefit}</p>
-                  <Button size="sm" variant="outline" className="text-xs h-8">
+                  <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>
                 </div>

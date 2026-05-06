@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface CycleDay {
   date: number;
@@ -249,10 +250,10 @@ export const CycleCalendar = () => {
                   </div>
                 </div>
                 
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline">Edit Day</Button>
-                  <Button size="sm" variant="outline">Add Symptoms</Button>
-                  <Button size="sm" variant="outline">Log Temperature</Button>
+                <div className="flex gap-2 flex-wrap">
+                  <Button size="sm" variant="outline" onClick={() => toast.info('Day editing coming soon')}>Edit Day</Button>
+                  <Button size="sm" variant="outline" onClick={() => toast.info('Symptom logging coming soon')}>Add Symptoms</Button>
+                  <Button size="sm" variant="outline" onClick={() => toast.info('Temperature logging coming soon')}>Log Temperature</Button>
                 </div>
               </CardContent>
             </Card>

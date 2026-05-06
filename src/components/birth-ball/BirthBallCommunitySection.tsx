@@ -94,8 +94,8 @@ export const BirthBallCommunitySection = () => {
           <p className="text-sm text-muted-foreground mb-3">
             Share your progress, get tips, and connect with other moms practicing birth ball exercises
           </p>
-          <Button variant="outline" size="sm">
-            Join Community
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/community/birth-ball">Join Community</Link>
           </Button>
         </div>
       </CardContent>

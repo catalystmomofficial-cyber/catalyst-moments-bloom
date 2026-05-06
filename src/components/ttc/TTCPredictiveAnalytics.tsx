@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { TrendingUp, Calendar, Target, AlertCircle, BarChart3, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface CyclePrediction {
   nextPeriod: Date;
@@ -280,9 +281,11 @@ export const TTCPredictiveAnalytics = () => {
               </div>
 
               <div className="pt-4 border-t">
-                <Button variant="outline" size="sm" className="w-full">
-                  <BarChart3 className="mr-2 h-4 w-4" />
-                  View Detailed Analytics
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link to="/progress">
+                    <BarChart3 className="mr-2 h-4 w-4" />
+                    View Detailed Analytics
+                  </Link>
                 </Button>
               </div>
             </>

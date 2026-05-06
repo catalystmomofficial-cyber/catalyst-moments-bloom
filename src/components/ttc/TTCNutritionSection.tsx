@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Heart, Leaf, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const TTCNutritionSection = () => {
   const fertilityFoods = [
@@ -64,8 +65,8 @@ export const TTCNutritionSection = () => {
           </div>
         ))}
         
-        <Button className="w-full" variant="outline">
-          View TTC Meal Plans
+        <Button className="w-full" variant="outline" asChild>
+          <Link to="/recipes">View TTC Meal Plans</Link>
         </Button>
       </CardContent>
     </Card>

@@ -73,8 +73,10 @@ const Wellness = () => {
           
           <div className="mt-4 md:mt-0 flex items-center gap-3">
             <WellnessCoachButton />
-            <Button>
-              <PenLine className="mr-2 h-4 w-4" /> Log Today
+            <Button asChild>
+              <Link to="/progress">
+                <PenLine className="mr-2 h-4 w-4" /> Log Today
+              </Link>
             </Button>
           </div>
         </div>
@@ -211,8 +213,12 @@ const Wellness = () => {
                   </div>
                   </CardContent>
                   <CardFooter className="flex justify-between">
-                    <Button variant="outline">Previous Week</Button>
-                    <Button variant="outline">Next Week</Button>
+                    <Button variant="outline" asChild>
+                      <Link to="/progress">View Progress</Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link to="/wellness/resources">More Resources</Link>
+                    </Button>
                   </CardFooter>
                 </Card>
                 

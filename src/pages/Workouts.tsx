@@ -165,7 +165,7 @@ const Workouts = () => {
                 className="pl-9"
               />
             </div>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" aria-label="Filter" title="Filter coming soon" onClick={() => {}} disabled>
               <Filter className="h-4 w-4" />
             </Button>
           </div>
