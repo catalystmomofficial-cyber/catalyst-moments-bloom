@@ -5,10 +5,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
-import { Smile, Frown, Meh, Heart, Zap, AlertCircle } from 'lucide-react';
+import { Smile, Frown, Meh, Heart, Zap, AlertCircle, CalendarIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { usePoints } from '@/hooks/usePoints';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 export const MoodCheckIn = () => {
   const [open, setOpen] = useState(false);
