@@ -201,7 +201,21 @@ export const PregnancyJournal = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{getMoodEmoji(entry.mood)}</span>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    aria-label="Share entry"
+                    onClick={() => {
+                      const text = `${entry.title} (Week ${entry.week}): ${entry.content || ''}`;
+                      if (navigator.share) {
+                        navigator.share({ title: entry.title, text }).catch(() => {});
+                      } else {
+                        navigator.clipboard.writeText(text);
+                        toast({ title: 'Copied to clipboard' });
+                      }
+                    }}
+                  >
                     <Share className="h-3 w-3" />
                   </Button>
                 </div>
