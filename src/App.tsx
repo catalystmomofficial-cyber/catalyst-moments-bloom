@@ -388,18 +388,24 @@ function AppContent() {
   );
 }
 
+const isStandalonePWA = () =>
+  typeof window !== 'undefined' &&
+  (window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone === true);
+
 const App = () => {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(isStandalonePWA());
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
+    if (!showSplash) return;
     const fadeTimer = setTimeout(() => setFadeOut(true), 3800);
     const removeTimer = setTimeout(() => setShowSplash(false), 4200);
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(removeTimer);
     };
-  }, []);
+  }, [showSplash]);
 
   if (showSplash) {
     return <SplashScreen fadeOut={fadeOut} />;

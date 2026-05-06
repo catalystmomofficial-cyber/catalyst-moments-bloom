@@ -121,12 +121,6 @@ const Dashboard = () => {
                     />
                   </DialogContent>
                 </Dialog>
-                <Button variant="outline" size="sm" className="gap-2 w-full md:w-auto justify-center min-w-0" asChild>
-                  <Link to="/profile">
-                    <Settings className="h-4 w-4 shrink-0" />
-                    <span className="truncate">My Profile</span>
-                  </Link>
-                </Button>
               </div>
             </div>
         
