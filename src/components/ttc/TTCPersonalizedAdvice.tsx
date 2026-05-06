@@ -213,8 +213,8 @@ export const TTCPersonalizedAdvice = ({
                       </div>
                     </div>
                     {item.actionable && (
-                      <Button size="sm" variant="outline">
-                        Learn More
+                      <Button size="sm" variant="outline" asChild>
+                        <Link to="/wellness/resources">Learn More</Link>
                       </Button>
                     )}
                   </div>
