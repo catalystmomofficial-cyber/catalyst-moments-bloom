@@ -7,6 +7,7 @@ import { Activity, Apple, Droplets, Brain, Heart, CheckCircle, Calendar } from '
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { useNavigate } from 'react-router-dom';
 
 interface DailyTip {
   id: string;
