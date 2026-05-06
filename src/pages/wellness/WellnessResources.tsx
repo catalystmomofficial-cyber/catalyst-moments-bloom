@@ -223,8 +223,8 @@ const WellnessResources = () => {
                 <p className="text-muted-foreground mb-4">
                   Can't find what you're looking for? Our wellness coach can recommend personalized resources.
                 </p>
-                <Button>
-                  Talk to Wellness Coach
+                <Button asChild>
+                  <a href="/wellness">Talk to Wellness Coach</a>
                 </Button>
               </CardContent>
             </Card>
