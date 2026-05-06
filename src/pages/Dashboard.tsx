@@ -42,8 +42,7 @@ interface StatsCardProps {
 }
 
 const Dashboard = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [isCheckInOpen, setIsCheckInOpen] = useState(false);
+  const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
