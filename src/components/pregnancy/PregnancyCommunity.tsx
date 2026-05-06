@@ -252,9 +252,11 @@ export const PregnancyCommunity = () => {
                           {post.likes} {post.isSupported ? 'Supported' : 'Support'}
                         </Button>
                         
-                        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-gray-500">
-                          <MessageCircle className="h-3 w-3 mr-1" />
-                          {post.replies} Replies
+                        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-gray-500" asChild>
+                          <Link to="/community">
+                            <MessageCircle className="h-3 w-3 mr-1" />
+                            {post.replies} Replies
+                          </Link>
                         </Button>
                       </div>
                       
