@@ -108,16 +108,16 @@ export const NutritionSection = () => {
             </div>
             
             <Button variant="outline" size="sm" className="w-full" asChild>
-              <Link to={`/recipes/${recipe.id}`}>
-                View Recipe
+              <Link to={mealPlanHref}>
+                View Meal Plan
               </Link>
             </Button>
           </div>
         ))}
         
         <Button variant="ghost" className="w-full mt-4" asChild>
-          <Link to="/recipes?category=breakfast">
-            View All Breakfast Recipes →
+          <Link to={mealPlanHref}>
+            View All Meal Plans →
           </Link>
         </Button>
       </CardContent>
