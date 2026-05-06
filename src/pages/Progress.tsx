@@ -523,9 +523,11 @@ const Progress = () => {
                     </ul>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <Button size="lg" className="gap-2">
-                      Upgrade to Premium
-                      <ArrowRight className="h-4 w-4" />
+                    <Button size="lg" className="gap-2" asChild>
+                      <a href="/dashboard#subscription">
+                        Upgrade to Premium
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
                     </Button>
                     <p className="text-xs text-center text-muted-foreground">
                       Join 10,000+ moms transforming their lives
