@@ -82,8 +82,8 @@ export const TTCCommunitySection = () => {
           <p className="text-sm text-muted-foreground mb-3">
             Connect with others on similar journeys for support, tips, and encouragement
           </p>
-          <Button variant="outline" size="sm">
-            Join TTC Group
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/community?filter=ttc">Join TTC Group</Link>
           </Button>
         </div>
       </CardContent>
