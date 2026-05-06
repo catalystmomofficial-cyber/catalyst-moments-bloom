@@ -130,8 +130,8 @@ const Dashboard = () => {
               </div>
             </div>
         
-            {/* Subscription Status - Simplified & Compact */}
-            <div className="mb-8">
+            {/* Subscription Status + Points Balance + Affiliate */}
+            <div className="mb-8 space-y-3">
               {subscribed ? (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-lg border border-primary/20 bg-gradient-to-r from-primary/5 to-transparent">
                   <div className="flex items-center gap-3 min-w-0">
@@ -154,9 +154,9 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={handleManageSubscription}
                       disabled={isManagingSubscription}
                       className="gap-1"
@@ -164,7 +164,6 @@ const Dashboard = () => {
                       <CreditCard className="h-4 w-4" />
                       Manage
                     </Button>
-                    <AffiliateButton variant="ghost" size="sm" />
                   </div>
                 </div>
               ) : (
@@ -180,10 +179,15 @@ const Dashboard = () => {
                   </div>
                   <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
                     <SubscriptionButton />
-                    <AffiliateButton variant="ghost" size="sm" />
                   </div>
                 </div>
               )}
+
+              <PointsBalance />
+
+              <div className="flex justify-end">
+                <AffiliateButton variant="outline" size="sm" />
+              </div>
             </div>
 
             {/* Quick Stats - More Compact */}
