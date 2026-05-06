@@ -189,7 +189,7 @@ export const TTCEducationalResources = () => {
                           </div>
                         </div>
                         
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" variant="outline" onClick={() => toast.info('Opening resource...')}>
                           {resource.type === 'video' ? 'Watch' : 'Read'}
                         </Button>
                       </div>
