@@ -60,8 +60,6 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
   };
 
   const getButtonText = () => {
-    if (isLoading) return 'Loading...';
-    
     switch (affiliateStatus) {
       case 'pending':
         return 'Application Pending';
@@ -74,7 +72,7 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
     }
   };
 
-  const isDisabled = isLoading || affiliateStatus === 'pending';
+  const isDisabled = affiliateStatus === 'pending';
 
   return (
     <>
