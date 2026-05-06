@@ -20,6 +20,7 @@ export const MoodCheckIn = () => {
   const [energyLevel, setEnergyLevel] = useState([7]);
   const [stressLevel, setStressLevel] = useState([3]);
   const [notes, setNotes] = useState('');
+  const [checkInDate, setCheckInDate] = useState<Date>(new Date());
   const [loading, setLoading] = useState(false);
   
   const { addMoodEntry } = useWellnessData();
