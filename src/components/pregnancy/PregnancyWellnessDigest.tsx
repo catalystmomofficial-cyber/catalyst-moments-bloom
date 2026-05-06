@@ -340,7 +340,7 @@ export const PregnancyWellnessDigest = () => {
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-blue-600 font-medium">💪 {tip.benefit}</p>
-                  <Button size="sm" variant="outline" className="text-xs h-8">
+                  <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>
                 </div>
@@ -358,7 +358,7 @@ export const PregnancyWellnessDigest = () => {
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-green-600 font-medium">🌱 {tip.benefit}</p>
-                  <Button size="sm" variant="outline" className="text-xs h-8">
+                  <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>
                 </div>
@@ -376,7 +376,7 @@ export const PregnancyWellnessDigest = () => {
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-purple-600 font-medium">🧘 {tip.benefit}</p>
-                  <Button size="sm" variant="outline" className="text-xs h-8">
+                  <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>
                 </div>
