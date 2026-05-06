@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Lightbulb, Calendar, Heart, Utensils, Dumbbell, Brain, Droplets, Thermometer } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface AdviceItem {
   id: string;
