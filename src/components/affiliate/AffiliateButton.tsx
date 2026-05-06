@@ -29,6 +29,10 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
   }, [user]);
 
   const checkAffiliateStatus = async () => {
+    // Safety: never stay loading more than 4s
+    const failsafe = setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
     try {
       const { data, error } = await (supabase as any)
         .rpc('get_affiliate_status', { user_id_param: user?.id });
@@ -45,6 +49,7 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
       console.error('Error:', error);
       setAffiliateStatus('none');
     } finally {
+      clearTimeout(failsafe);
       setIsLoading(false);
     }
   };
@@ -55,8 +60,6 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
   };
 
   const getButtonText = () => {
-    if (isLoading) return 'Loading...';
-    
     switch (affiliateStatus) {
       case 'pending':
         return 'Application Pending';
@@ -69,7 +72,7 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
     }
   };
 
-  const isDisabled = isLoading || affiliateStatus === 'pending';
+  const isDisabled = affiliateStatus === 'pending';
 
   return (
     <>

@@ -4,14 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Calendar } from "@/components/ui/calendar";
-import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle } from 'lucide-react';
+import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
-import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
-import { WeeklyProgress } from '@/components/dashboard/WeeklyProgress';
-import { WeeklyCheckIn } from '@/components/accountability/WeeklyCheckIn';
+import { PointsBalance } from '@/components/dashboard/PointsBalance';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
@@ -45,8 +42,6 @@ interface StatsCardProps {
 }
 
 const Dashboard = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [isCheckInOpen, setIsCheckInOpen] = useState(false);
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
@@ -126,11 +121,17 @@ const Dashboard = () => {
                     />
                   </DialogContent>
                 </Dialog>
+                <Button variant="outline" size="sm" className="gap-2 w-full md:w-auto justify-center min-w-0" asChild>
+                  <Link to="/profile">
+                    <Settings className="h-4 w-4 shrink-0" />
+                    <span className="truncate">My Profile</span>
+                  </Link>
+                </Button>
               </div>
             </div>
         
-            {/* Subscription Status - Simplified & Compact */}
-            <div className="mb-8">
+            {/* Subscription Status + Points Balance + Affiliate */}
+            <div className="mb-8 space-y-3">
               {subscribed ? (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-lg border border-primary/20 bg-gradient-to-r from-primary/5 to-transparent">
                   <div className="flex items-center gap-3 min-w-0">
@@ -153,9 +154,9 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={handleManageSubscription}
                       disabled={isManagingSubscription}
                       className="gap-1"
@@ -163,7 +164,6 @@ const Dashboard = () => {
                       <CreditCard className="h-4 w-4" />
                       Manage
                     </Button>
-                    <AffiliateButton variant="ghost" size="sm" />
                   </div>
                 </div>
               ) : (
@@ -179,10 +179,15 @@ const Dashboard = () => {
                   </div>
                   <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
                     <SubscriptionButton />
-                    <AffiliateButton variant="ghost" size="sm" />
                   </div>
                 </div>
               )}
+
+              <PointsBalance />
+
+              <div className="flex justify-end">
+                <AffiliateButton variant="outline" size="sm" />
+              </div>
             </div>
 
             {/* Quick Stats - More Compact */}
@@ -214,49 +219,16 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column - Primary Actions */}
               <div className="lg:col-span-2 space-y-6">
-                {/* Today's Focus */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>Today's Focus</span>
-                      <Timer className="h-5 w-5 text-muted-foreground" />
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {isTTC ? <TTCTracker /> : 
-                       isPregnant ? <PregnancyTracker /> : (
-                        <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
-                          <DialogTrigger asChild>
-                            <Card className="p-6 cursor-pointer hover:shadow-md transition-shadow border-dashed border-2">
-                              <div className="flex flex-col items-center justify-center space-y-3 h-full min-h-[100px]">
-                                <CheckCircle className="h-7 w-7 text-primary" />
-                                <div className="text-center">
-                                  <h3 className="font-semibold text-sm">Weekly Check-In</h3>
-                                  <p className="text-xs text-muted-foreground">Track progress</p>
-                                </div>
-                              </div>
-                            </Card>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-                            <WeeklyCheckIn />
-                          </DialogContent>
-                        </Dialog>
-                      )}
-                      {isPregnant ? <PregnancyWellnessDigest /> : <MoodCheckIn />}
-                    </div>
-                  </CardContent>
-                </Card>
-
                 {/* Recommended Activity */}
                 {isPregnant ? (
                   <div className="grid grid-cols-1 gap-4">
                     <PregnancyJournal />
                     <PostpartumPrepGuide />
                   </div>
+                ) : isTTC ? (
+                  <TTCTracker />
                 ) : (
                   (() => {
-                    // Smart entry into 30 Days Glow Up based on wellness score
                     const glowUpId = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
                     const score = wellnessScore ?? 60;
                     const startWeek = score < 50 ? 1 : score <= 70 ? 2 : score <= 85 ? 3 : 4;
@@ -268,47 +240,27 @@ const Dashboard = () => {
                     };
                     return (
                       <PlanCard
-                        title={isTTC ? "Fertility Flow Yoga" : "30 Days Glow Up Challenge"}
-                        category={isTTC ? "Workout" : "Postpartum Recovery Program"}
-                        description={isTTC ? "Gentle yoga to support reproductive health" : weekCopy[startWeek]}
+                        title="30 Days Glow Up Challenge"
+                        category="Postpartum Recovery Program"
+                        description={weekCopy[startWeek]}
                         completed={false}
                         icon={<Activity className="h-5 w-5" />}
-                        time={isTTC ? "20 mins" : "10–20 mins/day"}
-                        link={isTTC ? "/workouts/fertility-flow-yoga" : `/course/${glowUpId}?startWeek=${startWeek}`}
-                        buttonText={isTTC ? "Start Workout" : `Start Week ${startWeek}`}
+                        time="10–20 mins/day"
+                        link={`/course/${glowUpId}?startWeek=${startWeek}`}
+                        buttonText={`Start Week ${startWeek}`}
                         progress={0}
-                        tags={isTTC ? ["TTC", "Fertility"] : ["Postpartum", "Recovery", `Week ${startWeek}`]}
+                        tags={["Postpartum", "Recovery", `Week ${startWeek}`]}
                       />
                     );
                   })()
                 )}
 
-                {/* Challenge & Achievements - Collapsible */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <MonthlyChallenge />
-                  <ProfileCompletionWidget />
-                </div>
+                {/* Monthly Challenge */}
+                <MonthlyChallenge />
               </div>
               
               {/* Right Column - Quick Access */}
               <div className="space-y-6">
-                {/* Calendar */}
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center text-base">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      Calendar
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      className="rounded-md border pointer-events-auto"
-                    />
-                  </CardContent>
-                </Card>
 
                 {/* Quick Links */}
                 {isTTC ? <TTCNutritionSection /> : 

@@ -23,6 +23,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { AchievementBadge } from '@/components/social/AchievementBadge';
 import { ProgressCard } from '@/components/social/ProgressCard';
 import { ShareModal } from '@/components/social/ShareModal';
+import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
 
 interface CheckIn {
   id: string;
@@ -224,6 +225,11 @@ const Progress = () => {
           <p className="text-muted-foreground">
             Track your progress and celebrate every milestone
           </p>
+        </div>
+
+        {/* Profile Completion - relocated from Dashboard */}
+        <div className="mb-8">
+          <ProfileCompletionWidget />
         </div>
 
         {checkIns.length === 0 ? (
