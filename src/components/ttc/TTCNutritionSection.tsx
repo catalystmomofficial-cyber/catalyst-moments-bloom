@@ -65,8 +65,8 @@ export const TTCNutritionSection = () => {
           </div>
         ))}
         
-        <Button className="w-full" variant="outline">
-          View TTC Meal Plans
+        <Button className="w-full" variant="outline" asChild>
+          <Link to="/recipes">View TTC Meal Plans</Link>
         </Button>
       </CardContent>
     </Card>
