@@ -26,6 +26,8 @@ const Register = () => {
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [assessmentData, setAssessmentData] = useState<Record<string, string> | null>(null);
   const [paramWarning, setParamWarning] = useState<string>("");
+  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupEmail, setSignupEmail] = useState("");
 
   // Read & validate URL parameters on mount
   useEffect(() => {
