@@ -11,7 +11,7 @@ interface SEOProps {
 
 const SEO = ({ title, description, canonical, image, structuredData }: SEOProps) => {
   const location = useLocation();
-  const url = canonical || `${window.location.origin}${location.pathname}`;
+  const url = canonical || `https://catalystmomofficial.com${location.pathname}`;
 
   const jsonLd = structuredData ? JSON.stringify(structuredData) : undefined;
 
