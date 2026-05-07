@@ -219,16 +219,45 @@ Return ONLY valid JSON with this exact structure:
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
+    // Build FAQ JSON-LD schema for SEO
+    const faqSchema = Array.isArray(generatedContent.faqs) && generatedContent.faqs.length > 0 ? `
+<script type="application/ld+json">
+${JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": generatedContent.faqs.map((f: any) => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+  }))
+})}
+</script>` : '';
+
+    // Embed meta info as hidden tags so it travels with the post
+    const metaBlock = `
+<meta name="title" content="${(generatedContent.metaTitle || generatedContent.title).replace(/"/g, '&quot;')}" />
+<meta name="description" content="${(generatedContent.metaDescription || generatedContent.excerpt || '').slice(0, 160).replace(/"/g, '&quot;')}" />
+<meta name="category" content="${(generatedContent.category || 'Maternal Wellness').replace(/"/g, '&quot;')}" />
+<meta name="read-time" content="${generatedContent.readTime || 7}" />
+<meta name="author" content="Catalyst Mom Team" />`;
+
+    const finalContent = `${metaBlock}\n${generatedContent.content}\n${faqSchema}`;
+
+    const finalTags = Array.from(new Set([
+      ...(generatedContent.tags || []),
+      generatedContent.category || 'Maternal Wellness'
+    ]));
+
     // Insert blog post into database
     const { data: blogData, error: blogError } = await supabase
       .from('blogs')
       .insert({
         title: generatedContent.title,
-        content: generatedContent.content,
+        content: finalContent,
         slug: slug,
-        excerpt: generatedContent.excerpt,
-        tags: generatedContent.tags,
-        author: user.email,
+        excerpt: (generatedContent.metaDescription || generatedContent.excerpt || '').slice(0, 160),
+        tags: finalTags,
+        author: 'Catalyst Mom Team',
         published_at: null,
         status: 'draft',
         featured_image_url: featuredImageUrl
