@@ -61,7 +61,14 @@ serve(async (req) => {
     const keywordList = keywords ? keywords.split(',').map((k: string) => k.trim()).join(', ') : '';
     const systemPrompt = `You are an expert SEO blog writer for Catalyst Mom, a wellness platform for mothers.
 
-Write a 1000-word SEO-optimized blog post that:
+PRIORITY CONTENT FOCUS AREAS (prefer these angles when relevant):
+- Postpartum recovery
+- Maternal wellness
+- Fourth trimester
+- New mom self-care
+- Breastfeeding tips
+
+Write a 1000–1300 word SEO-optimized blog post that:
 - Targets the provided keyword naturally throughout the content
 - Naturally mentions and promotes the Catalyst Mom app and our protocol
 - Talks about our personalized assessment (link: https://catalystmom.online/)
@@ -70,21 +77,41 @@ Write a 1000-word SEO-optimized blog post that:
 
 CRITICAL FORMATTING INSTRUCTIONS:
 - Format everything in clean HTML
-- Use <h2> for subheadings
-- Use <p> for paragraphs
-- Use <ul>/<ol> and <li> for bullet or numbered lists
-- Hyperlink all tools and product links using <a href="URL">text</a> tags
+- Start the content with ONE <h1> containing the SEO title
+- Right after the H1, include a small meta line: <p class="post-meta"><span class="read-time">⏱ {readTime} min read</span> · <span class="author">By Catalyst Mom Team</span> · <span class="category">{category}</span></p>
+- Use <h2> for main subheadings (with target keywords) and <h3> for sub-subheadings
+- Use <p> for paragraphs, <ul>/<ol> + <li> for lists
+- Hyperlink tools/products with <a href="URL">text</a>
 - Include the Catalyst Mom assessment link as: <a href="https://catalystmom.online/">personalized assessment</a>
-- Do NOT include markdown, asterisks, hashtags, or "***html" text anywhere
-- At the end, include: <p style="display:none;">Meta description: [Insert a 150-character SEO summary]</p>
+- At the END of the content, ALWAYS include a FAQ section formatted as:
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq">
+    <h3>Question 1?</h3><p>Answer 1.</p>
+    <h3>Question 2?</h3><p>Answer 2.</p>
+    <h3>Question 3?</h3><p>Answer 3.</p>
+    <h3>Question 4?</h3><p>Answer 4.</p>
+    <h3>Question 5?</h3><p>Answer 5.</p>
+  </div>
+- Do NOT include markdown, asterisks, hashtags, or "\`\`\`html" text anywhere
 
-Format the response as JSON with this structure:
+Return ONLY valid JSON with this exact structure:
 {
-  "title": "SEO-optimized title under 60 characters",
-  "content": "Full blog post content in clean HTML format with <h2>, <p>, <ul>/<ol>, and <a> tags",
+  "title": "SEO-optimized H1 title under 60 characters",
+  "metaTitle": "SEO meta title under 60 characters",
+  "metaDescription": "SEO meta description under 160 characters",
+  "category": "One of: Postpartum Recovery | Maternal Wellness | Fourth Trimester | Self-Care | Breastfeeding | Pregnancy | TTC",
+  "readTime": 7,
+  "content": "Full blog post HTML beginning with <h1>, including <h2>/<h3>, <p>, lists, the meta line, and the FAQ section at the end",
   "excerpt": "Brief 150-character summary",
-  "tags": ["tag1", "tag2", "tag3"],
-  "imagePrompt": "A professional, high-quality image description that represents the blog topic (for AI image generation)"
+  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
+  "faqs": [
+    {"question": "Q1?", "answer": "A1"},
+    {"question": "Q2?", "answer": "A2"},
+    {"question": "Q3?", "answer": "A3"},
+    {"question": "Q4?", "answer": "A4"},
+    {"question": "Q5?", "answer": "A5"}
+  ],
+  "imagePrompt": "A professional, high-quality image description that represents the blog topic"
 }`;
 
     const userPrompt = `Write a blog post about: ${topic}${keywordList ? `\n\nTarget keyword: ${keywordList}` : ''}`;
@@ -192,16 +219,45 @@ Format the response as JSON with this structure:
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
+    // Build FAQ JSON-LD schema for SEO
+    const faqSchema = Array.isArray(generatedContent.faqs) && generatedContent.faqs.length > 0 ? `
+<script type="application/ld+json">
+${JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": generatedContent.faqs.map((f: any) => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+  }))
+})}
+</script>` : '';
+
+    // Embed meta info as hidden tags so it travels with the post
+    const metaBlock = `
+<meta name="title" content="${(generatedContent.metaTitle || generatedContent.title).replace(/"/g, '&quot;')}" />
+<meta name="description" content="${(generatedContent.metaDescription || generatedContent.excerpt || '').slice(0, 160).replace(/"/g, '&quot;')}" />
+<meta name="category" content="${(generatedContent.category || 'Maternal Wellness').replace(/"/g, '&quot;')}" />
+<meta name="read-time" content="${generatedContent.readTime || 7}" />
+<meta name="author" content="Catalyst Mom Team" />`;
+
+    const finalContent = `${metaBlock}\n${generatedContent.content}\n${faqSchema}`;
+
+    const finalTags = Array.from(new Set([
+      ...(generatedContent.tags || []),
+      generatedContent.category || 'Maternal Wellness'
+    ]));
+
     // Insert blog post into database
     const { data: blogData, error: blogError } = await supabase
       .from('blogs')
       .insert({
         title: generatedContent.title,
-        content: generatedContent.content,
+        content: finalContent,
         slug: slug,
-        excerpt: generatedContent.excerpt,
-        tags: generatedContent.tags,
-        author: user.email,
+        excerpt: (generatedContent.metaDescription || generatedContent.excerpt || '').slice(0, 160),
+        tags: finalTags,
+        author: 'Catalyst Mom Team',
         published_at: null,
         status: 'draft',
         featured_image_url: featuredImageUrl
