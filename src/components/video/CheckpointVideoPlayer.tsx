@@ -46,7 +46,7 @@ export default function CheckpointVideoPlayer({
   const { user } = useAuth();
   const { awardPoints } = usePoints();
   const { toast } = useToast();
-  const { triggerHaptic } = useHapticFeedback();
+  const { vibrate: triggerHaptic } = useHapticFeedback();
 
   const [resolvedChapters, setResolvedChapters] = useState<VideoChapter[]>(chapters ?? []);
   const [currentChapter, setCurrentChapter] = useState(0);
