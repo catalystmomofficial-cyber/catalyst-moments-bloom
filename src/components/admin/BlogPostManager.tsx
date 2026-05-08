@@ -117,18 +117,34 @@ export const BlogPostManager = () => {
   const handleUpdate = async () => {
     if (!editingPost) return;
 
+    if (!editingPost.title?.trim()) {
+      toast.error('Title is required');
+      return;
+    }
+    if (!editingPost.content?.trim()) {
+      toast.error('Content is required');
+      return;
+    }
+
     try {
       setIsSubmitting(true);
+      const slug = (editingPost.slug?.trim() ||
+        editingPost.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
+
+      const cleanTags = (editingPost.tags || [])
+        .map((t) => (t || '').trim())
+        .filter(Boolean);
+
       const { error } = await supabase.rpc('admin_update_blog', {
         blog_id: editingPost.id,
-        blog_title: editingPost.title,
+        blog_title: editingPost.title.trim(),
         blog_content: editingPost.content,
-        blog_slug: editingPost.slug,
-        blog_status: editingPost.status,
-        blog_author: editingPost.author,
-        blog_excerpt: editingPost.excerpt,
+        blog_slug: slug,
+        blog_status: editingPost.status || 'draft',
+        blog_author: (editingPost.author || 'Catalyst Mom Team').trim(),
+        blog_excerpt: editingPost.excerpt || '',
         blog_featured_image_url: editingPost.featured_image_url || '',
-        blog_tags: editingPost.tags || [],
+        blog_tags: cleanTags,
       });
 
       if (error) throw error;
@@ -136,9 +152,9 @@ export const BlogPostManager = () => {
       toast.success('Blog post updated successfully');
       setEditingPost(null);
       fetchPosts();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating post:', error);
-      toast.error('Failed to update blog post');
+      toast.error(error?.message || 'Failed to update blog post');
     } finally {
       setIsSubmitting(false);
     }
