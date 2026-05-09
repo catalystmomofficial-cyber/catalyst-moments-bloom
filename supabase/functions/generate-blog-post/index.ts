@@ -52,9 +52,9 @@ serve(async (req) => {
       );
     }
 
-    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY is not configured. Please add it to your Supabase project secrets.');
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    if (!GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY is not configured. Please add it to your Supabase project secrets.');
     }
 
     // Create SEO-optimized prompt
@@ -127,30 +127,29 @@ Return ONLY valid JSON with this exact structure:
   ]
 }`;
 
-    const userPrompt = `Write a blog post about: ${topic}${keywordList ? `\n\nTarget keywords: ${keywordList}` : ''}`;
+    const fullPrompt = `${systemPrompt}\n\nWrite a blog post about: ${topic}${keywordList ? `\n\nTarget keywords: ${keywordList}` : ''}`;
 
-    console.log('Generating blog post with Claude...');
+    console.log('Generating blog post with Gemini...');
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 8192,
-        system: systemPrompt,
-        messages: [
-          { role: 'user', content: userPrompt }
-        ],
-      }),
-    });
+    const geminiModel = 'gemini-2.5-flash';
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+          generationConfig: {
+            maxOutputTokens: 8192,
+            temperature: 1.0,
+          },
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API error:', response.status, errorText);
+      console.error('Gemini API error:', response.status, errorText);
 
       if (response.status === 429) {
         return new Response(
@@ -158,18 +157,22 @@ Return ONLY valid JSON with this exact structure:
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
-      if (response.status === 401) {
+      if (response.status === 400 || response.status === 403) {
         return new Response(
-          JSON.stringify({ error: 'Invalid ANTHROPIC_API_KEY. Please check your Supabase project secrets.' }),
+          JSON.stringify({ error: 'Invalid GEMINI_API_KEY. Please check your Supabase project secrets.' }),
           { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
 
-      throw new Error(`Anthropic API error: ${response.status} — ${errorText}`);
+      throw new Error(`Gemini API error: ${response.status} — ${errorText}`);
     }
 
     const aiData = await response.json();
-    const rawContent = aiData.content?.[0]?.text || '';
+    const rawContent = aiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    if (!rawContent) {
+      throw new Error('Gemini returned an empty response. Check the API key and model availability.');
+    }
 
     // Parse JSON — strip any accidental markdown fences
     const jsonStr = rawContent.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
