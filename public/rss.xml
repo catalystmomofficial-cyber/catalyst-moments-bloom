@@ -5,9 +5,9 @@
   xmlns:content="http://purl.org/rss/1.0/modules/content/"
   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Catalyst Mom — Maternal Wellness Blog</title>
+    <title>Catalyst Mom - Maternal Wellness Blog</title>
     <link>https://catalystmomofficial.com/blog</link>
-    <description>Evidence-based articles on pregnancy, postpartum recovery, breastfeeding, and maternal wellness — written for real moms by Catalyst Mom.</description>
+    <description>Evidence-based articles on pregnancy, postpartum recovery, breastfeeding, and maternal wellness - written for real moms by Catalyst Mom.</description>
     <language>en-us</language>
     <copyright>Copyright 2025 Catalyst Mom. All rights reserved.</copyright>
     <managingEditor>hello@catalystmomofficial.com (Catalyst Mom Team)</managingEditor>
@@ -17,7 +17,7 @@
     <atom:link href="https://catalystmomofficial.com/rss.xml" rel="self" type="application/rss+xml"/>
     <image>
       <url>https://catalystmomofficial.com/catalyst-mom-logo.png</url>
-      <title>Catalyst Mom — Maternal Wellness Blog</title>
+      <title>Catalyst Mom - Maternal Wellness Blog</title>
       <link>https://catalystmomofficial.com/blog</link>
       <width>144</width>
       <height>144</height>

@@ -59,27 +59,27 @@ serve(async (req) => {
 
     // Create SEO-optimized prompt
     const keywordList = keywords ? keywords.split(',').map((k: string) => k.trim()).join(', ') : '';
-    const systemPrompt = `You are the lead content writer for Catalyst Mom — a maternal wellness platform for new moms ages 25–40 (US-based, first/second-time mothers, educated, overwhelmed, searching Google for REAL answers, not clinical jargon).
+    const systemPrompt = `You are the lead content writer for Catalyst Mom - a maternal wellness platform for new moms ages 25-40 (US-based, first/second-time mothers, educated, overwhelmed, searching Google for REAL answers, not clinical jargon).
 
-BRAND VOICE — non-negotiable:
+BRAND VOICE - non-negotiable:
 - Write like a warm, knowledgeable best friend who happens to have medical knowledge.
 - Empathetic, real, empowering. NEVER clinical or corporate.
 - Use phrases naturally: "nobody tells you this", "real talk", "you are not alone", "this is normal".
 - Avoid cold medical language. No "patient", no "subject", no "individuals".
 - Tone: warm, supportive, professional-yet-friendly (${tone || 'professional yet friendly'}).
 
-COMPETITIVE POSITIONING — fill the gaps Baby2Body, Maven Clinic, Peanut, The Bloom Method, and MUTU System do NOT cover well. Lean into these angles whenever the topic permits:
+COMPETITIVE POSITIONING - fill the gaps Baby2Body, Maven Clinic, Peanut, The Bloom Method, and MUTU System do NOT cover well. Lean into these angles whenever the topic permits:
 
-1. POSTPARTUM RECOVERY — week-by-week timelines, C-section recovery, hormone crash, pelvic floor recovery, night sweats, lochia timeline, perineal healing, what's normal bleeding.
-2. FOURTH TRIMESTER — 12-week roadmap, friendship gap, what your body REALLY looks like after birth, postpartum rage, fourth-trimester essentials, partner support.
-3. BREASTFEEDING — week-one pain reality, increasing milk supply naturally, breastfeeding/PPD link, knowing when to stop, combo feeding, cluster feeding survival, engorgement, mastitis.
-4. POSTPARTUM MENTAL HEALTH — PPA vs PPD, mom loneliness, intrusive thoughts, postpartum OCD (1 in 25), asking for help without guilt, postpartum rage, matrescence.
-5. MATERNAL WELLNESS PROTOCOLS — postpartum nutrition for healing/energy, iron-rich foods, hair loss, diastasis recti self-check, safe exercise 6+ weeks, beginner pelvic-floor exercises, sleep deprivation coping, return to exercise after C-section.
-6. NEW MOM SELF-CARE — 10-min routines, showering with a newborn, self-care that isn't bubble baths, identity rebuilding, family boundaries, working-mom guilt.
+1. POSTPARTUM RECOVERY - week-by-week timelines, C-section recovery, hormone crash, pelvic floor recovery, night sweats, lochia timeline, perineal healing, what's normal bleeding.
+2. FOURTH TRIMESTER - 12-week roadmap, friendship gap, what your body REALLY looks like after birth, postpartum rage, fourth-trimester essentials, partner support.
+3. BREASTFEEDING - week-one pain reality, increasing milk supply naturally, breastfeeding/PPD link, knowing when to stop, combo feeding, cluster feeding survival, engorgement, mastitis.
+4. POSTPARTUM MENTAL HEALTH - PPA vs PPD, mom loneliness, intrusive thoughts, postpartum OCD (1 in 25), asking for help without guilt, postpartum rage, matrescence.
+5. MATERNAL WELLNESS PROTOCOLS - postpartum nutrition for healing/energy, iron-rich foods, hair loss, diastasis recti self-check, safe exercise 6+ weeks, beginner pelvic-floor exercises, sleep deprivation coping, return to exercise after C-section.
+6. NEW MOM SELF-CARE - 10-min routines, showering with a newborn, self-care that isn't bubble baths, identity rebuilding, family boundaries, working-mom guilt.
 
-TOPIC PRIORITY ORDER (when ambiguous): 1) postpartum recovery & fourth trimester → 2) breastfeeding → 3) mental health → 4) wellness/nutrition → 5) self-care/identity.
+TOPIC PRIORITY ORDER (when ambiguous): 1) postpartum recovery & fourth trimester -> 2) breastfeeding -> 3) mental health -> 4) wellness/nutrition -> 5) self-care/identity.
 
-SEO REQUIREMENTS — every post MUST follow these:
+SEO REQUIREMENTS - every post MUST follow these:
 - Minimum 1200 words of body content (do not pad with fluff).
 - ONE <h1> containing the primary keyword naturally.
 - <h2> tags use secondary keywords (postpartum recovery, fourth trimester, new mom, maternal wellness, breastfeeding tips, etc.).
@@ -94,7 +94,7 @@ SEO REQUIREMENTS — every post MUST follow these:
 CRITICAL FORMATTING INSTRUCTIONS:
 - Output clean HTML only (no markdown, no asterisks, no hashtags, no \`\`\`html fences).
 - Start the content with ONE <h1> containing the SEO title.
-- Right after the H1, include: <p class="post-meta"><span class="read-time">⏱ {readTime} min read</span> · <span class="author">By Catalyst Mom Team</span> · <span class="category">{category}</span></p>
+- Right after the H1, include: <p class="post-meta"><span class="read-time">Reading time: {readTime} min</span> - <span class="author">By Catalyst Mom Team</span> - <span class="category">{category}</span></p>
 - Use <h2> / <h3> for structure, <p> for paragraphs, <ul>/<ol>+<li> for lists.
 - Include the assessment link in the body as: <a href="https://catalystmomofficial.com/assessment">personalized postpartum assessment</a>
 - Final CTA paragraph must also link to https://catalystmomofficial.com/assessment.
@@ -129,9 +129,9 @@ Return ONLY valid JSON with this exact structure:
 
     const fullPrompt = `${systemPrompt}\n\nWrite a blog post about: ${topic}${keywordList ? `\n\nTarget keywords: ${keywordList}` : ''}`;
 
-    console.log('Generating blog post with Gemini...');
+    console.log('Generating blog post with Gemini 1.5 Flash...');
 
-    const geminiModel = 'gemini-2.5-flash';
+    const geminiModel = 'gemini-1.5-flash';
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${GEMINI_API_KEY}`,
       {
@@ -164,17 +164,18 @@ Return ONLY valid JSON with this exact structure:
         );
       }
 
-      throw new Error(`Gemini API error: ${response.status} — ${errorText}`);
+      throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
     }
 
     const aiData = await response.json();
     const rawContent = aiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
     if (!rawContent) {
-      throw new Error('Gemini returned an empty response. Check the API key and model availability.');
+      const blockReason = aiData.candidates?.[0]?.finishReason || aiData.promptFeedback?.blockReason || 'unknown';
+      throw new Error(`Gemini returned empty response. Finish reason: ${blockReason}`);
     }
 
-    // Parse JSON — strip any accidental markdown fences
+    // Parse JSON - strip any accidental markdown fences
     const jsonStr = rawContent.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     const generatedContent = JSON.parse(jsonStr);
 
