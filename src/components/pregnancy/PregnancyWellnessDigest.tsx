@@ -27,7 +27,7 @@ export const PregnancyWellnessDigest = () => {
   const navigate = useNavigate();
   const handleTipAction = (category: string) => {
     if (category === 'workout') navigate('/workouts');
-    else if (category === 'nutrition') navigate('/recipes');
+    else if (category === 'nutrition') navigate('/meal-plan?stage=pregnant');
     else navigate('/wellness');
   };
 

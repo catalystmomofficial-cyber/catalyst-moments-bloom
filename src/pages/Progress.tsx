@@ -7,18 +7,21 @@ import { Button } from '@/components/ui/button';
 import { Progress as ProgressIndicator } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  TrendingUp, 
-  Calendar, 
-  Award, 
+import {
+  TrendingUp,
+  Calendar,
+  Award,
   Target,
   Crown,
   Sparkles,
   ArrowRight,
   Share2,
-  Trophy
+  Trophy,
+  CheckCircle2,
+  Clock,
+  Zap
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, differenceInDays } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { AchievementBadge } from '@/components/social/AchievementBadge';
 import { ProgressCard } from '@/components/social/ProgressCard';
@@ -146,6 +149,45 @@ const Progress = () => {
 
   const { currentMilestone, progress: milestoneProgress } = getMilestoneProgress();
 
+  // Bi-weekly milestone check-in logic
+  const getBiweeklyCheckinStatus = () => {
+    // Use profile.created_at as program start, fall back to localStorage, then today
+    let startDate: Date;
+    const stored = localStorage.getItem('cm_program_start_date');
+
+    if (profile?.created_at) {
+      startDate = new Date(profile.created_at);
+    } else if (stored) {
+      startDate = new Date(stored);
+    } else {
+      startDate = new Date();
+      localStorage.setItem('cm_program_start_date', startDate.toISOString());
+    }
+
+    const today = new Date();
+    const daysSinceStart = differenceInDays(today, startDate);
+    const currentCycle = Math.floor(daysSinceStart / 14); // which 14-day cycle we're in
+    const daysIntoCurrentCycle = daysSinceStart % 14;
+    const daysUntilNext = 14 - daysIntoCurrentCycle;
+    const isActive = daysIntoCurrentCycle === 0 && daysSinceStart > 0; // exactly on a 14-day mark
+    // Show as "active" window for the first 2 days of each cycle (so she doesn't miss it)
+    const isWithinWindow = daysIntoCurrentCycle <= 1 && daysSinceStart >= 14;
+    const nextMilestoneDate = new Date(startDate);
+    nextMilestoneDate.setDate(nextMilestoneDate.getDate() + (currentCycle + 1) * 14);
+
+    return {
+      startDate,
+      daysSinceStart,
+      currentCycle,
+      daysUntilNext,
+      isActive: isActive || isWithinWindow,
+      nextMilestoneDate,
+      weeksCompleted: Math.floor(daysSinceStart / 7),
+    };
+  };
+
+  const biweeklyStatus = getBiweeklyCheckinStatus();
+
   const achievements = [
     {
       id: 'first-month',
@@ -234,6 +276,65 @@ const Progress = () => {
           <ProfileCompletionWidget />
           <AchievementBadges />
         </div>
+
+        {/* Bi-weekly Milestone Check-in Card */}
+        <Card className={`mb-8 border-2 transition-all ${
+          biweeklyStatus.isActive
+            ? 'border-primary bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 shadow-lg'
+            : 'border-muted bg-muted/20'
+        }`}>
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+              <div className={`p-3 rounded-full shrink-0 ${biweeklyStatus.isActive ? 'bg-primary/20' : 'bg-muted'}`}>
+                {biweeklyStatus.isActive
+                  ? <Zap className="h-6 w-6 text-primary animate-pulse" />
+                  : <Clock className="h-6 w-6 text-muted-foreground" />
+                }
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h3 className="text-lg font-bold">2-Week Milestone Check-in</h3>
+                  <Badge variant={biweeklyStatus.isActive ? 'default' : 'outline'} className={biweeklyStatus.isActive ? 'animate-pulse' : ''}>
+                    {biweeklyStatus.isActive ? 'Active Now!' : 'Upcoming'}
+                  </Badge>
+                </div>
+                {biweeklyStatus.isActive ? (
+                  <p className="text-sm text-muted-foreground">
+                    Your milestone check-in is ready! You've completed <strong>{biweeklyStatus.weeksCompleted} weeks</strong>. Time to measure your progress and celebrate your wins.
+                  </p>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    {biweeklyStatus.daysSinceStart < 14
+                      ? `Your first milestone check-in unlocks in ${biweeklyStatus.daysUntilNext} day${biweeklyStatus.daysUntilNext !== 1 ? 's' : ''}. Keep going, mama!`
+                      : `Your next milestone check-in is in ${biweeklyStatus.daysUntilNext} day${biweeklyStatus.daysUntilNext !== 1 ? 's' : ''} — on ${format(biweeklyStatus.nextMilestoneDate, 'MMM d')}.`
+                    }
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground mt-1">
+                  Program started: {format(biweeklyStatus.startDate, 'MMM d, yyyy')} · Week {biweeklyStatus.weeksCompleted + 1}
+                </p>
+              </div>
+              <Button
+                disabled={!biweeklyStatus.isActive}
+                variant={biweeklyStatus.isActive ? 'default' : 'outline'}
+                className="shrink-0 gap-2"
+                asChild={biweeklyStatus.isActive}
+              >
+                {biweeklyStatus.isActive ? (
+                  <a href="/dashboard">
+                    <CheckCircle2 className="h-4 w-4" />
+                    Start Check-in
+                  </a>
+                ) : (
+                  <span>
+                    <Clock className="h-4 w-4" />
+                    {biweeklyStatus.daysUntilNext}d away
+                  </span>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {checkIns.length === 0 ? (
           <Card className="border-2 border-dashed">

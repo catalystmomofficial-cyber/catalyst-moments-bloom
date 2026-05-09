@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle, Settings } from 'lucide-react';
+import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle, Settings, ClipboardList } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
@@ -40,6 +40,67 @@ interface StatsCardProps {
   icon: React.ReactNode;
   color: string;
 }
+
+const DAILY_CHECKLIST_ITEMS = [
+  'Complete your daily challenge',
+  'Do your weekly workout',
+  'Follow the meal plan',
+  'Drink 8+ glasses of water',
+  'Share your progress @Catalyst_Mom',
+];
+
+const DailyChecklistCard = () => {
+  const today = new Date().toDateString();
+  const storageKey = `dashboard-checklist-${today}`;
+  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
+    try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { return {}; }
+  });
+
+  const toggle = (item: string) => {
+    const next = { ...checked, [item]: !checked[item] };
+    setChecked(next);
+    localStorage.setItem(storageKey, JSON.stringify(next));
+  };
+
+  const completedCount = Object.values(checked).filter(Boolean).length;
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <ClipboardList className="h-5 w-5 text-primary" />
+          Daily Check-in
+        </CardTitle>
+        <CardDescription>{completedCount}/{DAILY_CHECKLIST_ITEMS.length} completed today</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ul className="space-y-2">
+          {DAILY_CHECKLIST_ITEMS.map(item => {
+            const isChecked = !!checked[item];
+            return (
+              <li key={item}>
+                <button
+                  type="button"
+                  onClick={() => toggle(item)}
+                  className="flex items-center gap-2.5 w-full text-left hover:text-foreground transition-colors text-sm"
+                >
+                  <span className={`w-4 h-4 rounded border-2 border-primary inline-flex items-center justify-center shrink-0 transition-colors ${isChecked ? 'bg-primary' : 'bg-transparent'}`}>
+                    {isChecked && (
+                      <svg className="w-3 h-3 text-primary-foreground" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </span>
+                  <span className={isChecked ? 'line-through opacity-60 text-muted-foreground' : 'text-foreground'}>{item}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </CardContent>
+    </Card>
+  );
+};
 
 const Dashboard = () => {
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
@@ -256,9 +317,12 @@ const Dashboard = () => {
               {/* Right Column - Quick Access */}
               <div className="space-y-6">
 
+                {/* Daily Check-in Checklist */}
+                <DailyChecklistCard />
+
                 {/* Quick Links */}
-                {isTTC ? <TTCNutritionSection /> : 
-                 isPregnant ? <PregnancyCommunity /> : 
+                {isTTC ? <TTCNutritionSection /> :
+                 isPregnant ? <PregnancyCommunity /> :
                  <NutritionSection />}
                 
                 {/* Community Preview */}
