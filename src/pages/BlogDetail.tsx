@@ -48,17 +48,19 @@ const BlogDetail = () => {
         if (error) throw error;
         setBlog(data);
 
-        // Track view
-        const sessionId = sessionStorage.getItem('session_id') || crypto.randomUUID();
-        sessionStorage.setItem('session_id', sessionId);
-        const { data: { user } } = await supabase.auth.getUser();
+        if (data) {
+          // Track view
+          const sessionId = sessionStorage.getItem('session_id') || crypto.randomUUID();
+          sessionStorage.setItem('session_id', sessionId);
+          const { data: { user } } = await supabase.auth.getUser();
 
-        await supabase.from('blog_analytics').insert({
-          blog_id: data.id,
-          user_id: user?.id || null,
-          session_id: sessionId,
-          view_date: new Date().toISOString()
-        });
+          await supabase.from('blog_analytics').insert({
+            blog_id: data.id,
+            user_id: user?.id || null,
+            session_id: sessionId,
+            view_date: new Date().toISOString()
+          });
+        }
       } catch (error) {
         console.error('Error fetching blog:', error);
       } finally {

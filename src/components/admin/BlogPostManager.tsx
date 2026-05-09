@@ -62,6 +62,86 @@ interface BlogPost {
   total_count: number;
 }
 
+interface EditorFormProps {
+  post: BlogPost;
+  onChange: (updated: BlogPost) => void;
+}
+
+const EditorForm = ({ post, onChange }: EditorFormProps) => (
+  <div className="space-y-4">
+    <div>
+      <Label>Title</Label>
+      <Input
+        value={post.title || ''}
+        onChange={(e) => onChange({ ...post, title: e.target.value })}
+      />
+    </div>
+    <div>
+      <Label>Slug</Label>
+      <Input
+        value={post.slug || ''}
+        onChange={(e) => onChange({ ...post, slug: e.target.value })}
+      />
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <Label>Status</Label>
+        <Select
+          value={post.status}
+          onValueChange={(value) => onChange({ ...post, status: value })}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value="published">Published</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label>Author</Label>
+        <Input
+          value={post.author || ''}
+          onChange={(e) => onChange({ ...post, author: e.target.value })}
+        />
+      </div>
+    </div>
+    <div>
+      <Label>Excerpt</Label>
+      <Textarea
+        value={post.excerpt || ''}
+        onChange={(e) => onChange({ ...post, excerpt: e.target.value })}
+        rows={3}
+      />
+    </div>
+    <div>
+      <Label>Content</Label>
+      <RichTextEditor
+        content={post.content || ''}
+        onChange={(newContent) => onChange({ ...post, content: newContent })}
+        placeholder="Write your blog post content here..."
+      />
+    </div>
+    <div>
+      <Label>Featured Image URL</Label>
+      <Input
+        value={post.featured_image_url || ''}
+        onChange={(e) => onChange({ ...post, featured_image_url: e.target.value })}
+      />
+    </div>
+    <div>
+      <Label>Tags (comma-separated)</Label>
+      <Input
+        value={post.tags?.join(', ') || ''}
+        onChange={(e) =>
+          onChange({ ...post, tags: e.target.value.split(',').map((t) => t.trim()) })
+        }
+      />
+    </div>
+  </div>
+);
+
 export const BlogPostManager = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -183,102 +263,6 @@ export const BlogPostManager = () => {
   };
 
   const totalPages = Math.ceil(totalCount / pageSize);
-
-  const EditorForm = () => (
-    <div className="space-y-4">
-      <div>
-        <Label>Title</Label>
-        <Input
-          value={editingPost?.title || ''}
-          onChange={(e) =>
-            setEditingPost(editingPost ? { ...editingPost, title: e.target.value } : null)
-          }
-        />
-      </div>
-      <div>
-        <Label>Slug</Label>
-        <Input
-          value={editingPost?.slug || ''}
-          onChange={(e) =>
-            setEditingPost(editingPost ? { ...editingPost, slug: e.target.value } : null)
-          }
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label>Status</Label>
-          <Select
-            value={editingPost?.status}
-            onValueChange={(value) =>
-              setEditingPost(editingPost ? { ...editingPost, status: value } : null)
-            }
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="published">Published</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label>Author</Label>
-          <Input
-            value={editingPost?.author || ''}
-            onChange={(e) =>
-              setEditingPost(editingPost ? { ...editingPost, author: e.target.value } : null)
-            }
-          />
-        </div>
-      </div>
-      <div>
-        <Label>Excerpt</Label>
-        <Textarea
-          value={editingPost?.excerpt || ''}
-          onChange={(e) =>
-            setEditingPost(editingPost ? { ...editingPost, excerpt: e.target.value } : null)
-          }
-          rows={3}
-        />
-      </div>
-      <div>
-        <Label>Content</Label>
-        <RichTextEditor
-          content={editingPost?.content || ''}
-          onChange={(newContent) =>
-            setEditingPost(editingPost ? { ...editingPost, content: newContent } : null)
-          }
-          placeholder="Write your blog post content here..."
-        />
-      </div>
-      <div>
-        <Label>Featured Image URL</Label>
-        <Input
-          value={editingPost?.featured_image_url || ''}
-          onChange={(e) =>
-            setEditingPost(editingPost ? { ...editingPost, featured_image_url: e.target.value } : null)
-          }
-        />
-      </div>
-      <div>
-        <Label>Tags (comma-separated)</Label>
-        <Input
-          value={editingPost?.tags?.join(', ') || ''}
-          onChange={(e) =>
-            setEditingPost(
-              editingPost
-                ? {
-                    ...editingPost,
-                    tags: e.target.value.split(',').map((t) => t.trim()),
-                  }
-                : null
-            )
-          }
-        />
-      </div>
-    </div>
-  );
 
   return (
     <Card>
@@ -427,7 +411,7 @@ export const BlogPostManager = () => {
               <TabsContent value="split" className="flex-1 mt-0 p-6 pt-4 overflow-hidden">
                 <div className="grid grid-cols-2 gap-6 h-full">
                   <div className="overflow-y-auto pr-4">
-                    <EditorForm />
+                    <EditorForm post={editingPost} onChange={setEditingPost} />
                   </div>
                   <div className="overflow-y-auto pl-4 border-l">
                     <div className="sticky top-0 bg-background pb-4 mb-4 z-10">
@@ -448,7 +432,7 @@ export const BlogPostManager = () => {
 
               <TabsContent value="edit" className="flex-1 mt-0 p-6 pt-4 overflow-y-auto">
                 <div className="max-w-3xl mx-auto">
-                  <EditorForm />
+                  <EditorForm post={editingPost} onChange={setEditingPost} />
                 </div>
               </TabsContent>
 
