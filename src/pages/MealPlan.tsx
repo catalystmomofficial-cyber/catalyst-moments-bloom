@@ -371,7 +371,7 @@ function PostpartumGlowUpChallenge() {
   const { toast } = useToast();
   const [showDetails, setShowDetails] = useState(false);
   const [activeWeek, setActiveWeek] = useState(0);
-  const [activeTab, setActiveTab] = useState<'Daily Tasks' | 'Workout Plan' | 'Meal Plan' | 'Reflection'>('Daily Tasks');
+  const [activeTab, setActiveTab] = useState<'Daily Tasks' | 'Meal Plan' | 'Reflection'>('Daily Tasks');
   const week = CHALLENGE_WEEKS[activeWeek];
 
   const handleDownload = () => {
@@ -547,9 +547,6 @@ function PostpartumGlowUpChallenge() {
         </ul>
       </div>
 
-      {/* Functional check-in calendar */}
-      <CheckInCalendar />
-
       {/* Week selector pills */}
       <div className="flex gap-2 flex-wrap mb-5">
         {CHALLENGE_WEEKS.map((w, i) => (
@@ -580,7 +577,7 @@ function PostpartumGlowUpChallenge() {
 
       {/* Content tabs — matches Recipe / Nutrition / Notes tab bar */}
       <div className="bg-muted/50 rounded-xl p-1 flex gap-1 mb-6 flex-wrap">
-        {(['Daily Tasks', 'Workout Plan', 'Meal Plan', 'Reflection'] as const).map(tab => (
+        {(['Daily Tasks', 'Meal Plan', 'Reflection'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -647,65 +644,6 @@ function PostpartumGlowUpChallenge() {
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Tab: Workout Plan ─────────────────────────────────────────────── */}
-      {activeTab === 'Workout Plan' && (
-        <div className="border border-border rounded-2xl overflow-hidden">
-          <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
-            {/* Left: schedule */}
-            <div className="p-6">
-              <div className="flex items-center gap-2 mb-5">
-                <span className="text-[#B5651D] text-lg">💪</span>
-                <h3 className="font-bold text-foreground text-lg">Weekly Schedule</h3>
-              </div>
-              <div className="space-y-4">
-                {DAYS_OF_WEEK.map((day, i) => (
-                  <div key={day} className="flex gap-3 items-start border-b border-border pb-4 last:border-0 last:pb-0">
-                    <span className="bg-[#B5651D] text-white text-xs font-bold px-2 py-1 rounded-md w-10 text-center shrink-0 mt-0.5">
-                      {day}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground mb-1">{week.workouts[i]?.label}</p>
-                      <ul className="text-xs text-muted-foreground space-y-0.5 list-disc list-inside leading-relaxed">
-                        {week.workouts[i]?.items.map((ex, j) => <li key={j}>{ex}</li>)}
-                      </ul>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: notes + c-section */}
-            <div className="p-6 bg-muted/20">
-              <div className="flex items-center gap-2 mb-5">
-                <span className="text-[#B5651D] text-lg">📌</span>
-                <h3 className="font-bold text-foreground text-lg">Workout Notes</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="rounded-xl bg-background border border-border p-4">
-                  <p className="text-sm font-semibold text-foreground mb-1">Before you start</p>
-                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside leading-relaxed">
-                    <li>Warm up 2–3 minutes before each workout</li>
-                    <li>Listen to your body — rest if something hurts</li>
-                    <li>Stay hydrated throughout your session</li>
-                    <li>Cool down and stretch after every workout</li>
-                  </ul>
-                </div>
-                <div className="rounded-xl bg-background border border-border p-4">
-                  <p className="text-sm font-semibold text-foreground mb-1">Equipment needed</p>
-                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside leading-relaxed">
-                    <li>Yoga mat</li>
-                    <li>Resistance band (optional)</li>
-                    <li>Foam roller (optional)</li>
-                    <li>Comfortable, supportive footwear</li>
-                  </ul>
-                </div>
-              </div>
-              <CsecAccordion mods={week.csec} />
             </div>
           </div>
         </div>
