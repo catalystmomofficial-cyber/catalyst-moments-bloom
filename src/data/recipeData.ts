@@ -1,4 +1,5 @@
 import { ContentItem } from '@/hooks/useContentFilter';
+import postpartumGlowUpCover from '@/assets/30-days-glow-up-professional-cover.jpg';
 
 interface Recipe extends ContentItem {
   prepTime: string;
