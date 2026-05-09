@@ -51,7 +51,7 @@ const Navbar = () => {
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Progress', href: '/progress' },
     { name: 'Workouts', href: '/workouts' },
-    { name: 'Meal Plan', href: '/catalystmomofficial.com/meal-plan?stage=postpartum' },
+    { name: 'Meal Plan', href: '/meal-plan?stage=postpartum' },
     { name: 'Wellness', href: '/wellness' },
     { name: 'Community', href: '/community' },
   ];
