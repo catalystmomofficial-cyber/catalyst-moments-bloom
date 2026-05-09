@@ -9,6 +9,7 @@ import { usePoints } from '@/hooks/usePoints';
 import { WorkoutPlayerProps, Exercise } from './types';
 import { getWorkoutData } from './WorkoutData';
 import VideoPlayer from './VideoPlayer';
+import CheckpointVideoPlayer from '@/components/video/CheckpointVideoPlayer';
 import ExerciseTimer from './ExerciseTimer';
 import ExerciseList from './ExerciseList';
 
@@ -174,10 +175,20 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Video Player */}
-          <VideoPlayer 
-            videoUrl={currentExercise.videoUrl} 
-            title={currentExercise.name} 
-          />
+          {/* Video Player — checkpoints for mp4 (postpartum & all workouts) */}
+          {currentExercise.videoUrl && /\.mp4($|[?])/i.test(currentExercise.videoUrl) ? (
+            <CheckpointVideoPlayer
+              src={currentExercise.videoUrl}
+              title={currentExercise.name}
+              streakKey={`workout-w${week}-d${day}-ex${currentExerciseIndex}`}
+              autoChapterSeconds={180}
+            />
+          ) : (
+            <VideoPlayer
+              videoUrl={currentExercise.videoUrl}
+              title={currentExercise.name}
+            />
+          )}
 
           {/* Timer */}
           <ExerciseTimer
