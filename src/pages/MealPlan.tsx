@@ -305,6 +305,66 @@ function CheckInCalendar() {
   );
 }
 
+// ─── Daily Checklist ─────────────────────────────────────────────────────────
+const CHECKLIST_ITEMS = [
+  'Complete your daily challenge',
+  'Do your weekly workout',
+  'Follow the meal plan',
+  'Drink 8+ glasses of water',
+  'Share your progress @Catalyst_Mom',
+];
+
+function DailyChecklist({ weekNumber }: { weekNumber: number }) {
+  const today = new Date().toDateString();
+  const storageKey = `glow-up-checklist-w${weekNumber}-${today}`;
+  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
+    if (typeof window === 'undefined') return {};
+    try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { return {}; }
+  });
+
+  useEffect(() => {
+    try {
+      setChecked(JSON.parse(localStorage.getItem(storageKey) || '{}'));
+    } catch { setChecked({}); }
+  }, [storageKey]);
+
+  const toggle = (item: string) => {
+    const next = { ...checked, [item]: !checked[item] };
+    setChecked(next);
+    localStorage.setItem(storageKey, JSON.stringify(next));
+  };
+
+  return (
+    <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
+      {CHECKLIST_ITEMS.map(item => {
+        const isChecked = !!checked[item];
+        return (
+          <li key={item}>
+            <button
+              type="button"
+              onClick={() => toggle(item)}
+              className="flex items-center gap-2 w-full text-left hover:text-foreground transition-colors"
+            >
+              <span
+                className={`w-4 h-4 rounded border-2 border-[#B5651D] inline-flex items-center justify-center shrink-0 transition-colors ${
+                  isChecked ? 'bg-[#B5651D]' : 'bg-transparent'
+                }`}
+              >
+                {isChecked && (
+                  <svg className="w-3 h-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </span>
+              <span className={isChecked ? 'line-through opacity-70' : ''}>{item}</span>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 // ─── Postpartum Glow-Up page  ─────────────────────────────────────────────────
 // Visual design mirrors the existing app recipe detail pages exactly
 function PostpartumGlowUpChallenge() {
