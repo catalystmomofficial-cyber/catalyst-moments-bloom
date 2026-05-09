@@ -3452,7 +3452,7 @@ export const mealPlans: MealPlan[] = [
     duration: '28 Day Complete Recovery Plan',
     recipeCount: 28,
     avgPrepTime: '20-35 min/meal',
-    image: 'https://images.unsplash.com/photo-1576402187878-974f70c890a5',
+    image: postpartumGlowUpCover,
     category: 'Postpartum',
     tags: ['Complete Recovery', 'Iron Dense', 'Gut Healing', 'Lactation Support'],
     journey: ['postpartum'],
