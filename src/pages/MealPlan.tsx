@@ -4,8 +4,11 @@ import PageLayout from '@/components/layout/PageLayout';
 import { MealPlanCard } from '@/components/recipes/JourneySpecificMealPlans';
 import { mealPlans } from '@/data/recipeData';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
-import { Clock, BookOpen, Download, Printer, Share2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Clock, BookOpen, Download, Printer, Share2, ChevronDown, ChevronUp, CalendarCheck, Flame, ChevronLeft } from 'lucide-react';
+import postpartumGlowUpCover from '@/assets/30-days-glow-up-professional-cover.jpg';
 
 // ─── 30-Day Challenge Data (from PDF) ────────────────────────────────────────
 
