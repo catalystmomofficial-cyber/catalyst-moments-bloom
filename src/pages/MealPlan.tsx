@@ -231,7 +231,85 @@ function CsecAccordion({ mods }: { mods: { day: string; note: string }[] }) {
 
 // ─── Postpartum Glow-Up page  ─────────────────────────────────────────────────
 // Visual design mirrors the existing app recipe detail pages exactly
+// ─── Check-in Calendar ───────────────────────────────────────────────────────
+const CHECKIN_STORAGE_KEY = 'glow-up-checkin-dates';
+
+function CheckInCalendar() {
+  const { toast } = useToast();
+  const [checkedDates, setCheckedDates] = useState<Date[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const raw = localStorage.getItem(CHECKIN_STORAGE_KEY);
+      if (!raw) return [];
+      return (JSON.parse(raw) as string[]).map(s => new Date(s));
+    } catch { return []; }
+  });
+
+  const persist = (dates: Date[]) => {
+    setCheckedDates(dates);
+    localStorage.setItem(CHECKIN_STORAGE_KEY, JSON.stringify(dates.map(d => d.toISOString())));
+  };
+
+  const handleSelect = (dates: Date[] | undefined) => {
+    const next = dates ?? [];
+    const wasAdded = next.length > checkedDates.length;
+    persist(next);
+    if (wasAdded) {
+      toast({ title: '✅ Checked in!', description: 'Keep that streak going, mama.' });
+    }
+  };
+
+  // streak = consecutive days ending today
+  const streak = useMemo(() => {
+    if (checkedDates.length === 0) return 0;
+    const set = new Set(checkedDates.map(d => new Date(d).toDateString()));
+    let count = 0;
+    const cursor = new Date();
+    while (set.has(cursor.toDateString())) {
+      count++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return count;
+  }, [checkedDates]);
+
+  return (
+    <div className="border border-border rounded-2xl p-5 mb-6 bg-background">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <div className="flex items-center gap-2">
+          <CalendarCheck className="h-5 w-5 text-[#B5651D]" />
+          <h3 className="font-bold text-foreground text-lg">Daily Check-In</h3>
+        </div>
+        <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1.5">
+            <Flame className="h-4 w-4 text-[#B5651D]" />
+            <span className="font-semibold text-foreground">{streak}</span>
+            <span className="text-muted-foreground">day streak</span>
+          </div>
+          <div className="text-muted-foreground">
+            <span className="font-semibold text-foreground">{checkedDates.length}</span> total
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center">
+        <Calendar
+          mode="multiple"
+          selected={checkedDates}
+          onSelect={handleSelect as any}
+          className="rounded-md border border-border"
+        />
+      </div>
+      <p className="text-xs text-muted-foreground mt-3 text-center">
+        Tap any day to mark it complete. Tap again to remove.
+      </p>
+    </div>
+  );
+}
+
+// ─── Postpartum Glow-Up page  ─────────────────────────────────────────────────
+// Visual design mirrors the existing app recipe detail pages exactly
 function PostpartumGlowUpChallenge() {
+  const { toast } = useToast();
+  const [showDetails, setShowDetails] = useState(false);
   const [activeWeek, setActiveWeek] = useState(0);
   const [activeTab, setActiveTab] = useState<'Daily Tasks' | 'Workout Plan' | 'Meal Plan' | 'Reflection'>('Daily Tasks');
   const week = CHALLENGE_WEEKS[activeWeek];
@@ -244,20 +322,83 @@ function PostpartumGlowUpChallenge() {
     );
   };
 
-  // ⚠️ Replace this src with the actual image path used for the
-  // "30-Day Glow-Up Challenge" video course in your app (from recipeData / videoData).
-  // Example: if your course thumbnail is in /lovable-uploads/, paste that path here.
-  const COVER_IMAGE_SRC = '/lovable-uploads/30-day-glow-up-cover.jpg';
+  const handlePrint = () => window.print();
+
+  const handleShare = async () => {
+    const shareData = {
+      title: '30-Day Mom Glow-Up Challenge',
+      text: 'Join me on the 30-Day Mom Glow-Up Challenge with Catalyst Mom!',
+      url: window.location.href,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        toast({ title: 'Link copied!', description: 'Share it with your mama friends.' });
+      }
+    } catch { /* user cancelled */ }
+  };
+
+  // Card-first preview — matches the Recipes page MealPlanCard look
+  if (!showDetails) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Postpartum Recovery Plans</h1>
+          <Badge variant="outline">Postpartum</Badge>
+        </div>
+        <div className="border border-border rounded-2xl overflow-hidden bg-background shadow-sm">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+            <div className="aspect-video">
+              <img
+                src={postpartumGlowUpCover}
+                alt="30-Day Mom Glow-Up Challenge"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute bottom-4 left-4 z-20">
+              <Badge className="bg-[#B5651D] hover:bg-[#B5651D] text-white">30 Day Challenge</Badge>
+            </div>
+          </div>
+          <div className="p-6">
+            <h2 className="text-xl font-bold mb-2 text-foreground">30-Day Mom Glow-Up Challenge</h2>
+            <p className="text-muted-foreground mb-4 leading-relaxed">
+              Comprehensive 30-day plan with iron-dense, gut-sealing, lactation-safe recipes plus daily workouts and check-ins for optimal postpartum healing.
+            </p>
+            <div className="flex items-center gap-4 mb-5 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1.5"><BookOpen className="h-4 w-4" /> 30 days</div>
+              <div className="flex items-center gap-1.5"><Clock className="h-4 w-4" /> 20–35 min/meal</div>
+            </div>
+            <Button
+              onClick={() => setShowDetails(true)}
+              className="w-full bg-[#B5651D] hover:bg-[#8B4513] text-white"
+            >
+              View Plan
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
+      {/* Back button */}
+      <button
+        onClick={() => setShowDetails(false)}
+        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
+      >
+        <ChevronLeft className="h-4 w-4" /> Back to plans
+      </button>
+
       {/* Cover image — same full-width hero as recipe detail pages */}
       <div className="w-full aspect-video md:aspect-[21/9] overflow-hidden rounded-2xl mb-6">
         <img
-          src={COVER_IMAGE_SRC}
+          src={postpartumGlowUpCover}
           alt="30-Day Mom Glow-Up Challenge"
           className="w-full h-full object-cover"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
         />
       </div>
 
