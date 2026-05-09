@@ -459,11 +459,18 @@ function PostpartumGlowUpChallenge() {
           <Download className="h-4 w-4" />
           Download PDF Guide
         </button>
-        <button className="flex items-center gap-2 border border-border hover:bg-muted px-4 py-2.5 rounded-full text-sm font-medium text-foreground transition-colors">
+        <button
+          onClick={handlePrint}
+          className="flex items-center gap-2 border border-border hover:bg-muted px-4 py-2.5 rounded-full text-sm font-medium text-foreground transition-colors"
+        >
           <Printer className="h-4 w-4" />
           Print
         </button>
-        <button className="flex items-center justify-center border border-border hover:bg-muted w-10 h-10 rounded-full transition-colors">
+        <button
+          onClick={handleShare}
+          aria-label="Share"
+          className="flex items-center justify-center border border-border hover:bg-muted w-10 h-10 rounded-full transition-colors"
+        >
           <Share2 className="h-4 w-4 text-foreground" />
         </button>
       </div>
