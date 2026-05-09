@@ -487,6 +487,9 @@ function PostpartumGlowUpChallenge() {
         </ul>
       </div>
 
+      {/* Functional check-in calendar */}
+      <CheckInCalendar />
+
       {/* Week selector pills */}
       <div className="flex gap-2 flex-wrap mb-5">
         {CHALLENGE_WEEKS.map((w, i) => (
