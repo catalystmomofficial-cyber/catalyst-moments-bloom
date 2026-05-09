@@ -13,7 +13,7 @@ serve(async (req) => {
 
   try {
     const { topic, keywords, tone } = await req.json();
-    
+
     if (!topic) {
       return new Response(
         JSON.stringify({ error: 'Topic is required' }),
@@ -52,9 +52,9 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+    const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY');
+    if (!ANTHROPIC_API_KEY) {
+      throw new Error('ANTHROPIC_API_KEY is not configured. Please add it to your Supabase project secrets.');
     }
 
     // Create SEO-optimized prompt
@@ -124,108 +124,56 @@ Return ONLY valid JSON with this exact structure:
     {"question": "Q3?", "answer": "A3"},
     {"question": "Q4?", "answer": "A4"},
     {"question": "Q5?", "answer": "A5"}
-  ],
-  "imagePrompt": "A professional, high-quality image description that represents the blog topic"
+  ]
 }`;
 
-    const userPrompt = `Write a blog post about: ${topic}${keywordList ? `\n\nTarget keyword: ${keywordList}` : ''}`;
+    const userPrompt = `Write a blog post about: ${topic}${keywordList ? `\n\nTarget keywords: ${keywordList}` : ''}`;
 
-    console.log('Generating blog post with Lovable AI...');
+    console.log('Generating blog post with Claude...');
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 8192,
+        system: systemPrompt,
         messages: [
-          { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        response_format: { type: "json_object" }
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AI gateway error:', response.status, errorText);
-      
+      console.error('Anthropic API error:', response.status, errorText);
+
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
+          JSON.stringify({ error: 'Rate limit exceeded. Please try again in a moment.' }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
-      
-      if (response.status === 402) {
+      if (response.status === 401) {
         return new Response(
-          JSON.stringify({ error: 'Payment required. Please add credits to your Lovable AI workspace.' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: 'Invalid ANTHROPIC_API_KEY. Please check your Supabase project secrets.' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
 
-      throw new Error(`AI gateway error: ${response.status}`);
+      throw new Error(`Anthropic API error: ${response.status} — ${errorText}`);
     }
 
     const aiData = await response.json();
-    const generatedContent = JSON.parse(aiData.choices[0].message.content);
+    const rawContent = aiData.content?.[0]?.text || '';
 
-    console.log('Generating featured image with Gemini AI...');
-
-    // Generate image using Gemini AI
-    const imageResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-image-preview',
-        messages: [
-          {
-            role: 'user',
-            content: generatedContent.imagePrompt || `Professional, high-quality image representing: ${topic}`
-          }
-        ],
-        modalities: ['image', 'text']
-      }),
-    });
-
-    let featuredImageUrl = null;
-    
-    if (imageResponse.ok) {
-      const imageData = await imageResponse.json();
-      const base64Image = imageData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-      
-      if (base64Image) {
-        // Convert base64 to blob
-        const base64Data = base64Image.split(',')[1];
-        const imageBlob = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
-        
-        // Upload to Supabase storage
-        const fileName = `blog-${Date.now()}.png`;
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('blog-images')
-          .upload(fileName, imageBlob, {
-            contentType: 'image/png',
-            upsert: false
-          });
-
-        if (!uploadError && uploadData) {
-          const { data: { publicUrl } } = supabase.storage
-            .from('blog-images')
-            .getPublicUrl(fileName);
-          featuredImageUrl = publicUrl;
-          console.log('Image uploaded successfully:', featuredImageUrl);
-        } else {
-          console.error('Image upload error:', uploadError);
-        }
-      }
-    } else {
-      console.error('Image generation failed:', await imageResponse.text());
-    }
+    // Parse JSON — strip any accidental markdown fences
+    const jsonStr = rawContent.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+    const generatedContent = JSON.parse(jsonStr);
 
     // Generate slug from title
     const slug = generatedContent.title
@@ -274,7 +222,7 @@ ${JSON.stringify({
         author: 'Catalyst Mom Team',
         published_at: null,
         status: 'draft',
-        featured_image_url: featuredImageUrl
+        featured_image_url: null,
       })
       .select()
       .single();
@@ -287,10 +235,10 @@ ${JSON.stringify({
     console.log('Blog post created successfully:', blogData.id);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         blog: blogData,
-        message: 'Blog post generated and saved as draft!' 
+        message: 'Blog post generated and saved as draft!'
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
