@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const BASE_URL = "https://catalystmomofficial.com";
+const FEED_URL = "https://moxxceccaftkeuaowctw.supabase.co/functions/v1/serve-rss";
 
 function escapeXml(str: string): string {
   return (str || "")
@@ -67,7 +68,7 @@ serve(async (req) => {
       return `    <item>\n      <title>${title}</title>\n      <link>${url}</link>\n      <guid isPermaLink="true">${url}</guid>\n      <description>${description}</description>\n      <pubDate>${pubDate}</pubDate>\n      <dc:creator>${escapeXml(blog.author || "Catalyst Mom Team")}</dc:creator>\n${categories}\n${image}\n    </item>`;
     }).join("\n");
 
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"\n  xmlns:atom="http://www.w3.org/2005/Atom"\n  xmlns:media="http://search.yahoo.com/mrss/"\n  xmlns:content="http://purl.org/rss/1.0/modules/content/"\n  xmlns:dc="http://purl.org/dc/elements/1.1/">\n  <channel>\n    <title>Catalyst Mom — Maternal Wellness Blog</title>\n    <link>${BASE_URL}/blog</link>\n    <description>Evidence-based articles on pregnancy, postpartum recovery, breastfeeding, and maternal wellness — written for real moms by Catalyst Mom.</description>\n    <language>en-us</language>\n    <copyright>Copyright 2025 Catalyst Mom. All rights reserved.</copyright>\n    <managingEditor>hello@catalystmomofficial.com (Catalyst Mom Team)</managingEditor>\n    <lastBuildDate>${now}</lastBuildDate>\n    <ttl>1440</ttl>\n    <atom:link href="${BASE_URL}/rss.xml" rel="self" type="application/rss+xml"/>\n    <image>\n      <url>${BASE_URL}/catalyst-mom-logo.png</url>\n      <title>Catalyst Mom — Maternal Wellness Blog</title>\n      <link>${BASE_URL}/blog</link>\n      <width>144</width>\n      <height>144</height>\n    </image>\n${items}\n  </channel>\n</rss>`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"\n  xmlns:atom="http://www.w3.org/2005/Atom"\n  xmlns:media="http://search.yahoo.com/mrss/"\n  xmlns:content="http://purl.org/rss/1.0/modules/content/"\n  xmlns:dc="http://purl.org/dc/elements/1.1/">\n  <channel>\n    <title>Catalyst Mom - Maternal Wellness Blog</title>\n    <link>${BASE_URL}/blog</link>\n    <description>Evidence-based articles on pregnancy, postpartum recovery, breastfeeding, and maternal wellness - written for real moms by Catalyst Mom.</description>\n    <language>en-us</language>\n    <copyright>Copyright 2025 Catalyst Mom. All rights reserved.</copyright>\n    <managingEditor>hello@catalystmomofficial.com (Catalyst Mom Team)</managingEditor>\n    <lastBuildDate>${now}</lastBuildDate>\n    <ttl>1440</ttl>\n    <atom:link href="${FEED_URL}" rel="self" type="application/rss+xml"/>\n    <image>\n      <url>${BASE_URL}/catalyst-mom-logo.png</url>\n      <title>Catalyst Mom - Maternal Wellness Blog</title>\n      <link>${BASE_URL}/blog</link>\n      <width>144</width>\n      <height>144</height>\n    </image>\n${items}\n  </channel>\n</rss>`;
 
     return new Response(xml, {
       status: 200,
@@ -83,5 +84,5 @@ serve(async (req) => {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
-    }
+  }
 });
