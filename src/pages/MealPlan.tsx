@@ -578,14 +578,7 @@ function PostpartumGlowUpChallenge() {
                 </div>
                 <div className="rounded-xl bg-background border border-border p-4">
                   <p className="text-sm font-semibold text-foreground mb-2">Daily checklist</p>
-                  <ul className="text-sm text-muted-foreground space-y-2 leading-relaxed">
-                    {['Complete your daily challenge', 'Do your weekly workout', 'Follow the meal plan', 'Drink 8+ glasses of water', 'Share your progress @Catalyst_Mom'].map(item => (
-                      <li key={item} className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded border border-[#B5651D] inline-block shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                  <DailyChecklist weekNumber={week.number} />
                 </div>
                 <div className="rounded-xl bg-[#B5651D]/10 border border-[#B5651D]/20 p-4">
                   <p className="text-sm font-semibold text-[#8B4513] mb-1">💪 Remember</p>
