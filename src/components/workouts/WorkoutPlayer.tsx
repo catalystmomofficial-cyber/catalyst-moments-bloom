@@ -9,6 +9,7 @@ import { usePoints } from '@/hooks/usePoints';
 import { WorkoutPlayerProps, Exercise } from './types';
 import { getWorkoutData } from './WorkoutData';
 import VideoPlayer from './VideoPlayer';
+import CheckpointVideoPlayer from '@/components/video/CheckpointVideoPlayer';
 import ExerciseTimer from './ExerciseTimer';
 import ExerciseList from './ExerciseList';
 
