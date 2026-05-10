@@ -7,6 +7,7 @@ import { Sparkles, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useCoachHistory } from '@/hooks/useCoachHistory';
+import { useAssessmentData } from '@/hooks/useAssessmentData';
 import {
   generateCoachOutput,
   type CoachStage,
@@ -14,13 +15,29 @@ import {
 } from '@/lib/wellnessCoachEngine';
 
 const stageMap = (s: string | null | undefined): CoachStage => {
-  if (s === 'pregnant') return 'pregnancy';
+  if (s === 'pregnant' || s === 'pregnancy') return 'pregnancy';
   if (s === 'postpartum') return 'postpartum';
   return 'TTC';
 };
 
+// Map assessment text fields → CoachGap array
+const resolveGaps = (a: Record<string, any> | null, fallbackScore: number): CoachGap[] => {
+  if (!a) return deriveGaps(fallbackScore);
+  // If the assessment stored an explicit gaps array, use it directly
+  if (Array.isArray(a.gaps) && a.gaps.length > 0) return a.gaps as CoachGap[];
+  // Otherwise derive from obstacle + goal text
+  const text = [a.biggest_obstacle, a.primary_goal].filter(Boolean).join(' ').toLowerCase();
+  const mapped: CoachGap[] = [];
+  if (/sleep|tired|fatigue|exhaust/.test(text)) mapped.push('sleep');
+  if (/stress|anxi|overwhelm|mental|mood/.test(text)) mapped.push('stress');
+  if (/nutri|diet|food|eat|nourish/.test(text)) mapped.push('nutrition');
+  if (/fit|exercise|workout|movement|active/.test(text)) mapped.push('fitness');
+  if (/recover|heal|postpartum/.test(text)) mapped.push('recovery');
+  return mapped.length > 0 ? mapped : deriveGaps(fallbackScore);
+};
+
 interface Props {
-  /** Optional override — falls back to live wellness data */
+  /** Optional override — falls back to assessment then live wellness data */
   score?: number;
   gaps?: CoachGap[];
 }
@@ -28,21 +45,29 @@ interface Props {
 export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
   const { user, profile, subscribed } = useAuth();
   const { wellnessScore } = useWellnessData();
+  const { assessmentData, scoreNumber: assessmentScore } = useAssessmentData();
   const navigate = useNavigate();
   const { logMessage } = useCoachHistory(1);
 
-  const stage = stageMap(profile?.motherhood_stage);
-  const effectiveScore = score ?? wellnessScore ?? 60;
+  // Priority: prop → assessment score → logged wellness score → default 60
+  const effectiveScore = score ?? assessmentScore ?? wellnessScore ?? 60;
+  // Priority: assessment stage → profile stage
+  const stage = stageMap(assessmentData?.stage ?? profile?.motherhood_stage);
+  // Priority: prop gaps → assessment gaps/text → score-derived fallback
+  const effectiveGaps = useMemo(
+    () => gaps ?? resolveGaps(assessmentData, effectiveScore),
+    [gaps, assessmentData, effectiveScore]
+  );
 
   const output = useMemo(() => {
     return generateCoachOutput({
-      name: profile?.display_name || user?.email?.split('@')[0] || 'friend',
+      name: assessmentData?.name || profile?.display_name || user?.email?.split('@')[0] || 'friend',
       stage,
       score: effectiveScore,
-      gaps: gaps ?? deriveGaps(wellnessScore),
+      gaps: effectiveGaps,
       subscriptionStatus: subscribed ? 'active' : 'inactive',
     });
-  }, [user, profile, subscribed, wellnessScore, score, gaps, stage, effectiveScore]);
+  }, [user, profile, assessmentData, subscribed, effectiveScore, effectiveGaps, stage]);
 
   // Persist this rendered message to the user's coach history (deduped inside hook)
   useEffect(() => {

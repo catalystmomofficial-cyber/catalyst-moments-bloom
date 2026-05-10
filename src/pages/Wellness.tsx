@@ -20,6 +20,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Link } from 'react-router-dom';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
+import { PersonalizedCoachCard } from '@/components/wellness-coach/PersonalizedCoachCard';
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
 import { SleepTracker } from '@/components/wellness/SleepTracker';
 import { SelfCareTracker } from '@/components/wellness/SelfCareTracker';
@@ -386,6 +387,8 @@ const Wellness = () => {
           </div>
           
           <div className="space-y-6">
+            <PersonalizedCoachCard />
+
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
