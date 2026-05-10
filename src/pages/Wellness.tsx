@@ -75,7 +75,7 @@ const Wellness = () => {
           <div className="mt-4 md:mt-0 flex items-center gap-3">
             <WellnessCoachButton />
             <Button asChild>
-              <Link to="/progress">
+              <Link to="/wellness?tab=mood">
                 <PenLine className="mr-2 h-4 w-4" /> Log Today
               </Link>
             </Button>
