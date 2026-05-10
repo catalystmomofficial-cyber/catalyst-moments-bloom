@@ -27,7 +27,7 @@ export interface Event {
   time: string;
   description: string;
   attendees: number;
-  type: 'workshop' | 'qa' | 'meditation' | 'fitness';
+  type: 'workshop' | 'qa' | 'meditation' | 'fitness' | 'masterclass';
   instructor?: string;
   maxAttendees?: number;
   location: 'virtual' | 'hybrid' | 'in-person';
@@ -47,56 +47,147 @@ export interface Event {
 // Fallback hardcoded events shown if the Supabase table isn't available yet
 const FALLBACK_EVENTS: Event[] = [
   {
-    id: '1',
-    title: 'Virtual Meditation Session',
-    date: 'Tomorrow',
-    time: '8:00 PM',
-    description: 'Join us for a peaceful 30-minute guided meditation session designed specifically for busy moms. Learn breathing techniques to manage stress and find your center.',
-    attendees: 18,
-    type: 'meditation',
-    instructor: 'Dr. Sarah Chen',
+    id: 'f1',
+    title: 'Pelvic Floor Truth — What Every Mom Must Know',
+    date: 'Wednesday',
+    time: '7:00 PM',
+    description: "Whether you're TTC, pregnant, or postpartum — your pelvic floor affects everything. Women's health physio Dr. Amara Osei answers the questions your doctor never has time for.",
+    attendees: 0,
+    type: 'masterclass',
+    instructor: 'Dr. Amara Osei',
     maxAttendees: 50,
     location: 'virtual',
     featured: true,
+    priceNonMember: 2700,
+    priceMember: 1400,
+    pointsCost: 1400,
+    isFreeForMembers: false,
     stageFilter: 'all',
   },
   {
-    id: '2',
-    title: 'Q&A with Sleep Specialist',
-    date: 'Friday',
-    time: '1:00 PM',
-    description: 'Get expert answers to your sleep questions! Dr. Maria Rodriguez will address common sleep challenges for both moms and babies.',
-    attendees: 34,
+    id: 'f2',
+    title: 'Sleep Reset for Moms — Reclaim Your Rest',
+    date: 'Thursday',
+    time: '8:00 PM',
+    description: "Sleep deprivation is not a badge of honour. Sleep specialist Dr. Nina Patel breaks down why moms can't sleep and gives you a real protocol to fix it — whatever stage you're in.",
+    attendees: 0,
     type: 'qa',
-    instructor: 'Dr. Maria Rodriguez',
+    instructor: 'Dr. Nina Patel',
     maxAttendees: 100,
     location: 'virtual',
+    featured: false,
+    priceNonMember: 0,
+    priceMember: 0,
+    pointsCost: 0,
+    isFreeForMembers: true,
     stageFilter: 'all',
   },
   {
-    id: '3',
-    title: 'Postpartum Fitness Workshop',
+    id: 'f3',
+    title: 'Core Reconnection Workshop — Live with a Physio',
     date: 'Saturday',
     time: '10:00 AM',
-    description: 'Safe and effective exercises for new moms. Learn proper form and modifications for your postpartum fitness journey.',
-    attendees: 22,
+    description: 'Diastasis recti, leaking, back pain — these are not permanent. Follow along live as women\'s health physio Coach Sarah walks you through the exact protocol to reconnect and heal your core.',
+    attendees: 0,
     type: 'fitness',
-    instructor: 'Coach Jennifer Liu',
+    instructor: 'Coach Sarah Mitchell',
     maxAttendees: 30,
-    location: 'hybrid',
+    location: 'virtual',
+    featured: false,
+    priceNonMember: 4700,
+    priceMember: 2700,
+    pointsCost: 2700,
+    isFreeForMembers: false,
     stageFilter: 'postpartum',
   },
   {
-    id: '4',
-    title: 'TTC Nutrition Workshop',
-    date: 'Sunday',
-    time: '2:00 PM',
-    description: 'Discover fertility-boosting nutrition strategies and meal planning tips to support your TTC journey.',
-    attendees: 15,
-    type: 'workshop',
-    instructor: 'Nutritionist Amy Parker',
+    id: 'f4',
+    title: 'Fertility & Your Cycle — Ask an OBGYN',
+    date: 'Tuesday',
+    time: '6:00 PM',
+    description: 'Understanding your cycle is the most underrated fertility tool you have. OBGYN Dr. Fatima Hassan answers your specific questions about ovulation, timing, cycle health, and when to seek help.',
+    attendees: 0,
+    type: 'qa',
+    instructor: 'Dr. Fatima Hassan',
     maxAttendees: 40,
     location: 'virtual',
+    featured: false,
+    priceNonMember: 3700,
+    priceMember: 1900,
+    pointsCost: 1900,
+    isFreeForMembers: false,
+    stageFilter: 'ttc',
+  },
+  {
+    id: 'f5',
+    title: 'Birth Ready Workshop — Movement, Breathing & Positioning',
+    date: 'Sunday',
+    time: '11:00 AM',
+    description: 'Your body already knows how to birth. This hands-on workshop with certified midwife Kezia Addo teaches you the movement, breathing, and positioning techniques that actually prepare you for labour.',
+    attendees: 0,
+    type: 'workshop',
+    instructor: 'Kezia Addo',
+    maxAttendees: 35,
+    location: 'virtual',
+    featured: false,
+    priceNonMember: 4700,
+    priceMember: 2700,
+    pointsCost: 2700,
+    isFreeForMembers: false,
+    stageFilter: 'pregnant',
+  },
+  {
+    id: 'f6',
+    title: "Stress, Cortisol & Why You're Not Recovering",
+    date: 'Monday',
+    time: '7:30 PM',
+    description: 'High cortisol blocks fertility, disrupts pregnancy, and stalls postpartum healing. Functional medicine doctor Dr. Priya Sharma explains the hormonal connection and gives you a simple daily reset protocol.',
+    attendees: 0,
+    type: 'masterclass',
+    instructor: 'Dr. Priya Sharma',
+    maxAttendees: 50,
+    location: 'virtual',
+    featured: false,
+    priceNonMember: 2700,
+    priceMember: 1400,
+    pointsCost: 1400,
+    isFreeForMembers: false,
+    stageFilter: 'all',
+  },
+  {
+    id: 'f7',
+    title: 'The Mental Load — Ask a Perinatal Therapist',
+    date: 'Wednesday',
+    time: '8:00 PM',
+    description: 'Overwhelm, resentment, invisible labour, burnout — this is real and it has a name. Perinatal therapist Dr. Lena Brooks holds a safe, honest space for the emotional side of motherhood nobody talks about.',
+    attendees: 0,
+    type: 'qa',
+    instructor: 'Dr. Lena Brooks',
+    maxAttendees: 40,
+    location: 'virtual',
+    featured: false,
+    priceNonMember: 3700,
+    priceMember: 1900,
+    pointsCost: 1900,
+    isFreeForMembers: false,
+    stageFilter: 'all',
+  },
+  {
+    id: 'f8',
+    title: 'Nutrition for Conception — What to Eat, What to Stop',
+    date: 'Saturday',
+    time: '12:00 PM',
+    description: 'What you eat in the 90 days before conception matters more than most women know. Fertility nutritionist Amy Chen gives you the exact protocol — foods, supplements, what to cut — backed by current research.',
+    attendees: 0,
+    type: 'workshop',
+    instructor: 'Amy Chen',
+    maxAttendees: 40,
+    location: 'virtual',
+    featured: false,
+    priceNonMember: 3700,
+    priceMember: 1900,
+    pointsCost: 1900,
+    isFreeForMembers: false,
     stageFilter: 'ttc',
   },
 ];
@@ -125,14 +216,15 @@ function mapSupabaseEvent(e: SupabaseEvent): Event {
   };
 }
 
-/** Returns true if the event should be visible for the given profile stage. */
+/** Returns true if the event should be visible for the given profile stage.
+ *  stage_filter values ('ttc', 'pregnant', 'postpartum', 'all') match
+ *  profile.motherhood_stage exactly — no normalisation needed.
+ */
 function eventMatchesStage(event: Event, profileStage: string | null | undefined): boolean {
   const filter = event.stageFilter ?? 'all';
   if (filter === 'all') return true;
   if (!profileStage) return false;
-  // profile stores 'pregnant'; stage_filter column uses 'pregnancy'
-  const normalised = profileStage === 'pregnant' ? 'pregnancy' : profileStage;
-  return filter === normalised;
+  return filter === profileStage;
 }
 
 function getEventTypeColor(type: string) {
