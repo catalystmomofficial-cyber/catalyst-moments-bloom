@@ -1,16 +1,16 @@
 {
+  "rewrites": [
+    {
+      "source": "/rss.xml",
+      "destination": "https://moxxceccaftkeuaowctw.supabase.co/functions/v1/serve-rss"
+    }
+  ],
   "headers": [
     {
       "source": "/rss.xml",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/xml; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
+        { "key": "Content-Type", "value": "application/rss+xml; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     }
   ]
