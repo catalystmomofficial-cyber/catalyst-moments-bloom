@@ -23,13 +23,6 @@ export interface SupabaseEvent {
   status: string | null;
 }
 
-/** Normalise profile stage values to match stage_filter column values. */
-function normaliseStage(stage: string | null | undefined): string | null {
-  if (!stage) return null;
-  if (stage === 'pregnant') return 'pregnancy';
-  return stage; // 'ttc', 'postpartum' match directly
-}
-
 export function useEvents(userStage?: string | null) {
   const [events, setEvents] = useState<SupabaseEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,10 +43,10 @@ export function useEvents(userStage?: string | null) {
         return;
       }
 
-      const stage = normaliseStage(userStage);
+      // stage_filter values match profile.motherhood_stage exactly: 'ttc', 'pregnant', 'postpartum', 'all'
       const filtered: SupabaseEvent[] = (data || []).filter((e: SupabaseEvent) => {
-        if (!stage) return e.stage_filter === 'all';
-        return e.stage_filter === 'all' || e.stage_filter === stage;
+        if (!userStage) return e.stage_filter === 'all';
+        return e.stage_filter === 'all' || e.stage_filter === userStage;
       });
 
       setEvents(filtered);
