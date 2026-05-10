@@ -6,7 +6,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Heart, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { useWellnessData } from '@/hooks/useWellnessData';
+import { usePoints } from '@/hooks/usePoints';
 
 interface SelfCareTrackerProps {
   trigger?: React.ReactNode;
@@ -30,7 +31,8 @@ export const SelfCareTracker = ({ trigger }: SelfCareTrackerProps) => {
   const [loading, setLoading] = useState(false);
   
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { addSelfCareEntry } = useWellnessData();
+  const { awardPoints } = usePoints();
 
   const handleActivityChange = (activityId: string, checked: boolean) => {
     if (checked) {
@@ -52,50 +54,15 @@ export const SelfCareTracker = ({ trigger }: SelfCareTrackerProps) => {
 
     setLoading(true);
     try {
-      // Update self-care status in localStorage
-      if (user) {
-        const storedWellness = localStorage.getItem(`wellness_${user.id}`);
-        const wellness = storedWellness ? JSON.parse(storedWellness) : [];
-        
-        // Update today's entry or create new one
-        const today = new Date().toDateString();
-        const todayEntry = wellness.find((entry: any) => 
-          new Date(entry.created_at).toDateString() === today
-        );
-        
-        if (todayEntry) {
-          todayEntry.self_care_completed = true;
-          todayEntry.notes = notes || todayEntry.notes;
-        } else {
-          wellness.unshift({
-            id: Date.now().toString(),
-            mood_score: 7,
-            energy_level: 7,
-            sleep_hours: 8,
-            stress_level: 3,
-            self_care_completed: true,
-            hydration_glasses: 4,
-            created_at: new Date().toISOString(),
-            notes: notes || 'Completed self-care activities'
-          });
-        }
-        
-        localStorage.setItem(`wellness_${user.id}`, JSON.stringify(wellness));
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await addSelfCareEntry(notes.trim() || undefined);
+      await awardPoints(5, 'self_care', 'Self-care logged');
       toast({
-        title: "Self-care logged successfully!",
-        description: `Great job completing ${selectedActivities.length} self-care activities today!`,
+        title: "Self-care logged! +5 points ✨",
+        description: `Great job completing ${selectedActivities.length} self-care ${selectedActivities.length === 1 ? 'activity' : 'activities'} today!`,
       });
-      
       setOpen(false);
       setSelectedActivities([]);
       setNotes('');
-      
-      // Refresh the page to show updated data
-      window.location.reload();
     } catch (error) {
       toast({
         title: "Error logging self-care",

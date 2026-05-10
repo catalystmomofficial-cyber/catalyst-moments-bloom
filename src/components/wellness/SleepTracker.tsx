@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { MoonStar, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useWellnessData } from '@/hooks/useWellnessData';
+import { usePoints } from '@/hooks/usePoints';
 
 interface SleepTrackerProps {
   trigger?: React.ReactNode;
@@ -20,18 +21,18 @@ export const SleepTracker = ({ trigger }: SleepTrackerProps) => {
   const [loading, setLoading] = useState(false);
   
   const { toast } = useToast();
+  const { addSleepEntry } = useWellnessData();
+  const { awardPoints } = usePoints();
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // Simulate sleep logging (extend useWellnessData later)
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await addSleepEntry({ sleep_hours: sleepHours[0], notes: notes.trim() || undefined });
+      await awardPoints(5, 'sleep_log', 'Sleep logged');
       toast({
-        title: "Sleep logged successfully!",
-        description: `Recorded ${sleepHours[0]} hours of sleep with quality rating ${sleepQuality[0]}/10.`,
+        title: "Sleep logged! +5 points ✨",
+        description: `Recorded ${sleepHours[0]} hours of sleep.`,
       });
-      
       setOpen(false);
       setNotes('');
     } catch (error) {
