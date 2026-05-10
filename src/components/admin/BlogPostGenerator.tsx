@@ -45,31 +45,44 @@ export const BlogPostGenerator = () => {
     setLastGeneratedPost(null);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('You must be logged in to generate blog posts.');
+      }
+
       const { data, error } = await supabase.functions.invoke('generate-blog-post', {
         body: {
           topic: topic.trim(),
           keywords: keywords.trim(),
-          tone
-        }
+          tone,
+        },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Function invocation error:', error);
+        throw new Error(error.message || 'Failed to reach generate-blog-post function');
+      }
 
       if (data?.error) {
         throw new Error(data.error);
       }
 
+      if (!data?.blog) {
+        throw new Error('No blog data returned. Check Supabase function logs for details.');
+      }
+
       setLastGeneratedPost(data.blog);
-      
+
       toast({
         title: "Success!",
         description: "Blog post generated and saved as draft. Opening preview...",
       });
 
-      // Navigate to preview page
       navigate(`/blog-preview?id=${data.blog.id}`);
 
-      // Reset form
       setTopic('');
       setKeywords('');
       setTone('professional yet friendly');
