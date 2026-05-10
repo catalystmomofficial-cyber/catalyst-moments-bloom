@@ -86,6 +86,59 @@ export const useWellnessData = () => {
     }
   };
 
+  const addSleepEntry = async (sleepData: {
+    sleep_hours: number;
+    notes?: string;
+  }) => {
+    if (!user) return;
+    const stored = localStorage.getItem(`wellness_${user.id}`);
+    const entries: WellnessEntry[] = stored ? JSON.parse(stored) : [];
+    const today = new Date().toDateString();
+    const idx = entries.findIndex(e => new Date(e.created_at).toDateString() === today);
+    if (idx >= 0) {
+      entries[idx] = { ...entries[idx], sleep_hours: sleepData.sleep_hours, notes: sleepData.notes || entries[idx].notes };
+    } else {
+      entries.unshift({
+        id: Date.now().toString(),
+        mood_score: 7,
+        energy_level: 7,
+        stress_level: 3,
+        sleep_hours: sleepData.sleep_hours,
+        self_care_completed: false,
+        hydration_glasses: 0,
+        created_at: new Date().toISOString(),
+        notes: sleepData.notes,
+      });
+    }
+    localStorage.setItem(`wellness_${user.id}`, JSON.stringify(entries));
+    setWellnessEntries(entries);
+  };
+
+  const addSelfCareEntry = async (notes?: string) => {
+    if (!user) return;
+    const stored = localStorage.getItem(`wellness_${user.id}`);
+    const entries: WellnessEntry[] = stored ? JSON.parse(stored) : [];
+    const today = new Date().toDateString();
+    const idx = entries.findIndex(e => new Date(e.created_at).toDateString() === today);
+    if (idx >= 0) {
+      entries[idx] = { ...entries[idx], self_care_completed: true, notes: notes || entries[idx].notes };
+    } else {
+      entries.unshift({
+        id: Date.now().toString(),
+        mood_score: 7,
+        energy_level: 7,
+        stress_level: 3,
+        sleep_hours: 8,
+        self_care_completed: true,
+        hydration_glasses: 0,
+        created_at: new Date().toISOString(),
+        notes: notes || 'Completed self-care activities',
+      });
+    }
+    localStorage.setItem(`wellness_${user.id}`, JSON.stringify(entries));
+    setWellnessEntries(entries);
+  };
+
   const logWorkout = async (workoutData: {
     workout_type: string;
     duration_minutes: number;
@@ -140,6 +193,8 @@ export const useWellnessData = () => {
     workoutSessions,
     loading,
     addMoodEntry,
+    addSleepEntry,
+    addSelfCareEntry,
     logWorkout,
     weeklyWorkoutProgress,
     weeklyWorkoutGoal,

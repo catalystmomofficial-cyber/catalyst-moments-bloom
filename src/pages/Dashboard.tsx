@@ -28,6 +28,7 @@ import AffiliateButton from '@/components/affiliate/AffiliateButton';
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
 
 import { MonthlyChallenge } from '@/components/challenges/MonthlyChallenge';
+import { PersonalizedCoachCard } from '@/components/wellness-coach/PersonalizedCoachCard';
 import { PushNotificationPrompt } from '@/components/notifications/PushNotificationPrompt';
 
 import { supabase } from '@/integrations/supabase/client';
@@ -316,6 +317,9 @@ const Dashboard = () => {
               
               {/* Right Column - Quick Access */}
               <div className="space-y-6">
+
+                {/* Personalized Wellness Coach */}
+                <PersonalizedCoachCard />
 
                 {/* Daily Check-in Checklist */}
                 <DailyChecklistCard />
