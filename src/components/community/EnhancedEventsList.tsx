@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Calendar, Clock, Users, MapPin, Star } from 'lucide-react';
+import { Calendar, Clock, Users, MapPin, Star, Zap } from 'lucide-react';
 import EventRegistrationModal from './EventRegistrationModal';
-
+import { useAuth } from '@/contexts/AuthContext';
+import { useEvents, isEventLive, formatEventDate, type SupabaseEvent } from '@/hooks/useEvents';
+import { usePoints } from '@/hooks/usePoints';
 
 // Import member avatars
 import mom1 from '@/assets/member-avatars/mom-1.jpg';
@@ -17,7 +19,8 @@ import mom6 from '@/assets/member-avatars/mom-6.jpg';
 
 const memberAvatars = [mom1, mom2, mom3, mom4, mom5, mom6];
 
-interface Event {
+// Extended Event shape used throughout this component and the modal
+export interface Event {
   id: string;
   title: string;
   date: string;
@@ -27,11 +30,20 @@ interface Event {
   type: 'workshop' | 'qa' | 'meditation' | 'fitness';
   instructor?: string;
   maxAttendees?: number;
-  location: 'virtual' | 'hybrid';
+  location: 'virtual' | 'hybrid' | 'in-person';
   featured?: boolean;
+  // Pricing & points (undefined for legacy hardcoded events)
+  priceNonMember?: number;
+  priceMember?: number;
+  pointsCost?: number;
+  isFreeForMembers?: boolean;
+  // Live state
+  isLive?: boolean;
+  eventDate?: string | null;
 }
 
-const upcomingEvents: Event[] = [
+// Fallback hardcoded events shown if the Supabase table isn't available yet
+const FALLBACK_EVENTS: Event[] = [
   {
     id: '1',
     title: 'Virtual Meditation Session',
@@ -83,131 +95,242 @@ const upcomingEvents: Event[] = [
   },
 ];
 
+function mapSupabaseEvent(e: SupabaseEvent): Event {
+  const live = isEventLive(e.event_date);
+  return {
+    id: e.id,
+    title: e.title,
+    date: formatEventDate(e.event_date),
+    time: e.time_display ?? '',
+    description: e.description ?? '',
+    attendees: e.current_attendees ?? 0,
+    type: (e.category as Event['type']) ?? 'workshop',
+    instructor: e.specialist_name ?? undefined,
+    maxAttendees: e.max_capacity ?? undefined,
+    location: (e.location_type as Event['location']) ?? 'virtual',
+    featured: e.is_featured ?? false,
+    priceNonMember: e.price_non_member ?? 0,
+    priceMember: e.price_member ?? 0,
+    pointsCost: e.points_cost ?? 0,
+    isFreeForMembers: e.is_free_for_members ?? false,
+    isLive: live,
+    eventDate: e.event_date,
+  };
+}
+
+function getEventTypeColor(type: string) {
+  switch (type) {
+    case 'workshop': return 'bg-blue-500';
+    case 'qa': return 'bg-green-500';
+    case 'meditation': return 'bg-purple-500';
+    case 'fitness': return 'bg-orange-500';
+    default: return 'bg-primary';
+  }
+}
+
+function getRandomAttendeeAvatars(count: number) {
+  const shuffled = [...memberAvatars].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, Math.min(count, 6));
+}
+
+function getButtonLabel(event: Event, subscribed: boolean): string {
+  const full = event.maxAttendees != null && event.attendees >= event.maxAttendees;
+  if (full) return 'Join Waitlist';
+  if (event.isLive) return 'Join Now';
+  if (event.isFreeForMembers && subscribed) return 'Register — Free';
+  return 'Register';
+}
+
 interface EnhancedEventsListProps {
   onViewCalendar?: () => void;
 }
 
 const EnhancedEventsList = ({ onViewCalendar }: EnhancedEventsListProps) => {
+  const { profile, subscribed, user } = useAuth();
+  const { events: supabaseEvents, loading, error } = useEvents(profile?.motherhood_stage);
+  const { getPoints } = usePoints();
+
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [pointsBalance, setPointsBalance] = useState(0);
+
+  // Fetch user's points balance for the header display
+  useEffect(() => {
+    if (user) {
+      getPoints().then(({ total }) => setPointsBalance(total));
+    }
+  }, [user, getPoints]);
+
+  // Use Supabase events when available; fall back to hardcoded list
+  const displayEvents: Event[] =
+    !loading && !error && supabaseEvents.length > 0
+      ? supabaseEvents.map(mapSupabaseEvent)
+      : !loading && error
+        ? FALLBACK_EVENTS
+        : loading
+          ? []
+          : FALLBACK_EVENTS;
 
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
     setShowRegistrationModal(true);
   };
 
-  const getEventTypeColor = (type: string) => {
-    switch (type) {
-      case 'workshop': return 'bg-blue-500';
-      case 'qa': return 'bg-green-500';
-      case 'meditation': return 'bg-purple-500';
-      case 'fitness': return 'bg-orange-500';
-      default: return 'bg-primary';
-    }
-  };
-
-  const getRandomAttendeeAvatars = (count: number) => {
-    const shuffled = [...memberAvatars].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.min(count, 6));
-  };
-
   return (
     <>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-semibold">Upcoming Events</h3>
+          <div>
+            <h3 className="text-xl font-semibold">Upcoming Events</h3>
+            {user && pointsBalance > 0 && (
+              <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                <Zap className="h-3 w-3 text-primary" />
+                You have {pointsBalance.toLocaleString()} pts · ${(pointsBalance / 100).toFixed(2)} value
+              </p>
+            )}
+          </div>
           <Button variant="outline" size="sm" onClick={onViewCalendar}>
             View Calendar
           </Button>
         </div>
 
+        {loading && (
+          <div className="space-y-3">
+            {[1, 2].map(i => (
+              <div key={i} className="h-40 bg-muted/40 rounded-lg animate-pulse" />
+            ))}
+          </div>
+        )}
+
         <div className="grid gap-4">
-          {upcomingEvents.map((event) => (
-            <Card 
-              key={event.id} 
-              className={`cursor-pointer transition-all duration-200 hover:shadow-md hover-scale ${
-                event.featured ? 'ring-2 ring-primary/20 bg-gradient-to-r from-primary/5 to-accent/5' : ''
-              }`}
-              onClick={() => handleEventClick(event)}
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${getEventTypeColor(event.type)}`} />
-                    <div>
-                      <h4 className="font-semibold">{event.title}</h4>
-                      {event.featured && (
-                        <Badge variant="secondary" className="mt-1">
-                          <Star className="w-3 h-3 mr-1" />
-                          Featured
-                        </Badge>
-                      )}
+          {displayEvents.map((event) => {
+            const seatsLeft = event.maxAttendees != null
+              ? event.maxAttendees - event.attendees
+              : null;
+            const showPricing = (event.priceNonMember ?? 0) > 0;
+            const showPoints = (event.pointsCost ?? 0) > 0;
+            const showLowSeats = seatsLeft != null && seatsLeft > 0 && seatsLeft < 5;
+
+            return (
+              <Card
+                key={event.id}
+                className={`cursor-pointer transition-all duration-200 hover:shadow-md hover-scale ${
+                  event.featured ? 'ring-2 ring-primary/20 bg-gradient-to-r from-primary/5 to-accent/5' : ''
+                }`}
+                onClick={() => handleEventClick(event)}
+              >
+                {/* LIVE NOW banner — only rendered when event is live */}
+                {event.isLive && (
+                  <div className="flex items-center gap-2 bg-destructive/10 text-destructive text-xs font-semibold px-4 py-1.5 rounded-t-lg">
+                    <span className="w-2 h-2 rounded-full bg-destructive animate-pulse shrink-0" />
+                    LIVE NOW
+                  </div>
+                )}
+
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full ${getEventTypeColor(event.type)} ${event.isLive ? 'ring-2 ring-offset-1 ring-destructive' : ''}`} />
+                      <div>
+                        <h4 className="font-semibold">{event.title}</h4>
+                        {event.featured && (
+                          <Badge variant="secondary" className="mt-1">
+                            <Star className="w-3 h-3 mr-1" />
+                            Featured
+                          </Badge>
+                        )}
+                      </div>
                     </div>
+                    <Badge variant="outline" className="capitalize">
+                      {event.type}
+                    </Badge>
                   </div>
-                  <Badge variant="outline" className="capitalize">
-                    {event.type}
-                  </Badge>
-                </div>
-              </CardHeader>
+                </CardHeader>
 
-              <CardContent className="pt-0">
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                  {event.description}
-                </p>
+                <CardContent className="pt-0">
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    {event.description}
+                  </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <span>{event.date}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-primary" />
-                    <span>{event.time}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    <span className="capitalize">{event.location}</span>
-                  </div>
-                  {event.instructor && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-sm">
                     <div className="flex items-center gap-2">
-                      <Star className="h-4 w-4 text-primary" />
-                      <span>{event.instructor}</span>
+                      <Calendar className="h-4 w-4 text-primary" />
+                      <span>{event.date}</span>
                     </div>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex -space-x-2">
-                      {getRandomAttendeeAvatars(4).map((avatar, index) => (
-                        <Avatar key={index} className="w-6 h-6 border-2 border-background">
-                          <AvatarImage src={avatar} alt={`Attendee ${index + 1}`} />
-                          <AvatarFallback className="text-xs">M{index + 1}</AvatarFallback>
-                        </Avatar>
-                      ))}
-                      {event.attendees > 4 && (
-                        <div className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center">
-                          <span className="text-xs font-medium">+{event.attendees - 4}</span>
-                        </div>
-                      )}
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-primary" />
+                      <span>{event.time}</span>
                     </div>
-                    <span className="text-sm text-muted-foreground">
-                      <Users className="w-3 h-3 inline mr-1" />
-                      {event.attendees} attending
-                      {event.maxAttendees && ` / ${event.maxAttendees} max`}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      <span className="capitalize">{event.location}</span>
+                    </div>
+                    {event.instructor && (
+                      <div className="flex items-center gap-2">
+                        <Star className="h-4 w-4 text-primary" />
+                        <span>{event.instructor}</span>
+                      </div>
+                    )}
                   </div>
 
-                  <Button size="sm" onClick={(e) => {
-                    e.stopPropagation();
-                    handleEventClick(event);
-                  }}>
-                    Register
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                  {/* Pricing line — only shown if event has a price */}
+                  {showPricing && (
+                    <p className="text-xs text-muted-foreground mb-1">
+                      Members: ${((event.priceMember ?? 0) / 100).toFixed(2)} · Non-members: ${((event.priceNonMember ?? 0) / 100).toFixed(2)}
+                    </p>
+                  )}
+
+                  {/* Points redemption line — only shown if event has points cost */}
+                  {showPoints && (
+                    <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                      <Zap className="h-3 w-3 text-primary" />
+                      Or redeem with {(event.pointsCost ?? 0).toLocaleString()} pts
+                    </p>
+                  )}
+
+                  {/* Low seats warning — only shown when fewer than 5 spots remain */}
+                  {showLowSeats && (
+                    <p className="text-xs text-destructive mb-2 font-medium">
+                      Only {seatsLeft} {seatsLeft === 1 ? 'spot' : 'spots'} left
+                    </p>
+                  )}
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex -space-x-2">
+                        {getRandomAttendeeAvatars(4).map((avatar, index) => (
+                          <Avatar key={index} className="w-6 h-6 border-2 border-background">
+                            <AvatarImage src={avatar} alt={`Attendee ${index + 1}`} />
+                            <AvatarFallback className="text-xs">M{index + 1}</AvatarFallback>
+                          </Avatar>
+                        ))}
+                        {event.attendees > 4 && (
+                          <div className="w-6 h-6 rounded-full bg-muted border-2 border-background flex items-center justify-center">
+                            <span className="text-xs font-medium">+{event.attendees - 4}</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        <Users className="w-3 h-3 inline mr-1" />
+                        {event.attendees} attending
+                        {event.maxAttendees && ` / ${event.maxAttendees} max`}
+                      </span>
+                    </div>
+
+                    <Button
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEventClick(event);
+                      }}
+                    >
+                      {getButtonLabel(event, !!subscribed)}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
 
@@ -215,6 +338,11 @@ const EnhancedEventsList = ({ onViewCalendar }: EnhancedEventsListProps) => {
         isOpen={showRegistrationModal}
         onClose={() => setShowRegistrationModal(false)}
         event={selectedEvent}
+        userPointsBalance={pointsBalance}
+        onRegistrationComplete={() => {
+          // Refresh points balance after registration
+          if (user) getPoints().then(({ total }) => setPointsBalance(total));
+        }}
       />
     </>
   );
