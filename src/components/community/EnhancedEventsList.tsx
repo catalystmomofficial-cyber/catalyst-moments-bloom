@@ -40,6 +40,8 @@ export interface Event {
   // Live state
   isLive?: boolean;
   eventDate?: string | null;
+  // Stage targeting — 'all' or a specific stage value
+  stageFilter?: string;
 }
 
 // Fallback hardcoded events shown if the Supabase table isn't available yet
@@ -56,6 +58,7 @@ const FALLBACK_EVENTS: Event[] = [
     maxAttendees: 50,
     location: 'virtual',
     featured: true,
+    stageFilter: 'all',
   },
   {
     id: '2',
@@ -68,6 +71,7 @@ const FALLBACK_EVENTS: Event[] = [
     instructor: 'Dr. Maria Rodriguez',
     maxAttendees: 100,
     location: 'virtual',
+    stageFilter: 'all',
   },
   {
     id: '3',
@@ -80,6 +84,7 @@ const FALLBACK_EVENTS: Event[] = [
     instructor: 'Coach Jennifer Liu',
     maxAttendees: 30,
     location: 'hybrid',
+    stageFilter: 'postpartum',
   },
   {
     id: '4',
@@ -92,6 +97,7 @@ const FALLBACK_EVENTS: Event[] = [
     instructor: 'Nutritionist Amy Parker',
     maxAttendees: 40,
     location: 'virtual',
+    stageFilter: 'ttc',
   },
 ];
 
@@ -115,7 +121,18 @@ function mapSupabaseEvent(e: SupabaseEvent): Event {
     isFreeForMembers: e.is_free_for_members ?? false,
     isLive: live,
     eventDate: e.event_date,
+    stageFilter: e.stage_filter ?? 'all',
   };
+}
+
+/** Returns true if the event should be visible for the given profile stage. */
+function eventMatchesStage(event: Event, profileStage: string | null | undefined): boolean {
+  const filter = event.stageFilter ?? 'all';
+  if (filter === 'all') return true;
+  if (!profileStage) return false;
+  // profile stores 'pregnant'; stage_filter column uses 'pregnancy'
+  const normalised = profileStage === 'pregnant' ? 'pregnancy' : profileStage;
+  return filter === normalised;
 }
 
 function getEventTypeColor(type: string) {
@@ -162,7 +179,7 @@ const EnhancedEventsList = ({ onViewCalendar }: EnhancedEventsListProps) => {
   }, [user, getPoints]);
 
   // Use Supabase events when available; fall back to hardcoded list
-  const displayEvents: Event[] =
+  const rawEvents: Event[] =
     !loading && !error && supabaseEvents.length > 0
       ? supabaseEvents.map(mapSupabaseEvent)
       : !loading && error
@@ -170,6 +187,9 @@ const EnhancedEventsList = ({ onViewCalendar }: EnhancedEventsListProps) => {
         : loading
           ? []
           : FALLBACK_EVENTS;
+
+  // Apply stage filter regardless of data source
+  const displayEvents = rawEvents.filter(e => eventMatchesStage(e, profile?.motherhood_stage));
 
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
