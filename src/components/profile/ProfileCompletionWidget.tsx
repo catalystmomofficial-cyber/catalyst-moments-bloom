@@ -181,6 +181,9 @@ export const ProfileCompletionWidget = () => {
         duration: 5000,
       });
 
+      // Notify other components to refresh points balance
+      window.dispatchEvent(new CustomEvent('points-updated'));
+
       // Refresh completion status
       setTimeout(() => {
         checkCompletion();
