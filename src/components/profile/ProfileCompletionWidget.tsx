@@ -139,7 +139,21 @@ export const ProfileCompletionWidget = () => {
   };
 
   const handleClaimReward = async (milestone: ProfileMilestone) => {
-    if (!user || !milestone.completed || claimedMilestones.includes(milestone.id) || claimingReward) return;
+    if (!user || claimedMilestones.includes(milestone.id) || claimingReward) return;
+
+    // Allow direct claim for first_checkin and profile_100 even if not yet completed
+    const directClaimable = milestone.id === 'first_checkin' || milestone.id === 'profile_100';
+    if (!milestone.completed && !directClaimable) return;
+
+    // profile_100 requires actual 100% completion
+    if (milestone.id === 'profile_100' && completion.totalPercentage !== 100) {
+      toast({
+        title: 'Complete all profile fields first',
+        description: 'Finish your profile to claim this reward',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setClaimingReward(milestone.id);
     
@@ -166,6 +180,9 @@ export const ProfileCompletionWidget = () => {
         description: milestone.label,
         duration: 5000,
       });
+
+      // Notify other components to refresh points balance
+      window.dispatchEvent(new CustomEvent('points-updated'));
 
       // Refresh completion status
       setTimeout(() => {
@@ -306,7 +323,22 @@ export const ProfileCompletionWidget = () => {
                     </div>
                     <div className="flex items-center gap-2 ml-2">
                       <Badge variant="outline">+{milestone.points} pts</Badge>
-                      {milestone.route && (
+                      {(milestone.id === 'first_checkin' || milestone.id === 'profile_100') ? (
+                        claimedMilestones.includes(milestone.id) ? (
+                          <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400">
+                            ✓ Claimed
+                          </Badge>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleClaimReward(milestone)}
+                            disabled={claimingReward === milestone.id}
+                          >
+                            {claimingReward === milestone.id ? 'Processing...' : 'Complete'}
+                          </Button>
+                        )
+                      ) : milestone.route && (
                         <Button
                           size="sm"
                           variant="outline"

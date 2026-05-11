@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Link } from 'react-router-dom';
 import { AchievementBadge } from '@/components/social/AchievementBadge';
 import { ProgressCard } from '@/components/social/ProgressCard';
 import { ShareModal } from '@/components/social/ShareModal';
@@ -345,7 +346,7 @@ const Progress = () => {
                 Record your first check-in to begin your transformation journey
               </p>
               <Button asChild>
-                <a href="/dashboard">Go to Dashboard</a>
+                <Link to="/dashboard">Go to Dashboard</Link>
               </Button>
             </CardContent>
           </Card>

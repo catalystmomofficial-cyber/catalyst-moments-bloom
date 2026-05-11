@@ -11,15 +11,21 @@ export const PointsBalance = () => {
   useEffect(() => {
     if (!user) return;
     let cancelled = false;
-    (async () => {
+    const fetchPoints = async () => {
       const { data } = await supabase
         .from('user_points')
         .select('total_points')
         .eq('user_id', user.id)
         .maybeSingle();
       if (!cancelled) setPoints(data?.total_points ?? 0);
-    })();
-    return () => { cancelled = true; };
+    };
+    fetchPoints();
+    const handler = () => fetchPoints();
+    window.addEventListener('points-updated', handler);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('points-updated', handler);
+    };
   }, [user]);
 
   return (
