@@ -757,6 +757,8 @@ export type Database = {
       }
       event_registrations: {
         Row: {
+          amount_paid: number | null
+          attended: boolean | null
           created_at: string
           email: string
           event_date: string | null
@@ -768,11 +770,15 @@ export type Database = {
           id: string
           last_name: string
           notification_pref: string | null
+          payment_method: string | null
           phone: string | null
+          points_used: number | null
           questions: string | null
           user_id: string | null
         }
         Insert: {
+          amount_paid?: number | null
+          attended?: boolean | null
           created_at?: string
           email: string
           event_date?: string | null
@@ -784,11 +790,15 @@ export type Database = {
           id?: string
           last_name: string
           notification_pref?: string | null
+          payment_method?: string | null
           phone?: string | null
+          points_used?: number | null
           questions?: string | null
           user_id?: string | null
         }
         Update: {
+          amount_paid?: number | null
+          attended?: boolean | null
           created_at?: string
           email?: string
           event_date?: string | null
@@ -800,9 +810,89 @@ export type Database = {
           id?: string
           last_name?: string
           notification_pref?: string | null
+          payment_method?: string | null
           phone?: string | null
+          points_used?: number | null
           questions?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          current_attendees: number | null
+          day_display: string | null
+          description: string | null
+          event_date: string | null
+          id: string
+          is_featured: boolean | null
+          is_free_for_members: boolean | null
+          location_type: string | null
+          max_capacity: number | null
+          meeting_url: string | null
+          points_cost: number | null
+          price_member: number | null
+          price_non_member: number | null
+          replay_available: boolean | null
+          replay_expires_hours: number | null
+          specialist_name: string | null
+          specialist_title: string | null
+          stage_filter: string | null
+          status: string | null
+          time_display: string | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          current_attendees?: number | null
+          day_display?: string | null
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          is_featured?: boolean | null
+          is_free_for_members?: boolean | null
+          location_type?: string | null
+          max_capacity?: number | null
+          meeting_url?: string | null
+          points_cost?: number | null
+          price_member?: number | null
+          price_non_member?: number | null
+          replay_available?: boolean | null
+          replay_expires_hours?: number | null
+          specialist_name?: string | null
+          specialist_title?: string | null
+          stage_filter?: string | null
+          status?: string | null
+          time_display?: string | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          current_attendees?: number | null
+          day_display?: string | null
+          description?: string | null
+          event_date?: string | null
+          id?: string
+          is_featured?: boolean | null
+          is_free_for_members?: boolean | null
+          location_type?: string | null
+          max_capacity?: number | null
+          meeting_url?: string | null
+          points_cost?: number | null
+          price_member?: number | null
+          price_non_member?: number | null
+          replay_available?: boolean | null
+          replay_expires_hours?: number | null
+          specialist_name?: string | null
+          specialist_title?: string | null
+          stage_filter?: string | null
+          status?: string | null
+          time_display?: string | null
+          title?: string
         }
         Relationships: []
       }
@@ -1846,6 +1936,16 @@ export type Database = {
           remaining_points: number
           success: boolean
         }[]
+      }
+      register_for_event: {
+        Args: {
+          p_amount_paid: number
+          p_event_id: string
+          p_payment_method: string
+          p_points_used: number
+          p_user_id: string
+        }
+        Returns: Json
       }
       request_stage_change: {
         Args: { p_reason?: string; p_requested_stage: string }
