@@ -139,7 +139,21 @@ export const ProfileCompletionWidget = () => {
   };
 
   const handleClaimReward = async (milestone: ProfileMilestone) => {
-    if (!user || !milestone.completed || claimedMilestones.includes(milestone.id) || claimingReward) return;
+    if (!user || claimedMilestones.includes(milestone.id) || claimingReward) return;
+
+    // Allow direct claim for first_checkin and profile_100 even if not yet completed
+    const directClaimable = milestone.id === 'first_checkin' || milestone.id === 'profile_100';
+    if (!milestone.completed && !directClaimable) return;
+
+    // profile_100 requires actual 100% completion
+    if (milestone.id === 'profile_100' && completion.totalPercentage !== 100) {
+      toast({
+        title: 'Complete all profile fields first',
+        description: 'Finish your profile to claim this reward',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setClaimingReward(milestone.id);
     
