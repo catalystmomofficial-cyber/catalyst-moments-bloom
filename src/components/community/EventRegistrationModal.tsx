@@ -275,6 +275,22 @@ const EventRegistrationModal = ({
             </p>
           )}
 
+          {/* Member pricing nudge — logged in but not subscribed */}
+          {user && !subscribed && isPaidEvent && memberPrice > 0 && (
+            <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <Zap className="h-3 w-3 text-primary shrink-0" />
+              Members pay ${(memberPrice / 100).toFixed(2)} —{' '}
+              <a href="/pricing" className="underline text-primary">Join to unlock</a>
+            </p>
+          )}
+
+          {/* Sign-in prompt — not logged in */}
+          {!user && (
+            <p className="text-xs text-center text-muted-foreground">
+              <a href="/auth" className="underline text-primary">Sign in or create an account</a> to register for this event
+            </p>
+          )}
+
           <div className="flex justify-end gap-3 pt-2">
             <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
               Cancel
