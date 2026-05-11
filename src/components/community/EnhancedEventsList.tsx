@@ -8,6 +8,8 @@ import EventRegistrationModal from './EventRegistrationModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEvents, isEventLive, formatEventDate, type SupabaseEvent } from '@/hooks/useEvents';
 import { usePoints } from '@/hooks/usePoints';
+import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 // Import member avatars
 import mom1 from '@/assets/member-avatars/mom-1.jpg';
@@ -42,6 +44,8 @@ export interface Event {
   eventDate?: string | null;
   // Stage targeting — 'all' or a specific stage value
   stageFilter?: string;
+  // Join URL opened when user clicks "Join Now"
+  meetingUrl?: string;
 }
 
 // Fallback hardcoded events shown if the Supabase table isn't available yet
@@ -213,6 +217,7 @@ function mapSupabaseEvent(e: SupabaseEvent): Event {
     isLive: live,
     eventDate: e.event_date,
     stageFilter: e.stage_filter ?? 'all',
+    meetingUrl: e.meeting_url ?? undefined,
   };
 }
 
@@ -257,7 +262,8 @@ interface EnhancedEventsListProps {
 const EnhancedEventsList = ({ onViewCalendar }: EnhancedEventsListProps) => {
   const { profile, subscribed, user } = useAuth();
   const { events: supabaseEvents, loading, error } = useEvents(profile?.motherhood_stage);
-  const { getPoints } = usePoints();
+  const { getPoints, awardPoints } = usePoints();
+  const { toast } = useToast();
 
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
@@ -269,6 +275,28 @@ const EnhancedEventsList = ({ onViewCalendar }: EnhancedEventsListProps) => {
       getPoints().then(({ total }) => setPointsBalance(total));
     }
   }, [user, getPoints]);
+
+  const handleJoinNow = async (event: Event) => {
+    // Open meeting URL immediately so browser doesn't block the new tab
+    if (event.meetingUrl) {
+      window.open(event.meetingUrl, '_blank');
+    }
+
+    if (!user) return;
+
+    const { data: result } = await (supabase as any).rpc('mark_event_attended', {
+      p_event_id: event.id.toString(),
+      p_user_id: user.id.toString(),
+    });
+
+    // Only award points if this is the first time attending
+    if (!result?.already_attended) {
+      const pointsEarned = (event.type as string) === 'summit' ? 500 : 200;
+      await awardPoints(pointsEarned, 'event_attendance', `Attended ${event.title}`);
+      getPoints().then(({ total }) => setPointsBalance(total));
+      toast({ title: `You earned +${pointsEarned} points for attending!` });
+    }
+  };
 
   // Use Supabase events when available; fall back to hardcoded list
   const rawEvents: Event[] =
@@ -431,10 +459,14 @@ const EnhancedEventsList = ({ onViewCalendar }: EnhancedEventsListProps) => {
 
                     <Button
                       size="sm"
-                      variant={event.isLive ? 'default' : 'default'}
+                      variant="default"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEventClick(event);
+                        if (event.isLive) {
+                          handleJoinNow(event);
+                        } else {
+                          handleEventClick(event);
+                        }
                       }}
                     >
                       {getButtonLabel(event, !!subscribed)}

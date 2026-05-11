@@ -21,6 +21,7 @@ export interface SupabaseEvent {
   is_free_for_members: boolean | null;
   replay_available: boolean | null;
   status: string | null;
+  meeting_url: string | null;
 }
 
 export function useEvents(userStage?: string | null) {
