@@ -345,7 +345,7 @@ const Progress = () => {
                 Record your first check-in to begin your transformation journey
               </p>
               <Button asChild>
-                <a href="/dashboard">Go to Dashboard</a>
+                <Link to="/dashboard">Go to Dashboard</Link>
               </Button>
             </CardContent>
           </Card>
