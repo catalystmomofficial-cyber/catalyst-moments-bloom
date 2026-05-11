@@ -320,7 +320,22 @@ export const ProfileCompletionWidget = () => {
                     </div>
                     <div className="flex items-center gap-2 ml-2">
                       <Badge variant="outline">+{milestone.points} pts</Badge>
-                      {milestone.route && (
+                      {(milestone.id === 'first_checkin' || milestone.id === 'profile_100') ? (
+                        claimedMilestones.includes(milestone.id) ? (
+                          <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400">
+                            ✓ Claimed
+                          </Badge>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleClaimReward(milestone)}
+                            disabled={claimingReward === milestone.id}
+                          >
+                            {claimingReward === milestone.id ? 'Processing...' : 'Complete'}
+                          </Button>
+                        )
+                      ) : milestone.route && (
                         <Button
                           size="sm"
                           variant="outline"
