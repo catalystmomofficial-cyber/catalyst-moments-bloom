@@ -14,6 +14,7 @@ import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
 import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
 import { TTCEducationalResources } from '@/components/ttc/TTCEducationalResources';
+import { TTCDailyCheckIn } from '@/components/ttc/TTCDailyCheckIn';
 import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
 import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
 import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
