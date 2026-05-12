@@ -1468,6 +1468,237 @@ export type Database = {
         }
         Relationships: []
       }
+      ttc_bloodwork: {
+        Row: {
+          amh: number | null
+          b12: number | null
+          cortisol: number | null
+          created_at: string
+          cycle_day: number | null
+          estradiol: number | null
+          ferritin: number | null
+          fsh: number | null
+          id: string
+          insulin: number | null
+          lab_source: string | null
+          lh: number | null
+          notes: string | null
+          progesterone: number | null
+          prolactin: number | null
+          t3: number | null
+          t4: number | null
+          test_date: string
+          testosterone: number | null
+          tsh: number | null
+          user_id: string
+          vitamin_d: number | null
+        }
+        Insert: {
+          amh?: number | null
+          b12?: number | null
+          cortisol?: number | null
+          created_at?: string
+          cycle_day?: number | null
+          estradiol?: number | null
+          ferritin?: number | null
+          fsh?: number | null
+          id?: string
+          insulin?: number | null
+          lab_source?: string | null
+          lh?: number | null
+          notes?: string | null
+          progesterone?: number | null
+          prolactin?: number | null
+          t3?: number | null
+          t4?: number | null
+          test_date: string
+          testosterone?: number | null
+          tsh?: number | null
+          user_id: string
+          vitamin_d?: number | null
+        }
+        Update: {
+          amh?: number | null
+          b12?: number | null
+          cortisol?: number | null
+          created_at?: string
+          cycle_day?: number | null
+          estradiol?: number | null
+          ferritin?: number | null
+          fsh?: number | null
+          id?: string
+          insulin?: number | null
+          lab_source?: string | null
+          lh?: number | null
+          notes?: string | null
+          progesterone?: number | null
+          prolactin?: number | null
+          t3?: number | null
+          t4?: number | null
+          test_date?: string
+          testosterone?: number | null
+          tsh?: number | null
+          user_id?: string
+          vitamin_d?: number | null
+        }
+        Relationships: []
+      }
+      ttc_cycle_logs: {
+        Row: {
+          basal_body_temp: number | null
+          cervical_mucus: string | null
+          created_at: string
+          cycle_day: number | null
+          flow_intensity: string | null
+          id: string
+          log_date: string
+          notes: string | null
+          ovulation_test: string | null
+          period_status: string | null
+          symptoms: string[] | null
+          user_id: string
+        }
+        Insert: {
+          basal_body_temp?: number | null
+          cervical_mucus?: string | null
+          created_at?: string
+          cycle_day?: number | null
+          flow_intensity?: string | null
+          id?: string
+          log_date: string
+          notes?: string | null
+          ovulation_test?: string | null
+          period_status?: string | null
+          symptoms?: string[] | null
+          user_id: string
+        }
+        Update: {
+          basal_body_temp?: number | null
+          cervical_mucus?: string | null
+          created_at?: string
+          cycle_day?: number | null
+          flow_intensity?: string | null
+          id?: string
+          log_date?: string
+          notes?: string | null
+          ovulation_test?: string | null
+          period_status?: string | null
+          symptoms?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ttc_cycle_settings: {
+        Row: {
+          average_cycle_length: number
+          average_period_length: number
+          created_at: string
+          id: string
+          known_conditions: string[] | null
+          last_period_start: string | null
+          months_trying: number
+          ttc_start_date: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          average_cycle_length?: number
+          average_period_length?: number
+          created_at?: string
+          id?: string
+          known_conditions?: string[] | null
+          last_period_start?: string | null
+          months_trying?: number
+          ttc_start_date?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          average_cycle_length?: number
+          average_period_length?: number
+          created_at?: string
+          id?: string
+          known_conditions?: string[] | null
+          last_period_start?: string | null
+          months_trying?: number
+          ttc_start_date?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ttc_daily_checkins: {
+        Row: {
+          checkin_date: string
+          created_at: string
+          cycle_day: number | null
+          energy_score: number | null
+          id: string
+          mood: string | null
+          skin_status: string | null
+          symptoms_notes: string | null
+          user_id: string
+        }
+        Insert: {
+          checkin_date: string
+          created_at?: string
+          cycle_day?: number | null
+          energy_score?: number | null
+          id?: string
+          mood?: string | null
+          skin_status?: string | null
+          symptoms_notes?: string | null
+          user_id: string
+        }
+        Update: {
+          checkin_date?: string
+          created_at?: string
+          cycle_day?: number | null
+          energy_score?: number | null
+          id?: string
+          mood?: string | null
+          skin_status?: string | null
+          symptoms_notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ttc_pattern_reports: {
+        Row: {
+          created_at: string
+          data_days_analyzed: number | null
+          doctor_prep_text: string | null
+          flags: string[] | null
+          generated_at: string
+          id: string
+          report_json: Json | null
+          suggested_questions: string[] | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data_days_analyzed?: number | null
+          doctor_prep_text?: string | null
+          flags?: string[] | null
+          generated_at?: string
+          id?: string
+          report_json?: Json | null
+          suggested_questions?: string[] | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data_days_analyzed?: number | null
+          doctor_prep_text?: string | null
+          flags?: string[] | null
+          generated_at?: string
+          id?: string
+          report_json?: Json | null
+          suggested_questions?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_achievements: {
         Row: {
           achievement_id: string

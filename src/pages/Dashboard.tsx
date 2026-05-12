@@ -14,6 +14,7 @@ import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
 import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
 import { TTCEducationalResources } from '@/components/ttc/TTCEducationalResources';
+import { TTCDailyCheckIn } from '@/components/ttc/TTCDailyCheckIn';
 import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
 import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
 import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
@@ -241,15 +242,23 @@ const Dashboard = () => {
 
               <PointsBalance />
 
-              <div className="flex justify-end">
-                <AffiliateButton variant="outline" size="sm" />
-              </div>
+              {!isTTC && (
+                <div className="flex justify-end">
+                  <AffiliateButton variant="outline" size="sm" />
+                </div>
+              )}
             </div>
+
+            {isTTC && (
+              <div className="mb-6">
+                <TTCDailyCheckIn />
+              </div>
+            )}
 
             {/* Quick Stats - More Compact */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <StatsCard
-                title="Weekly Workouts"
+                title="Movement This Week"
                 value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
                 description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
                 icon={<Activity className="h-5 w-5" />}
