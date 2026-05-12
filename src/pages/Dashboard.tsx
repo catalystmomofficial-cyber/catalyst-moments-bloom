@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle, Settings, ClipboardList } from 'lucide-react';
+import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle, Settings, ClipboardList, Target, Utensils, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
@@ -14,7 +15,6 @@ import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
 import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
 import { TTCEducationalResources } from '@/components/ttc/TTCEducationalResources';
-import { TTCDailyCheckIn } from '@/components/ttc/TTCDailyCheckIn';
 import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
 import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
 import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
@@ -34,6 +34,60 @@ import { PushNotificationPrompt } from '@/components/notifications/PushNotificat
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+
+// ─── TTC daily fertility tips (one shown per day) ────────────────────────────
+const TTC_TIPS = [
+  'Track your basal body temperature first thing every morning for the most accurate readings.',
+  'Cervical mucus that looks like raw egg whites signals your most fertile days.',
+  'Stress can delay ovulation — even 10 minutes of deep breathing today makes a difference.',
+  'Stay hydrated: good cervical mucus quality starts with drinking enough water.',
+  'Folic acid (400–800 mcg/day) is most important in the weeks before conception.',
+  'Moderate exercise supports hormone balance — intense training can suppress ovulation.',
+  'Sleep affects every fertility hormone. Aim for 7–9 hours tonight.',
+];
+
+const getTodaysTip = () => TTC_TIPS[new Date().getDay() % TTC_TIPS.length];
+
+// ─── Compact cycle day card (no tabs) ────────────────────────────────────────
+const CycleDayCard = () => {
+  const cycleDay = 14;
+  const phase = 'fertile' as const;
+  const phaseColors: Record<string, string> = {
+    menstrual:  'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+    follicular: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+    fertile:    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+    luteal:     'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+  };
+  const hormoneContext: Record<string, string> = {
+    menstrual:  'Estrogen rising — rest and nourish your body.',
+    follicular: 'Estrogen climbing — energy and mood lift incoming.',
+    fertile:    'LH surge — peak conception window, high energy.',
+    luteal:     'Progesterone dominant — focus on rest and warmth.',
+  };
+
+  return (
+    <Card>
+      <CardContent className="pt-5 pb-4">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex flex-col items-center justify-center shrink-0">
+            <span className="text-xl font-bold text-primary leading-none">{cycleDay}</span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Day</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <Target className="h-4 w-4 text-primary shrink-0" />
+              <span className="font-semibold text-sm">Cycle Day {cycleDay}</span>
+              <Badge className={`text-xs ${phaseColors[phase]}`}>
+                {phase.charAt(0).toUpperCase() + phase.slice(1)} Window
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">{hormoneContext[phase]}</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 interface StatsCardProps {
   title: string;
@@ -242,139 +296,158 @@ const Dashboard = () => {
 
               <PointsBalance />
 
-              {!isTTC && (
-                <div className="flex justify-end">
-                  <AffiliateButton variant="outline" size="sm" />
-                </div>
-              )}
-            </div>
-
-            {isTTC && (
-              <div className="mb-6">
-                <TTCDailyCheckIn />
+              <div className="flex justify-end">
+                <AffiliateButton variant="outline" size="sm" />
               </div>
-            )}
-
-            {/* Quick Stats - More Compact */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <StatsCard
-                title="Movement This Week"
-                value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
-                description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
-                icon={<Activity className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
-              <StatsCard
-                title="Wellness Score"
-                value={wellnessScore || "—"}
-                description={wellnessScore ? "Recent check-ins" : "Check-in to track"}
-                icon={<Heart className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
-              <StatsCard
-                title="This Week"
-                value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
-                description="Workout minutes"
-                icon={<TrendingUp className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
             </div>
-            
-            {/* Main Content Grid - Reorganized */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left Column - Primary Actions */}
-              <div className="lg:col-span-2 space-y-6">
-                {/* Recommended Activity */}
-                {isPregnant ? (
-                  <div className="grid grid-cols-1 gap-4">
-                    <PregnancyJournal />
-                    <PostpartumPrepGuide />
-                  </div>
-                ) : isTTC ? (
-                  <TTCTracker />
-                ) : (
-                  (() => {
-                    const glowUpId = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
-                    const score = wellnessScore ?? 60;
-                    const startWeek = score < 50 ? 1 : score <= 70 ? 2 : score <= 85 ? 3 : 4;
-                    const weekCopy: Record<number, string> = {
-                      1: 'Start gently — Week 1: foundations & breath',
-                      2: 'Build momentum — Week 2: core reconnection',
-                      3: 'Step it up — Week 3: strength & stability',
-                      4: 'Glow phase — Week 4: full-body transformation',
-                    };
-                    return (
-                      <PlanCard
-                        title="30 Days Glow Up Challenge"
-                        category="Postpartum Recovery Program"
-                        description={weekCopy[startWeek]}
-                        completed={false}
-                        icon={<Activity className="h-5 w-5" />}
-                        time="10–20 mins/day"
-                        link={`/course/${glowUpId}?startWeek=${startWeek}`}
-                        buttonText={`Start Week ${startWeek}`}
-                        progress={0}
-                        tags={["Postpartum", "Recovery", `Week ${startWeek}`]}
-                      />
-                    );
-                  })()
-                )}
 
-                {/* Monthly Challenge */}
+            {/* ── TTC: focused daily view ─────────────────────────────────── */}
+            {isTTC ? (
+              <div className="max-w-2xl space-y-4">
+                {/* 1. Quick Check-In */}
                 <MonthlyChallenge />
-              </div>
-              
-              {/* Right Column - Quick Access */}
-              <div className="space-y-6">
 
-                {/* Personalized Wellness Coach */}
+                {/* 2. Cycle day — compact */}
+                <CycleDayCard />
+
+                {/* 3. Wellness Coach */}
                 <PersonalizedCoachCard />
 
-                {/* Daily Check-in Checklist */}
-                <DailyChecklistCard />
-
-                {/* Quick Links */}
-                {isTTC ? <TTCNutritionSection /> :
-                 isPregnant ? <PregnancyCommunity /> :
-                 <NutritionSection />}
-                
-                {/* Community Preview */}
-                {isTTC ? (
-                  <TTCCommunitySection />
-                ) : !isPregnant ? (
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center text-base">
-                        <Users className="mr-2 h-4 w-4" />
-                        Community
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex items-start space-x-3">
-                        <div className="rounded-full bg-primary/20 h-8 w-8 flex items-center justify-center flex-shrink-0">
-                          <User className="h-4 w-4 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm truncate"><span className="font-medium">Jessica</span> completed the 30-day Challenge</p>
-                          <p className="text-xs text-muted-foreground">2 hours ago</p>
-                        </div>
+                {/* 4. Today's fertility tip */}
+                <Card>
+                  <CardContent className="pt-5 pb-4">
+                    <div className="flex gap-3 items-start">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <span className="text-base">✨</span>
                       </div>
-                    </CardContent>
-                    <CardFooter className="pt-3">
-                      <Button variant="outline" size="sm" className="w-full" asChild>
-                        <Link to="/community">Join Community</Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ) : null}
+                      <div>
+                        <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-1">Today's Focus</p>
+                        <p className="text-sm text-foreground leading-relaxed">{getTodaysTip()}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
+                {/* 5. Navigation buttons */}
+                <div className="flex gap-3 flex-wrap pt-1">
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/meal-plan?stage=ttc">
+                      <Utensils className="h-3.5 w-3.5 mr-1.5" />
+                      Meal Plan
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/community">
+                      <Users className="h-3.5 w-3.5 mr-1.5" />
+                      Community
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/wellness">
+                      <BookOpen className="h-3.5 w-3.5 mr-1.5" />
+                      Resources
+                    </Link>
+                  </Button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <>
+                {/* Quick Stats — non-TTC stages */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                  <StatsCard
+                    title="Weekly Workouts"
+                    value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
+                    description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
+                    icon={<Activity className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                  <StatsCard
+                    title="Wellness Score"
+                    value={wellnessScore || "—"}
+                    description={wellnessScore ? "Recent check-ins" : "Check-in to track"}
+                    icon={<Heart className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                  <StatsCard
+                    title="This Week"
+                    value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
+                    description="Workout minutes"
+                    icon={<TrendingUp className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                </div>
 
-            {isTTC && (
-              <div className="mt-6">
-                <TTCEducationalResources />
-              </div>
+                {/* Main Content Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2 space-y-6">
+                    {isPregnant ? (
+                      <div className="grid grid-cols-1 gap-4">
+                        <PregnancyJournal />
+                        <PostpartumPrepGuide />
+                      </div>
+                    ) : (
+                      (() => {
+                        const glowUpId = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
+                        const score = wellnessScore ?? 60;
+                        const startWeek = score < 50 ? 1 : score <= 70 ? 2 : score <= 85 ? 3 : 4;
+                        const weekCopy: Record<number, string> = {
+                          1: 'Start gently — Week 1: foundations & breath',
+                          2: 'Build momentum — Week 2: core reconnection',
+                          3: 'Step it up — Week 3: strength & stability',
+                          4: 'Glow phase — Week 4: full-body transformation',
+                        };
+                        return (
+                          <PlanCard
+                            title="30 Days Glow Up Challenge"
+                            category="Postpartum Recovery Program"
+                            description={weekCopy[startWeek]}
+                            completed={false}
+                            icon={<Activity className="h-5 w-5" />}
+                            time="10–20 mins/day"
+                            link={`/course/${glowUpId}?startWeek=${startWeek}`}
+                            buttonText={`Start Week ${startWeek}`}
+                            progress={0}
+                            tags={["Postpartum", "Recovery", `Week ${startWeek}`]}
+                          />
+                        );
+                      })()
+                    )}
+                    <MonthlyChallenge />
+                  </div>
+
+                  <div className="space-y-6">
+                    <PersonalizedCoachCard />
+                    <DailyChecklistCard />
+                    {isPregnant ? <PregnancyCommunity /> : <NutritionSection />}
+                    {!isPregnant && (
+                      <Card>
+                        <CardHeader className="pb-3">
+                          <CardTitle className="flex items-center text-base">
+                            <Users className="mr-2 h-4 w-4" />
+                            Community
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="flex items-start space-x-3">
+                            <div className="rounded-full bg-primary/20 h-8 w-8 flex items-center justify-center flex-shrink-0">
+                              <User className="h-4 w-4 text-primary" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm truncate"><span className="font-medium">Jessica</span> completed the 30-day Challenge</p>
+                              <p className="text-xs text-muted-foreground">2 hours ago</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                        <CardFooter className="pt-3">
+                          <Button variant="outline" size="sm" className="w-full" asChild>
+                            <Link to="/community">Join Community</Link>
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    )}
+                  </div>
+                </div>
+              </>
             )}
           </>
         )}
