@@ -55,7 +55,7 @@ export const TTCBloodworkModal = ({ open, onOpenChange, settings, onSaved }: Pro
       const v = values[m.key];
       if (v && !isNaN(Number(v))) row[m.key] = Number(v);
     });
-    const { error } = await supabase.from('ttc_bloodwork').insert(row);
+    const { error } = await supabase.from('ttc_bloodwork').insert(row as any);
     if (error) { setSaving(false); toast.error('Could not save: ' + error.message); return; }
     await supabase.rpc('add_user_points', {
       p_user_id: user.id, p_points: 100, p_source: 'ttc_bloodwork', p_description: 'Logged bloodwork',
