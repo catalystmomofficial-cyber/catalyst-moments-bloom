@@ -7,8 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
-import { Clock, BookOpen, Download, Printer, Share2, ChevronDown, ChevronUp, CalendarCheck, Flame, ChevronLeft } from 'lucide-react';
+import { Clock, BookOpen, Download, Printer, Share2, ChevronDown, ChevronUp, CalendarCheck, Flame, ChevronLeft, Lock } from 'lucide-react';
 import postpartumGlowUpCover from '@/assets/30-days-glow-up-professional-cover.jpg';
+import { useAuth } from '@/contexts/AuthContext';
 
 // ─── 30-Day Challenge Data (from PDF) ────────────────────────────────────────
 
@@ -403,40 +404,54 @@ function PostpartumGlowUpChallenge() {
   // Card-first preview — matches the Recipes page MealPlanCard look
   if (!showDetails) {
     return (
-      <div className="max-w-2xl mx-auto">
+      <div>
         <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">Postpartum Recovery Plans</h1>
-          <Badge variant="outline">Postpartum</Badge>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Postpartum Meal Plans</h1>
+          <p className="text-muted-foreground">Nutrition plans tailored for your postpartum journey.</p>
         </div>
-        <div className="border border-border rounded-2xl overflow-hidden bg-background shadow-sm">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-            <div className="aspect-video">
-              <img
-                src={postpartumGlowUpCover}
-                alt="30-Day Mom Glow-Up Challenge"
-                className="w-full h-full object-cover"
-              />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Active plan */}
+          <div className="border border-border rounded-2xl overflow-hidden bg-background shadow-sm">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+              <div className="aspect-video">
+                <img
+                  src={postpartumGlowUpCover}
+                  alt="30-Day Mom Glow-Up Challenge"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute bottom-4 left-4 z-20">
+                <Badge className="bg-[#B5651D] hover:bg-[#B5651D] text-white">30 Day Challenge</Badge>
+              </div>
             </div>
-            <div className="absolute bottom-4 left-4 z-20">
-              <Badge className="bg-[#B5651D] hover:bg-[#B5651D] text-white">30 Day Challenge</Badge>
+            <div className="p-6">
+              <h2 className="text-xl font-bold mb-2 text-foreground">30-Day Mom Glow-Up Challenge</h2>
+              <p className="text-muted-foreground mb-4 leading-relaxed">
+                Comprehensive 30-day plan with iron-dense, gut-sealing, lactation-safe recipes plus daily workouts and check-ins for optimal postpartum healing.
+              </p>
+              <div className="flex items-center gap-4 mb-5 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1.5"><BookOpen className="h-4 w-4" /> 30 days</div>
+                <div className="flex items-center gap-1.5"><Clock className="h-4 w-4" /> 20–35 min/meal</div>
+              </div>
+              <Button
+                onClick={() => setShowDetails(true)}
+                className="w-full bg-[#B5651D] hover:bg-[#8B4513] text-white"
+              >
+                View Plan
+              </Button>
             </div>
           </div>
-          <div className="p-6">
-            <h2 className="text-xl font-bold mb-2 text-foreground">30-Day Mom Glow-Up Challenge</h2>
-            <p className="text-muted-foreground mb-4 leading-relaxed">
-              Comprehensive 30-day plan with iron-dense, gut-sealing, lactation-safe recipes plus daily workouts and check-ins for optimal postpartum healing.
-            </p>
-            <div className="flex items-center gap-4 mb-5 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1.5"><BookOpen className="h-4 w-4" /> 30 days</div>
-              <div className="flex items-center gap-1.5"><Clock className="h-4 w-4" /> 20–35 min/meal</div>
+
+          {/* Coming Soon placeholder */}
+          <div className="border border-dashed border-border rounded-2xl overflow-hidden bg-muted/20 flex flex-col items-center justify-center p-8 text-center min-h-[320px]">
+            <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-4">
+              <Lock className="h-6 w-6 text-muted-foreground" />
             </div>
-            <Button
-              onClick={() => setShowDetails(true)}
-              className="w-full bg-[#B5651D] hover:bg-[#8B4513] text-white"
-            >
-              View Plan
-            </Button>
+            <h3 className="font-bold text-foreground text-lg mb-2">More Plans Coming Soon</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
+              We're working on more postpartum meal plans. Check back soon!
+            </p>
           </div>
         </div>
       </div>
@@ -757,10 +772,20 @@ const VALID_KEYS = new Set(Object.keys(STAGE_TO_JOURNEY));
 const MealPlan = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
+  const { profile } = useAuth();
 
   const rawStage = (searchParams.get('stage') || '').toLowerCase().trim();
   const rawFocus = (searchParams.get('focus') || '').toLowerCase().trim();
   const rawParam = rawStage || rawFocus;
+
+  // Auto-redirect to user's stage if no stage param is present
+  useEffect(() => {
+    if (!rawParam && profile?.motherhood_stage && VALID_KEYS.has(profile.motherhood_stage)) {
+      const next = new URLSearchParams(searchParams);
+      next.set('stage', profile.motherhood_stage);
+      setSearchParams(next, { replace: true });
+    }
+  }, [rawParam, profile?.motherhood_stage]);
 
   const isValid    = rawParam ? VALID_KEYS.has(rawParam) : true;
   const stageParam = isValid ? rawParam : '';
