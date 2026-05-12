@@ -1925,6 +1925,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      mark_event_attended: {
+        Args: { p_event_id: string; p_user_id: string }
+        Returns: Json
+      }
       redeem_points_for_discount: {
         Args: {
           p_description?: string
