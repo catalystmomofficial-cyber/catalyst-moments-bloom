@@ -15,8 +15,6 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
 import WorkoutDetail from "./pages/WorkoutDetail";
-import Recipes from "./pages/Recipes";
-import RecipeDetail from "./pages/RecipeDetail";
 import Wellness from "./pages/Wellness";
 import Community from "./pages/Community";
 import GroupDetail from "./pages/GroupDetail";
@@ -146,21 +144,8 @@ function AppContent() {
             </SubscriptionGuard>
           </PrivateRoute>
         } />
-        <Route path="/nutrition" element={<Navigate to="/recipes" replace />} />
-        <Route path="/recipes" element={
-          <PrivateRoute>
-            <SubscriptionGuard>
-              <Recipes />
-            </SubscriptionGuard>
-          </PrivateRoute>
-        } />
-        <Route path="/recipes/:slug" element={
-          <PrivateRoute>
-            <SubscriptionGuard>
-              <RecipeDetail />
-            </SubscriptionGuard>
-          </PrivateRoute>
-        } />
+        <Route path="/nutrition" element={<Navigate to="/meal-plan" replace />} />
+        <Route path="/recipes" element={<Navigate to="/meal-plan" replace />} />
         <Route path="/wellness" element={
           <PrivateRoute>
             <SubscriptionGuard>
