@@ -106,7 +106,7 @@ const DailyChecklistCard = () => {
 const Dashboard = () => {
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
-  const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
+  const { wellnessScore, previousWellnessScore, wellnessTrend, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
   const { user, profile, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
   const { stageInfo, hasJourney } = useContentFilter();
   
