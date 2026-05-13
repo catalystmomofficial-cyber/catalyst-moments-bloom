@@ -217,8 +217,69 @@ Use check-in data to provide targeted advice:
 - Connect their measurements to their wellness goals`;
     }
     
+    // ── TTC-specific context: cycle phase, recent check-ins, latest bloodwork ──
+    let ttcContext = '';
+    if (userId && motherhoodStage === 'ttc') {
+      try {
+        const [settingsRes, recentLogsRes, recentCheckinsRes, bloodworkRes] = await Promise.all([
+          supabase.from('ttc_cycle_settings').select('*').eq('user_id', userId).maybeSingle(),
+          supabase.from('ttc_cycle_logs').select('*').eq('user_id', userId).order('date', { ascending: false }).limit(7),
+          supabase.from('ttc_daily_checkins').select('*').eq('user_id', userId).order('date', { ascending: false }).limit(7),
+          supabase.from('ttc_bloodwork').select('*').eq('user_id', userId).order('date', { ascending: false }).limit(1).maybeSingle(),
+        ]);
+
+        const settings = settingsRes.data;
+        let cycleDay: number | null = null;
+        let phase = 'unknown';
+        if (settings?.last_period_start) {
+          const days = Math.floor((Date.now() - new Date(settings.last_period_start).getTime()) / 86400000);
+          const cycleLen = settings.average_cycle_length || 28;
+          cycleDay = (days % cycleLen) + 1;
+          if (cycleDay <= (settings.average_period_length || 5)) phase = 'menstrual';
+          else if (cycleDay <= 13) phase = 'follicular';
+          else if (cycleDay <= 16) phase = 'ovulation (fertile window)';
+          else phase = 'luteal';
+        }
+
+        const checkinAvg = recentCheckinsRes.data?.length
+          ? (recentCheckinsRes.data.reduce((s: number, c: any) => s + (c.energy_score || 0), 0) / recentCheckinsRes.data.length).toFixed(1)
+          : 'no data';
+
+        const bw = bloodworkRes.data;
+        const flags: string[] = [];
+        if (bw) {
+          if (bw.amh != null && bw.amh < 1.0) flags.push(`AMH low (${bw.amh})`);
+          if (bw.tsh != null && (bw.tsh < 0.5 || bw.tsh > 2.5)) flags.push(`TSH out of fertility range (${bw.tsh}, optimal 0.5–2.5)`);
+          if (bw.vitamin_d != null && bw.vitamin_d < 30) flags.push(`Vitamin D low (${bw.vitamin_d})`);
+          if (bw.ferritin != null && bw.ferritin < 40) flags.push(`Ferritin low (${bw.ferritin}, optimal >40)`);
+          if (bw.prolactin != null && bw.prolactin > 25) flags.push(`Prolactin elevated (${bw.prolactin})`);
+        }
+
+        ttcContext = `
+
+## TTC CYCLE & HORMONE CONTEXT
+- Cycle Day: ${cycleDay ?? 'unknown'} | Phase: ${phase}
+- Months trying: ${settings?.months_trying ?? 'unknown'}
+- Known conditions: ${settings?.known_conditions?.length ? settings.known_conditions.join(', ') : 'none'}
+- Last 7 days avg energy: ${checkinAvg}/10
+- Recent symptoms: ${recentCheckinsRes.data?.flatMap((c: any) => c.symptoms || []).slice(0, 5).join(', ') || 'none logged'}
+- Latest bloodwork: ${bw ? `dated ${bw.date}` : 'none uploaded'}
+${flags.length ? `- ⚠️ Bloodwork flags: ${flags.join('; ')}` : ''}
+
+TTC COACHING RULES:
+- Tailor advice to current cycle phase (menstrual = rest/iron; follicular = strength/protein; ovulation = fertility-supporting nutrients (zinc, B6); luteal = magnesium, complex carbs, stress reduction)
+- If bloodwork flags exist, address them concretely (food sources, supplement ranges, when to retest) and recommend doctor follow-up
+- Reference fertility-specific nutrients: folate, omega-3, CoQ10, vitamin D, iron, B12
+- Encourage the daily check-in if it's missing
+- Suggest the Pattern Report after 30+ days of data, or Doctor Prep before appointments
+- Never diagnose — frame everything as "patterns to discuss with your provider"`;
+      } catch (e) {
+        console.error('[WELLNESS_COACH] TTC context error:', e);
+      }
+    }
+
     // Build comprehensive system prompt focused on the four pillars and conversion
-    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}
+    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}${ttcContext}
 
 ## CATALYST MOM CORE OFFERING
 The four pillars of our platform:

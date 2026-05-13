@@ -106,7 +106,7 @@ const DailyChecklistCard = () => {
 const Dashboard = () => {
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
-  const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
+  const { wellnessScore, previousWellnessScore, wellnessTrend, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
   const { user, profile, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
   const { stageInfo, hasJourney } = useContentFilter();
   
@@ -257,8 +257,18 @@ const Dashboard = () => {
               />
               <StatsCard
                 title="Wellness Score"
-                value={wellnessScore || "—"}
-                description={wellnessScore ? "Recent check-ins" : "Check-in to track"}
+                value={
+                  wellnessScore
+                    ? `${wellnessScore}${wellnessTrend === 'up' ? ' ↑' : wellnessTrend === 'down' ? ' ↓' : ''}`
+                    : "—"
+                }
+                description={
+                  wellnessScore
+                    ? previousWellnessScore != null
+                      ? `from ${previousWellnessScore} last check-in`
+                      : "Recent check-ins"
+                    : "Check-in to track"
+                }
                 icon={<Heart className="h-5 w-5" />}
                 color="bg-primary/10"
               />
