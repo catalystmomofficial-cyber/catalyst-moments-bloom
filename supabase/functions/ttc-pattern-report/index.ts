@@ -6,7 +6,6 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 
@@ -67,6 +66,9 @@ Deno.serve(async (req) => {
     const user = userData?.user;
     if (!user) return json({ error: "Unauthorized" }, 401);
 
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) return json({ error: "LOVABLE_API_KEY is not configured" }, 500);
+
     const body = (await req.json()) as Body;
     if (body.mode !== "pattern_report" && body.mode !== "doctor_prep") {
       return json({ error: "Invalid mode" }, 400);
@@ -87,8 +89,8 @@ Deno.serve(async (req) => {
     const bloodwork = bloodworkRes.data ?? [];
     const assessment = (profileRes.data?.assessment_data as Record<string, unknown> | null) ?? null;
 
-    if (body.mode === "pattern_report" && checkins.length < 7) {
-      return json({ error: "Not enough check-in data yet. Keep logging to unlock your pattern report." }, 400);
+    if (body.mode === "pattern_report" && checkins.length < 1) {
+      return json({ error: "No check-in data yet. Log your first daily check-in to generate a pattern report." }, 400);
     }
 
     const userMessage =
@@ -108,7 +110,7 @@ Deno.serve(async (req) => {
           { role: "system", content: body.mode === "pattern_report" ? PATTERN_SYSTEM : DOCTOR_SYSTEM },
           { role: "user", content: userMessage },
         ],
-        response_format: { type: "json_object" },
+        temperature: 0.1,
       }),
     });
 
