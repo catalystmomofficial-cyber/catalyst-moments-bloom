@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Calendar, Heart, Thermometer, Droplets, Moon, Target, Eye, EyeOff, Upload, X, Loader2 } from 'lucide-react';
+import { Calendar, Heart, Thermometer, Droplets, Moon, Target, Eye, EyeOff, Upload, X, Loader2, FlaskConical } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { supabase } from '@/integrations/supabase/client';
 import { CycleCalendar } from './CycleCalendar';
+import { TTCBloodworkModal } from './TTCBloodworkModal';
 import { TTCPersonalizedAdvice } from './TTCPersonalizedAdvice';
 import { TTCPredictiveAnalytics } from './TTCPredictiveAnalytics';
 
@@ -21,7 +22,7 @@ const CYCLE_IMPORT_SYSTEM_PROMPT =
   '"cycle_logs": [{ "date": "YYYY-MM-DD", "cycle_day": "number or null", "symptoms": [] }] }. ' +
   'If you cannot find a value, use null. Never invent data.';
 
-// ─── Import Cycle Data Modal ────────────────────────────────────────────────────────────────────────────────────
+// ─── Import Cycle Data Modal ──────────────────────────────────────────────────
 const ImportCycleDataModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
   const { user } = useAuth();
   const { awardPoints } = usePoints();
@@ -163,7 +164,7 @@ const ImportCycleDataModal = ({ open, onClose }: { open: boolean; onClose: () =>
   );
 };
 
-// ─── TTCTracker ─────────────────────────────────────────────────────────────────────────────────────────
+// ─── TTCTracker ───────────────────────────────────────────────────────────────
 export const TTCTracker = () => {
   const { toast } = useToast();
   const [currentCycle, setCurrentCycle] = useState({
@@ -174,6 +175,7 @@ export const TTCTracker = () => {
   const [temperatureLocked, setTemperatureLocked] = useState(false);
   const [todayTemperature, setTodayTemperature] = useState<number | null>(null);
   const [importOpen, setImportOpen] = useState(false);
+  const [bloodworkOpen, setBloodworkOpen] = useState(false);
 
   const handleLogCycleData = (type: string) => {
     if (type === 'Temperature') {
@@ -208,6 +210,7 @@ export const TTCTracker = () => {
   return (
     <>
       <ImportCycleDataModal open={importOpen} onClose={() => setImportOpen(false)} />
+      <TTCBloodworkModal open={bloodworkOpen} onClose={() => setBloodworkOpen(false)} />
 
       <Card>
         <CardHeader>
@@ -282,6 +285,15 @@ export const TTCTracker = () => {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => setBloodworkOpen(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <FlaskConical className="h-4 w-4" />
+                    Bloodwork
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => setImportOpen(true)}
                     className="col-span-2 flex items-center gap-2"
                   >
@@ -327,6 +339,15 @@ export const TTCTracker = () => {
                   >
                     <Moon className="h-4 w-4" />
                     Log Sleep
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setBloodworkOpen(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <FlaskConical className="h-4 w-4" />
+                    Bloodwork
                   </Button>
                   <Button
                     variant="outline"
