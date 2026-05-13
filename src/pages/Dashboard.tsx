@@ -339,7 +339,7 @@ const Dashboard = () => {
                 <PersonalizedCoachCard />
 
                 {/* Daily Check-in Checklist */}
-                <DailyChecklistCard />
+                {!isTTC && <DailyChecklistCard />}
 
                 {/* Quick Links */}
                 {isTTC ? <TTCNutritionSection /> :
