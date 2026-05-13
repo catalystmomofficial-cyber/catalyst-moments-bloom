@@ -348,9 +348,7 @@ const Dashboard = () => {
                 )}
                 
                 {/* Community Preview */}
-                {isTTC ? (
-                  <TTCCommunitySection />
-                ) : !isPregnant ? (
+                {!isTTC && !isPregnant ? (
                   <Card>
                     <CardHeader className="pb-3">
                       <CardTitle className="flex items-center text-base">
