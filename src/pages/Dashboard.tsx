@@ -247,6 +247,8 @@ const Dashboard = () => {
               </div>
             </div>
 
+            {isTTC && <TTCDailyCheckIn />}
+
             {/* Quick Stats - More Compact */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <StatsCard
