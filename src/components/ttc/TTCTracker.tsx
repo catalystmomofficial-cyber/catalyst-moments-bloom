@@ -4,13 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Calendar, Heart, Thermometer, Droplets, Moon, Target, Eye, EyeOff, Upload, X, Loader2, FlaskConical } from 'lucide-react';
+import { Calendar, Heart, Thermometer, Droplets, Moon, Target, Eye, EyeOff, Upload, X, Loader2, FlaskConical, Stethoscope, BarChart3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { supabase } from '@/integrations/supabase/client';
 import { CycleCalendar } from './CycleCalendar';
 import { TTCBloodworkModal } from './TTCBloodworkModal';
+import { TTCPatternReport } from './TTCPatternReport';
 import { TTCPersonalizedAdvice } from './TTCPersonalizedAdvice';
 import { TTCPredictiveAnalytics } from './TTCPredictiveAnalytics';
 
@@ -116,7 +117,6 @@ const ImportCycleDataModal = ({ open, onClose }: { open: boolean; onClose: () =>
             Upload 1–3 screenshots from any cycle or sleep tracking app. We'll extract your data automatically.
           </p>
 
-          {/* Drop zone */}
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
@@ -137,7 +137,6 @@ const ImportCycleDataModal = ({ open, onClose }: { open: boolean; onClose: () =>
             onChange={handleFiles}
           />
 
-          {/* Preview list */}
           {previews.length > 0 && (
             <ul className="space-y-2">
               {previews.map((f, i) => (
@@ -176,6 +175,7 @@ export const TTCTracker = () => {
   const [todayTemperature, setTodayTemperature] = useState<number | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [bloodworkOpen, setBloodworkOpen] = useState(false);
+  const [reportMode, setReportMode] = useState<'doctor_prep' | 'pattern_report' | null>(null);
 
   const handleLogCycleData = (type: string) => {
     if (type === 'Temperature') {
@@ -188,7 +188,7 @@ export const TTCTracker = () => {
         return;
       }
       setTemperatureLocked(true);
-      setTodayTemperature(97.8); // Mock temperature
+      setTodayTemperature(97.8);
     }
 
     toast({
@@ -211,6 +211,13 @@ export const TTCTracker = () => {
     <>
       <ImportCycleDataModal open={importOpen} onClose={() => setImportOpen(false)} />
       <TTCBloodworkModal open={bloodworkOpen} onClose={() => setBloodworkOpen(false)} />
+      {reportMode && (
+        <TTCPatternReport
+          open={true}
+          onOpenChange={(v) => { if (!v) setReportMode(null); }}
+          mode={reportMode}
+        />
+      )}
 
       <Card>
         <CardHeader>
@@ -295,10 +302,28 @@ export const TTCTracker = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setImportOpen(true)}
-                    className="col-span-2 flex items-center gap-2"
+                    className="flex items-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
                     Import App
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setReportMode('doctor_prep')}
+                    className="col-span-2 flex items-center gap-2"
+                  >
+                    <Stethoscope className="h-4 w-4" />
+                    Prepare for Appointment
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setReportMode('pattern_report')}
+                    className="col-span-2 flex items-center gap-2"
+                  >
+                    <BarChart3 className="h-4 w-4" />
+                    Generate Pattern Report
                   </Button>
                 </div>
               ) : (
@@ -353,10 +378,28 @@ export const TTCTracker = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setImportOpen(true)}
-                    className="col-span-2 flex items-center gap-2"
+                    className="flex items-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
                     Import App
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setReportMode('doctor_prep')}
+                    className="col-span-2 flex items-center gap-2"
+                  >
+                    <Stethoscope className="h-4 w-4" />
+                    Prepare for Appointment
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setReportMode('pattern_report')}
+                    className="col-span-2 flex items-center gap-2"
+                  >
+                    <BarChart3 className="h-4 w-4" />
+                    Generate Pattern Report
                   </Button>
                 </div>
               )}
