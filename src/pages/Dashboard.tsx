@@ -378,11 +378,19 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {isTTC && (
-              <div className="mt-6">
-                <TTCEducationalResources />
+            {isTTC ? (
+              <div className="mt-6 flex gap-3">
+                <Button asChild variant="outline" size="sm" className="flex-1">
+                  <Link to="/meal-plan?stage=ttc">Meal Plan</Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="flex-1">
+                  <Link to="/community?filter=ttc">Community</Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="flex-1">
+                  <Link to="/resources">Resources</Link>
+                </Button>
               </div>
-            )}
+            ) : null}
           </>
         )}
       </div>
