@@ -295,7 +295,7 @@ export const TTCTracker = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setImportOpen(true)}
-                    className="col-span-2 flex items-center gap-2"
+                    className="flex items-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
                     Import App
@@ -353,7 +353,7 @@ export const TTCTracker = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => setImportOpen(true)}
-                    className="col-span-2 flex items-center gap-2"
+                    className="flex items-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
                     Import App
