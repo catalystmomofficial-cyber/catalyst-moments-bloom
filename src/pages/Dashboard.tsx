@@ -249,40 +249,44 @@ const Dashboard = () => {
 
             {isTTC && <TTCDailyCheckIn />}
 
-            {/* Quick Stats - More Compact */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <StatsCard
-                title="Weekly Workouts"
-                value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
-                description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
-                icon={<Activity className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
-              <StatsCard
-                title="Wellness Score"
-                value={
-                  wellnessScore
-                    ? `${wellnessScore}${wellnessTrend === 'up' ? ' ↑' : wellnessTrend === 'down' ? ' ↓' : ''}`
-                    : "—"
-                }
-                description={
-                  wellnessScore
-                    ? previousWellnessScore != null
-                      ? `from ${previousWellnessScore} last check-in`
-                      : "Recent check-ins"
-                    : "Check-in to track"
-                }
-                icon={<Heart className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
-              <StatsCard
-                title="This Week"
-                value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
-                description="Workout minutes"
-                icon={<TrendingUp className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
-            </div>
+            {!isTTC && (
+              <>
+                {/* Quick Stats - More Compact */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                  <StatsCard
+                    title="Weekly Workouts"
+                    value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
+                    description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
+                    icon={<Activity className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                  <StatsCard
+                    title="Wellness Score"
+                    value={
+                      wellnessScore
+                        ? `${wellnessScore}${wellnessTrend === 'up' ? ' ↑' : wellnessTrend === 'down' ? ' ↓' : ''}`
+                        : "—"
+                    }
+                    description={
+                      wellnessScore
+                        ? previousWellnessScore != null
+                          ? `from ${previousWellnessScore} last check-in`
+                          : "Recent check-ins"
+                        : "Check-in to track"
+                    }
+                    icon={<Heart className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                  <StatsCard
+                    title="This Week"
+                    value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
+                    description="Workout minutes"
+                    icon={<TrendingUp className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                </div>
+              </>
+            )}
             
             {/* Main Content Grid - Reorganized */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
