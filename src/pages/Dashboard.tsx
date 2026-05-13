@@ -14,6 +14,7 @@ import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
 import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
 import { TTCEducationalResources } from '@/components/ttc/TTCEducationalResources';
+import { TTCDailyCheckIn } from '@/components/ttc/TTCDailyCheckIn';
 import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
 import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
 import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
@@ -246,40 +247,46 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Quick Stats - More Compact */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-              <StatsCard
-                title="Weekly Workouts"
-                value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
-                description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
-                icon={<Activity className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
-              <StatsCard
-                title="Wellness Score"
-                value={
-                  wellnessScore
-                    ? `${wellnessScore}${wellnessTrend === 'up' ? ' ↑' : wellnessTrend === 'down' ? ' ↓' : ''}`
-                    : "—"
-                }
-                description={
-                  wellnessScore
-                    ? previousWellnessScore != null
-                      ? `from ${previousWellnessScore} last check-in`
-                      : "Recent check-ins"
-                    : "Check-in to track"
-                }
-                icon={<Heart className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
-              <StatsCard
-                title="This Week"
-                value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
-                description="Workout minutes"
-                icon={<TrendingUp className="h-5 w-5" />}
-                color="bg-primary/10"
-              />
-            </div>
+            {isTTC && <TTCDailyCheckIn />}
+
+            {!isTTC && (
+              <>
+                {/* Quick Stats - More Compact */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                  <StatsCard
+                    title="Weekly Workouts"
+                    value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
+                    description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
+                    icon={<Activity className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                  <StatsCard
+                    title="Wellness Score"
+                    value={
+                      wellnessScore
+                        ? `${wellnessScore}${wellnessTrend === 'up' ? ' ↑' : wellnessTrend === 'down' ? ' ↓' : ''}`
+                        : "—"
+                    }
+                    description={
+                      wellnessScore
+                        ? previousWellnessScore != null
+                          ? `from ${previousWellnessScore} last check-in`
+                          : "Recent check-ins"
+                        : "Check-in to track"
+                    }
+                    icon={<Heart className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                  <StatsCard
+                    title="This Week"
+                    value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
+                    description="Workout minutes"
+                    icon={<TrendingUp className="h-5 w-5" />}
+                    color="bg-primary/10"
+                  />
+                </div>
+              </>
+            )}
             
             {/* Main Content Grid - Reorganized */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -332,17 +339,16 @@ const Dashboard = () => {
                 <PersonalizedCoachCard />
 
                 {/* Daily Check-in Checklist */}
-                <DailyChecklistCard />
+                {!isTTC && <DailyChecklistCard />}
 
                 {/* Quick Links */}
-                {isTTC ? <TTCNutritionSection /> :
-                 isPregnant ? <PregnancyCommunity /> :
-                 <NutritionSection />}
+                {!isTTC && (
+                  isPregnant ? <PregnancyCommunity /> :
+                  <NutritionSection />
+                )}
                 
                 {/* Community Preview */}
-                {isTTC ? (
-                  <TTCCommunitySection />
-                ) : !isPregnant ? (
+                {!isTTC && !isPregnant ? (
                   <Card>
                     <CardHeader className="pb-3">
                       <CardTitle className="flex items-center text-base">
@@ -372,11 +378,19 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {isTTC && (
-              <div className="mt-6">
-                <TTCEducationalResources />
+            {isTTC ? (
+              <div className="mt-6 flex gap-3">
+                <Button asChild variant="outline" size="sm" className="flex-1">
+                  <Link to="/meal-plan?stage=ttc">Meal Plan</Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="flex-1">
+                  <Link to="/community?filter=ttc">Community</Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="flex-1">
+                  <Link to="/resources">Resources</Link>
+                </Button>
               </div>
-            )}
+            ) : null}
           </>
         )}
       </div>
