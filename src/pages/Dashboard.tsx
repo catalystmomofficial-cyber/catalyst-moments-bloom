@@ -342,9 +342,10 @@ const Dashboard = () => {
                 {!isTTC && <DailyChecklistCard />}
 
                 {/* Quick Links */}
-                {isTTC ? <TTCNutritionSection /> :
-                 isPregnant ? <PregnancyCommunity /> :
-                 <NutritionSection />}
+                {!isTTC && (
+                  isPregnant ? <PregnancyCommunity /> :
+                  <NutritionSection />
+                )}
                 
                 {/* Community Preview */}
                 {isTTC ? (
