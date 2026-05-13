@@ -168,11 +168,21 @@ const ImportCycleDataModal = ({ open, onClose }: { open: boolean; onClose: () =>
 // ─── TTCTracker ───────────────────────────────────────────────────────────────
 export const TTCTracker = () => {
   const { toast } = useToast();
-  const { settings, refresh } = useTTCData();
-  const [currentCycle, setCurrentCycle] = useState({
-    day: 14,
-    phase: 'fertile' as 'menstrual' | 'follicular' | 'fertile' | 'luteal'
-  });
+  const { settings, refresh, cycleDay, phase } = useTTCData();
+
+  const ttcPhaseToLocal = (p: string | null): 'menstrual' | 'follicular' | 'fertile' | 'luteal' => {
+    if (p === 'menstrual') return 'menstrual';
+    if (p === 'follicular') return 'follicular';
+    if (p === 'ovulation') return 'fertile';
+    if (p === 'early_luteal' || p === 'late_luteal') return 'luteal';
+    return 'fertile';
+  };
+
+  const currentCycle = {
+    day: cycleDay ?? 1,
+    phase: ttcPhaseToLocal(phase),
+  };
+
   const [viewMode, setViewMode] = useState<'simple' | 'detailed'>('simple');
   const [temperatureLocked, setTemperatureLocked] = useState(false);
   const [todayTemperature, setTodayTemperature] = useState<number | null>(null);
