@@ -4,13 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Calendar, Heart, Thermometer, Droplets, Moon, Target, Eye, EyeOff, Upload, X, Loader2, FlaskConical, Stethoscope, BarChart3 } from 'lucide-react';
+import { Calendar, Heart, Thermometer, Droplets, Moon, Target, Eye, EyeOff, Upload, X, Loader2, FlaskConical, Stethoscope, BarChart3, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { supabase } from '@/integrations/supabase/client';
+import { useTTCData } from '@/hooks/useTTCData';
 import { CycleCalendar } from './CycleCalendar';
 import { TTCBloodworkModal } from './TTCBloodworkModal';
+import { TTCCycleSettingsModal } from './TTCCycleSettingsModal';
 import { TTCPatternReport } from './TTCPatternReport';
 import { TTCPersonalizedAdvice } from './TTCPersonalizedAdvice';
 import { TTCPredictiveAnalytics } from './TTCPredictiveAnalytics';
@@ -166,6 +168,7 @@ const ImportCycleDataModal = ({ open, onClose }: { open: boolean; onClose: () =>
 // ─── TTCTracker ───────────────────────────────────────────────────────────────
 export const TTCTracker = () => {
   const { toast } = useToast();
+  const { settings, refresh } = useTTCData();
   const [currentCycle, setCurrentCycle] = useState({
     day: 14,
     phase: 'fertile' as 'menstrual' | 'follicular' | 'fertile' | 'luteal'
@@ -176,6 +179,7 @@ export const TTCTracker = () => {
   const [importOpen, setImportOpen] = useState(false);
   const [bloodworkOpen, setBloodworkOpen] = useState(false);
   const [reportMode, setReportMode] = useState<'doctor_prep' | 'pattern_report' | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleLogCycleData = (type: string) => {
     if (type === 'Temperature') {
@@ -211,6 +215,7 @@ export const TTCTracker = () => {
     <>
       <ImportCycleDataModal open={importOpen} onClose={() => setImportOpen(false)} />
       <TTCBloodworkModal open={bloodworkOpen} onClose={() => setBloodworkOpen(false)} />
+      <TTCCycleSettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} initial={settings} onSaved={refresh} />
       {reportMode && (
         <TTCPatternReport
           open={true}
@@ -226,15 +231,25 @@ export const TTCTracker = () => {
               <Target className="mr-2 h-5 w-5" />
               TTC Cycle Tracker
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setViewMode(viewMode === 'simple' ? 'detailed' : 'simple')}
-              className="flex items-center gap-2"
-            >
-              {viewMode === 'simple' ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-              {viewMode === 'simple' ? 'Detailed View' : 'Simple View'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setViewMode(viewMode === 'simple' ? 'detailed' : 'simple')}
+                className="flex items-center gap-2"
+              >
+                {viewMode === 'simple' ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                {viewMode === 'simple' ? 'Detailed View' : 'Simple View'}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSettingsOpen(true)}
+                className="h-8 w-8"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            </div>
           </CardTitle>
           <CardDescription>
             Track your cycle and fertility signs with {viewMode} tracking
