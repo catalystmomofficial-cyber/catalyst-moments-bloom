@@ -179,14 +179,23 @@ export const useWellnessData = () => {
   const weeklyWorkoutProgress = Math.min((workoutSessions.length / weeklyWorkoutGoal) * 100, 100);
 
   // Calculate wellness score
+  const calcScore = (entry: any) =>
+    Math.round(((entry.mood_score + entry.energy_level + (10 - entry.stress_level)) / 3) * 10);
+
   const latestWellness = wellnessEntries[0];
-  const wellnessScore = latestWellness 
-    ? Math.round(
-        (latestWellness.mood_score + 
-         latestWellness.energy_level + 
-         (10 - latestWellness.stress_level)) / 3 * 10
-      )
-    : 0;
+  const wellnessScore = latestWellness ? calcScore(latestWellness) : 0;
+
+  // Compare to previous entry for trend
+  const previousWellness = wellnessEntries[1];
+  const previousWellnessScore = previousWellness ? calcScore(previousWellness) : null;
+  const wellnessTrend: 'up' | 'down' | 'flat' | null =
+    previousWellnessScore == null
+      ? null
+      : wellnessScore > previousWellnessScore
+        ? 'up'
+        : wellnessScore < previousWellnessScore
+          ? 'down'
+          : 'flat';
 
   return {
     wellnessEntries,
@@ -199,6 +208,8 @@ export const useWellnessData = () => {
     weeklyWorkoutProgress,
     weeklyWorkoutGoal,
     wellnessScore,
+    previousWellnessScore,
+    wellnessTrend,
     refreshData: fetchWellnessData,
   };
 };
