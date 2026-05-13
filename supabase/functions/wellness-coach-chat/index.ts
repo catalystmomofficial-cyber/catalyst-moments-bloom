@@ -40,10 +40,10 @@ serve(async (req) => {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
-    if (!GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY is not configured');
+    if (!OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is not configured');
     }
 
     const authClient = createClient(SUPABASE_URL!, SUPABASE_ANON_KEY!, {
@@ -452,24 +452,18 @@ Subscription Status: ${userProfile?.is_subscribed ? 'PREMIUM MEMBER' : 'FREE TRI
       tool_choice: "auto" as const,
     };
 
-    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${GEMINI_API_KEY}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ model: 'gemini-2.0-flash', ...requestBody }),
+      body: JSON.stringify({ model: 'gpt-4o', ...requestBody }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error('[WELLNESS_COACH] AI API error:', response.status, errorText);
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: 'AI credits depleted. Please check your GEMINI_API_KEY secret.' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
       throw new Error(`AI API error: ${response.status}`);
     }
 

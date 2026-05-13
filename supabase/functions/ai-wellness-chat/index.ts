@@ -14,10 +14,13 @@ serve(async (req) => {
   try {
     const { message, userContext, conversationHistory, images } = await req.json();
     
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-    if (!GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY is not configured');
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+    if (!OPENAI_API_KEY) {
+      console.error('OpenAI API key not found. Available env vars:', Object.keys(Deno.env.toObject()));
+      throw new Error('OpenAI API key not configured');
     }
+
+    console.log('OpenAI API key found, length:', OPENAI_API_KEY.length);
 
     // Enhanced system prompt with comprehensive user context
     let systemPrompt = `You are Dr. Maya, a highly qualified AI wellness coach and maternal health expert. You are warm, empathetic, and professional with deep expertise in pregnancy, postpartum recovery, TTC (trying to conceive), nutrition, fitness, mental health, and general maternal wellness. You're having a personalized voice conversation with ${userContext?.displayName || 'a mom'}.
@@ -105,24 +108,24 @@ Respond as a trusted wellness professional who truly understands their journey a
       ];
     }
 
-    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${GEMINI_API_KEY}`,
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gemini-2.0-flash',
+        model: 'gpt-4o',
         messages,
-        max_tokens: 500,
+        max_completion_tokens: 500,
         temperature: 0.7,
       }),
     });
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('Gemini API error:', error);
-      throw new Error(`Gemini API error: ${response.status}`);
+      console.error('OpenAI API error:', error);
+      throw new Error(`OpenAI API error: ${response.status}`);
     }
 
     const data = await response.json();

@@ -20,9 +20,9 @@ serve(async (req) => {
       );
     }
 
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-    if (!GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY is not configured');
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+    if (!OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY is not configured');
     }
 
     console.log('Processing AI edit request with instruction:', instruction);
@@ -58,18 +58,20 @@ EDITING INSTRUCTION: ${instruction}
 
 Return ONLY the edited content with no explanation.`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            { role: 'user', parts: [{ text: systemPrompt + '\n\n' + userMessage }] }
-          ],
-        }),
-      }
-    );
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userMessage },
+        ],
+      }),
+    });
 
     if (!response.ok) {
       if (response.status === 429) {
@@ -80,11 +82,11 @@ Return ONLY the edited content with no explanation.`;
       }
       const errorText = await response.text();
       console.error('AI API error:', response.status, errorText);
-      throw new Error(`Gemini API error: ${response.status}`);
+      throw new Error(`OpenAI API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const editedContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const editedContent = data.choices?.[0]?.message?.content;
 
     if (!editedContent) {
       throw new Error('No edited content returned from AI');
