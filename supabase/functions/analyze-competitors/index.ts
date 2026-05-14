@@ -107,7 +107,7 @@ Return ONLY the JSON, no other text.`;
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gemini-1.5-flash',
+          model: 'gemini-2.5-flash',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt }
@@ -119,8 +119,19 @@ Return ONLY the JSON, no other text.`;
     let response = await callGateway();
 
     if (!response.ok && (response.status === 402 || response.status === 429)) {
+      const status = response.status;
       console.log('[analyze-competitors] Lovable AI unavailable, falling back to Gemini direct');
-      response = await callGeminiDirect();
+      try {
+        response = await callGeminiDirect();
+      } catch (fallbackError) {
+        const message = status === 402
+          ? 'AI credits depleted. Please add credits to continue.'
+          : 'Rate limit exceeded. Please try again in a moment.';
+        return new Response(JSON.stringify({ error: message }), {
+          status,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
     }
 
     if (!response.ok) {
