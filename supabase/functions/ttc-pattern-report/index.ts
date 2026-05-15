@@ -98,7 +98,12 @@ Deno.serve(async (req) => {
         ? buildPatternUserMessage({ settings, checkins, logs, bloodwork, assessment })
         : buildDoctorUserMessage({ settings, checkins, logs, bloodwork, assessment });
 
-    const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const messages = [
+      { role: "system", content: body.mode === "pattern_report" ? PATTERN_SYSTEM : DOCTOR_SYSTEM },
+      { role: "user", content: userMessage },
+    ];
+
+    const callGateway = () => fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
@@ -106,19 +111,46 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: body.mode === "pattern_report" ? PATTERN_SYSTEM : DOCTOR_SYSTEM },
-          { role: "user", content: userMessage },
-        ],
+        messages,
         temperature: 0.1,
       }),
     });
 
+    const callGeminiDirect = () => {
+      const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+      if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY not configured for fallback");
+      return fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${GEMINI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gemini-2.5-flash",
+          messages,
+          temperature: 0.1,
+        }),
+      });
+    };
+
+    let aiRes = await callGateway();
+
+    if (!aiRes.ok && (aiRes.status === 402 || aiRes.status === 429)) {
+      const status = aiRes.status;
+      console.log("[ttc-pattern-report] Lovable AI unavailable, falling back to Gemini direct");
+      try {
+        aiRes = await callGeminiDirect();
+      } catch (fallbackError) {
+        const message = status === 402
+          ? "AI credits depleted. Please add credits to continue."
+          : "Rate limit exceeded. Please try again in a moment.";
+        return json({ error: message }, status);
+      }
+    }
+
     if (!aiRes.ok) {
       const txt = await aiRes.text();
-      console.error("AI gateway error:", aiRes.status, txt);
-      if (aiRes.status === 429) return json({ error: "Rate limited. Try again in a minute." }, 429);
-      if (aiRes.status === 402) return json({ error: "AI credits exhausted. Add credits in Settings → Workspace → Usage." }, 402);
+      console.error("AI error:", aiRes.status, txt);
       return json({ error: "AI generation failed" }, 500);
     }
 

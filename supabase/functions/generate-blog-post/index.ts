@@ -96,7 +96,12 @@ Return ONLY valid JSON (no markdown fences) with this exact structure:
 
     console.log('Generating blog post via Lovable AI Gateway...');
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ];
+
+    const callGateway = () => fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
@@ -104,31 +109,50 @@ Return ONLY valid JSON (no markdown fences) with this exact structure:
       },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
-        ],
+        messages,
         response_format: { type: 'json_object' },
       }),
     });
 
+    const callGeminiDirect = () => {
+      const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+      if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY not configured for fallback');
+      return fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${GEMINI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gemini-2.5-flash',
+          messages,
+          response_format: { type: 'json_object' },
+        }),
+      });
+    };
+
+    let response = await callGateway();
+
+    if (!response.ok && (response.status === 402 || response.status === 429)) {
+      const status = response.status;
+      console.log('[generate-blog-post] Lovable AI unavailable, falling back to Gemini direct');
+      try {
+        response = await callGeminiDirect();
+      } catch (fallbackError) {
+        const message = status === 402
+          ? 'AI credits depleted. Please add credits to continue.'
+          : 'Rate limit exceeded. Please try again in a moment.';
+        return new Response(JSON.stringify({ error: message }), {
+          status,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Lovable AI error:', response.status, errorText);
-
-      if (response.status === 429) {
-        return new Response(
-          JSON.stringify({ error: 'Rate limits exceeded, please try again later.' }),
-          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: 'Lovable AI credits exhausted. Add funds in Settings → Workspace → Usage.' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      throw new Error(`AI gateway error: ${response.status} - ${errorText}`);
+      console.error('AI error:', response.status, errorText);
+      throw new Error(`AI error: ${response.status} - ${errorText}`);
     }
 
     const aiData = await response.json();
