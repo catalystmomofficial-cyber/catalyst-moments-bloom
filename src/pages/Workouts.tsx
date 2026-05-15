@@ -39,7 +39,7 @@ const allWorkouts: (ContentItem & WorkoutCardProps)[] = [];
 
 const Workouts = () => {
   const { user, profile } = useAuth();
-  const { filterContent, stageInfo, hasJourney, currentStage } = useContentFilter();
+  const { filterContent, stageInfo, hasJourney, currentStage, currentJourney } = useContentFilter();
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
@@ -122,7 +122,9 @@ const Workouts = () => {
   };
 
   const isTTC = stageInfo?.journey === 'ttc';
-  const isPregnant = stageInfo?.journey === 'pregnant';
+  const isPregnant = stageInfo?.journey === 'pregnant' ||
+    currentJourney === 'pregnant' ||
+    !!(currentStage?.includes('pregnan') || currentStage?.includes('trimester'));
   const isPostpartum = stageInfo?.journey === 'postpartum';
   const isToddler = stageInfo?.journey === 'toddler';
   
