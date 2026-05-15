@@ -20,10 +20,10 @@ export const useContentFilter = () => {
     
     // Extract base journey from stage
     if (profile.motherhood_stage.includes('ttc')) return 'ttc';
-    if (profile.motherhood_stage.includes('trimester')) return 'pregnant';
+    if (profile.motherhood_stage.includes('trimester') || profile.motherhood_stage.includes('pregnan')) return 'pregnant';
     if (profile.motherhood_stage.includes('postpartum')) return 'postpartum';
     if (profile.motherhood_stage.includes('toddler')) return 'toddler';
-    
+
     // Fallback to direct stage mapping
     return profile.motherhood_stage;
   }, [profile?.motherhood_stage]);
@@ -65,7 +65,7 @@ export const useContentFilter = () => {
       return { journey: 'ttc', phase: 'Trying to Conceive', week: null };
     }
 
-    if (currentStage.includes('trimester')) {
+    if (currentStage.includes('trimester') || currentStage.includes('pregnan')) {
       if (currentStage.includes('1')) return { journey: 'pregnant', phase: 'First Trimester', week: '1-12 weeks' };
       if (currentStage.includes('2')) return { journey: 'pregnant', phase: 'Second Trimester', week: '13-26 weeks' };
       if (currentStage.includes('3')) return { journey: 'pregnant', phase: 'Third Trimester', week: '27-40 weeks' };
