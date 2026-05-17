@@ -5,44 +5,52 @@ import PageLayout from '@/components/layout/PageLayout';
 
 const faqs = [
   {
+    q: "Can you heal diastasis recti with 20-minute home workouts?",
+    a: "Yes. Healing diastasis recti doesn’t require hours in the gym; it requires intentional, deep-core activation. Short, targeted 20-minute routines focusing on proper breathing and transverse abdominis engagement can safely close the gap and rebuild stability without equipment.",
+  },
+  {
+    q: "How can I prepare my body for a natural birth and prevent tearing?",
+    a: "Preparing for a natural, tear-free birth involves functional pelvic floor training, mobility work, and learning to breathe with contractions. Moving purposefully during pregnancy releases hip and pelvic tension, allowing your body to relax naturally during delivery.",
+  },
+  {
     q: "How do I heal diastasis recti safely after a C-section?",
     a: "Healing diastasis recti after a C-section requires a progressive approach that focuses on deep core engagement rather than traditional sit-ups or crunches. Our Core Restore protocols are designed to protect your incision while progressively rebuilding your midsection strength — safely and at your own pace.",
   },
   {
     q: "Is it normal to leak when sneezing postpartum?",
-    a: "Leaking when you sneeze, laugh, or jump is common — but it is not something you have to live with permanently. It is often a sign of pelvic floor dysfunction. Our postpartum recovery program focuses on rebuilding the connection between your breath and your pelvic floor to address leaking at the root.",
+    a: "While leaking (urinary incontinence) is common, it is not something you just have to live with. It is a sign of pelvic floor dysfunction or coordination issues. Our targeted core and pelvic floor rehabilitation exercises help rebuild automatic reflex control so you can sneeze, jump, and run completely leak-free.",
   },
   {
     q: "What are the best exercises to prepare for a VBAC?",
-    a: "A successful VBAC often depends on pelvic mobility, breathing technique, and nervous system regulation. Our pregnancy protocol includes birth ball exercises and breathing techniques designed to help you feel prepared, in control, and confident on your birth day.",
+    a: "Preparing for a Vaginal Birth After Cesarean (VBAC) focuses heavily on pelvic mobility, deep core breathing, and optimal fetal positioning. Exercises like deep squats, pelvic tilts, asymmetric lunges, and learning to release the pelvic floor during contractions help open the birth canal and build the stamina needed for a successful labor.",
   },
   {
     q: "Can I exercise while trying to conceive?",
-    a: "Yes — but the type of movement matters. High intensity workouts can raise cortisol levels which may interfere with ovulation. Catalyst Mom provides fertility-friendly workouts that keep you strong without overstressing your body during the conception window.",
+    a: "Absolutely. Exercise is highly beneficial when trying to conceive (TTC) because it manages stress, improves insulin sensitivity, and optimizes blood flow to the reproductive organs. The key is balance—focusing on moderate strength training, mobility work, and steady cardio rather than extreme, exhaustive workouts.",
   },
   {
     q: "When should I start tracking my cycle for TTC?",
-    a: "We recommend tracking for at least 3 months to understand your unique ovulation patterns. The Catalyst Mom App simplifies this with built-in cycle tracking, ovulation awareness tools, and nutrition guidance synced to your cycle phases.",
+    a: "You should start tracking your cycle immediately if you are trying to conceive. Tracking your basal body temperature (BBT), cervical mucus changes, and utilizing ovulation predictor kits (OPKs) helps you accurately map your fertile window, understand your luteal phase length, and pinpoint the exact days you are most likely to get pregnant.",
   },
   {
     q: "What is included in the $29 per month subscription?",
-    a: "Your subscription includes stage-specific programs for TTC, pregnancy, and postpartum, nutrition guidance, wellness tracking, cycle tracking, baby kick counter, contraction tracker, community access, bi-weekly human coach check-ins, and 24/7 Catalyst AI wellness support.",
+    a: "Your $29/month membership unlocks full access to the Catalyst Mom ecosystem. This includes customized trimester-by-trimester prenatal plans, postpartum deep-core restoration protocols, time-efficient 20-minute home workouts, family-friendly nutrition frameworks, milestone tracking tools, and our supportive community space.",
   },
   {
     q: "Do I get access to a real coach?",
-    a: "Yes. Every active subscriber receives bi-weekly check-ins with a real wellness coach. Between check-ins our Catalyst AI provides instant answers to wellness questions 24/7.",
+    a: "Yes. Catalyst Mom combines digital convenience with real human touch. While the app delivers your tailored daily plan, our certified coaches are accessible within the platform to answer your specific movement questions, review your form, and keep you accountable every step of the way.",
   },
   {
     q: "Is there a money-back guarantee?",
-    a: "Yes. We offer a 30-day money-back guarantee on all new subscriptions. If Catalyst Mom is not right for you within the first 30 days contact us at admin@catalystmom.online and we will refund every penny. No questions asked.",
+    a: "Yes, we stand behind our method. We offer a risk-free 7-day money-back guarantee. If you join and feel like the workouts, community, or protocols aren't the right fit for your motherhood stage, simply contact our support team within your first week for a full, hassle-free refund.",
   },
   {
     q: "Does Catalyst Mom work on my phone without an app store?",
-    a: "Yes. Catalyst Mom is a Progressive Web App which means it works directly in your phone browser and can be installed to your home screen in seconds — no app store required. On iPhone open the site in Safari, tap Share, then Add to Home Screen. On Android tap Install when prompted.",
+    a: "Yes! Catalyst Mom is built as a progressive web platform, meaning you get a seamless, fast app-like experience directly through your phone's browser without needing to download large updates from the app store. You can easily add an icon right to your home screen for one-tap access.",
   },
   {
     q: "What makes Catalyst Mom different from other fitness apps?",
-    a: "Catalyst Mom is built exclusively for the three stages of maternal wellness — TTC, Pregnancy, and Postpartum. Every workout, protocol, and piece of guidance is specific to where you are right now. Combined with real human coach check-ins every two weeks and a community of mamas at the same stage — it is the only platform that covers the full maternal journey in one place.",
+    a: "Most fitness apps treat women's bodies the same, whether they are pregnant, 6 weeks postpartum, or years into motherhood. Catalyst Mom is entirely customized around maternal health. We combine core/pelvic floor rehabilitation, functional strength, and metabolic health into short, intentional 20-minute windows that respect a busy mom's schedule.",
   },
 ];
 
