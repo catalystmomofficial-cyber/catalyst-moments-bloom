@@ -1,58 +1,81 @@
-## Goal
+# Affiliate Program — Implementation Plan
 
-Add a new Supabase Edge Function `stripe-webhook` that fires on Stripe `checkout.session.completed`, sends a branded welcome email via Resend, and syncs the customer into Omnisend with tags so your "Welcome Sequence" automation triggers.
+A full affiliate system end-to-end. Below is exactly what will be built, in order.
 
-## What gets built
+## 1. Database (one migration)
 
-### 1. New Edge Function: `supabase/functions/stripe-webhook/index.ts`
+Add to `profiles`:
+- `affiliate_status` text ('none' | 'active' | 'pending' | 'rejected'), default 'none'
+- `affiliate_code` text unique, nullable
+- `referred_by` text, nullable (stores referrer's `affiliate_code`)
+- `paypal_email` text, nullable (for payout)
 
-- **Public endpoint** (no JWT) — Stripe must reach it without an auth header. Will be added to `supabase/config.toml` with `verify_jwt = false`.
-- **Raw body capture** — uses `await req.text()` (required for Stripe signature verification).
-- **Signature verification** — `stripe.webhooks.constructEventAsync(body, sig, STRIPE_WEBHOOK_SECRET)` (the async variant is required in Deno because `crypto.subtle` is async).
-- **Event filter** — only acts on `checkout.session.completed`. Other events return `200` immediately so Stripe doesn't retry.
-- **Data extracted from session**: `customer_email` (falls back to `customer_details.email`), `customer_details.name`, `amount_total`, `currency`, `id`.
-- **Action A — Resend email** (wrapped in try/catch, logged on failure):
-  - From: `Catalyst Mom <onboarding@resend.dev>` (matches your existing `send-welcome-email` sender)
-  - Subject: `You're In! Your Catalyst Mom Recovery Starts Now 🌸`
-  - HTML body: warm, on-brand (catalyst-copper `#b87333` accents matching your transactional templates), confirms payment amount, CTA button to `https://catalystmomofficial.com/login`, and a "Add to Home Screen" reminder block for PWA recovery alerts.
-- **Action B — Omnisend sync** (wrapped in try/catch, logged on failure):
-  - `POST https://api.omnisend.com/v3/contacts`
-  - Headers: `X-API-KEY: ${OMNISEND_API_KEY}`, `Content-Type: application/json`
-  - Body: `{ identifiers: [{ type: "email", id: email, channels: { email: { status: "subscribed", statusDate: <iso> } } }], firstName, lastName, tags: ["source: stripe_payment", "status: paid_subscriber"] }`
-- **Independent failure handling** — both actions run; one failing does not block the other. Webhook always returns `200` after attempting both (so Stripe doesn't retry on email/marketing hiccups). Errors are logged to function logs.
+New table `affiliate_referrals`:
+- `id`, `affiliate_user_id`, `referred_user_id`, `affiliate_code`
+- `status` ('pending' | 'confirmed' | 'paid' | 'invalid')
+- `second_payment_at` timestamptz null
+- `payout_ready_at` timestamptz null (second_payment_at + 7 days)
+- `payout_paid_at` timestamptz null
+- `amount_cents` int default 2900
+- timestamps
 
-### 2. Config: `supabase/config.toml`
+New table `affiliate_payouts`:
+- `id`, `affiliate_user_id`, `referral_id`, `amount_cents`, `status`, `notified_at`, `paid_at`
 
-Add:
-```
-[functions.stripe-webhook]
-verify_jwt = false
-```
+RLS:
+- Users can read their own referrals / payouts
+- Admins can read/update all
+- Service role inserts/updates everything
 
-### 3. Secrets
+RPC functions (SECURITY DEFINER):
+- `approve_affiliate_application(application_id)` → updates application status + sets profile.affiliate_status='active' + generates unique `affiliate_code` (slug from display_name + 4 random chars, unique check)
+- `reject_affiliate_application(application_id)`
+- `get_affiliate_stats(user_id)` → returns totals (pending, confirmed, paid, earnings)
+- `attach_referral_on_signup(new_user_id, ref_code)` → sets `referred_by`, inserts pending row in `affiliate_referrals`
+- `mark_referral_second_payment(referred_user_id)` → updates referral row: status='confirmed', second_payment_at=now, payout_ready_at=now+7d
+- `process_ready_payouts()` → returns rows where payout_ready_at < now AND affiliate has active subscription AND not yet paid; marks them ready for notification
 
-Already configured: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`.
+## 2. Edge functions
 
-Need to add (will prompt you):
-- `STRIPE_WEBHOOK_SECRET` — get from Stripe Dashboard → Developers → Webhooks after creating the endpoint
-- `OMNISEND_API_KEY` — get from Omnisend → Store settings → Integrations → API keys
+**New: `send-affiliate-email`** — generic sender via Resend with two templates: `application_received`, `payout_ready`.
 
-### 4. Stripe Dashboard setup (you do this once after deploy)
+**New: `approve-affiliate-application`** — admin-callable, calls RPC + sends approval email with referral link.
 
-1. Go to Stripe → Developers → Webhooks → Add endpoint
-2. URL: `https://moxxceccaftkeuaowctw.supabase.co/functions/v1/stripe-webhook`
-3. Select event: `checkout.session.completed`
-4. Copy the signing secret (`whsec_…`) and paste it into `STRIPE_WEBHOOK_SECRET`
+**Update: `stripe-webhook`** — on `invoice.payment_succeeded` (or `customer.subscription.updated`), count successful payments for that customer. If count == 2, look up the user's `profiles.referred_by`. If set, call `mark_referral_second_payment`. Sends nothing yet — payout email is scheduled.
 
-## Notes on existing setup
+**New: `process-affiliate-payouts`** — cron-runnable. Picks `confirmed` referrals where `payout_ready_at <= now()` and affiliate has `user_has_active_subscription`. Marks payout status, sends "You earned $29" email. (Cron setup left as SQL the user runs manually per project memory.)
 
-Your project currently sends the customer confirmation email **client-side** from `SubscriptionSuccess.tsx` after polling `check-subscription`. That works only if the user lands on the success page. This webhook becomes a **server-side backup** that fires the moment Stripe confirms payment — so even users who close the tab still get the welcome email and are added to your Omnisend sequence. The two paths are idempotent enough not to cause duplicates: Resend will send a second email if invoked twice, but the existing client-side call uses an `idempotencyKey` (`sub-confirm-${sessionId}`) — the new webhook will use a different key (`stripe-webhook-${sessionId}`) since it's a different template/sender concept. If you want strict dedup, say the word and I'll have the webhook reuse the same idempotency key as the client path.
+**Update: `AffiliateSignupModal`** flow — already creates application via `create_affiliate_application`. After insert, call `send-affiliate-email` with `application_received`.
 
-## What I'll need from you after approval
+## 3. Signup referral capture
 
-1. Approve adding the two secrets (`STRIPE_WEBHOOK_SECRET`, `OMNISEND_API_KEY`) — I'll prompt with the add-secret tool.
-2. After deploy, register the webhook in Stripe (URL above) and paste the signing secret.
+- `src/pages/auth/Register.tsx`: read `?ref=` from URL on mount, store in `localStorage('catalyst_ref')`
+- After successful signup, call `attach_referral_on_signup` with the stored code
+- Clear localStorage after
 
-<lov-actions>
-<lov-link href="https://supabase.com/dashboard/project/moxxceccaftkeuaowctw/functions">Edge Functions dashboard</lov-link>
-</lov-actions>
+## 4. Admin UI
+
+In `src/components/admin/` add an `AffiliateApplicationsPanel` (or extend existing) with Accept / Reject buttons calling the new edge function / RPCs. Show pending list.
+
+## 5. Affiliate Dashboard page
+
+New route `/affiliate/dashboard` (protected, requires `affiliate_status='active'`):
+- Hero: referral link + copy button + native share
+- Stats grid: total / pending / confirmed referrals, total earnings ($29 × confirmed), payout status
+- Share Tools section: 3 pre-written captions (Instagram, Story, WhatsApp) with copy buttons, link auto-injected, `[stage]` replaced from profile.motherhood_stage
+- Rules card: 3 rules listed
+- PayPal email input (saved to profile) for payouts
+
+Link from `AffiliateButton` when `affiliate_status='active'` → goes to `/affiliate/dashboard`.
+
+## 6. Brand colors
+
+Use existing `catalyst-copper`, `catalyst-brown`, `catalyst-gold` tokens (per project memory). Map to the requested copper/cream/charcoal in the dashboard styling.
+
+## Out of scope (not touched)
+- TTC dashboard, Wellness page, FAQ page, other edge functions
+- Actual money movement (PayPal/bank) — system only marks payouts ready and emails the affiliate
+
+---
+
+After you approve, I'll execute the migration first, then write the edge functions, then the UI.
