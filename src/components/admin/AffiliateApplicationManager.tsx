@@ -55,19 +55,32 @@ export const AffiliateApplicationManager: React.FC = () => {
   const updateApplicationStatus = async (applicationId: string, status: string) => {
     setIsUpdating(true);
     try {
-      const { error } = await supabase.rpc('update_affiliate_status', {
+      const { data, error } = await supabase.rpc('update_affiliate_status', {
         application_id: applicationId,
         new_status: status
       });
 
       if (error) throw error;
 
+      // On approval, send the welcome email with their unique referral link
+      if (status === 'approved' && data && (data as any[]).length > 0) {
+        const row = (data as any[])[0];
+        const link = `https://catalystmomofficial.com/signup?ref=${row.affiliate_code}`;
+        supabase.functions.invoke('send-affiliate-email', {
+          body: {
+            type: 'application_approved',
+            to: row.affiliate_email,
+            name: row.affiliate_name || 'there',
+            link,
+          },
+        }).catch(() => {});
+      }
+
       toast({
         title: "Success",
         description: `Application ${status} successfully`,
       });
 
-      // Refresh applications data
       await fetchApplications();
       setSelectedApplication(null);
     } catch (error) {

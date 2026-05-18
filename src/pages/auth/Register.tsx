@@ -132,18 +132,22 @@ const Register = () => {
     try {
       await register(name, email, password, motherhoodStage, referralCode);
 
-      // Persist assessment data to the user's profile if present
-      if (assessmentData) {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        if (assessmentData) {
           await supabase
             .from('profiles')
             .update({ assessment_data: assessmentData })
             .eq('user_id', user.id);
         }
+        if (referralCode) {
+          await (supabase as any).rpc('attach_referral_on_signup', {
+            p_user_id: user.id,
+            p_ref_code: referralCode,
+          });
+        }
       }
 
-      // Show confirmation message instead of immediately navigating
       setSignupEmail(email);
       setSignupSuccess(true);
     } catch (err) {
