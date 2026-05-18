@@ -55,8 +55,11 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
   };
 
   const handleClick = () => {
-    // Always route to the Partner landing page
-    window.location.href = '/affiliate';
+    if (affiliateStatus === 'approved') {
+      window.location.href = '/affiliate/dashboard';
+    } else {
+      window.location.href = '/affiliate';
+    }
   };
 
   const getButtonText = () => {
