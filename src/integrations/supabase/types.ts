@@ -107,6 +107,92 @@ export type Database = {
         }
         Relationships: []
       }
+      affiliate_payouts: {
+        Row: {
+          affiliate_user_id: string
+          amount_cents: number
+          created_at: string
+          id: string
+          notified_at: string | null
+          paid_at: string | null
+          referral_id: string
+          status: string
+        }
+        Insert: {
+          affiliate_user_id: string
+          amount_cents?: number
+          created_at?: string
+          id?: string
+          notified_at?: string | null
+          paid_at?: string | null
+          referral_id: string
+          status?: string
+        }
+        Update: {
+          affiliate_user_id?: string
+          amount_cents?: number
+          created_at?: string
+          id?: string
+          notified_at?: string | null
+          paid_at?: string | null
+          referral_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_payouts_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affiliate_referrals: {
+        Row: {
+          affiliate_code: string
+          affiliate_user_id: string
+          amount_cents: number
+          created_at: string
+          id: string
+          payment_count: number
+          payout_paid_at: string | null
+          payout_ready_at: string | null
+          referred_user_id: string
+          second_payment_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          affiliate_code: string
+          affiliate_user_id: string
+          amount_cents?: number
+          created_at?: string
+          id?: string
+          payment_count?: number
+          payout_paid_at?: string | null
+          payout_ready_at?: string | null
+          referred_user_id: string
+          second_payment_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          affiliate_code?: string
+          affiliate_user_id?: string
+          amount_cents?: number
+          created_at?: string
+          id?: string
+          payment_count?: number
+          payout_paid_at?: string | null
+          payout_ready_at?: string | null
+          referred_user_id?: string
+          second_payment_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       birth_ball_exercise_logs: {
         Row: {
           completed_at: string
@@ -1255,6 +1341,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          affiliate_status: string
           approved: boolean
           assessment_data: Json | null
           avatar_url: string | null
@@ -1263,6 +1350,7 @@ export type Database = {
           display_name: string | null
           id: string
           motherhood_stage: string | null
+          paypal_email: string | null
           referral_code: string | null
           referred_by_code: string | null
           theme_preference: string | null
@@ -1270,6 +1358,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          affiliate_status?: string
           approved?: boolean
           assessment_data?: Json | null
           avatar_url?: string | null
@@ -1278,6 +1367,7 @@ export type Database = {
           display_name?: string | null
           id?: string
           motherhood_stage?: string | null
+          paypal_email?: string | null
           referral_code?: string | null
           referred_by_code?: string | null
           theme_preference?: string | null
@@ -1285,6 +1375,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          affiliate_status?: string
           approved?: boolean
           assessment_data?: Json | null
           avatar_url?: string | null
@@ -1293,6 +1384,7 @@ export type Database = {
           display_name?: string | null
           id?: string
           motherhood_stage?: string | null
+          paypal_email?: string | null
           referral_code?: string | null
           referred_by_code?: string | null
           theme_preference?: string | null
@@ -2028,6 +2120,10 @@ export type Database = {
         }[]
       }
       approve_user: { Args: { user_id_param: string }; Returns: undefined }
+      attach_referral_on_signup: {
+        Args: { p_ref_code: string; p_user_id: string }
+        Returns: undefined
+      }
       award_challenge_badges: { Args: never; Returns: undefined }
       create_affiliate_application: {
         Args: {
@@ -2051,6 +2147,21 @@ export type Database = {
           error_message: string
           remaining_points: number
           success: boolean
+        }[]
+      }
+      generate_unique_referral_code: {
+        Args: { p_seed: string }
+        Returns: string
+      }
+      get_affiliate_stats: {
+        Args: { p_user_id: string }
+        Returns: {
+          confirmed_referrals: number
+          paid_earnings_cents: number
+          paid_referrals: number
+          pending_referrals: number
+          total_earnings_cents: number
+          total_referrals: number
         }[]
       }
       get_affiliate_status: {
@@ -2160,6 +2271,19 @@ export type Database = {
         Args: { p_event_id: string; p_user_id: string }
         Returns: Json
       }
+      mark_referral_payment: {
+        Args: { p_referred_user_id: string }
+        Returns: undefined
+      }
+      process_affiliate_payouts: {
+        Args: never
+        Returns: {
+          affiliate_user_id: string
+          amount_cents: number
+          payout_id: string
+          referral_id: string
+        }[]
+      }
       redeem_points_for_discount: {
         Args: {
           p_description?: string
@@ -2192,7 +2316,12 @@ export type Database = {
       }
       update_affiliate_status: {
         Args: { application_id: string; new_status: string }
-        Returns: undefined
+        Returns: {
+          affiliate_code: string
+          affiliate_email: string
+          affiliate_name: string
+          affiliate_user_id: string
+        }[]
       }
       user_has_active_subscription: { Args: never; Returns: boolean }
     }

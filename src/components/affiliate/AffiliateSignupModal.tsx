@@ -84,6 +84,15 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
 
       if (error) throw error;
 
+      // Fire-and-forget confirmation email
+      supabase.functions.invoke('send-affiliate-email', {
+        body: {
+          type: 'application_received',
+          to: email,
+          name: formData.fullName || 'there',
+        },
+      }).catch(() => {});
+
       toast({
         title: 'Application Submitted ✨',
         description:

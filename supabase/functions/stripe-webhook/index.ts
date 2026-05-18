@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -111,6 +112,41 @@ serve(async (req) => {
     const body = await req.text();
     const event = await stripe.webhooks.constructEventAsync(body, sig, webhookSecret);
     log("Event received", { type: event.type, id: event.id });
+
+    // Affiliate referral tracking on each successful invoice payment
+    if (event.type === "invoice.payment_succeeded") {
+      try {
+        const invoice = event.data.object as Stripe.Invoice;
+        const customerId = typeof invoice.customer === "string" ? invoice.customer : invoice.customer?.id;
+        const payerEmail = invoice.customer_email || (invoice as any).customer_details?.email;
+        if (customerId || payerEmail) {
+          const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+          let userId: string | null = null;
+          if (customerId) {
+            const { data: sub } = await admin.from("subscribers").select("user_id").eq("stripe_customer_id", customerId).maybeSingle();
+            userId = sub?.user_id ?? null;
+          }
+          if (!userId && payerEmail) {
+            const { data: sub } = await admin.from("subscribers").select("user_id").eq("email", payerEmail).maybeSingle();
+            userId = sub?.user_id ?? null;
+          }
+          if (userId) {
+            await admin.rpc("mark_referral_payment", { p_referred_user_id: userId });
+            log("Marked referral payment", { userId });
+            // Trigger payout processor (it filters by 7d buffer + active sub internally)
+            fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/process-affiliate-payouts`, {
+              method: "POST",
+              headers: { Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}` },
+            }).catch((e) => log("Payout trigger failed", { err: String(e) }));
+          }
+        }
+      } catch (e) {
+        log("Affiliate tracking error", { err: String(e) });
+      }
+      return new Response(JSON.stringify({ received: true }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     if (event.type !== "checkout.session.completed") {
       return new Response(JSON.stringify({ received: true, ignored: event.type }), {

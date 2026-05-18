@@ -47,6 +47,7 @@ import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import GlowAndGo from "./pages/GlowAndGo";
 import Affiliate from "./pages/Affiliate";
+import AffiliateDashboard from "./pages/AffiliateDashboard";
 import Admin from "./pages/Admin";
 import BlogPreview from "./pages/BlogPreview";
 import SelfCareGuide from "./pages/wellness/SelfCareGuide";
@@ -314,6 +315,11 @@ function AppContent() {
           </PrivateRoute>
         } />
         <Route path="/affiliate" element={<Affiliate />} />
+        <Route path="/affiliate/dashboard" element={
+          <PrivateRoute>
+            <AffiliateDashboard />
+          </PrivateRoute>
+        } />
         <Route path="/admin" element={
           <PrivateRoute>
             <Admin />
