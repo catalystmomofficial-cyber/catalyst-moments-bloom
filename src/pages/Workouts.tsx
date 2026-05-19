@@ -11,6 +11,7 @@ import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
 import PostpartumGlowUpChallenge from '@/components/workouts/PostpartumGlowUpChallenge';
 import FitFierceAdvancedCard from '@/components/workouts/FitFierceAdvancedCard';
 import CoreRestoreCard from '@/components/workouts/CoreRestoreCard';
+import CoreRestoreFoundationsCard from '@/components/workouts/CoreRestoreFoundationsCard';
 import EnergyStrengthCard from '@/components/workouts/EnergyStrengthCard';
 import BirthBallGuideCard from '@/components/workouts/BirthBallGuideCard';
 
@@ -281,6 +282,7 @@ const Workouts = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
+              {isPostpartum && <CoreRestoreFoundationsCard />}
               {isPostpartum && <PostpartumGlowUpChallenge />}
               {isToddler && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && null}
