@@ -11,6 +11,7 @@ import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
 import PostpartumGlowUpChallenge from '@/components/workouts/PostpartumGlowUpChallenge';
 import FitFierceAdvancedCard from '@/components/workouts/FitFierceAdvancedCard';
 import CoreRestoreCard from '@/components/workouts/CoreRestoreCard';
+import CoreRestoreFoundationsCard from '@/components/workouts/CoreRestoreFoundationsCard';
 import EnergyStrengthCard from '@/components/workouts/EnergyStrengthCard';
 import BirthBallGuideCard from '@/components/workouts/BirthBallGuideCard';
 
