@@ -44,7 +44,7 @@ const VideoModal = ({ isOpen, onClose, videoUrl, title, isWelcomeVideo = false }
                 />
               ) : (
                 <iframe
-                  src={`${videoUrl}?autoplay=1`}
+                  src={`${videoUrl}${videoUrl.includes('?') ? '&' : '?'}autoplay=1`}
                   title={title || "Video"}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
