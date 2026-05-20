@@ -12,7 +12,7 @@ import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
 import PWAInstallBanner from '@/components/pwa/PWAInstallBanner';
 import { useAuth } from '@/contexts/AuthContext';
-import InlineDemoVideo from '@/components/home/InlineDemoVideo';
+
 
 
 const isStandaloneMode = () =>
@@ -71,9 +71,6 @@ const Index = () => {
       />
       {/* Hero Section */}
       <HeroSection onWatchVideo={openWelcomeVideo} />
-
-      <InlineDemoVideo />
-
 
       {/* Features Section */}
       <FeaturesSection />
