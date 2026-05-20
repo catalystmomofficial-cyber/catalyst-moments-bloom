@@ -164,8 +164,7 @@ export default function CoreRestoreFoundationsCard() {
   const currentWeekTitle = userProgress ? weekTitles[userProgress.current_week - 1] : weekTitles[0];
 
   return (
-    <div className="relative">
-    <Card className="overflow-hidden border-primary/20 shadow-lg opacity-60 pointer-events-none select-none">
+    <Card className="overflow-hidden border-primary/20 shadow-lg relative">
       <div className="relative h-48 bg-gradient-to-br from-amber-700 via-orange-600 to-rose-500">
         <img
           src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=400&fit=crop"
@@ -179,11 +178,12 @@ export default function CoreRestoreFoundationsCard() {
             Featured Program
           </Badge>
         </div>
-        {isCompleted && (
-          <div className="absolute top-4 right-4">
-            <Star className="h-6 w-6 text-yellow-300 fill-current" />
-          </div>
-        )}
+        <div className="absolute top-4 right-4">
+          <Badge className="bg-background/90 text-foreground border border-primary/30 shadow-sm backdrop-blur-sm">
+            <Lock className="h-3 w-3 mr-1 text-primary" />
+            Coming Soon
+          </Badge>
+        </div>
         <div className="absolute bottom-4 left-4 text-white">
           <h3 className="text-2xl font-bold">Core Restore Foundations</h3>
           <p className="text-white/90">Safely close abdominal separation &amp; heal your floor</p>
