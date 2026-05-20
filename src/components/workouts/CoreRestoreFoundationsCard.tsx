@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Calendar, Clock, Star, Play, ArrowRight, ShieldCheck } from "lucide-react";
+import { Calendar, Clock, Star, Play, ArrowRight, ShieldCheck, Lock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -164,7 +164,8 @@ export default function CoreRestoreFoundationsCard() {
   const currentWeekTitle = userProgress ? weekTitles[userProgress.current_week - 1] : weekTitles[0];
 
   return (
-    <Card className="overflow-hidden border-primary/20 shadow-lg">
+    <div className="relative">
+    <Card className="overflow-hidden border-primary/20 shadow-lg opacity-60 pointer-events-none select-none">
       <div className="relative h-48 bg-gradient-to-br from-amber-700 via-orange-600 to-rose-500">
         <img
           src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=400&fit=crop"
@@ -299,5 +300,13 @@ export default function CoreRestoreFoundationsCard() {
         </Button>
       </CardContent>
     </Card>
+    <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black/40 z-10">
+      <div className="bg-white/95 rounded-2xl px-8 py-6 flex flex-col items-center shadow-xl">
+        <Lock className="h-10 w-10 text-primary mb-3" />
+        <span className="text-lg font-bold text-foreground">Program Locked</span>
+        <span className="text-sm text-muted-foreground mt-1 text-center">Coming soon</span>
+      </div>
+    </div>
+    </div>
   );
 }
