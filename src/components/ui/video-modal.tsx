@@ -48,6 +48,7 @@ const VideoModal = ({ isOpen, onClose, videoUrl, title, isWelcomeVideo = false }
                   title={title || "Video"}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
                   className="w-full h-full"
                 />
               )}
