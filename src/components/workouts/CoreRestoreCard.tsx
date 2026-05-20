@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Play, Clock, ChevronRight } from 'lucide-react';
+import { Play, Clock, ChevronRight, Lock } from 'lucide-react';
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 
 const AVATARS = [
@@ -68,7 +68,7 @@ const UserAvatars = ({ enrolledCount }: { enrolledCount: number }) => {
   );
 };
 
-const CoreRestoreCard = () => {
+const CoreRestoreCard = ({ locked = false }: { locked?: boolean }) => {
   const [enrolledCount, setEnrolledCount] = useState(189);
   const [isHovered, setIsHovered] = useState(false);
   const [hasStartedProgram, setHasStartedProgram] = useState(false);
@@ -85,21 +85,34 @@ const CoreRestoreCard = () => {
   }, []);
 
   return (
-    <Card className="overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20 
+    <Card className="overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20
                      hover:shadow-lg transition-all duration-300 relative group">
+      {/* Lock overlay */}
+      {locked && (
+        <div className="absolute inset-0 bg-background/70 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
+          <div className="text-center">
+            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+              <Lock className="h-7 w-7 text-primary" />
+            </div>
+            <Badge variant="secondary" className="text-sm font-semibold">Premium Program</Badge>
+            <p className="text-xs text-muted-foreground mt-2 max-w-[160px]">Upgrade to unlock this program</p>
+          </div>
+        </div>
+      )}
+
       {/* Hero Image with Play Button */}
       <div className="relative h-48 bg-gradient-to-br from-primary to-secondary overflow-hidden">
-        <img 
-          src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop" 
+        <img
+          src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop"
           alt="Core restoration exercises"
           className="w-full h-full object-cover opacity-80"
         />
-        
+
         {/* Play Button */}
-        {hasStartedProgram && (
-          <button 
-            onClick={() => openVideo("https://www.youtube.com/embed/ScNNfyq3d_w", "Core Restore Program")}
-            className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 
+        {hasStartedProgram && !locked && (
+          <button
+            onClick={() => openVideo("https://www.youtube.com/embed/ScNNfyq3d_w", "Core Restore Foundations")}
+            className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0
                        group-hover:opacity-100 transition-all duration-300"
           >
             <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 hover:bg-white transition-colors">
@@ -122,10 +135,10 @@ const CoreRestoreCard = () => {
       {/* Content */}
       <div className="p-6">
         <h3 className="text-xl font-bold text-gray-900 mb-2">
-          Core Restore: 21-Day Ab Rehab for Moms
+          Core Restore Foundations
         </h3>
         <p className="text-gray-600 text-sm mb-4">
-          🧘‍♀️ Reconnect to core, posture, pelvic floor at any stage
+          Safely close abdominal separation &amp; heal your floor
         </p>
 
         {/* Duration */}
@@ -162,20 +175,26 @@ const CoreRestoreCard = () => {
         </div>
 
         {/* CTA Button */}
-        <Button 
+        <Button
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold
                      transform transition-all duration-200 hover:scale-105"
+          disabled={locked}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => {
+            if (locked) return;
             setHasStartedProgram(true);
-            openVideo("https://www.youtube.com/embed/ScNNfyq3d_w", "Core Restore Program");
+            openVideo("https://www.youtube.com/embed/ScNNfyq3d_w", "Core Restore Foundations");
           }}
         >
-          {hasStartedProgram ? 'Continue Program' : 'Start Program'}
-          <ChevronRight className={`ml-2 h-4 w-4 transition-transform duration-200 ${
-            isHovered ? 'translate-x-1' : ''
-          }`} />
+          {locked ? (
+            <><Lock className="mr-2 h-4 w-4" /> Locked</>
+          ) : hasStartedProgram ? 'Continue Program' : 'Start Program'}
+          {!locked && (
+            <ChevronRight className={`ml-2 h-4 w-4 transition-transform duration-200 ${
+              isHovered ? 'translate-x-1' : ''
+            }`} />
+          )}
         </Button>
       </div>
     </Card>
