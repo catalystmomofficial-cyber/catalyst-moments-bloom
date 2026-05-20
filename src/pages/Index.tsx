@@ -72,6 +72,9 @@ const Index = () => {
       {/* Hero Section */}
       <HeroSection onWatchVideo={openWelcomeVideo} />
 
+      <InlineDemoVideo />
+
+
       {/* Features Section */}
       <FeaturesSection />
       
