@@ -277,36 +277,15 @@ export default function CoreRestoreFoundationsCard() {
         </div>
 
         <Button
-          onClick={handleStartProgram}
-          className="w-full"
+          disabled
+          className="w-full cursor-not-allowed"
           size="lg"
+          variant="secondary"
         >
-          {isCompleted ? (
-            <>
-              <Star className="h-4 w-4 mr-2" />
-              Review Foundation
-            </>
-          ) : hasStartedProgram || isEnrolled ? (
-            <>
-              <Play className="h-4 w-4 mr-2" />
-              Continue Foundation
-            </>
-          ) : (
-            <>
-              <ArrowRight className="h-4 w-4 mr-2" />
-              Begin Your Foundation
-            </>
-          )}
+          <Lock className="h-4 w-4 mr-2" />
+          Unlocks Soon — Join the Waitlist
         </Button>
       </CardContent>
     </Card>
-    <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black/40 z-10">
-      <div className="bg-white/95 rounded-2xl px-8 py-6 flex flex-col items-center shadow-xl">
-        <Lock className="h-10 w-10 text-primary mb-3" />
-        <span className="text-lg font-bold text-foreground">Program Locked</span>
-        <span className="text-sm text-muted-foreground mt-1 text-center">Coming soon</span>
-      </div>
-    </div>
-    </div>
   );
 }
