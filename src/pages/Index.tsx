@@ -81,7 +81,7 @@ const Index = () => {
       <TestimonialsSection />
       
       {/* CTA Section */}
-      <CTASection onWatchDemo={openWelcomeVideo} />
+      <CTASection onWatchDemo={(url, title) => openVideoModal(url, title)} />
 
       {/* PWA Install Banner */}
       <PWAInstallBanner />
