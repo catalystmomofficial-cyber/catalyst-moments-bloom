@@ -4,7 +4,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { X } from "lucide-react";
 import { Button } from "./button";
-import StaticWelcomeVideo from "@/components/video/StaticWelcomeVideo";
 
 interface VideoModalProps {
   isOpen: boolean;
@@ -30,7 +29,15 @@ const VideoModal = ({ isOpen, onClose, videoUrl, title, isWelcomeVideo = false }
             <X className="h-4 w-4" />
           </Button>
           {isWelcomeVideo ? (
-            <StaticWelcomeVideo onComplete={onClose} />
+            <AspectRatio ratio={16 / 9}>
+              <iframe
+                src="https://www.youtube.com/embed/MxFf4_degjk?rel=0&modestbranding=1&showinfo=0&autoplay=1"
+                title="Catalyst Mom Welcome Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </AspectRatio>
           ) : (
             <AspectRatio ratio={16 / 9}>
               {isMp4 ? (
