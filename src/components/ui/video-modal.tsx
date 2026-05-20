@@ -44,7 +44,7 @@ const VideoModal = ({ isOpen, onClose, videoUrl, title, isWelcomeVideo = false }
                 />
               ) : (
                 <iframe
-                  src="https://www.youtube.com/embed/MxFf4_degjk?rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&autoplay=1"
+                  src={`${videoUrl}${videoUrl.includes('?') ? '&' : '?'}autoplay=1`}
                   title={title || "Video"}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
