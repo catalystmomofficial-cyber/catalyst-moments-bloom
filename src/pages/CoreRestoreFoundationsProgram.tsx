@@ -11,9 +11,8 @@ import PageLayout from "@/components/layout/PageLayout";
 const STORAGE_KEY = "core-restore-foundations-progress";
 const TOTAL_DAYS = 28;
 
+const WEEK_1_VIDEO = "https://2ee544dc5efc15b4d7ff5ce8ea728a4d.r2.cloudflarestorage.com/catalyst-mom-courses/DR%20COURSE/DR%20WEEK%201";
 const DAY_1_VIDEO = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
-// Placeholder audio (60s guided intro). Replace with real asset when ready.
-const DAY_1_AUDIO = "/catalyst-mom-demo.mp4";
 
 interface LocalProgress {
   current_week: number;
@@ -183,17 +182,6 @@ export default function CoreRestoreFoundationsProgram() {
               </div>
             ) : (
               <>
-                {/* 60s Guided Audio Intro */}
-                <div className="rounded-xl border bg-muted/30 p-4 space-y-2">
-                  <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    60-Second Guided Intro
-                  </div>
-                  <audio controls preload="metadata" className="w-full">
-                    <source src={DAY_1_AUDIO} />
-                    Your browser does not support audio.
-                  </audio>
-                </div>
-
                 {/* Video player */}
                 <div className="rounded-2xl overflow-hidden border bg-black shadow-md">
                   <video
@@ -202,7 +190,7 @@ export default function CoreRestoreFoundationsProgram() {
                     playsInline
                     preload="metadata"
                     className="w-full aspect-video bg-black"
-                    src={selectedDay === 1 ? DAY_1_VIDEO : DAY_1_VIDEO}
+                    src={selectedWeek === 1 ? WEEK_1_VIDEO : DAY_1_VIDEO}
                   />
                 </div>
 
