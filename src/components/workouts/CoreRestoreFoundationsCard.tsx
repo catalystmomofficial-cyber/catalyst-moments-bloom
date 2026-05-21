@@ -277,13 +277,12 @@ export default function CoreRestoreFoundationsCard() {
         </div>
 
         <Button
-          disabled
-          className="w-full cursor-not-allowed"
+          onClick={() => (window.location.href = "/workouts/core-restore-foundations")}
+          className="w-full"
           size="lg"
-          variant="secondary"
         >
-          <Lock className="h-4 w-4 mr-2" />
-          Unlocks Soon — Join the Waitlist
+          <Play className="h-4 w-4 mr-2" />
+          {isEnrolled ? "Continue Program" : "Start Program"}
         </Button>
       </CardContent>
     </Card>
