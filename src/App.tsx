@@ -15,6 +15,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
 import WorkoutDetail from "./pages/WorkoutDetail";
+import CoreRestoreFoundationsProgram from "./pages/CoreRestoreFoundationsProgram";
 import Wellness from "./pages/Wellness";
 import Community from "./pages/Community";
 import GroupDetail from "./pages/GroupDetail";
@@ -135,6 +136,13 @@ function AppContent() {
           <PrivateRoute>
             <SubscriptionGuard>
               <Workouts />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/workouts/core-restore-foundations" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <CoreRestoreFoundationsProgram />
             </SubscriptionGuard>
           </PrivateRoute>
         } />
