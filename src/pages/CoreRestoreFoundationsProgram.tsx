@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Check, Lock } from "lucide-react";
+import { ArrowLeft, Check, Tv } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PageLayout from "@/components/layout/PageLayout";
 
@@ -20,12 +20,19 @@ const WEEK_1_VIDEOS = [
   "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%206.mp4",
   "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%207.mp4",
 ];
-const DAY_1_VIDEO = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
+const DAY_PLACEHOLDER = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
+
+const weekTitles = [
+  "Foundation Week",
+  "Activation Week",
+  "Connection Week",
+  "Restoration Week",
+];
 
 interface LocalProgress {
   current_week: number;
   current_day: number;
-  unlocked_day: number; // 1..28
+  unlocked_day: number;
   started_at: string;
   completed_at?: string;
 }
@@ -49,28 +56,17 @@ const loadProgress = (): LocalProgress => {
   return fresh;
 };
 
-const weekTitles = [
-  "Foundation Week",
-  "Activation Week",
-  "Connection Week",
-  "Restoration Week",
-];
-
 export default function CoreRestoreFoundationsProgram() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [progress, setProgress] = useState<LocalProgress>(() => loadProgress());
-  const [selectedDay, setSelectedDay] = useState<number>(() => loadProgress().unlocked_day);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   }, [progress]);
 
-  const isUnlocked = (day: number) => day <= progress.unlocked_day;
-  const isCompleted = (day: number) => day < progress.unlocked_day;
-
   const markDayComplete = () => {
-    if (selectedDay !== progress.unlocked_day) return;
+    if (progress.completed_at) return;
     const next = Math.min(progress.unlocked_day + 1, TOTAL_DAYS);
     const week = Math.ceil(next / 7);
     const day = ((next - 1) % 7) + 1;
@@ -82,161 +78,90 @@ export default function CoreRestoreFoundationsProgram() {
       completed_at: next === TOTAL_DAYS ? new Date().toISOString() : progress.completed_at,
     };
     setProgress(updated);
-    setSelectedDay(next > TOTAL_DAYS ? TOTAL_DAYS : next);
     toast({
-      title: next > progress.unlocked_day ? `Day ${selectedDay} complete 💛` : "Saved",
-      description:
-        next >= TOTAL_DAYS && updated.completed_at
-          ? "Program complete — beautiful work, mama."
-          : `Day ${next} is now unlocked.`,
+      title: `Day ${progress.unlocked_day} complete 💛`,
+      description: updated.completed_at
+        ? "Program complete — beautiful work, mama."
+        : `Day ${next} is now unlocked.`,
     });
   };
 
   const pct = Math.min(100, ((progress.unlocked_day - 1) / TOTAL_DAYS) * 100);
+  const currentDay = progress.unlocked_day;
+  const currentWeek = Math.ceil(currentDay / 7);
+  const currentDayInWeek = ((currentDay - 1) % 7) + 1;
+  const isAllComplete = !!progress.completed_at;
 
-  const weeks = useMemo(
-    () =>
-      Array.from({ length: 4 }, (_, w) => ({
-        week: w + 1,
-        title: weekTitles[w],
-        days: Array.from({ length: 7 }, (_, d) => w * 7 + d + 1),
-      })),
-    []
-  );
-
-  const selectedUnlocked = isUnlocked(selectedDay);
-  const selectedIsCurrent = selectedDay === progress.unlocked_day;
-  const selectedWeek = Math.ceil(selectedDay / 7);
-  const selectedDayInWeek = ((selectedDay - 1) % 7) + 1;
+  const videoSrc =
+    currentWeek === 1 ? WEEK_1_VIDEOS[currentDayInWeek - 1] : DAY_PLACEHOLDER;
 
   return (
     <PageLayout>
-      <div className="container max-w-4xl mx-auto py-6 px-4 space-y-6">
+      <div className="container max-w-lg mx-auto py-6 px-4 space-y-6">
         <Button variant="ghost" onClick={() => navigate("/workouts")} className="-ml-2">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Workouts
         </Button>
 
+        {/* Header */}
         <div className="space-y-2">
-          <h1 className="text-2xl md:text-3xl font-bold">Core Restore Foundations</h1>
+          <h1 className="text-2xl font-bold">Core Restore Foundations</h1>
           <p className="text-muted-foreground text-sm">
-            {weekTitles[Math.ceil(progress.unlocked_day / 7) - 1] || weekTitles[3]} •
-            {" "}Day {progress.unlocked_day} of {TOTAL_DAYS}
+            {weekTitles[currentWeek - 1] ?? weekTitles[3]} • Day {currentDay} of {TOTAL_DAYS}
           </p>
           <Progress value={pct} className="h-2" />
         </div>
 
-        {/* Day grid */}
-        <div className="space-y-5">
-          {weeks.map(({ week, title, days }) => (
-            <div key={week} className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold tracking-wide uppercase text-muted-foreground">
-                  Week {week} — {title}
-                </h2>
-              </div>
-              <div className="grid grid-cols-7 gap-2">
-                {days.map((day) => {
-                  const unlocked = isUnlocked(day);
-                  const done = isCompleted(day);
-                  const active = day === selectedDay;
-                  return (
-                    <button
-                      key={day}
-                      onClick={() => unlocked && setSelectedDay(day)}
-                      disabled={!unlocked}
-                      className={[
-                        "aspect-square rounded-xl border text-sm font-medium transition",
-                        "flex flex-col items-center justify-center",
-                        unlocked
-                          ? "bg-card hover:border-primary cursor-pointer"
-                          : "bg-muted/40 opacity-40 cursor-not-allowed",
-                        active ? "border-primary ring-2 ring-primary/30" : "border-border",
-                        done ? "bg-primary/10 border-primary/40" : "",
-                      ].join(" ")}
-                      aria-label={`Day ${day}${unlocked ? "" : " (locked)"}`}
-                    >
-                      <span className="text-xs text-muted-foreground">Day</span>
-                      <span className="text-base leading-none">{day}</span>
-                      {done && <Check className="h-3 w-3 text-primary mt-1" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Active day view */}
-        <Card className="border-primary/20 shadow-sm">
-          <CardContent className="p-5 md:p-6 space-y-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
-                  Week {selectedWeek} • Day {selectedDayInWeek}
-                </Badge>
-                <h3 className="mt-2 text-xl font-semibold">
-                  Day {selectedDay} {isCompleted(selectedDay) ? "— Complete" : selectedIsCurrent ? "— Today" : ""}
-                </h3>
-              </div>
-            </div>
-
-            {!selectedUnlocked ? (
-              <div className="rounded-xl border bg-muted/30 p-8 text-center space-y-2">
-                <Lock className="h-5 w-5 mx-auto text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">
-                  Locked until previous day is complete
+        {/* Active day hero card */}
+        <Card className="border-primary/20 shadow-md">
+          <CardContent className="p-5 space-y-4">
+            <div>
+              <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                Week {currentWeek} • Day {currentDayInWeek}
+              </Badge>
+              <h3 className="mt-2 text-xl font-semibold">
+                {isAllComplete ? "Program Complete 💛" : `Day ${currentDay} — Today`}
+              </h3>
+              {currentWeek === 1 && (
+                <p className="text-sm text-muted-foreground mt-1">
+                  Week 1 — Diastasis Recti Workout
                 </p>
-              </div>
-            ) : (
-              <>
-                {/* Video player */}
-                {selectedWeek === 1 && (
-                  <p className="text-sm font-semibold text-muted-foreground">Week 1 — Diastasis Recti Workout</p>
-                )}
-                <div className="rounded-2xl overflow-hidden border bg-black shadow-md">
-                  {selectedWeek === 1 ? (
-                    <video
-                      key={selectedDay}
-                      controls
-                      controlsList="nodownload"
-                      width="100%"
-                      style={{ borderRadius: '12px', backgroundColor: '#000' }}
-                      preload="metadata"
-                    >
-                      <source
-                        src={WEEK_1_VIDEOS[selectedDayInWeek - 1]}
-                        type="video/mp4"
-                      />
-                      Your browser does not support the video tag.
-                    </video>
-                  ) : (
-                    <video
-                      key={selectedDay}
-                      controls
-                      playsInline
-                      preload="metadata"
-                      className="w-full aspect-video bg-black"
-                      src={DAY_1_VIDEO}
-                    />
-                  )}
-                </div>
+              )}
+            </div>
 
-                {/* Mark complete */}
-                <Button
-                  size="lg"
-                  className="w-full"
-                  onClick={markDayComplete}
-                  disabled={!selectedIsCurrent}
-                >
-                  <Check className="h-4 w-4 mr-2" />
-                  {selectedIsCurrent
-                    ? `Mark Day ${selectedDay} Complete`
-                    : isCompleted(selectedDay)
-                    ? "Already Completed"
-                    : "Locked"}
-                </Button>
-              </>
+            {/* Video player */}
+            <div className="rounded-2xl overflow-hidden border bg-black shadow-md">
+              <video
+                key={currentDay}
+                controls
+                playsInline
+                controlsList="nodownload"
+                {...{ "x-webkit-airplay": "allow", "webkit-playsinline": "" }}
+                width="100%"
+                style={{ borderRadius: "12px", backgroundColor: "#000" }}
+                preload="metadata"
+              >
+                <source src={videoSrc} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            {/* Casting hint */}
+            <p className="flex items-start gap-2 text-xs text-muted-foreground">
+              <Tv className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+              Want a bigger screen? Use your device's native options to cast this routine to your Apple TV, Smart TV, or Laptop.
+            </p>
+
+            {/* Mark complete */}
+            {isAllComplete ? (
+              <p className="text-center text-sm text-muted-foreground py-2">
+                Your core is restored — beautiful work, mama.
+              </p>
+            ) : (
+              <Button size="lg" className="w-full" onClick={markDayComplete}>
+                <Check className="h-4 w-4 mr-2" />
+                Mark Day {currentDay} Complete
+              </Button>
             )}
           </CardContent>
         </Card>
