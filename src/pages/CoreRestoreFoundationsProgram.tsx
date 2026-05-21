@@ -11,7 +11,7 @@ import PageLayout from "@/components/layout/PageLayout";
 const STORAGE_KEY = "core-restore-foundations-progress";
 const TOTAL_DAYS = 28;
 
-const WEEK_1_VIDEO = "https://2ee544dc5efc15b4d7ff5ce8ea728a4d.r2.cloudflarestorage.com/catalyst-mom-courses/DR%20COURSE/DR%20WEEK%201";
+const WEEK_1_VIDEO = "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Diastasis%20Recti%20Workout%20(Video).mp4";
 const DAY_1_VIDEO = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
 
 interface LocalProgress {
@@ -183,15 +183,34 @@ export default function CoreRestoreFoundationsProgram() {
             ) : (
               <>
                 {/* Video player */}
+                {selectedWeek === 1 && (
+                  <p className="text-sm font-semibold text-muted-foreground">Week 1 — Diastasis Recti Workout</p>
+                )}
                 <div className="rounded-2xl overflow-hidden border bg-black shadow-md">
-                  <video
-                    key={selectedDay}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    className="w-full aspect-video bg-black"
-                    src={selectedWeek === 1 ? WEEK_1_VIDEO : DAY_1_VIDEO}
-                  />
+                  {selectedWeek === 1 ? (
+                    <video
+                      controls
+                      controlsList="nodownload"
+                      width="100%"
+                      style={{ borderRadius: '12px', backgroundColor: '#000' }}
+                      preload="metadata"
+                    >
+                      <source
+                        src="https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Diastasis%20Recti%20Workout%20(Video).mp4"
+                        type="video/mp4"
+                      />
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : (
+                    <video
+                      key={selectedDay}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      className="w-full aspect-video bg-black"
+                      src={DAY_1_VIDEO}
+                    />
+                  )}
                 </div>
 
                 {/* Mark complete */}
