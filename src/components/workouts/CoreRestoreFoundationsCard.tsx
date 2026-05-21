@@ -165,11 +165,6 @@ export default function CoreRestoreFoundationsCard() {
 
   return (
     <Card className="overflow-hidden border-primary/20 shadow-lg relative">
-      {/* Program locked overlay */}
-      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-xl bg-background/75 backdrop-blur-[2px] cursor-not-allowed pointer-events-auto">
-        <Lock className="h-10 w-10 text-muted-foreground mb-2" />
-        <p className="text-sm font-semibold text-muted-foreground">Coming Soon</p>
-      </div>
       <div className="relative h-48 bg-gradient-to-br from-amber-700 via-orange-600 to-rose-500">
         <img
           src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=400&fit=crop"
@@ -282,12 +277,12 @@ export default function CoreRestoreFoundationsCard() {
         </div>
 
         <Button
-          disabled
+          onClick={() => (window.location.href = "/workouts/core-restore-foundations")}
           className="w-full"
           size="lg"
         >
-          <Lock className="h-4 w-4 mr-2" />
-          Coming Soon
+          <Play className="h-4 w-4 mr-2" />
+          {isEnrolled ? "Continue Program" : "Start Program"}
         </Button>
       </CardContent>
     </Card>
