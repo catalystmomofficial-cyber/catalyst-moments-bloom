@@ -282,12 +282,12 @@ export default function CoreRestoreFoundationsCard() {
         </div>
 
         <Button
-          onClick={() => (window.location.href = "/workouts/core-restore-foundations")}
+          disabled
           className="w-full"
           size="lg"
         >
-          <Play className="h-4 w-4 mr-2" />
-          {isEnrolled ? "Continue Program" : "Start Program"}
+          <Lock className="h-4 w-4 mr-2" />
+          Coming Soon
         </Button>
       </CardContent>
     </Card>
