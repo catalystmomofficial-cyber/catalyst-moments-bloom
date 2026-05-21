@@ -282,7 +282,7 @@ const Workouts = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
-              {/* CoreRestoreFoundationsCard hidden — program still in progress */}
+              {isPostpartum && <CoreRestoreFoundationsCard />}
               {isPostpartum && <PostpartumGlowUpChallenge />}
               {isToddler && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && null}
