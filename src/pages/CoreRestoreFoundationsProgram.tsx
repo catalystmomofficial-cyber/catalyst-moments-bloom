@@ -11,7 +11,15 @@ import PageLayout from "@/components/layout/PageLayout";
 const STORAGE_KEY = "core-restore-foundations-progress";
 const TOTAL_DAYS = 28;
 
-const WEEK_1_VIDEO = "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Diastasis%20Recti%20Workout%20(Video).mp4";
+const WEEK_1_VIDEOS = [
+  "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%201.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%202.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%203.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%204.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%205.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%206.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%207.mp4",
+];
 const DAY_1_VIDEO = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
 
 interface LocalProgress {
@@ -189,6 +197,7 @@ export default function CoreRestoreFoundationsProgram() {
                 <div className="rounded-2xl overflow-hidden border bg-black shadow-md">
                   {selectedWeek === 1 ? (
                     <video
+                      key={selectedDay}
                       controls
                       controlsList="nodownload"
                       width="100%"
@@ -196,7 +205,7 @@ export default function CoreRestoreFoundationsProgram() {
                       preload="metadata"
                     >
                       <source
-                        src="https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Diastasis%20Recti%20Workout%20(Video).mp4"
+                        src={WEEK_1_VIDEOS[selectedDayInWeek - 1]}
                         type="video/mp4"
                       />
                       Your browser does not support the video tag.
