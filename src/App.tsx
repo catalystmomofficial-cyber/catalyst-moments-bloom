@@ -139,13 +139,8 @@ function AppContent() {
             </SubscriptionGuard>
           </PrivateRoute>
         } />
-        <Route path="/workouts/core-restore-foundations" element={
-          <PrivateRoute>
-            <SubscriptionGuard>
-              <CoreRestoreFoundationsProgram />
-            </SubscriptionGuard>
-          </PrivateRoute>
-        } />
+        {/* Route hidden — Core Restore Foundations still in progress */}
+        <Route path="/workouts/core-restore-foundations" element={<Navigate to="/workouts" replace />} />
         <Route path="/workouts/:slug" element={
           <PrivateRoute>
             <SubscriptionGuard>
