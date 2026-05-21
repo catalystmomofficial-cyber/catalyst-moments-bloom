@@ -164,8 +164,7 @@ export default function CoreRestoreFoundationsCard() {
   const currentWeekTitle = userProgress ? weekTitles[userProgress.current_week - 1] : weekTitles[0];
 
   return (
-    <div className="relative">
-    <Card className="overflow-hidden border-primary/20 shadow-lg opacity-60 pointer-events-none select-none">
+    <Card className="overflow-hidden border-primary/20 shadow-lg relative">
       <div className="relative h-48 bg-gradient-to-br from-amber-700 via-orange-600 to-rose-500">
         <img
           src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=400&fit=crop"
@@ -179,11 +178,12 @@ export default function CoreRestoreFoundationsCard() {
             Featured Program
           </Badge>
         </div>
-        {isCompleted && (
-          <div className="absolute top-4 right-4">
-            <Star className="h-6 w-6 text-yellow-300 fill-current" />
-          </div>
-        )}
+        <div className="absolute top-4 right-4">
+          <Badge className="bg-background/90 text-foreground border border-primary/30 shadow-sm backdrop-blur-sm">
+            <Lock className="h-3 w-3 mr-1 text-primary" />
+            Coming Soon
+          </Badge>
+        </div>
         <div className="absolute bottom-4 left-4 text-white">
           <h3 className="text-2xl font-bold">Core Restore Foundations</h3>
           <p className="text-white/90">Safely close abdominal separation &amp; heal your floor</p>
@@ -277,36 +277,15 @@ export default function CoreRestoreFoundationsCard() {
         </div>
 
         <Button
-          onClick={handleStartProgram}
-          className="w-full"
+          disabled
+          className="w-full cursor-not-allowed"
           size="lg"
+          variant="secondary"
         >
-          {isCompleted ? (
-            <>
-              <Star className="h-4 w-4 mr-2" />
-              Review Foundation
-            </>
-          ) : hasStartedProgram || isEnrolled ? (
-            <>
-              <Play className="h-4 w-4 mr-2" />
-              Continue Foundation
-            </>
-          ) : (
-            <>
-              <ArrowRight className="h-4 w-4 mr-2" />
-              Begin Your Foundation
-            </>
-          )}
+          <Lock className="h-4 w-4 mr-2" />
+          Unlocks Soon — Join the Waitlist
         </Button>
       </CardContent>
     </Card>
-    <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black/40 z-10">
-      <div className="bg-white/95 rounded-2xl px-8 py-6 flex flex-col items-center shadow-xl">
-        <Lock className="h-10 w-10 text-primary mb-3" />
-        <span className="text-lg font-bold text-foreground">Program Locked</span>
-        <span className="text-sm text-muted-foreground mt-1 text-center">Coming soon</span>
-      </div>
-    </div>
-    </div>
   );
 }
