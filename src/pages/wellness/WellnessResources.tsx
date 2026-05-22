@@ -9,6 +9,27 @@ const MOMODORO_COVER =
   'https://catalystmomofficial.com/Momon%20guide/Product%20Covers%20copy.png';
 const MOMODORO_PDF =
   'https://catalystmomofficial.com/Momon%20guide/The%20Momodoro%20Planner.pdf';
+const SELFCARE_PDF =
+  'https://catalystmomofficial.com/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
+
+const products = [
+  {
+    title: 'The Momodoro Planner',
+    description:
+      'A beautifully structured premium time-management and layout tool designed to help busy moms organize their days and reclaim their time.',
+    cover: MOMODORO_COVER,
+    pdf: MOMODORO_PDF,
+    cta: 'Download Planner',
+  },
+  {
+    title: "The Busy Mom's Self-Care & Stress Relief System",
+    description:
+      'A practical, stress-relief system designed specifically to help busy mothers find calm and recharge.',
+    cover: MOMODORO_COVER,
+    pdf: SELFCARE_PDF,
+    cta: 'Download System',
+  },
+];
 
 const WellnessResources = () => {
   return (
@@ -31,53 +52,65 @@ const WellnessResources = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              {/* Momodoro Planner — premium product card */}
-              <Card className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-xl transition-all duration-500">
-                <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-                  <img
-                    src={MOMODORO_COVER}
-                    alt="The Momodoro Planner cover"
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
+              {products.map((p) => (
+                <Card
+                  key={p.title}
+                  className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-xl transition-all duration-500"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                    <img
+                      src={p.cover}
+                      alt={`${p.title} cover`}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
 
-                  <div className="absolute top-4 left-4">
-                    <Badge className="bg-background/90 text-foreground border-0 backdrop-blur">
-                      Digital Guide
-                    </Badge>
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-background/90 text-foreground border-0 backdrop-blur">
+                        Digital Guide
+                      </Badge>
+                    </div>
+
+                    <div className="absolute inset-x-0 bottom-0 p-6">
+                      <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-2">
+                        The Catalyst Mom Collection
+                      </p>
+                      <h3 className="font-serif text-2xl md:text-3xl font-semibold leading-tight text-foreground">
+                        {p.title}
+                      </h3>
+                    </div>
                   </div>
 
-                  <div className="absolute inset-x-0 bottom-0 p-6">
-                    <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-2">
-                      The Catalyst Mom Collection
+                  <CardContent className="p-6 space-y-5">
+                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                      {p.description}
                     </p>
-                    <h3 className="font-serif text-2xl md:text-3xl font-semibold leading-tight text-foreground">
-                      The Momodoro Planner
-                    </h3>
-                  </div>
-                </div>
 
-                <CardContent className="p-6 space-y-5">
-                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                    A beautifully structured premium time-management and layout tool
-                    designed to help busy moms organize their days and reclaim their time.
-                  </p>
-
-                  <Button asChild size="lg" className="w-full">
-                    <a
-                      href={MOMODORO_PDF}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      download
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Planner
-                    </a>
-                  </Button>
-                </CardContent>
-              </Card>
+                    <Button asChild size="lg" className="w-full">
+                      <a href={p.pdf} target="_blank" rel="noopener noreferrer" download>
+                        <Download className="w-4 h-4 mr-2" />
+                        {p.cta}
+                      </a>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
+          </section>
+
+          <section className="mt-12">
+            <Card className="bg-muted/30 border-border/60">
+              <CardContent className="p-8 text-center space-y-3">
+                <h3 className="text-xl font-semibold">Need More Resources?</h3>
+                <p className="text-muted-foreground max-w-xl mx-auto">
+                  Can't find what you're looking for? Our wellness coach can recommend personalized resources.
+                </p>
+                <Button asChild variant="outline" className="mt-2">
+                  <a href="/wellness-coach">Chat with Wellness Coach</a>
+                </Button>
+              </CardContent>
+            </Card>
           </section>
         </div>
       </div>
