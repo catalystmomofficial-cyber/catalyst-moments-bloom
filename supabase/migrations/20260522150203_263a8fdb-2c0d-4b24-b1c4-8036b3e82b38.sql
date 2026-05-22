@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.register_for_event(text, text, text, integer, integer);
