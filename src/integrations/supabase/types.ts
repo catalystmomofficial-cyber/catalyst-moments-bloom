@@ -841,6 +841,36 @@ export type Database = {
         }
         Relationships: []
       }
+      digital_product_purchases: {
+        Row: {
+          amount_paid_cents: number
+          created_at: string
+          id: string
+          payment_method: string
+          points_used: number
+          product_slug: string
+          user_id: string
+        }
+        Insert: {
+          amount_paid_cents?: number
+          created_at?: string
+          id?: string
+          payment_method: string
+          points_used?: number
+          product_slug: string
+          user_id: string
+        }
+        Update: {
+          amount_paid_cents?: number
+          created_at?: string
+          id?: string
+          payment_method?: string
+          points_used?: number
+          product_slug?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       event_registrations: {
         Row: {
           amount_paid: number | null
@@ -2283,6 +2313,15 @@ export type Database = {
           payout_id: string
           referral_id: string
         }[]
+      }
+      purchase_digital_product: {
+        Args: {
+          p_amount_paid_cents: number
+          p_payment_method: string
+          p_points_used: number
+          p_product_slug: string
+        }
+        Returns: Json
       }
       redeem_points_for_discount: {
         Args: {
