@@ -36,44 +36,46 @@ const Admin = () => {
           </div>
 
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-9">
-              <TabsTrigger value="overview" className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                Overview
-              </TabsTrigger>
-              <TabsTrigger value="subscriptions" className="flex items-center gap-2">
-                <CreditCard className="h-4 w-4" />
-                Subscriptions
-              </TabsTrigger>
-              <TabsTrigger value="users" className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Users
-              </TabsTrigger>
-              <TabsTrigger value="revenue" className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
-                Revenue
-              </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center gap-2">
-                <BarChart3 className="h-4 w-4" />
-                Analytics
-              </TabsTrigger>
-              <TabsTrigger value="affiliates" className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                Affiliates
-              </TabsTrigger>
-              <TabsTrigger value="blog" className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4" />
-                Blog
-              </TabsTrigger>
-              <TabsTrigger value="blog-analytics" className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                Blog Analytics
-              </TabsTrigger>
-              <TabsTrigger value="push" className="flex items-center gap-2">
-                <Bell className="h-4 w-4" />
-                Push
-              </TabsTrigger>
-            </TabsList>
+            <div className="w-full overflow-x-auto scrollbar-hide -mx-2 px-2">
+              <TabsList className="inline-flex w-max min-w-full gap-1 whitespace-nowrap">
+                <TabsTrigger value="overview" className="flex items-center gap-2 px-4">
+                  <Shield className="h-4 w-4" />
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger value="subscriptions" className="flex items-center gap-2 px-4">
+                  <CreditCard className="h-4 w-4" />
+                  Subscriptions
+                </TabsTrigger>
+                <TabsTrigger value="users" className="flex items-center gap-2 px-4">
+                  <Users className="h-4 w-4" />
+                  Users
+                </TabsTrigger>
+                <TabsTrigger value="revenue" className="flex items-center gap-2 px-4">
+                  <DollarSign className="h-4 w-4" />
+                  Revenue
+                </TabsTrigger>
+                <TabsTrigger value="analytics" className="flex items-center gap-2 px-4">
+                  <BarChart3 className="h-4 w-4" />
+                  Analytics
+                </TabsTrigger>
+                <TabsTrigger value="affiliates" className="flex items-center gap-2 px-4">
+                  <TrendingUp className="h-4 w-4" />
+                  Affiliates
+                </TabsTrigger>
+                <TabsTrigger value="blog" className="flex items-center gap-2 px-4">
+                  <Sparkles className="h-4 w-4" />
+                  Blog
+                </TabsTrigger>
+                <TabsTrigger value="blog-analytics" className="flex items-center gap-2 px-4">
+                  <FileText className="h-4 w-4" />
+                  Blog Analytics
+                </TabsTrigger>
+                <TabsTrigger value="push" className="flex items-center gap-2 px-4">
+                  <Bell className="h-4 w-4" />
+                  Push
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="overview">
               <OverviewSection />

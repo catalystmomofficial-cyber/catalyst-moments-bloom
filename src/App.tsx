@@ -74,6 +74,8 @@ import Unsubscribe from "./pages/Unsubscribe";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
 import SplashScreen from "./components/SplashScreen";
+import PresenceTracker from "./components/presence/PresenceTracker";
+import AdminGiftListener from "./components/notifications/AdminGiftListener";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -96,6 +98,8 @@ function AppContent() {
         <ScrollToTop />
         <SubscriptionRefresher />
         <GoogleAuthOnboarding />
+        <PresenceTracker />
+        <AdminGiftListener />
         <Toaster />
         <Sonner />
       <Routes>
