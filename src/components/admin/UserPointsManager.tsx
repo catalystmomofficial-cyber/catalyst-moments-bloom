@@ -138,9 +138,6 @@ export const UserPointsManager: React.FC = () => {
     }
   };
 
-    }
-  };
-
   useEffect(() => {
     fetchUsers();
   }, []);
