@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Sparkles } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
+import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
 
 const MOMODORO_COVER =
   'https://catalystmomofficial.com/Momon%20guide/Product%20Covers%20copy.png';
