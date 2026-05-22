@@ -170,15 +170,34 @@ const PurchaseModal = ({
   const handleStripePayment = async () => {
     setGateway('stripe');
     setSubmitting(true);
-    // Placeholder: simulate a secure Stripe checkout round-trip.
-    // TODO: replace with real Stripe Checkout session once Stripe is enabled.
-    await new Promise((r) => setTimeout(r, 1200));
-    toast({
-      title: 'Payment successful',
-      description: `Charged $${(amountPaidCents / 100).toFixed(2)} via Stripe.`,
-    });
-    await finalizePurchase();
-    setGateway(null);
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        'create-product-payment',
+        {
+          body: {
+            productSlug: product.slug,
+            productTitle: product.title,
+            amountCents: amountPaidCents,
+            pointsUsed,
+          },
+        },
+      );
+      if (error) throw error;
+      const url = (data as { url?: string })?.url;
+      if (!url) throw new Error('Stripe did not return a checkout URL');
+      // Redirect to Stripe Checkout in a new tab; verification happens on return.
+      window.open(url, '_blank');
+      onClose();
+    } catch (e: any) {
+      toast({
+        title: 'Could not start Stripe checkout',
+        description: e?.message ?? 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmitting(false);
+      setGateway(null);
+    }
   };
 
   const handlePayPalPayment = async () => {
