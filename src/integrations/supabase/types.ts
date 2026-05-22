@@ -2335,16 +2335,33 @@ export type Database = {
           success: boolean
         }[]
       }
-      register_for_event: {
-        Args: {
-          p_amount_paid: number
-          p_event_id: string
-          p_payment_method: string
-          p_points_used: number
-          p_user_id: string
-        }
-        Returns: Json
-      }
+      register_for_event:
+        | {
+            Args: {
+              p_amount_paid: number
+              p_event_id: string
+              p_payment_method: string
+              p_points_used: number
+              p_user_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_amount_paid: number
+              p_email?: string
+              p_event_date?: string
+              p_event_id: string
+              p_event_time?: string
+              p_event_title?: string
+              p_first_name?: string
+              p_last_name?: string
+              p_payment_method: string
+              p_points_used: number
+              p_user_id: string
+            }
+            Returns: Json
+          }
       request_stage_change: {
         Args: { p_reason?: string; p_requested_stage: string }
         Returns: string
