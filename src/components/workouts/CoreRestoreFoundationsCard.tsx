@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
+import coreRestoreCover from "@/assets/core-restore-foundations-cover.jpg";
+
 
 const AVATARS = [
   'https://randomuser.me/api/portraits/women/22.jpg',
@@ -167,7 +169,7 @@ export default function CoreRestoreFoundationsCard() {
     <Card className="overflow-hidden border-primary/20 shadow-lg relative">
       <div className="relative h-48 bg-gradient-to-br from-amber-700 via-orange-600 to-rose-500">
         <img
-          src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=400&fit=crop"
+          src={coreRestoreCover}
           alt="Core Restore Foundations - Safe postpartum healing"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -178,12 +180,7 @@ export default function CoreRestoreFoundationsCard() {
             Featured Program
           </Badge>
         </div>
-        <div className="absolute top-4 right-4">
-          <Badge className="bg-background/90 text-foreground border border-primary/30 shadow-sm backdrop-blur-sm">
-            <Lock className="h-3 w-3 mr-1 text-primary" />
-            Coming Soon
-          </Badge>
-        </div>
+
         <div className="absolute bottom-4 left-4 text-white">
           <h3 className="text-2xl font-bold">Core Restore Foundations</h3>
           <p className="text-white/90">Safely close abdominal separation &amp; heal your floor</p>

@@ -243,6 +243,7 @@ const Workouts = () => {
           
             <TabsContent value="quickWorkouts">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <PostpartumGlowUpChallenge />
                 {filteredWorkouts.filter(w => 
                   w.category === 'Quick' || parseInt(w.duration) <= 15
                 ).map((workout) => (
@@ -260,6 +261,7 @@ const Workouts = () => {
                 ))}
               </div>
             </TabsContent>
+
           
             <TabsContent value="favorites">
               <div className="text-center py-8 border rounded-lg bg-muted/30">
@@ -283,7 +285,7 @@ const Workouts = () => {
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
               {isPostpartum && <CoreRestoreFoundationsCard />}
-              {isPostpartum && <PostpartumGlowUpChallenge />}
+
               {isToddler && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && null}
             </div>
