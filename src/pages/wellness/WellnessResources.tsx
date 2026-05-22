@@ -30,7 +30,7 @@ import { useToast } from '@/components/ui/use-toast';
 const MOMODORO_PDF =
   'https://catalystmomofficial.com/Momon%20guide/The%20Momodoro%20Planner.pdf';
 const SELFCARE_PDF =
-  'https://catalystmomofficial.com/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
+  'https://catalystmomofficial.com/catalyst%20guide/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
 
 type Product = {
   slug: string;
