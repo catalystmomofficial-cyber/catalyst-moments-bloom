@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Sparkles } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
+import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
 
 const MOMODORO_COVER =
   'https://catalystmomofficial.com/Momon%20guide/Product%20Covers%20copy.png';
@@ -25,7 +26,7 @@ const products = [
     title: "The Busy Mom's Self-Care & Stress Relief System",
     description:
       'A practical, stress-relief system designed specifically to help busy mothers find calm and recharge.',
-    cover: MOMODORO_COVER,
+    cover: busyMomSelfCareCover,
     pdf: SELFCARE_PDF,
     cta: 'Download System',
   },
