@@ -2,12 +2,11 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, Sparkles } from 'lucide-react';
+import { Download, Sparkles, CheckCircle2, Flame } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
+import momodoroCover from '@/assets/momodoro-planner-cover.png';
 
-const MOMODORO_COVER =
-  'https://catalystmomofficial.com/Momon%20guide/Product%20Covers%20copy.png';
 const MOMODORO_PDF =
   'https://catalystmomofficial.com/Momon%20guide/The%20Momodoro%20Planner.pdf';
 const SELFCARE_PDF =
@@ -16,19 +15,29 @@ const SELFCARE_PDF =
 const products = [
   {
     title: 'The Momodoro Planner',
+    tagline: '15-Minute Focus Sessions for Busy Moms',
     description:
-      'A beautifully structured premium time-management and layout tool designed to help busy moms organize their days and reclaim their time.',
-    cover: MOMODORO_COVER,
+      'A beautifully structured premium time-management tool that helps busy moms organize their days and reclaim their time — one focused 15-minute session at a time.',
+    cover: momodoroCover,
     pdf: MOMODORO_PDF,
     cta: 'Download Planner',
+    price: '$12',
+    points: '1,200 pts',
+    demand: 'HIGH',
+    stages: 'All Stages',
   },
   {
     title: "The Busy Mom's Self-Care & Stress Relief System",
+    tagline: 'Simple Daily Habits to Feel Energized, Relaxed & In Control',
     description:
-      'A practical, stress-relief system designed specifically to help busy mothers find calm and recharge.',
+      'A practical, stress-relief system designed specifically to help busy mothers find calm, recharge, and feel in control — every single day.',
     cover: busyMomSelfCareCover,
     pdf: SELFCARE_PDF,
     cta: 'Download System',
+    price: '$17',
+    points: '1,700 pts',
+    demand: 'HIGH',
+    stages: 'All Stages',
   },
 ];
 
@@ -67,9 +76,18 @@ const WellnessResources = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
 
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-background/90 text-foreground border-0 backdrop-blur">
+                    <div className="absolute top-4 left-4 flex flex-col gap-2">
+                      <Badge className="bg-background/90 text-foreground border-0 backdrop-blur w-fit">
                         Digital Guide
+                      </Badge>
+                      <Badge className="bg-emerald-500/90 text-white border-0 backdrop-blur w-fit gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> You have this
+                      </Badge>
+                    </div>
+
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-orange-500/90 text-white border-0 backdrop-blur gap-1">
+                        <Flame className="w-3 h-3" /> Demand: {p.demand}
                       </Badge>
                     </div>
 
@@ -80,10 +98,23 @@ const WellnessResources = () => {
                       <h3 className="font-serif text-2xl md:text-3xl font-semibold leading-tight text-foreground">
                         {p.title}
                       </h3>
+                      <p className="mt-2 text-sm md:text-base text-foreground/80 italic">
+                        {p.tagline}
+                      </p>
                     </div>
                   </div>
 
                   <CardContent className="p-6 space-y-5">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Badge variant="secondary" className="rounded-full">
+                        {p.stages}
+                      </Badge>
+                      <div className="ml-auto flex items-baseline gap-3">
+                        <span className="text-2xl font-bold text-foreground">{p.price}</span>
+                        <span className="text-sm font-medium text-primary">{p.points}</span>
+                      </div>
+                    </div>
+
                     <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                       {p.description}
                     </p>
