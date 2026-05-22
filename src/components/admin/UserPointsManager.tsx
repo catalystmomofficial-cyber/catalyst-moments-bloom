@@ -8,7 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Edit, Award } from 'lucide-react';
+import { Loader2, Edit, Award, Sparkles } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface UserWithPoints {
   user_id: string;
@@ -26,14 +27,14 @@ export const UserPointsManager: React.FC = () => {
   const [pointsAdjustment, setPointsAdjustment] = useState('');
   const [reason, setReason] = useState('');
   const [isAdjusting, setIsAdjusting] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
   const fetchUsers = async () => {
     try {
       const { data, error } = await supabase.rpc('get_all_users_with_points');
-      
       if (error) throw error;
-      
       setUsers(data || []);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -59,23 +60,35 @@ export const UserPointsManager: React.FC = () => {
 
     setIsAdjusting(true);
     try {
+      const amount = parseInt(pointsAdjustment);
       const { error } = await supabase.rpc('admin_adjust_user_points', {
         target_user_id: selectedUser.user_id,
-        points_adjustment: parseInt(pointsAdjustment),
-        reason: reason
+        points_adjustment: amount,
+        reason: reason,
       });
 
       if (error) throw error;
 
+      // Optimistic local update
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.user_id === selectedUser.user_id
+            ? { ...u, total_points: u.total_points + amount }
+            : u
+        )
+      );
+
       toast({
-        title: "Success",
-        description: `Points adjusted for ${selectedUser.display_name || selectedUser.email}`,
+        title: "Points adjusted",
+        description: `${amount >= 0 ? '+' : ''}${amount} pts for ${selectedUser.display_name || selectedUser.email}. ${
+          onlineUsers.has(selectedUser.user_id)
+            ? 'They are online — celebration sent live!'
+            : "They'll see it on next sign-in."
+        }`,
       });
 
-      // Refresh user data
       await fetchUsers();
-      
-      // Reset form
+      setDialogOpen(false);
       setSelectedUser(null);
       setPointsAdjustment('');
       setReason('');
@@ -95,6 +108,26 @@ export const UserPointsManager: React.FC = () => {
     fetchUsers();
   }, []);
 
+  // Subscribe to the shared online-users presence channel
+  useEffect(() => {
+    const channel = supabase.channel('online-users');
+
+    const syncOnline = () => {
+      const state = channel.presenceState() as Record<string, unknown[]>;
+      setOnlineUsers(new Set(Object.keys(state)));
+    };
+
+    channel
+      .on('presence', { event: 'sync' }, syncOnline)
+      .on('presence', { event: 'join' }, syncOnline)
+      .on('presence', { event: 'leave' }, syncOnline)
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   if (isLoading) {
     return (
       <Card>
@@ -111,10 +144,14 @@ export const UserPointsManager: React.FC = () => {
         <CardTitle className="flex items-center gap-2">
           <Award className="h-5 w-5" />
           User Points Management
+          <Badge variant="outline" className="ml-2 gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            {onlineUsers.size} online
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -127,84 +164,113 @@ export const UserPointsManager: React.FC = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.user_id}>
-                  <TableCell>
-                    <div className="font-medium">
-                      {user.display_name || 'Unknown User'}
-                    </div>
-                  </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">{user.total_points}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge>{user.level}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(user.created_at).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => setSelectedUser(user)}
-                        >
-                          <Edit className="h-4 w-4 mr-1" />
-                          Adjust Points
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>
-                            Adjust Points for {user.display_name || user.email}
-                          </DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium">Current Points</label>
-                            <div className="text-2xl font-bold text-primary">
-                              {user.total_points}
-                            </div>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Points Adjustment</label>
-                            <Input
-                              type="number"
-                              placeholder="Enter points to add/remove (use negative for removal)"
-                              value={pointsAdjustment}
-                              onChange={(e) => setPointsAdjustment(e.target.value)}
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium">Reason</label>
-                            <Textarea
-                              placeholder="Explain why you're adjusting points..."
-                              value={reason}
-                              onChange={(e) => setReason(e.target.value)}
-                            />
-                          </div>
-                          <Button 
-                            onClick={handlePointsAdjustment}
-                            disabled={isAdjusting}
-                            className="w-full"
-                          >
-                            {isAdjusting ? (
-                              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                            ) : null}
-                            Apply Adjustment
-                          </Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {users.map((user) => {
+                const isOnline = onlineUsers.has(user.user_id);
+                return (
+                  <TableRow key={user.user_id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            'h-2.5 w-2.5 rounded-full shrink-0',
+                            isOnline
+                              ? 'bg-emerald-500 shadow-[0_0_0_3px_hsl(var(--background))] ring-2 ring-emerald-500/30 animate-pulse'
+                              : 'bg-muted-foreground/40'
+                          )}
+                          title={isOnline ? 'Online now' : 'Offline'}
+                          aria-label={isOnline ? 'Online now' : 'Offline'}
+                        />
+                        <span className="font-medium">
+                          {user.display_name || 'Unknown User'}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">{user.total_points}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge>{user.level}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(user.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setPointsAdjustment('');
+                          setReason('');
+                          setDialogOpen(true);
+                        }}
+                      >
+                        <Sparkles className="h-4 w-4 mr-1" />
+                        Adjust Points
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
+
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Edit className="h-4 w-4" />
+                Adjust Points for {selectedUser?.display_name || selectedUser?.email}
+                {selectedUser && onlineUsers.has(selectedUser.user_id) && (
+                  <Badge variant="outline" className="gap-1.5 ml-auto">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    Online now
+                  </Badge>
+                )}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Current Points</label>
+                <div className="text-2xl font-bold text-primary">
+                  {selectedUser?.total_points ?? 0}
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Points Adjustment</label>
+                <Input
+                  type="number"
+                  placeholder="Enter points to add/remove (use negative to remove)"
+                  value={pointsAdjustment}
+                  onChange={(e) => setPointsAdjustment(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Reason</label>
+                <Textarea
+                  placeholder="e.g. completing the 7-day birth ball challenge"
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  maxLength={200}
+                />
+              </div>
+              <Button
+                onClick={handlePointsAdjustment}
+                disabled={isAdjusting}
+                className="w-full"
+              >
+                {isAdjusting ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <Sparkles className="h-4 w-4 mr-2" />
+                )}
+                Apply & Celebrate
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );
