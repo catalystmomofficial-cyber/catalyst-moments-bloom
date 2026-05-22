@@ -76,9 +76,18 @@ const WellnessResources = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent" />
 
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-background/90 text-foreground border-0 backdrop-blur">
+                    <div className="absolute top-4 left-4 flex flex-col gap-2">
+                      <Badge className="bg-background/90 text-foreground border-0 backdrop-blur w-fit">
                         Digital Guide
+                      </Badge>
+                      <Badge className="bg-emerald-500/90 text-white border-0 backdrop-blur w-fit gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> You have this
+                      </Badge>
+                    </div>
+
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-orange-500/90 text-white border-0 backdrop-blur gap-1">
+                        <Flame className="w-3 h-3" /> Demand: {p.demand}
                       </Badge>
                     </div>
 
@@ -89,10 +98,23 @@ const WellnessResources = () => {
                       <h3 className="font-serif text-2xl md:text-3xl font-semibold leading-tight text-foreground">
                         {p.title}
                       </h3>
+                      <p className="mt-2 text-sm md:text-base text-foreground/80 italic">
+                        {p.tagline}
+                      </p>
                     </div>
                   </div>
 
                   <CardContent className="p-6 space-y-5">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Badge variant="secondary" className="rounded-full">
+                        {p.stages}
+                      </Badge>
+                      <div className="ml-auto flex items-baseline gap-3">
+                        <span className="text-2xl font-bold text-foreground">{p.price}</span>
+                        <span className="text-sm font-medium text-primary">{p.points}</span>
+                      </div>
+                    </div>
+
                     <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                       {p.description}
                     </p>
