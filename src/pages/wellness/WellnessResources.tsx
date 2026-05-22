@@ -30,7 +30,7 @@ import { useToast } from '@/components/ui/use-toast';
 const MOMODORO_PDF =
   'https://catalystmomofficial.com/Momon%20guide/The%20Momodoro%20Planner.pdf';
 const SELFCARE_PDF =
-  'https://catalystmomofficial.com/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
+  'https://catalystmomofficial.com/catalyst%20guide/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
 
 type Product = {
   slug: string;
@@ -170,15 +170,34 @@ const PurchaseModal = ({
   const handleStripePayment = async () => {
     setGateway('stripe');
     setSubmitting(true);
-    // Placeholder: simulate a secure Stripe checkout round-trip.
-    // TODO: replace with real Stripe Checkout session once Stripe is enabled.
-    await new Promise((r) => setTimeout(r, 1200));
-    toast({
-      title: 'Payment successful',
-      description: `Charged $${(amountPaidCents / 100).toFixed(2)} via Stripe.`,
-    });
-    await finalizePurchase();
-    setGateway(null);
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        'create-product-payment',
+        {
+          body: {
+            productSlug: product.slug,
+            productTitle: product.title,
+            amountCents: amountPaidCents,
+            pointsUsed,
+          },
+        },
+      );
+      if (error) throw error;
+      const url = (data as { url?: string })?.url;
+      if (!url) throw new Error('Stripe did not return a checkout URL');
+      // Redirect to Stripe Checkout in a new tab; verification happens on return.
+      window.open(url, '_blank');
+      onClose();
+    } catch (e: any) {
+      toast({
+        title: 'Could not start Stripe checkout',
+        description: e?.message ?? 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSubmitting(false);
+      setGateway(null);
+    }
   };
 
   const handlePayPalPayment = async () => {
@@ -424,6 +443,26 @@ const WellnessResources = () => {
     window.addEventListener('points-updated', onPts);
     return () => window.removeEventListener('points-updated', onPts);
   }, [refresh]);
+
+  // Verify Stripe checkout on return: ?payment=success&session_id=...&slug=...
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payment = params.get('payment');
+    const sessionId = params.get('session_id');
+    if (payment !== 'success' || !sessionId || !user) return;
+
+    (async () => {
+      const { data, error } = await supabase.functions.invoke(
+        'verify-product-payment',
+        { body: { sessionId } },
+      );
+      // Clean URL regardless of outcome
+      window.history.replaceState({}, '', '/wellness/resources');
+      if (error || !(data as any)?.paid) return;
+      window.dispatchEvent(new Event('points-updated'));
+      refresh();
+    })();
+  }, [user, refresh]);
 
   return (
     <PageLayout>
