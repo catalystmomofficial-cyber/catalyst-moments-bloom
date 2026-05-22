@@ -4,12 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, Users, CheckCircle, Zap, CreditCard } from 'lucide-react';
+import { Calendar, Clock, Users, CheckCircle, Zap, CreditCard, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import type { Event } from './EnhancedEventsList';
+
+const PAYPAL_CLIENT_ID =
+  (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) ||
+  'AVx-CDjcjaMtNsqlKBIm-edzwezhGiMtti86hVwfMbc967nLU2QlJXTAn62Vsk6HCPB6nB8sfOz8khKB';
 
 interface EventRegistrationModalProps {
   isOpen: boolean;
