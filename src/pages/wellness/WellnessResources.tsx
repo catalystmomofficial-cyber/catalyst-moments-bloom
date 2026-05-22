@@ -32,7 +32,8 @@ import {
 } from '@paypal/react-paypal-js';
 
 const PAYPAL_CLIENT_ID =
-  (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) || 'sb';
+  (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) ||
+  'AVx-CDjcjaMtNsqlKBIm-edzwezhGiMtti86hVwfMbc967nLU2QlJXTAn62Vsk6HCPB6nB8sfOz8khKB';
 
 const MOMODORO_PDF =
   'https://catalystmomofficial.com/Momon%20guide/The%20Momodoro%20Planner.pdf';
