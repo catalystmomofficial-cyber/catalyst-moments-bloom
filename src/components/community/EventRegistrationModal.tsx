@@ -36,6 +36,8 @@ const EventRegistrationModal = ({
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('free');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [step, setStep] = useState<'select' | 'checkout'>('select');
+  const [gateway, setGateway] = useState<'stripe' | 'paypal' | null>(null);
   const { toast } = useToast();
   const { user, profile, subscribed } = useAuth();
   const { awardPoints } = usePoints();
@@ -60,18 +62,17 @@ const EventRegistrationModal = ({
     } else {
       setPaymentMethod('free');
     }
+    setStep('select');
+    setGateway(null);
   }, [event?.id]);
 
   if (!event) return null;
 
-  const handleSubmit = async () => {
-    if (!user) {
-      toast({ title: 'Sign in required', description: 'Please sign in to register.', variant: 'destructive' });
-      return;
-    }
+  // Cash amount due after any points credit
+  const amountDueCents = paymentMethod === 'stripe' ? displayPrice : 0;
 
-    setIsSubmitting(true);
-
+  const finalizeRegistration = async () => {
+    if (!user) return;
     // Deduct points upfront if paying with points
     if (paymentMethod === 'points') {
       const { error: pointsErr } = await supabase.rpc('add_user_points', {
@@ -83,12 +84,10 @@ const EventRegistrationModal = ({
 
       if (pointsErr) {
         toast({ title: 'Points error', description: pointsErr.message, variant: 'destructive' });
-        setIsSubmitting(false);
-        return;
+        return false;
       }
     }
 
-    // Atomic registration via RPC (capacity check + duplicate check + attendee increment)
     const displayName = profile?.display_name ?? user.email?.split('@')[0] ?? 'Member';
     const [firstName, ...rest] = displayName.split(' ');
     const lastName = rest.join(' ') || '-';
@@ -107,7 +106,6 @@ const EventRegistrationModal = ({
     });
 
     if (regErr || !result?.success) {
-      // Refund points if deduction succeeded but registration failed
       if (paymentMethod === 'points') {
         await supabase.rpc('add_user_points', {
           p_user_id: user.id,
@@ -121,14 +119,11 @@ const EventRegistrationModal = ({
         description: result?.error ?? regErr?.message ?? 'Please try again.',
         variant: 'destructive',
       });
-      setIsSubmitting(false);
-      return;
+      return false;
     }
 
-    // Award +50 registration bonus points
     await awardPoints(50, 'event_registration', `Registered for ${event.title}`);
 
-    // Confirmation email (non-blocking)
     supabase.functions
       .invoke('send-transactional-email', {
         body: {
@@ -156,10 +151,54 @@ const EventRegistrationModal = ({
     setTimeout(() => {
       setIsSuccess(false);
       setPaymentMethod('free');
+      setStep('select');
       onClose();
     }, 3000);
+    return true;
+  };
 
+  const handleSubmit = async () => {
+    if (!user) {
+      toast({ title: 'Sign in required', description: 'Please sign in to register.', variant: 'destructive' });
+      return;
+    }
+    // Cash owed → advance to checkout step (mirrors product workflow)
+    if (amountDueCents > 0) {
+      setStep('checkout');
+      return;
+    }
+    setIsSubmitting(true);
+    await finalizeRegistration();
     setIsSubmitting(false);
+  };
+
+  const handleStripeCheckout = async () => {
+    setGateway('stripe');
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-event-payment', {
+        body: {
+          eventId: event.id,
+          eventTitle: event.title,
+          amountCents: amountDueCents,
+          pointsUsed: 0,
+        },
+      });
+      if (error) throw error;
+      const url = (data as { url?: string })?.url;
+      if (!url) throw new Error('Stripe did not return a checkout URL');
+      window.open(url, '_blank');
+      onClose();
+    } catch (e: any) {
+      toast({
+        title: 'Could not start Stripe checkout',
+        description: e?.message ?? 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+      setGateway(null);
+    }
   };
 
   // ── Success screen ───────────────────────────────────────────────────────────
