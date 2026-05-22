@@ -49,55 +49,89 @@ export const UserPointsManager: React.FC = () => {
   };
 
   const handlePointsAdjustment = async () => {
-    if (!selectedUser || !pointsAdjustment || !reason) {
+    const amount = Number.parseInt(pointsAdjustment, 10);
+
+    if (!selectedUser) return;
+    if (!Number.isFinite(amount) || amount === 0) {
       toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        variant: "destructive",
+        title: 'Enter a points amount',
+        description: 'Use a non-zero number (negative to remove).',
+        variant: 'destructive',
+      });
+      return;
+    }
+    if (!reason.trim()) {
+      toast({
+        title: 'Reason required',
+        description: 'Tell the user why they got this adjustment.',
+        variant: 'destructive',
       });
       return;
     }
 
     setIsAdjusting(true);
+    const targetId = selectedUser.user_id;
+    const targetName = selectedUser.display_name || selectedUser.email;
+
     try {
-      const amount = parseInt(pointsAdjustment);
-      const { error } = await supabase.rpc('admin_adjust_user_points', {
-        target_user_id: selectedUser.user_id,
+      console.log('[admin_adjust_user_points] calling', {
+        target_user_id: targetId,
         points_adjustment: amount,
-        reason: reason,
+        reason,
       });
+
+      const { data, error } = await supabase.rpc('admin_adjust_user_points', {
+        target_user_id: targetId,
+        points_adjustment: amount,
+        reason: reason.trim(),
+      });
+
+      console.log('[admin_adjust_user_points] response', { data, error });
 
       if (error) throw error;
 
-      // Optimistic local update
+      // Pull the authoritative fresh row straight from the database.
+      const { data: fresh, error: freshError } = await supabase
+        .from('user_points')
+        .select('total_points, level')
+        .eq('user_id', targetId)
+        .maybeSingle();
+
+      if (freshError) throw freshError;
+
+      const newTotal = fresh?.total_points ?? 0;
+      const newLevel = fresh?.level ?? 1;
+
       setUsers((prev) =>
         prev.map((u) =>
-          u.user_id === selectedUser.user_id
-            ? { ...u, total_points: u.total_points + amount }
+          u.user_id === targetId
+            ? { ...u, total_points: newTotal, level: newLevel }
             : u
         )
       );
 
       toast({
-        title: "Points adjusted",
-        description: `${amount >= 0 ? '+' : ''}${amount} pts for ${selectedUser.display_name || selectedUser.email}. ${
-          onlineUsers.has(selectedUser.user_id)
+        title: 'Points adjusted',
+        description: `${amount >= 0 ? '+' : ''}${amount} pts for ${targetName}. New balance: ${newTotal}. ${
+          onlineUsers.has(targetId)
             ? 'They are online — celebration sent live!'
             : "They'll see it on next sign-in."
         }`,
       });
 
-      await fetchUsers();
       setDialogOpen(false);
       setSelectedUser(null);
       setPointsAdjustment('');
       setReason('');
-    } catch (error) {
-      console.error('Error adjusting points:', error);
+
+      // Background full refresh to keep sort order accurate.
+      fetchUsers();
+    } catch (err: any) {
+      console.error('Error adjusting points:', err);
       toast({
-        title: "Error",
-        description: "Failed to adjust points",
-        variant: "destructive",
+        title: 'Failed to adjust points',
+        description: err?.message || err?.error_description || 'Unknown error',
+        variant: 'destructive',
       });
     } finally {
       setIsAdjusting(false);
