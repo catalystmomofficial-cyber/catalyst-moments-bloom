@@ -84,12 +84,21 @@ const EventRegistrationModal = ({
     }
 
     // Atomic registration via RPC (capacity check + duplicate check + attendee increment)
+    const displayName = profile?.display_name ?? user.email?.split('@')[0] ?? 'Member';
+    const [firstName, ...rest] = displayName.split(' ');
+    const lastName = rest.join(' ') || '-';
     const { data: result, error: regErr } = await (supabase as any).rpc('register_for_event', {
       p_event_id: event.id.toString(),
       p_user_id: user.id.toString(),
       p_payment_method: paymentMethod,
       p_points_used: paymentMethod === 'points' ? pointsCost : 0,
       p_amount_paid: paymentMethod === 'stripe' ? displayPrice : 0,
+      p_event_title: event.title,
+      p_event_date: event.date ?? null,
+      p_event_time: event.time ?? null,
+      p_first_name: firstName,
+      p_last_name: lastName,
+      p_email: user.email ?? null,
     });
 
     if (regErr || !result?.success) {
