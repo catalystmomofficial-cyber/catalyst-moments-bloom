@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Download, Sparkles } from 'lucide-react';
+import { Download, Sparkles, CheckCircle2, Flame } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
 import momodoroCover from '@/assets/momodoro-planner-cover.png';
