@@ -93,6 +93,8 @@ const PurchaseModal = ({
   const { toast } = useToast();
   const [method, setMethod] = useState<PaymentMethod>('points');
   const [submitting, setSubmitting] = useState(false);
+  const [step, setStep] = useState<'select' | 'checkout'>('select');
+  const [gateway, setGateway] = useState<'stripe' | 'paypal' | null>(null);
 
   const hasEnoughPoints = product ? pointsBalance >= product.pointsCost : false;
   const shortfallCents = product
@@ -102,11 +104,20 @@ const PurchaseModal = ({
   useEffect(() => {
     if (!product) return;
     setMethod(hasEnoughPoints ? 'points' : 'stripe');
+    setStep('select');
+    setGateway(null);
   }, [product?.slug, hasEnoughPoints]);
 
   if (!product) return null;
 
-  const handleConfirm = async () => {
+  const pointsUsed =
+    method === 'points'
+      ? product.pointsCost
+      : Math.min(pointsBalance, product.priceCents);
+  const amountPaidCents =
+    method === 'points' ? 0 : product.priceCents - pointsUsed;
+
+  const finalizePurchase = async () => {
     if (!user) {
       toast({
         title: 'Sign in required',
@@ -116,13 +127,6 @@ const PurchaseModal = ({
       return;
     }
     setSubmitting(true);
-
-    const pointsUsed =
-      method === 'points'
-        ? product.pointsCost
-        : Math.min(pointsBalance, product.priceCents);
-    const amountPaidCents =
-      method === 'points' ? 0 : product.priceCents - pointsUsed;
 
     const { data, error } = await supabase.rpc(
       'purchase_digital_product' as any,
@@ -153,6 +157,42 @@ const PurchaseModal = ({
     });
     onPurchased();
     onClose();
+  };
+
+  const handleConfirm = async () => {
+    if (amountPaidCents > 0) {
+      setStep('checkout');
+      return;
+    }
+    await finalizePurchase();
+  };
+
+  const handleStripePayment = async () => {
+    setGateway('stripe');
+    setSubmitting(true);
+    // Placeholder: simulate a secure Stripe checkout round-trip.
+    // TODO: replace with real Stripe Checkout session once Stripe is enabled.
+    await new Promise((r) => setTimeout(r, 1200));
+    toast({
+      title: 'Payment successful',
+      description: `Charged $${(amountPaidCents / 100).toFixed(2)} via Stripe.`,
+    });
+    await finalizePurchase();
+    setGateway(null);
+  };
+
+  const handlePayPalPayment = async () => {
+    setGateway('paypal');
+    setSubmitting(true);
+    // Placeholder: simulate PayPal smart button approval.
+    // TODO: replace with real PayPal SDK + server-side capture.
+    await new Promise((r) => setTimeout(r, 1200));
+    toast({
+      title: 'Payment successful',
+      description: `Charged $${(amountPaidCents / 100).toFixed(2)} via PayPal.`,
+    });
+    await finalizePurchase();
+    setGateway(null);
   };
 
   return (
