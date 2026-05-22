@@ -381,15 +381,6 @@ const WellnessResources = () => {
 
                     {/* Bottom content */}
                     <CardContent className="absolute inset-x-0 bottom-0 p-6 space-y-4">
-                      <div>
-                        <h3 className="font-serif text-2xl md:text-3xl font-semibold leading-tight text-white">
-                          {p.title}
-                        </h3>
-                        <p className="mt-1.5 text-sm md:text-base text-white/85 italic">
-                          {p.tagline}
-                        </p>
-                      </div>
-
                       <div className="flex items-baseline gap-3">
                         <span className="text-2xl font-bold text-white">
                           ${(p.priceCents / 100).toFixed(2)}
