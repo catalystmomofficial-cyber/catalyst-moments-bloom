@@ -207,19 +207,8 @@ const PurchaseModal = ({
     }
   };
 
-  const handlePayPalPayment = async () => {
-    setGateway('paypal');
-    setSubmitting(true);
-    // Placeholder: simulate PayPal smart button approval.
-    // TODO: replace with real PayPal SDK + server-side capture.
-    await new Promise((r) => setTimeout(r, 1200));
-    toast({
-      title: 'Payment successful',
-      description: `Charged $${(amountPaidCents / 100).toFixed(2)} via PayPal.`,
-    });
-    await finalizePurchase();
-    setGateway(null);
-  };
+  // PayPal Smart Buttons use onApprove callback below — no manual handler needed.
+
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
