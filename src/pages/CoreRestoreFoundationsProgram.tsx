@@ -247,96 +247,6 @@ export default function CoreRestoreFoundationsProgram() {
           Back to Workouts
         </Button>
 
-        {/* Header */}
-        <div className="space-y-3">
-          <h1 className="text-2xl font-bold tracking-tight">Core Restore Foundations</h1>
-          <p className="text-muted-foreground text-sm">
-            A 4-week journey to rebuild your core after birth.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 pt-1">
-            <Badge className="gap-1 bg-primary/10 text-primary border-primary/30">
-              <Flame className="h-3.5 w-3.5" /> {progress.streak}-day streak
-            </Badge>
-            <Badge variant="outline" className="gap-1">
-              <Trophy className="h-3.5 w-3.5" /> Day {Math.min(unlockedDay, TOTAL_DAYS)} of {TOTAL_DAYS}
-            </Badge>
-            {isProgramComplete && (
-              <Badge className="gap-1 bg-amber-100 text-amber-800 border-amber-300">
-                <Star className="h-3.5 w-3.5 fill-current" /> Program Complete
-              </Badge>
-            )}
-          </div>
-
-          <Progress value={overallPct} className="h-2" />
-        </div>
-
-        {/* Week journey */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {weeks.map((w) => {
-            const weekStartDay = (w.number - 1) * 7 + 1;
-            const weekEndDay = w.number * 7;
-            const weekUnlocked = unlockedDay >= weekStartDay;
-            const weekDone = unlockedDay > weekEndDay || isProgramComplete;
-            return (
-              <div
-                key={w.number}
-                className={`relative rounded-2xl border p-4 bg-gradient-to-br ${w.color} ${
-                  !weekUnlocked ? "opacity-60" : ""
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <Badge variant="outline" className={w.badgeClass}>
-                    Week {w.number} — {w.code}
-                  </Badge>
-                  {weekDone ? (
-                    <Check className="h-4 w-4 text-emerald-600" />
-                  ) : !weekUnlocked ? (
-                    <Lock className="h-4 w-4 text-muted-foreground" />
-                  ) : (
-                    <Sparkles className="h-4 w-4 text-primary" />
-                  )}
-                </div>
-                <h3 className="font-semibold">{w.title}</h3>
-                <p className="text-xs text-muted-foreground mt-1 mb-3">{w.description}</p>
-
-                <div className="grid grid-cols-7 gap-1.5">
-                  {Array.from({ length: 7 }).map((_, i) => {
-                    const dayNum = weekStartDay + i;
-                    const dayUnlocked = dayNum <= unlockedDay;
-                    const dayDone = dayNum < unlockedDay || (isProgramComplete && dayNum <= TOTAL_DAYS);
-                    const isToday = dayNum === unlockedDay && !isProgramComplete;
-                    const isSelected = dayNum === selectedDay;
-                    return (
-                      <button
-                        key={dayNum}
-                        onClick={() => dayUnlocked && setSelectedDay(dayNum)}
-                        disabled={!dayUnlocked}
-                        aria-label={`Day ${dayNum}`}
-                        className={`h-9 rounded-md text-xs font-medium border transition ${
-                          isSelected
-                            ? "ring-2 ring-primary ring-offset-1"
-                            : ""
-                        } ${
-                          dayDone
-                            ? "bg-primary/15 border-primary/30 text-primary"
-                            : isToday
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : dayUnlocked
-                            ? "bg-background border-border hover:bg-muted"
-                            : "bg-muted/40 border-transparent text-muted-foreground cursor-not-allowed"
-                        }`}
-                      >
-                        {dayDone ? <Check className="h-3.5 w-3.5 mx-auto" /> : i + 1}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
         {/* Active day card */}
         <Card className="border-primary/20 shadow-md">
           <CardContent className="p-5 space-y-4">
@@ -431,6 +341,96 @@ export default function CoreRestoreFoundationsProgram() {
             )}
           </CardContent>
         </Card>
+
+        {/* Header */}
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold tracking-tight">Core Restore Foundations</h1>
+          <p className="text-muted-foreground text-sm">
+            A 4-week journey to rebuild your core after birth.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <Badge className="gap-1 bg-primary/10 text-primary border-primary/30">
+              <Flame className="h-3.5 w-3.5" /> {progress.streak}-day streak
+            </Badge>
+            <Badge variant="outline" className="gap-1">
+              <Trophy className="h-3.5 w-3.5" /> Day {Math.min(unlockedDay, TOTAL_DAYS)} of {TOTAL_DAYS}
+            </Badge>
+            {isProgramComplete && (
+              <Badge className="gap-1 bg-amber-100 text-amber-800 border-amber-300">
+                <Star className="h-3.5 w-3.5 fill-current" /> Program Complete
+              </Badge>
+            )}
+          </div>
+
+          <Progress value={overallPct} className="h-2" />
+        </div>
+
+        {/* Week journey */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {weeks.map((w) => {
+            const weekStartDay = (w.number - 1) * 7 + 1;
+            const weekEndDay = w.number * 7;
+            const weekUnlocked = unlockedDay >= weekStartDay;
+            const weekDone = unlockedDay > weekEndDay || isProgramComplete;
+            return (
+              <div
+                key={w.number}
+                className={`relative rounded-2xl border p-4 bg-gradient-to-br ${w.color} ${
+                  !weekUnlocked ? "opacity-60" : ""
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <Badge variant="outline" className={w.badgeClass}>
+                    Week {w.number} — {w.code}
+                  </Badge>
+                  {weekDone ? (
+                    <Check className="h-4 w-4 text-emerald-600" />
+                  ) : !weekUnlocked ? (
+                    <Lock className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <Sparkles className="h-4 w-4 text-primary" />
+                  )}
+                </div>
+                <h3 className="font-semibold">{w.title}</h3>
+                <p className="text-xs text-muted-foreground mt-1 mb-3">{w.description}</p>
+
+                <div className="grid grid-cols-7 gap-1.5">
+                  {Array.from({ length: 7 }).map((_, i) => {
+                    const dayNum = weekStartDay + i;
+                    const dayUnlocked = dayNum <= unlockedDay;
+                    const dayDone = dayNum < unlockedDay || (isProgramComplete && dayNum <= TOTAL_DAYS);
+                    const isToday = dayNum === unlockedDay && !isProgramComplete;
+                    const isSelected = dayNum === selectedDay;
+                    return (
+                      <button
+                        key={dayNum}
+                        onClick={() => dayUnlocked && setSelectedDay(dayNum)}
+                        disabled={!dayUnlocked}
+                        aria-label={`Day ${dayNum}`}
+                        className={`h-9 rounded-md text-xs font-medium border transition ${
+                          isSelected
+                            ? "ring-2 ring-primary ring-offset-1"
+                            : ""
+                        } ${
+                          dayDone
+                            ? "bg-primary/15 border-primary/30 text-primary"
+                            : isToday
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : dayUnlocked
+                            ? "bg-background border-border hover:bg-muted"
+                            : "bg-muted/40 border-transparent text-muted-foreground cursor-not-allowed"
+                        }`}
+                      >
+                        {dayDone ? <Check className="h-3.5 w-3.5 mx-auto" /> : i + 1}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Celebration modal — same vibe as 30-day glow up achievements */}
