@@ -444,6 +444,26 @@ const WellnessResources = () => {
     return () => window.removeEventListener('points-updated', onPts);
   }, [refresh]);
 
+  // Verify Stripe checkout on return: ?payment=success&session_id=...&slug=...
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payment = params.get('payment');
+    const sessionId = params.get('session_id');
+    if (payment !== 'success' || !sessionId || !user) return;
+
+    (async () => {
+      const { data, error } = await supabase.functions.invoke(
+        'verify-product-payment',
+        { body: { sessionId } },
+      );
+      // Clean URL regardless of outcome
+      window.history.replaceState({}, '', '/wellness/resources');
+      if (error || !(data as any)?.paid) return;
+      window.dispatchEvent(new Event('points-updated'));
+      refresh();
+    })();
+  }, [user, refresh]);
+
   return (
     <PageLayout>
       <div className="container mx-auto px-4 py-8">
