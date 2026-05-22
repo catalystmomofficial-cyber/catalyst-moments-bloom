@@ -18,6 +18,7 @@ import {
   Lock,
   Zap,
   CreditCard,
+  Loader2,
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
