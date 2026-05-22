@@ -249,7 +249,7 @@ const Wellness = () => {
                           time="8 min read"
                           icon={<Heart className="h-5 w-5" />}
                           color="bg-pink-100"
-                          onClick={() => window.open('/wellness/prenatal-essentials', '_blank')}
+                          onClick={() => window.location.assign('/wellness/resources')}
                         />
                         <WellnessResourceCard
                           title="Managing Pregnancy Stress"
@@ -258,7 +258,7 @@ const Wellness = () => {
                           time="6 min read"
                           icon={<SmilePlus className="h-5 w-5" />}
                           color="bg-purple-100"
-                          onClick={() => window.open('/wellness/pregnancy-stress', '_blank')}
+                          onClick={() => window.location.assign('/wellness/resources')}
                         />
                       </>
                     )}
@@ -272,7 +272,7 @@ const Wellness = () => {
                           time="5 min read"
                           icon={<MoonStar className="h-5 w-5" />}
                           color="bg-blue-100"
-                          onClick={() => window.open('/wellness/sleep-strategies', '_blank')}
+                          onClick={() => window.location.assign('/wellness/resources')}
                         />
                         <WellnessResourceCard
                           title="Postpartum Recovery Guide"
@@ -281,7 +281,7 @@ const Wellness = () => {
                           time="10 min read"
                           icon={<Heart className="h-5 w-5" />}
                           color="bg-green-100"
-                          onClick={() => window.open('/wellness/postpartum-recovery', '_blank')}
+                          onClick={() => window.location.assign('/wellness/resources')}
                         />
                       </>
                     )}
@@ -295,7 +295,7 @@ const Wellness = () => {
                           time="7 min read"
                           icon={<Heart className="h-5 w-5" />}
                           color="bg-rose-100"
-                          onClick={() => window.open('/wellness/fertility-wellness', '_blank')}
+                          onClick={() => window.location.assign('/wellness/resources')}
                         />
                         <WellnessResourceCard
                           title="Stress Management for TTC"
@@ -304,7 +304,7 @@ const Wellness = () => {
                           time="5 min read"
                           icon={<SmilePlus className="h-5 w-5" />}
                           color="bg-purple-100"
-                          onClick={() => window.open('/wellness/ttc-stress', '_blank')}
+                          onClick={() => window.location.assign('/wellness/resources')}
                         />
                       </>
                     )}
@@ -316,7 +316,7 @@ const Wellness = () => {
                       time="Audio: 5 min"
                       icon={<Heart className="h-5 w-5" />}
                       color="bg-red-100"
-                      onClick={() => window.open('/wellness/mindfulness', '_blank')}
+                      onClick={() => window.location.assign('/wellness/resources')}
                     />
                     <WellnessResourceCard
                       title="Hydration & Energy Guide"
@@ -325,7 +325,7 @@ const Wellness = () => {
                       time="8 min read"
                       icon={<Utensils className="h-5 w-5" />}
                       color="bg-green-100"
-                      onClick={() => window.open('/wellness/hydration-guide', '_blank')}
+                      onClick={() => window.location.assign('/wellness/resources')}
                     />
                   </div>
                 </div>
