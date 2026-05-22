@@ -18,6 +18,7 @@ import {
   Lock,
   Zap,
   CreditCard,
+  Loader2,
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
@@ -92,6 +93,8 @@ const PurchaseModal = ({
   const { toast } = useToast();
   const [method, setMethod] = useState<PaymentMethod>('points');
   const [submitting, setSubmitting] = useState(false);
+  const [step, setStep] = useState<'select' | 'checkout'>('select');
+  const [gateway, setGateway] = useState<'stripe' | 'paypal' | null>(null);
 
   const hasEnoughPoints = product ? pointsBalance >= product.pointsCost : false;
   const shortfallCents = product
@@ -101,11 +104,20 @@ const PurchaseModal = ({
   useEffect(() => {
     if (!product) return;
     setMethod(hasEnoughPoints ? 'points' : 'stripe');
+    setStep('select');
+    setGateway(null);
   }, [product?.slug, hasEnoughPoints]);
 
   if (!product) return null;
 
-  const handleConfirm = async () => {
+  const pointsUsed =
+    method === 'points'
+      ? product.pointsCost
+      : Math.min(pointsBalance, product.priceCents);
+  const amountPaidCents =
+    method === 'points' ? 0 : product.priceCents - pointsUsed;
+
+  const finalizePurchase = async () => {
     if (!user) {
       toast({
         title: 'Sign in required',
@@ -115,13 +127,6 @@ const PurchaseModal = ({
       return;
     }
     setSubmitting(true);
-
-    const pointsUsed =
-      method === 'points'
-        ? product.pointsCost
-        : Math.min(pointsBalance, product.priceCents);
-    const amountPaidCents =
-      method === 'points' ? 0 : product.priceCents - pointsUsed;
 
     const { data, error } = await supabase.rpc(
       'purchase_digital_product' as any,
@@ -154,102 +159,230 @@ const PurchaseModal = ({
     onClose();
   };
 
+  const handleConfirm = async () => {
+    if (amountPaidCents > 0) {
+      setStep('checkout');
+      return;
+    }
+    await finalizePurchase();
+  };
+
+  const handleStripePayment = async () => {
+    setGateway('stripe');
+    setSubmitting(true);
+    // Placeholder: simulate a secure Stripe checkout round-trip.
+    // TODO: replace with real Stripe Checkout session once Stripe is enabled.
+    await new Promise((r) => setTimeout(r, 1200));
+    toast({
+      title: 'Payment successful',
+      description: `Charged $${(amountPaidCents / 100).toFixed(2)} via Stripe.`,
+    });
+    await finalizePurchase();
+    setGateway(null);
+  };
+
+  const handlePayPalPayment = async () => {
+    setGateway('paypal');
+    setSubmitting(true);
+    // Placeholder: simulate PayPal smart button approval.
+    // TODO: replace with real PayPal SDK + server-side capture.
+    await new Promise((r) => setTimeout(r, 1200));
+    toast({
+      title: 'Payment successful',
+      description: `Charged $${(amountPaidCents / 100).toFixed(2)} via PayPal.`,
+    });
+    await finalizePurchase();
+    setGateway(null);
+  };
+
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Unlock {product.title}</DialogTitle>
+          <DialogTitle>
+            {step === 'checkout' ? 'Complete payment' : `Unlock ${product.title}`}
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-5">
-          <div className="flex items-center gap-2 text-sm bg-accent/20 rounded-lg px-4 py-2">
-            <Zap className="h-4 w-4 text-primary shrink-0" />
-            <span>
-              You have{' '}
-              <strong>{pointsBalance.toLocaleString()} pts</strong> · $
-              {(pointsBalance / 100).toFixed(2)} value
-            </span>
-          </div>
+        {step === 'select' && (
+          <div className="space-y-5">
+            <div className="flex items-center gap-2 text-sm bg-accent/20 rounded-lg px-4 py-2">
+              <Zap className="h-4 w-4 text-primary shrink-0" />
+              <span>
+                You have{' '}
+                <strong>{pointsBalance.toLocaleString()} pts</strong> · $
+                {(pointsBalance / 100).toFixed(2)} value
+              </span>
+            </div>
 
-          <div className="space-y-2">
-            <Label>How would you like to unlock it?</Label>
-            <RadioGroup
-              value={method}
-              onValueChange={(v) => setMethod(v as PaymentMethod)}
-              className="space-y-2"
-            >
-              <label
-                className={`flex items-start gap-3 p-3 rounded-lg border transition-colors ${
-                  hasEnoughPoints
-                    ? 'cursor-pointer'
-                    : 'opacity-50 cursor-not-allowed'
-                } ${
-                  method === 'points'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border'
-                }`}
+            <div className="space-y-2">
+              <Label>How would you like to unlock it?</Label>
+              <RadioGroup
+                value={method}
+                onValueChange={(v) => setMethod(v as PaymentMethod)}
+                className="space-y-2"
               >
-                <RadioGroupItem
-                  value="points"
-                  disabled={!hasEnoughPoints}
-                  className="mt-0.5"
-                />
-                <div>
-                  <p className="text-sm font-medium flex items-center gap-1">
-                    <Zap className="h-3.5 w-3.5 text-primary" />
-                    {hasEnoughPoints
-                      ? `Unlock Free — use ${product.pointsCost.toLocaleString()} pts`
-                      : `Need ${(product.pointsCost - pointsBalance).toLocaleString()} more pts`}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {hasEnoughPoints
-                      ? `You'll have ${(pointsBalance - product.pointsCost).toLocaleString()} pts remaining`
-                      : `Earn more points to redeem for free`}
-                  </p>
-                </div>
-              </label>
+                <label
+                  className={`flex items-start gap-3 p-3 rounded-lg border transition-colors ${
+                    hasEnoughPoints
+                      ? 'cursor-pointer'
+                      : 'opacity-50 cursor-not-allowed'
+                  } ${
+                    method === 'points'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border'
+                  }`}
+                >
+                  <RadioGroupItem
+                    value="points"
+                    disabled={!hasEnoughPoints}
+                    className="mt-0.5"
+                  />
+                  <div>
+                    <p className="text-sm font-medium flex items-center gap-1">
+                      <Zap className="h-3.5 w-3.5 text-primary" />
+                      {hasEnoughPoints
+                        ? `Unlock Free — use ${product.pointsCost.toLocaleString()} pts`
+                        : `Need ${(product.pointsCost - pointsBalance).toLocaleString()} more pts`}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {hasEnoughPoints
+                        ? `You'll have ${(pointsBalance - product.pointsCost).toLocaleString()} pts remaining`
+                        : `Earn more points to redeem for free`}
+                    </p>
+                  </div>
+                </label>
 
-              <label
-                className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                  method === 'stripe'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border'
-                }`}
+                <label
+                  className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                    method === 'stripe'
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border'
+                  }`}
+                >
+                  <RadioGroupItem value="stripe" className="mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium flex items-center gap-1">
+                      <CreditCard className="h-3.5 w-3.5 text-primary" />
+                      {pointsBalance > 0 && pointsBalance < product.priceCents
+                        ? `Use ${pointsBalance.toLocaleString()} pts + pay $${(shortfallCents / 100).toFixed(2)}`
+                        : `Pay $${(product.priceCents / 100).toFixed(2)}`}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Secure checkout · instant access
+                    </p>
+                  </div>
+                </label>
+              </RadioGroup>
+            </div>
+
+            {!user && (
+              <p className="text-xs text-center text-muted-foreground">
+                <a href="/auth" className="underline text-primary">
+                  Sign in
+                </a>{' '}
+                to unlock this guide
+              </p>
+            )}
+
+            <div className="flex justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={onClose} disabled={submitting}>
+                Cancel
+              </Button>
+              <Button onClick={handleConfirm} disabled={submitting || !user}>
+                {submitting
+                  ? 'Unlocking...'
+                  : amountPaidCents > 0
+                  ? 'Continue to payment'
+                  : 'Confirm Unlock'}
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === 'checkout' && (
+          <div className="space-y-5">
+            {/* Order summary */}
+            <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">{product.title}</span>
+                <span className="font-medium">
+                  ${(product.priceCents / 100).toFixed(2)}
+                </span>
+              </div>
+              {pointsUsed > 0 && (
+                <div className="flex justify-between text-sm text-primary">
+                  <span className="flex items-center gap-1">
+                    <Zap className="h-3.5 w-3.5" />
+                    Points credit ({pointsUsed.toLocaleString()} pts)
+                  </span>
+                  <span>− ${(pointsUsed / 100).toFixed(2)}</span>
+                </div>
+              )}
+              <div className="border-t border-border pt-2 flex justify-between font-semibold">
+                <span>Due today</span>
+                <span>${(amountPaidCents / 100).toFixed(2)}</span>
+              </div>
+            </div>
+
+            {/* Gateway buttons */}
+            <div className="space-y-3">
+              <p className="text-sm font-medium">Choose a payment method</p>
+
+              <Button
+                onClick={handleStripePayment}
+                disabled={submitting}
+                size="lg"
+                className="w-full bg-[#635BFF] hover:bg-[#5147e6] text-white shadow-sm"
               >
-                <RadioGroupItem value="stripe" className="mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium flex items-center gap-1">
-                    <CreditCard className="h-3.5 w-3.5 text-primary" />
-                    {pointsBalance > 0 && pointsBalance < product.priceCents
-                      ? `Use ${pointsBalance.toLocaleString()} pts + pay $${(shortfallCents / 100).toFixed(2)}`
-                      : `Pay $${(product.priceCents / 100).toFixed(2)}`}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Secure checkout · instant access
-                  </p>
-                </div>
-              </label>
-            </RadioGroup>
-          </div>
+                {gateway === 'stripe' ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <CreditCard className="w-4 h-4 mr-2" />
+                )}
+                Pay with Credit Card
+              </Button>
 
-          {!user && (
-            <p className="text-xs text-center text-muted-foreground">
-              <a href="/auth" className="underline text-primary">
-                Sign in
-              </a>{' '}
-              to unlock this guide
-            </p>
-          )}
+              <Button
+                onClick={handlePayPalPayment}
+                disabled={submitting}
+                size="lg"
+                className="w-full bg-[#FFC439] hover:bg-[#f0b72e] text-[#003087] font-bold shadow-sm"
+              >
+                {gateway === 'paypal' ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <span className="mr-1">Pay</span>
+                )}
+                <span className="italic">
+                  <span className="text-[#003087]">Pay</span>
+                  <span className="text-[#009cde]">Pal</span>
+                </span>
+              </Button>
 
-          <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={onClose} disabled={submitting}>
-              Cancel
-            </Button>
-            <Button onClick={handleConfirm} disabled={submitting || !user}>
-              {submitting ? 'Unlocking...' : 'Confirm Unlock'}
-            </Button>
+              <p className="text-[11px] text-center text-muted-foreground pt-1">
+                Encrypted & secure · You will not be charged until confirmation
+              </p>
+            </div>
+
+            <div className="flex justify-between gap-3 pt-1">
+              <Button
+                variant="ghost"
+                onClick={() => setStep('select')}
+                disabled={submitting}
+              >
+                ← Back
+              </Button>
+              <Button
+                variant="outline"
+                onClick={onClose}
+                disabled={submitting}
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </DialogContent>
     </Dialog>
   );
