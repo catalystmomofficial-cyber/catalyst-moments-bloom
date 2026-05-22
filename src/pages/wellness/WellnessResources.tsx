@@ -26,6 +26,13 @@ import momodoroCover from '@/assets/momodoro-planner-cover.png';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
+import {
+  PayPalScriptProvider,
+  PayPalButtons,
+} from '@paypal/react-paypal-js';
+
+const PAYPAL_CLIENT_ID =
+  (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) || 'sb';
 
 const MOMODORO_PDF =
   'https://catalystmomofficial.com/Momon%20guide/The%20Momodoro%20Planner.pdf';
