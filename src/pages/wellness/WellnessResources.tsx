@@ -26,7 +26,7 @@ const products = [
     title: "The Busy Mom's Self-Care & Stress Relief System",
     description:
       'A practical, stress-relief system designed specifically to help busy mothers find calm and recharge.',
-    cover: MOMODORO_COVER,
+    cover: busyMomSelfCareCover,
     pdf: SELFCARE_PDF,
     cta: 'Download System',
   },
