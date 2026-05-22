@@ -9,6 +9,27 @@ const MOMODORO_COVER =
   'https://catalystmomofficial.com/Momon%20guide/Product%20Covers%20copy.png';
 const MOMODORO_PDF =
   'https://catalystmomofficial.com/Momon%20guide/The%20Momodoro%20Planner.pdf';
+const SELFCARE_PDF =
+  'https://catalystmomofficial.com/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
+
+const products = [
+  {
+    title: 'The Momodoro Planner',
+    description:
+      'A beautifully structured premium time-management and layout tool designed to help busy moms organize their days and reclaim their time.',
+    cover: MOMODORO_COVER,
+    pdf: MOMODORO_PDF,
+    cta: 'Download Planner',
+  },
+  {
+    title: "The Busy Mom's Self-Care & Stress Relief System",
+    description:
+      'A practical, stress-relief system designed specifically to help busy mothers find calm and recharge.',
+    cover: MOMODORO_COVER,
+    pdf: SELFCARE_PDF,
+    cta: 'Download System',
+  },
+];
 
 const WellnessResources = () => {
   return (
