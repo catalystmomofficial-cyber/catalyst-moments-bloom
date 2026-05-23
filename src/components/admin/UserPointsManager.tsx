@@ -253,6 +253,13 @@ export const UserPointsManager: React.FC = () => {
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
+                      {user.subscribed ? (
+                        <Badge className="bg-emerald-500 hover:bg-emerald-500">{user.subscription_tier || 'Active'}</Badge>
+                      ) : (
+                        <Badge variant="secondary">Inactive</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
                       <Badge variant="secondary">{user.total_points}</Badge>
                     </TableCell>
                     <TableCell>
