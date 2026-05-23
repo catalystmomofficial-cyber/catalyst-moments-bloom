@@ -194,7 +194,7 @@ export const UserPointsManager: React.FC = () => {
                 <TableHead>Points</TableHead>
                 <TableHead>Level</TableHead>
                 <TableHead>Member Since</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="sticky right-0 bg-background shadow-[-8px_0_8px_-8px_hsl(var(--border))]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
