@@ -665,9 +665,7 @@ const WellnessResources = () => {
                   Can't find what you're looking for? Our wellness coach can
                   recommend personalized resources.
                 </p>
-                <Button asChild variant="outline" className="mt-2">
-                  <a href="/wellness-coach">Chat with Wellness Coach</a>
-                </Button>
+                <HomeWellnessCoachButton variant="outline" className="mt-2" />
               </CardContent>
             </Card>
           </section>
