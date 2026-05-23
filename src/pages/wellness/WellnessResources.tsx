@@ -21,7 +21,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
-import HomeWellnessCoachButton from '@/components/wellness-coach/HomeWellnessCoachButton';
+import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
 import momodoroCover from '@/assets/momodoro-planner-cover.png';
 import { supabase } from '@/integrations/supabase/client';
@@ -666,7 +666,7 @@ const WellnessResources = () => {
                   Can't find what you're looking for? Our wellness coach can
                   recommend personalized resources.
                 </p>
-                <HomeWellnessCoachButton variant="outline" className="mt-2" />
+                <WellnessCoachButton variant="outline" className="mt-2" />
               </CardContent>
             </Card>
           </section>
