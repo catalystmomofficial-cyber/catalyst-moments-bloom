@@ -18,6 +18,8 @@ interface UserWithPoints {
   total_points: number;
   level: number;
   created_at: string;
+  subscribed: boolean;
+  subscription_tier: string | null;
 }
 
 export const UserPointsManager: React.FC = () => {
@@ -33,9 +35,39 @@ export const UserPointsManager: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data, error } = await supabase.rpc('get_all_users_with_points');
-      if (error) throw error;
-      setUsers(data || []);
+      // Source of truth: same subscribers table powering Subscription Management
+      const { data: subs, error: subsError } = await supabase
+        .from('subscribers')
+        .select('user_id, email, subscribed, subscription_tier, created_at')
+        .order('created_at', { ascending: false });
+      if (subsError) throw subsError;
+
+      const userIds = (subs || []).map((s: any) => s.user_id).filter(Boolean);
+
+      const [profilesRes, pointsRes] = await Promise.all([
+        userIds.length
+          ? supabase.from('profiles').select('user_id, display_name').in('user_id', userIds)
+          : Promise.resolve({ data: [] as any[], error: null }),
+        userIds.length
+          ? supabase.from('user_points').select('user_id, total_points, level').in('user_id', userIds)
+          : Promise.resolve({ data: [] as any[], error: null }),
+      ]);
+
+      const nameMap = Object.fromEntries(((profilesRes.data as any[]) || []).map((p) => [p.user_id, p.display_name]));
+      const pointsMap = Object.fromEntries(((pointsRes.data as any[]) || []).map((p) => [p.user_id, p]));
+
+      const merged: UserWithPoints[] = (subs || []).map((s: any) => ({
+        user_id: s.user_id,
+        email: s.email,
+        display_name: nameMap[s.user_id] || 'Unknown',
+        total_points: pointsMap[s.user_id]?.total_points ?? 0,
+        level: pointsMap[s.user_id]?.level ?? 1,
+        created_at: s.created_at,
+        subscribed: !!s.subscribed,
+        subscription_tier: s.subscription_tier ?? null,
+      }));
+
+      setUsers(merged);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast({
@@ -191,6 +223,7 @@ export const UserPointsManager: React.FC = () => {
               <TableRow>
                 <TableHead>User</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Subscription</TableHead>
                 <TableHead>Points</TableHead>
                 <TableHead>Level</TableHead>
                 <TableHead>Member Since</TableHead>
@@ -220,6 +253,13 @@ export const UserPointsManager: React.FC = () => {
                       </div>
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      {user.subscribed ? (
+                        <Badge className="bg-emerald-500 hover:bg-emerald-500">{user.subscription_tier || 'Active'}</Badge>
+                      ) : (
+                        <Badge variant="secondary">Inactive</Badge>
+                      )}
+                    </TableCell>
                     <TableCell>
                       <Badge variant="secondary">{user.total_points}</Badge>
                     </TableCell>
