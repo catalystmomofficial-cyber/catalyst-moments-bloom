@@ -86,11 +86,11 @@ const Admin = () => {
             </TabsContent>
 
             <TabsContent value="users" className="space-y-6">
+              <UserPointsManager />
               <PendingUsersSection />
               <StageChangeRequestsSection />
               <EventRegistrationsSection />
               <UsersSection />
-              <UserPointsManager />
             </TabsContent>
 
             <TabsContent value="revenue">
