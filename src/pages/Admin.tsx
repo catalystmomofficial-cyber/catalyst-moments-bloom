@@ -1,6 +1,6 @@
 import React from 'react';
 import { AdminGuard } from '@/components/admin/AdminGuard';
-import { UserPointsManager } from '@/components/admin/UserPointsManager';
+import { PointsManagerLauncher } from '@/components/admin/PointsManagerLauncher';
 import { PendingUsersSection } from '@/components/admin/PendingUsersSection';
 import { AffiliateSection } from '@/components/admin/AffiliateSection';
 import { OverviewSection } from '@/components/admin/OverviewSection';
