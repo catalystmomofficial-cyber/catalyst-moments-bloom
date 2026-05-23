@@ -229,7 +229,7 @@ export const UserPointsManager: React.FC = () => {
                     <TableCell>
                       {new Date(user.created_at).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="sticky right-0 bg-background shadow-[-8px_0_8px_-8px_hsl(var(--border))]">
                       <Button
                         variant="outline"
                         size="sm"
