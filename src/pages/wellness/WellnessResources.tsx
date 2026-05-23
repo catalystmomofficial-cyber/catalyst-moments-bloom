@@ -21,7 +21,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
-import HomeWellnessCoachButton from '@/components/wellness-coach/HomeWellnessCoachButton';
+import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
 import momodoroCover from '@/assets/momodoro-planner-cover.png';
 import { supabase } from '@/integrations/supabase/client';
