@@ -223,6 +223,7 @@ export const UserPointsManager: React.FC = () => {
               <TableRow>
                 <TableHead>User</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead>Subscription</TableHead>
                 <TableHead>Points</TableHead>
                 <TableHead>Level</TableHead>
                 <TableHead>Member Since</TableHead>
