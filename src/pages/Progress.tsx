@@ -19,7 +19,9 @@ import {
   Trophy,
   CheckCircle2,
   Clock,
-  Zap
+  Zap,
+  Video,
+  CalendarCheck
 } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
