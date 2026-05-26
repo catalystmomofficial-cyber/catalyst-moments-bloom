@@ -213,6 +213,8 @@ export default function CheckpointVideoPlayer({
           poster={poster}
           controls
           playsInline
+          crossOrigin="anonymous"
+          {...{ 'x-webkit-airplay': 'allow', 'webkit-playsinline': '', disableRemotePlayback: false }}
           onLoadedMetadata={handleLoadedMetadata}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded}
