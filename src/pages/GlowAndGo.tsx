@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useVideoPlayer } from "@/contexts/VideoPlayerContext";
 import { Play, Clock, ShieldCheck, Heart, Dumbbell, Sparkles, Leaf } from "lucide-react";
 import { GLOW_AND_GO_VIDEOS } from "@/data/glowAndGoVideos";
+import { setLastActiveProgram } from "@/lib/lastActiveProgram";
 import FeatureCard from "@/components/home/FeatureCard";
 import { Progress } from "@/components/ui/progress";
 import glowMainCover from "@/assets/glow-and-go-professional-cover.jpg";
@@ -19,6 +20,16 @@ const GlowAndGo = () => {
 
   useEffect(() => {
     document.title = "Glow & Go Prenatal Program";
+    setLastActiveProgram({
+      id: 'glow-and-go',
+      name: 'Glow & Go Prenatal',
+      href: '/glow-and-go',
+      stage: 'pregnancy',
+      unit: 'videos',
+      completed: watchedCount,
+      total: totalVideos,
+      ctaLabel: 'Continue Watching',
+    });
 
     // Canonical tag
     const link = document.createElement("link");
@@ -67,6 +78,20 @@ const GlowAndGo = () => {
       document.head.removeChild(script);
     };
   }, []);
+
+  useEffect(() => {
+    setLastActiveProgram({
+      id: 'glow-and-go',
+      name: 'Glow & Go Prenatal',
+      href: '/glow-and-go',
+      stage: 'pregnancy',
+      unit: 'videos',
+      completed: watchedCount,
+      total: totalVideos,
+      ctaLabel: 'Continue Watching',
+    });
+  }, [watchedCount, totalVideos]);
+
 
   const handlePlay = (id: string, url: string, title: string) => {
     setWatched((prev) => {

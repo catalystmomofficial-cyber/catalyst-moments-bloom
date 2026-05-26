@@ -4,73 +4,71 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Activity, Flame, CalendarDays } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+  getLastActiveProgram,
+  subscribeLastActiveProgram,
+  type LastActiveProgram,
+} from '@/lib/lastActiveProgram';
 
 type ProgramSummary = {
   name: string;
   href: string;
   completed: number;
   total: number;
-  unit: string; // e.g. "days", "videos"
-  lastActivity: number; // epoch ms
+  unit: string;
+  lastActivity: number;
   streak?: number;
   isComplete?: boolean;
   ctaLabel: string;
 };
 
-const readCoreRestore = (): ProgramSummary | null => {
-  try {
-    const raw = localStorage.getItem('core-restore-foundations-progress');
-    if (!raw) return null;
-    const p = JSON.parse(raw);
-    const unlocked = Number(p.unlocked_day) || 1;
-    const completedDays = Math.max(0, unlocked - 1);
-    const lastDate = p.last_completed_date || p.started_at;
-    const lastActivity = lastDate ? new Date(lastDate).getTime() : 0;
-    return {
-      name: 'Core Restore Foundations',
-      href: '/workouts/core-restore-foundations',
-      completed: p.completed_at ? 28 : completedDays,
-      total: 28,
-      unit: 'days',
-      lastActivity,
-      streak: Number(p.streak) || 0,
-      isComplete: !!p.completed_at,
-      ctaLabel: p.completed_at ? 'Review Program' : 'Continue Program',
-    };
-  } catch {
-    return null;
-  }
-};
+// Enrich the lightweight last-active record with any richer per-program state
+// that lives in localStorage (so progress/streak stay live).
+const enrich = (p: LastActiveProgram): ProgramSummary => {
+  let completed = p.completed ?? 0;
+  let total = p.total ?? 1;
+  let streak = p.streak ?? 0;
+  let isComplete = p.isComplete ?? false;
 
-const readGlowAndGo = (): ProgramSummary | null => {
   try {
-    const raw = localStorage.getItem('glowAndGoWatched');
-    if (!raw) return null;
-    const watched = JSON.parse(raw) as Record<string, boolean>;
-    const completed = Object.values(watched).filter(Boolean).length;
-    if (completed === 0) return null;
-    // No timestamp stored; use a moderately recent fallback so it ranks below
-    // programs that do track timestamps unless it's the only one available.
-    return {
-      name: 'Glow & Go Prenatal',
-      href: '/glow-and-go',
-      completed,
-      total: Math.max(completed, 12),
-      unit: 'videos',
-      lastActivity: Date.now() - 1000 * 60 * 60 * 24, // ~1 day ago fallback
-      ctaLabel: 'Continue Watching',
-    };
+    if (p.id === 'core-restore-foundations') {
+      const raw = localStorage.getItem('core-restore-foundations-progress');
+      if (raw) {
+        const cr = JSON.parse(raw);
+        const unlocked = Number(cr.unlocked_day) || 1;
+        total = 28;
+        completed = cr.completed_at ? 28 : Math.max(0, unlocked - 1);
+        streak = Number(cr.streak) || 0;
+        isComplete = !!cr.completed_at;
+      }
+    } else if (p.id === 'glow-and-go') {
+      const raw = localStorage.getItem('glowAndGoWatched');
+      if (raw) {
+        const watched = JSON.parse(raw) as Record<string, boolean>;
+        completed = Object.values(watched).filter(Boolean).length;
+        total = Math.max(total, completed, 1);
+      }
+    }
   } catch {
-    return null;
+    /* noop */
   }
+
+  return {
+    name: p.name,
+    href: p.href,
+    completed,
+    total: Math.max(total, 1),
+    unit: p.unit ?? 'sessions',
+    lastActivity: p.lastActivity,
+    streak,
+    isComplete,
+    ctaLabel: p.ctaLabel ?? (isComplete ? 'Review Program' : 'Continue Program'),
+  };
 };
 
 const pickActiveProgram = (): ProgramSummary | null => {
-  const programs = [readCoreRestore(), readGlowAndGo()].filter(
-    (p): p is ProgramSummary => !!p,
-  );
-  if (programs.length === 0) return null;
-  return programs.sort((a, b) => b.lastActivity - a.lastActivity)[0];
+  const last = getLastActiveProgram();
+  return last ? enrich(last) : null;
 };
 
 export const WeeklyProgress = () => {
@@ -80,9 +78,8 @@ export const WeeklyProgress = () => {
   useEffect(() => {
     setProgram(pickActiveProgram());
     setReady(true);
-    const onFocus = () => setProgram(pickActiveProgram());
-    window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
+    const unsub = subscribeLastActiveProgram(() => setProgram(pickActiveProgram()));
+    return unsub;
   }, []);
 
   if (!ready) {

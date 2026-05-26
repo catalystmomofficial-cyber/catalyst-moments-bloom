@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
+import { setLastActiveProgram } from '@/lib/lastActiveProgram';
 
 // Real-looking diverse avatar URLs for postpartum moms
 const AVATARS = [
@@ -113,6 +114,23 @@ export default function PostpartumGlowUpChallenge() {
       setLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    const week = userProgress?.current_week ?? 1;
+    const day = userProgress?.current_day ?? 1;
+    const completed = Math.max(0, (week - 1) * 7 + (day - 1));
+    setLastActiveProgram({
+      id: '30-days-glow-up-challenge',
+      name: '30 Days Glow Up Challenge',
+      href: courseId ? `/course/${courseId}` : '/workouts',
+      stage: 'postpartum',
+      unit: 'days',
+      completed,
+      total: 30,
+      isComplete: completed >= 30,
+      ctaLabel: userProgress ? 'Continue Challenge' : 'Join Challenge',
+    });
+  }, [userProgress, courseId]);
 
   useEffect(() => {
     const interval = setInterval(() => {
