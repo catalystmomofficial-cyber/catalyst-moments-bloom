@@ -51,6 +51,8 @@ export default function CheckpointVideoPlayer({
   streakKey,
   chapters,
   autoChapterSeconds = 180,
+  onRemoteAction,
+  remoteMeta,
 }: CheckpointVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { user } = useAuth();
