@@ -47,6 +47,7 @@ interface CheckIn {
 
 const Progress = () => {
   const { user, profile } = useAuth();
+  const { currentJourney } = useContentFilter();
   const { toast } = useToast();
   const [checkIns, setCheckIns] = useState<CheckIn[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,6 +60,9 @@ const Progress = () => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareContent, setShareContent] = useState<'achievement' | 'progress'>('progress');
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null);
+  const [milestoneOpen, setMilestoneOpen] = useState(false);
+  const [activitySummary, setActivitySummary] = useState({ workouts: 0, activeDays: 0, points: 0 });
+
 
   useEffect(() => {
     if (user) {
