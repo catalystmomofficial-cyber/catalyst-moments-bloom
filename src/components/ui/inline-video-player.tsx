@@ -231,6 +231,8 @@ const InlineVideoPlayer = ({
             src={videoUrl}
             className="w-full h-full object-cover"
             playsInline
+            crossOrigin="anonymous"
+            {...{ 'x-webkit-airplay': 'allow', 'webkit-playsinline': '', disableRemotePlayback: false }}
             controls={isFullscreen}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}

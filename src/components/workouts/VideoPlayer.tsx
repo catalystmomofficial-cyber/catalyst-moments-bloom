@@ -100,6 +100,8 @@ export default function VideoPlayer({ videoUrl, title, thumbnail, remoteMeta, on
             src={videoUrl}
             controls
             playsInline
+            crossOrigin="anonymous"
+            {...{ 'x-webkit-airplay': 'allow', 'webkit-playsinline': '', disableRemotePlayback: false }}
             poster={thumbnail}
             className="absolute top-0 left-0 w-full h-full object-contain"
             title={title}
