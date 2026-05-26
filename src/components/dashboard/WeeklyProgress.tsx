@@ -115,7 +115,10 @@ export const WeeklyProgress = () => {
     );
   }
 
-  const pct = Math.min(100, Math.round((program.completed / program.total) * 100));
+  const hasProgress = program.total > 0;
+  const pct = hasProgress
+    ? Math.min(100, Math.round((program.completed / program.total) * 100))
+    : 0;
 
   return (
     <Card>
@@ -127,33 +130,41 @@ export const WeeklyProgress = () => {
         <CardDescription>{program.name}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium capitalize">{program.unit} completed</span>
-            <span className="text-lg font-bold">
-              {program.completed}/{program.total}
-            </span>
-          </div>
-          <Progress value={pct} className="h-3" />
-          <p className="text-xs text-muted-foreground">{pct}% complete</p>
-        </div>
+        {hasProgress ? (
+          <>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium capitalize">{program.unit} completed</span>
+                <span className="text-lg font-bold">
+                  {program.completed}/{program.total}
+                </span>
+              </div>
+              <Progress value={pct} className="h-3" />
+              <p className="text-xs text-muted-foreground">{pct}% complete</p>
+            </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-3 bg-muted/30 rounded-lg">
-            <div className="flex items-center justify-center mb-1">
-              <Flame className="h-4 w-4 text-orange-500" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center p-3 bg-muted/30 rounded-lg">
+                <div className="flex items-center justify-center mb-1">
+                  <Flame className="h-4 w-4 text-orange-500" />
+                </div>
+                <div className="text-lg font-bold">{program.streak ?? 0}</div>
+                <div className="text-xs text-muted-foreground">Day Streak</div>
+              </div>
+              <div className="text-center p-3 bg-muted/30 rounded-lg">
+                <div className="flex items-center justify-center mb-1">
+                  <CalendarDays className="h-4 w-4 text-primary" />
+                </div>
+                <div className="text-lg font-bold">{Math.max(0, program.total - program.completed)}</div>
+                <div className="text-xs text-muted-foreground">Remaining</div>
+              </div>
             </div>
-            <div className="text-lg font-bold">{program.streak ?? 0}</div>
-            <div className="text-xs text-muted-foreground">Day Streak</div>
-          </div>
-          <div className="text-center p-3 bg-muted/30 rounded-lg">
-            <div className="flex items-center justify-center mb-1">
-              <CalendarDays className="h-4 w-4 text-primary" />
-            </div>
-            <div className="text-lg font-bold">{program.total - program.completed}</div>
-            <div className="text-xs text-muted-foreground">Remaining</div>
-          </div>
-        </div>
+          </>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Last played • pick up right where you left off.
+          </p>
+        )}
 
         <Button
           variant={program.isComplete ? 'outline' : 'default'}
