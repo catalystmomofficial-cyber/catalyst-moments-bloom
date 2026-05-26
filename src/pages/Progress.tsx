@@ -29,6 +29,8 @@ import { ProgressCard } from '@/components/social/ProgressCard';
 import { ShareModal } from '@/components/social/ShareModal';
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
 import { AchievementBadges } from '@/components/profile/AchievementBadges';
+import { MilestoneCheckInModal, type MilestoneStage } from '@/components/progress/MilestoneCheckInModal';
+import { useContentFilter } from '@/hooks/useContentFilter';
 
 
 interface CheckIn {
@@ -45,6 +47,7 @@ interface CheckIn {
 
 const Progress = () => {
   const { user, profile } = useAuth();
+  const { currentJourney } = useContentFilter();
   const { toast } = useToast();
   const [checkIns, setCheckIns] = useState<CheckIn[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,6 +60,9 @@ const Progress = () => {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareContent, setShareContent] = useState<'achievement' | 'progress'>('progress');
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null);
+  const [milestoneOpen, setMilestoneOpen] = useState(false);
+  const [activitySummary, setActivitySummary] = useState({ workouts: 0, activeDays: 0, points: 0 });
+
 
   useEffect(() => {
     if (user) {
@@ -150,12 +156,18 @@ const Progress = () => {
 
   const { currentMilestone, progress: milestoneProgress } = getMilestoneProgress();
 
-  // Bi-weekly milestone check-in logic
+  // Bi-weekly milestone check-in logic (resets after each booking)
   const getBiweeklyCheckinStatus = () => {
-    // Use profile.created_at as program start, fall back to localStorage, then today
+    // Anchor: most recent of (last booked milestone) or (program start)
+    const lastBooked = (() => {
+      try {
+        const v = localStorage.getItem('cm_last_milestone_at');
+        return v ? new Date(v) : null;
+      } catch { return null; }
+    })();
+
     let startDate: Date;
     const stored = localStorage.getItem('cm_program_start_date');
-
     if (profile?.created_at) {
       startDate = new Date(profile.created_at);
     } else if (stored) {
@@ -165,29 +177,58 @@ const Progress = () => {
       localStorage.setItem('cm_program_start_date', startDate.toISOString());
     }
 
+    const anchor = lastBooked && lastBooked > startDate ? lastBooked : startDate;
     const today = new Date();
     const daysSinceStart = differenceInDays(today, startDate);
-    const currentCycle = Math.floor(daysSinceStart / 14); // which 14-day cycle we're in
-    const daysIntoCurrentCycle = daysSinceStart % 14;
-    const daysUntilNext = 14 - daysIntoCurrentCycle;
-    const isActive = daysIntoCurrentCycle === 0 && daysSinceStart > 0; // exactly on a 14-day mark
-    // Show as "active" window for the first 2 days of each cycle (so she doesn't miss it)
-    const isWithinWindow = daysIntoCurrentCycle <= 1 && daysSinceStart >= 14;
-    const nextMilestoneDate = new Date(startDate);
-    nextMilestoneDate.setDate(nextMilestoneDate.getDate() + (currentCycle + 1) * 14);
+    const daysSinceAnchor = differenceInDays(today, anchor);
+    const daysUntilNext = Math.max(0, 14 - daysSinceAnchor);
+    const isActive = daysSinceAnchor >= 14;
+    const nextMilestoneDate = new Date(anchor);
+    nextMilestoneDate.setDate(nextMilestoneDate.getDate() + 14);
 
     return {
       startDate,
       daysSinceStart,
-      currentCycle,
+      currentCycle: Math.floor(daysSinceStart / 14),
       daysUntilNext,
-      isActive: isActive || isWithinWindow,
+      isActive,
       nextMilestoneDate,
       weeksCompleted: Math.floor(daysSinceStart / 7),
     };
   };
 
+
   const biweeklyStatus = getBiweeklyCheckinStatus();
+
+  // Map current journey -> milestone stage
+  const milestoneStage: MilestoneStage = (() => {
+    if (currentJourney === 'ttc') return 'ttc';
+    if (currentJourney === 'pregnant') return 'pregnant';
+    if (currentJourney === 'postpartum') return 'postpartum';
+    return 'general';
+  })();
+
+  // Fetch 14-day activity summary for the modal
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const since = new Date();
+      since.setDate(since.getDate() - 14);
+      const sinceIso = since.toISOString();
+
+      const [{ data: completions }, { data: tx }, { data: pts }] = await Promise.all([
+        supabase.from('user_content_completion').select('completed_at').eq('user_id', user.id).gte('completed_at', sinceIso),
+        supabase.from('points_transactions').select('points').eq('user_id', user.id).gte('created_at', sinceIso),
+        supabase.from('user_points').select('total_points').eq('user_id', user.id).maybeSingle(),
+      ]);
+
+      const workouts = completions?.length ?? 0;
+      const activeDays = new Set((completions ?? []).map((c: any) => (c.completed_at || '').slice(0, 10))).size;
+      const earned = (tx ?? []).reduce((sum: number, t: any) => sum + (t.points || 0), 0);
+      setActivitySummary({ workouts, activeDays, points: earned || (pts?.total_points ?? 0) });
+    })();
+  }, [user, milestoneOpen]);
+
 
   const achievements = [
     {
@@ -319,23 +360,38 @@ const Progress = () => {
                 disabled={!biweeklyStatus.isActive}
                 variant={biweeklyStatus.isActive ? 'default' : 'outline'}
                 className="shrink-0 gap-2"
-                asChild={biweeklyStatus.isActive}
+                onClick={() => biweeklyStatus.isActive && setMilestoneOpen(true)}
               >
                 {biweeklyStatus.isActive ? (
-                  <a href="/dashboard">
+                  <>
                     <CheckCircle2 className="h-4 w-4" />
                     Start Check-in
-                  </a>
+                  </>
                 ) : (
-                  <span>
+                  <>
                     <Clock className="h-4 w-4" />
                     {biweeklyStatus.daysUntilNext}d away
-                  </span>
+                  </>
                 )}
               </Button>
             </div>
           </CardContent>
         </Card>
+
+        <MilestoneCheckInModal
+          open={milestoneOpen}
+          onOpenChange={setMilestoneOpen}
+          stage={milestoneStage}
+          userName={profile?.display_name ?? undefined}
+          userEmail={user?.email ?? undefined}
+          summary={{
+            workouts: activitySummary.workouts,
+            activeDays: activitySummary.activeDays,
+            points: activitySummary.points,
+            weeks: biweeklyStatus.weeksCompleted,
+          }}
+        />
+
 
         {checkIns.length === 0 ? (
           <Card className="border-2 border-dashed">
