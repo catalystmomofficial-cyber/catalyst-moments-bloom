@@ -20,6 +20,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { usePoints } from "@/hooks/usePoints";
 import PageLayout from "@/components/layout/PageLayout";
+import { setLastActiveProgram } from "@/lib/lastActiveProgram";
 
 const STORAGE_KEY = "core-restore-foundations-progress";
 const TOTAL_DAYS = 28;
