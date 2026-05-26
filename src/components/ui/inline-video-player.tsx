@@ -32,6 +32,9 @@ const InlineVideoPlayer = ({
   
   const isMp4 = /\.mp4($|[?])/i.test(videoUrl);
 
+  useRemoteSync({ videoRef, meta: { title: title ?? 'Video' }, enabled: isOpen && isMp4 });
+
+
   useEffect(() => {
     if (!isOpen) {
       setIsPlaying(false);
