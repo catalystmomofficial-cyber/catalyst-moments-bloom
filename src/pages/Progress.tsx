@@ -29,6 +29,8 @@ import { ProgressCard } from '@/components/social/ProgressCard';
 import { ShareModal } from '@/components/social/ShareModal';
 import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionWidget';
 import { AchievementBadges } from '@/components/profile/AchievementBadges';
+import { MilestoneCheckInModal, type MilestoneStage } from '@/components/progress/MilestoneCheckInModal';
+import { useContentFilter } from '@/hooks/useContentFilter';
 
 
 interface CheckIn {
