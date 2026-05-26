@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Heart, Flower2, Baby, Activity, Trophy, Flame, Calendar, ArrowRight } from 'lucide-react';
 import { usePoints } from '@/hooks/usePoints';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export type MilestoneStage = 'ttc' | 'pregnant' | 'postpartum' | 'general';
