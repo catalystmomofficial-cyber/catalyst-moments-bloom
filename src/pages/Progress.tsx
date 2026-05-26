@@ -360,23 +360,38 @@ const Progress = () => {
                 disabled={!biweeklyStatus.isActive}
                 variant={biweeklyStatus.isActive ? 'default' : 'outline'}
                 className="shrink-0 gap-2"
-                asChild={biweeklyStatus.isActive}
+                onClick={() => biweeklyStatus.isActive && setMilestoneOpen(true)}
               >
                 {biweeklyStatus.isActive ? (
-                  <a href="/dashboard">
+                  <>
                     <CheckCircle2 className="h-4 w-4" />
                     Start Check-in
-                  </a>
+                  </>
                 ) : (
-                  <span>
+                  <>
                     <Clock className="h-4 w-4" />
                     {biweeklyStatus.daysUntilNext}d away
-                  </span>
+                  </>
                 )}
               </Button>
             </div>
           </CardContent>
         </Card>
+
+        <MilestoneCheckInModal
+          open={milestoneOpen}
+          onOpenChange={setMilestoneOpen}
+          stage={milestoneStage}
+          userName={profile?.display_name ?? undefined}
+          userEmail={user?.email ?? undefined}
+          summary={{
+            workouts: activitySummary.workouts,
+            activeDays: activitySummary.activeDays,
+            points: activitySummary.points,
+            weeks: biweeklyStatus.weeksCompleted,
+          }}
+        />
+
 
         {checkIns.length === 0 ? (
           <Card className="border-2 border-dashed">
