@@ -72,7 +72,13 @@ const NewsletterSubscription = () => {
   );
 };
 
+const isStandalonePWA = () =>
+  typeof window !== 'undefined' &&
+  (window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone === true);
+
 const Footer = () => {
+  if (isStandalonePWA()) return null;
   return (
     <footer className="bg-gradient-to-b from-background to-muted/30 pt-16 pb-8">
       <div className="container mx-auto px-4">
