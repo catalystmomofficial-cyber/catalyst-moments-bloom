@@ -26,6 +26,15 @@ interface CheckpointVideoPlayerProps {
   chapters?: VideoChapter[];
   /** If chapters not provided, auto-split every N seconds (default 180s = 3min). */
   autoChapterSeconds?: number;
+  /** Optional: remote controller wants to jump exercises / mark complete */
+  onRemoteAction?: (action: { type: 'next' | 'prev' | 'mark-complete' | 'chapter'; value?: number }) => void;
+  /** Optional: extra meta to broadcast to the remote (exercise context) */
+  remoteMeta?: {
+    program?: string;
+    exerciseIndex?: number;
+    totalExercises?: number;
+    exerciseName?: string;
+  };
 }
 
 const REWARD_BADGES = [
