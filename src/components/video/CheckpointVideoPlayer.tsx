@@ -219,6 +219,17 @@ export default function CheckpointVideoPlayer({
           onLoadedMetadata={handleLoadedMetadata}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded}
+          onPlay={() => {
+            const path = window.location.pathname + window.location.search;
+            const programName = remoteMeta?.program || title || 'Workout';
+            const exName = remoteMeta?.exerciseName || title;
+            setLastActiveProgram({
+              id: path,
+              name: exName && exName !== programName ? `${programName} — ${exName}` : programName,
+              href: path,
+              unit: 'sessions',
+            });
+          }}
           className="w-full h-full"
         />
 
