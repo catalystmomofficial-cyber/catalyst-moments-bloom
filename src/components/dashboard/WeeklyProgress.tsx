@@ -26,7 +26,7 @@ type ProgramSummary = {
 // that lives in localStorage (so progress/streak stay live).
 const enrich = (p: LastActiveProgram): ProgramSummary => {
   let completed = p.completed ?? 0;
-  let total = p.total ?? 1;
+  let total = p.total ?? 0;
   let streak = p.streak ?? 0;
   let isComplete = p.isComplete ?? false;
 
@@ -57,7 +57,7 @@ const enrich = (p: LastActiveProgram): ProgramSummary => {
     name: p.name,
     href: p.href,
     completed,
-    total: Math.max(total, 1),
+    total,
     unit: p.unit ?? 'sessions',
     lastActivity: p.lastActivity,
     streak,
