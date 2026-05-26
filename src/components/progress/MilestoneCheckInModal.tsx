@@ -153,20 +153,39 @@ export const MilestoneCheckInModal = ({
     } catch (err) {
       console.error('Award points failed', err);
     }
+    const bookedAt = new Date().toISOString();
+    let startTime: string | null = null;
+    let joinUrl: string | null = null;
+
+    // Fetch the live Zoom join URL + start time from Calendly via our edge function
+    if (booking?.eventUri) {
+      try {
+        const { data, error } = await supabase.functions.invoke('calendly-event-details', {
+          body: { eventUri: booking.eventUri },
+        });
+        if (!error && data) {
+          startTime = data.startTime ?? null;
+          joinUrl = data.joinUrl ?? null;
+        }
+      } catch (err) {
+        console.error('Calendly details fetch failed', err);
+      }
+    }
+
     try {
-      const bookedAt = new Date().toISOString();
       localStorage.setItem('cm_last_milestone_at', bookedAt);
-      // Persist booking so /progress can render the "Upcoming Session" state
       const record = {
         bookedAt,
         stage,
         eventUri: booking?.eventUri ?? null,
-        // Invitee URI = canonical one-tap link to the booked meeting (reschedule, cancel, Zoom join)
         inviteeUri: booking?.inviteeUri ?? null,
+        startTime,
+        joinUrl,
       };
       localStorage.setItem('cm_milestone_booking', JSON.stringify(record));
       window.dispatchEvent(new CustomEvent('cm:milestone-booked', { detail: record }));
     } catch {}
+
 
     toast.success('🎉 Milestone booked! +150 points awarded', {
       description: 'Your next 2-week window has been reset. See you soon, mama!',
