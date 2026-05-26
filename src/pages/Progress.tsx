@@ -19,7 +19,9 @@ import {
   Trophy,
   CheckCircle2,
   Clock,
-  Zap
+  Zap,
+  Video,
+  CalendarCheck
 } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -336,63 +338,132 @@ const Progress = () => {
         </div>
 
         {/* Bi-weekly Milestone Check-in Card */}
-        <Card className={`mb-8 border-2 transition-all ${
-          biweeklyStatus.isActive
-            ? 'border-primary bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 shadow-lg'
-            : 'border-muted bg-muted/20'
-        }`}>
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-              <div className={`p-3 rounded-full shrink-0 ${biweeklyStatus.isActive ? 'bg-primary/20' : 'bg-muted'}`}>
-                {biweeklyStatus.isActive
-                  ? <Zap className="h-6 w-6 text-primary animate-pulse" />
-                  : <Clock className="h-6 w-6 text-muted-foreground" />
-                }
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h3 className="text-lg font-bold">2-Week Milestone Check-in</h3>
-                  <Badge variant={biweeklyStatus.isActive ? 'default' : 'outline'} className={biweeklyStatus.isActive ? 'animate-pulse' : ''}>
-                    {biweeklyStatus.isActive ? 'Active Now!' : 'Upcoming'}
-                  </Badge>
-                </div>
-                {biweeklyStatus.isActive ? (
-                  <p className="text-sm text-muted-foreground">
-                    Your milestone check-in is ready! You've completed <strong>{biweeklyStatus.weeksCompleted} weeks</strong>. Time to measure your progress and celebrate your wins.
-                  </p>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    {biweeklyStatus.daysSinceStart < 14
-                      ? `Your first milestone check-in unlocks in ${biweeklyStatus.daysUntilNext} day${biweeklyStatus.daysUntilNext !== 1 ? 's' : ''}. Keep going, mama!`
-                      : `Your next milestone check-in is in ${biweeklyStatus.daysUntilNext} day${biweeklyStatus.daysUntilNext !== 1 ? 's' : ''} — on ${format(biweeklyStatus.nextMilestoneDate, 'MMM d')}.`
+        {(() => {
+          // Determine if there is a confirmed upcoming Zoom session.
+          // Prefer the live Calendly start_time; otherwise treat a booking as "upcoming" for 14 days after bookedAt.
+          const now = new Date();
+          let upcoming: null | { startTime: Date | null; joinUrl: string | null; inviteeUri: string | null; bookedAt: Date } = null;
+          if (booking) {
+            const bookedAt = new Date(booking.bookedAt);
+            const start = booking['startTime' as keyof typeof booking] ? new Date((booking as any).startTime) : null;
+            const joinUrl = (booking as any).joinUrl ?? null;
+            const inviteeUri = booking.inviteeUri ?? null;
+            const expiresAt = start ?? new Date(bookedAt.getTime() + 14 * 24 * 60 * 60 * 1000);
+            if (expiresAt > now) {
+              upcoming = { startTime: start, joinUrl, inviteeUri, bookedAt };
+            }
+          }
+
+          if (upcoming) {
+            const meetingLink = upcoming.joinUrl ?? upcoming.inviteeUri ?? null;
+            return (
+              <Card className="mb-8 border-2 border-primary bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                    <div className="p-3 rounded-full shrink-0 bg-primary/20">
+                      <CalendarCheck className="h-6 w-6 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <h3 className="text-lg font-bold">Upcoming Session</h3>
+                        <Badge variant="default">Confirmed</Badge>
+                      </div>
+                      {upcoming.startTime ? (
+                        <p className="text-sm text-muted-foreground">
+                          Your 2-Week Milestone Zoom call is locked in for{' '}
+                          <strong className="text-foreground">
+                            {format(upcoming.startTime, 'EEEE, MMM d')} at {format(upcoming.startTime, 'h:mm a')}
+                          </strong>
+                          .
+                        </p>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          Your 2-Week Milestone Zoom call is confirmed. Check your email for the exact time — your join link is ready below.
+                        </p>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Booked {format(upcoming.bookedAt, 'MMM d, yyyy')} · Week {biweeklyStatus.weeksCompleted + 1}
+                      </p>
+                    </div>
+                    {meetingLink ? (
+                      <Button asChild className="shrink-0 gap-2 bg-primary hover:bg-primary/90">
+                        <a href={meetingLink} target="_blank" rel="noopener noreferrer">
+                          <Video className="h-4 w-4" />
+                          Join Live Zoom Sync
+                        </a>
+                      </Button>
+                    ) : (
+                      <Button disabled variant="outline" className="shrink-0 gap-2">
+                        <Video className="h-4 w-4" />
+                        Link in your email
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          }
+
+          return (
+            <Card className={`mb-8 border-2 transition-all ${
+              biweeklyStatus.isActive
+                ? 'border-primary bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 shadow-lg'
+                : 'border-muted bg-muted/20'
+            }`}>
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                  <div className={`p-3 rounded-full shrink-0 ${biweeklyStatus.isActive ? 'bg-primary/20' : 'bg-muted'}`}>
+                    {biweeklyStatus.isActive
+                      ? <Zap className="h-6 w-6 text-primary animate-pulse" />
+                      : <Clock className="h-6 w-6 text-muted-foreground" />
                     }
-                  </p>
-                )}
-                <p className="text-xs text-muted-foreground mt-1">
-                  Program started: {format(biweeklyStatus.startDate, 'MMM d, yyyy')} · Week {biweeklyStatus.weeksCompleted + 1}
-                </p>
-              </div>
-              <Button
-                disabled={!biweeklyStatus.isActive}
-                variant={biweeklyStatus.isActive ? 'default' : 'outline'}
-                className="shrink-0 gap-2"
-                onClick={() => biweeklyStatus.isActive && setMilestoneOpen(true)}
-              >
-                {biweeklyStatus.isActive ? (
-                  <>
-                    <CheckCircle2 className="h-4 w-4" />
-                    Start Check-in
-                  </>
-                ) : (
-                  <>
-                    <Clock className="h-4 w-4" />
-                    {biweeklyStatus.daysUntilNext}d away
-                  </>
-                )}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <h3 className="text-lg font-bold">2-Week Milestone Check-in</h3>
+                      <Badge variant={biweeklyStatus.isActive ? 'default' : 'outline'} className={biweeklyStatus.isActive ? 'animate-pulse' : ''}>
+                        {biweeklyStatus.isActive ? 'Ready to Claim' : 'Upcoming'}
+                      </Badge>
+                    </div>
+                    {biweeklyStatus.isActive ? (
+                      <p className="text-sm text-muted-foreground">
+                        Your milestone check-in is ready! You've completed <strong>{biweeklyStatus.weeksCompleted} weeks</strong>. Time to measure your progress and celebrate your wins.
+                      </p>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        {biweeklyStatus.daysSinceStart < 14
+                          ? `Your first milestone check-in unlocks in ${biweeklyStatus.daysUntilNext} day${biweeklyStatus.daysUntilNext !== 1 ? 's' : ''}. Keep going, mama!`
+                          : `Your next milestone check-in is in ${biweeklyStatus.daysUntilNext} day${biweeklyStatus.daysUntilNext !== 1 ? 's' : ''} — on ${format(biweeklyStatus.nextMilestoneDate, 'MMM d')}.`
+                        }
+                      </p>
+                    )}
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Program started: {format(biweeklyStatus.startDate, 'MMM d, yyyy')} · Week {biweeklyStatus.weeksCompleted + 1}
+                    </p>
+                  </div>
+                  <Button
+                    disabled={!biweeklyStatus.isActive}
+                    variant={biweeklyStatus.isActive ? 'default' : 'outline'}
+                    className="shrink-0 gap-2"
+                    onClick={() => biweeklyStatus.isActive && setMilestoneOpen(true)}
+                  >
+                    {biweeklyStatus.isActive ? (
+                      <>
+                        <CheckCircle2 className="h-4 w-4" />
+                        Start Check-in
+                      </>
+                    ) : (
+                      <>
+                        <Clock className="h-4 w-4" />
+                        {biweeklyStatus.daysUntilNext}d away
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })()}
 
         <MilestoneCheckInModal
           open={milestoneOpen}
