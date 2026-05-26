@@ -121,7 +121,11 @@ export const MilestoneCheckInModal = ({
     const handler = (e: MessageEvent) => {
       if (typeof e.data !== 'object' || !e.data?.event) return;
       if (e.data.event === 'calendly.event_scheduled') {
-        handleBookingSuccess();
+        const payload = e.data?.payload ?? {};
+        handleBookingSuccess({
+          eventUri: payload?.event?.uri,
+          inviteeUri: payload?.invitee?.uri,
+        });
       }
     };
     window.addEventListener('message', handler);
