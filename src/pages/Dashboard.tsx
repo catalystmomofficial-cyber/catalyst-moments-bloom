@@ -34,6 +34,17 @@ import { PushNotificationPrompt } from '@/components/notifications/PushNotificat
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import {
+  getLastActiveProgram,
+  subscribeLastActiveProgram,
+  type LastActiveProgram,
+} from '@/lib/lastActiveProgram';
+
+const useLastActiveProgram = () => {
+  const [p, setP] = useState<LastActiveProgram | null>(() => getLastActiveProgram());
+  useEffect(() => subscribeLastActiveProgram(setP), []);
+  return p;
+};
 
 interface StatsCardProps {
   title: string;
