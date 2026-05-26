@@ -200,6 +200,36 @@ const Progress = () => {
 
   const biweeklyStatus = getBiweeklyCheckinStatus();
 
+  // Map current journey -> milestone stage
+  const milestoneStage: MilestoneStage = (() => {
+    if (currentJourney === 'ttc') return 'ttc';
+    if (currentJourney === 'pregnant') return 'pregnant';
+    if (currentJourney === 'postpartum') return 'postpartum';
+    return 'general';
+  })();
+
+  // Fetch 14-day activity summary for the modal
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const since = new Date();
+      since.setDate(since.getDate() - 14);
+      const sinceIso = since.toISOString();
+
+      const [{ data: completions }, { data: tx }, { data: pts }] = await Promise.all([
+        supabase.from('user_content_completion').select('completed_at').eq('user_id', user.id).gte('completed_at', sinceIso),
+        supabase.from('points_transactions').select('points').eq('user_id', user.id).gte('created_at', sinceIso),
+        supabase.from('user_points').select('total_points').eq('user_id', user.id).maybeSingle(),
+      ]);
+
+      const workouts = completions?.length ?? 0;
+      const activeDays = new Set((completions ?? []).map((c: any) => (c.completed_at || '').slice(0, 10))).size;
+      const earned = (tx ?? []).reduce((sum: number, t: any) => sum + (t.points || 0), 0);
+      setActivitySummary({ workouts, activeDays, points: earned || (pts?.total_points ?? 0) });
+    })();
+  }, [user, milestoneOpen]);
+
+
   const achievements = [
     {
       id: 'first-month',
