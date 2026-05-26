@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Minimize2, Maximize2, X, Move } from 'lucide-react';
+import { useRemoteSync } from '@/hooks/useRemoteSync';
 
 interface InlineVideoPlayerProps {
   isOpen: boolean;
