@@ -323,6 +323,33 @@ const Dashboard = () => {
                       3: 'Step it up — Week 3: strength & stability',
                       4: 'Glow phase — Week 4: full-body transformation',
                     };
+
+                    // If user recently played any program/video, surface that instead
+                    if (lastActive) {
+                      const hasProgress = (lastActive.total ?? 0) > 0;
+                      const pct = hasProgress
+                        ? Math.min(100, Math.round(((lastActive.completed ?? 0) / (lastActive.total as number)) * 100))
+                        : 0;
+                      return (
+                        <PlanCard
+                          key={`last-${lastActive.lastActivity}`}
+                          title={lastActive.name}
+                          category="Continue where you left off"
+                          description="Pick up your most recent session"
+                          completed={!!lastActive.isComplete}
+                          icon={<Activity className="h-5 w-5" />}
+                          time=""
+                          link={lastActive.href}
+                          buttonText={lastActive.ctaLabel ?? (lastActive.isComplete ? 'Review' : 'Resume')}
+                          progress={pct}
+                          tags={[
+                            lastActive.stage ? lastActive.stage.charAt(0).toUpperCase() + lastActive.stage.slice(1) : 'Recent',
+                            lastActive.unit ?? 'sessions',
+                          ]}
+                        />
+                      );
+                    }
+
                     return (
                       <PlanCard
                         title="30 Days Glow Up Challenge"
