@@ -72,9 +72,17 @@ export default function CheckpointVideoPlayer({
     videoRef,
     meta: {
       title,
-      program: streakKey,
+      program: remoteMeta?.program ?? streakKey,
       chapter: currentChapter,
       totalChapters: resolvedChapters.length,
+      exerciseIndex: remoteMeta?.exerciseIndex,
+      totalExercises: remoteMeta?.totalExercises,
+      exerciseName: remoteMeta?.exerciseName ?? title,
+    },
+    onAction: (a) => {
+      if (a.type === 'next' || a.type === 'prev' || a.type === 'mark-complete' || a.type === 'chapter') {
+        onRemoteAction?.({ type: a.type, value: (a as any).value });
+      }
     },
   });
 
