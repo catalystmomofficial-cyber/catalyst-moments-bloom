@@ -4,6 +4,8 @@ import { VideoPlayerProps } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { useRemoteSync } from '@/hooks/useRemoteSync';
+import { setLastActiveProgram } from '@/lib/lastActiveProgram';
+
 
 export default function VideoPlayer({ videoUrl, title, thumbnail, remoteMeta, onRemoteAction }: VideoPlayerProps) {
   console.log('VideoPlayer - URL:', videoUrl, 'Title:', title, 'Thumbnail:', thumbnail);
@@ -105,6 +107,16 @@ export default function VideoPlayer({ videoUrl, title, thumbnail, remoteMeta, on
             poster={thumbnail}
             className="absolute top-0 left-0 w-full h-full object-contain"
             title={title}
+            onPlay={() => {
+              const path = window.location.pathname + window.location.search;
+              const programName = remoteMeta?.program || title || 'Workout';
+              setLastActiveProgram({
+                id: path,
+                name: remoteMeta?.exerciseName ? `${programName} — ${remoteMeta.exerciseName}` : programName,
+                href: path,
+                unit: 'sessions',
+              });
+            }}
             onLoadedMetadata={() => {
               if (videoRef.current) {
                 videoRef.current.playbackRate = playbackSpeed;

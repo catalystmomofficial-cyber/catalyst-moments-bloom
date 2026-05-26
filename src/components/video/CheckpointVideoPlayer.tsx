@@ -9,6 +9,7 @@ import { usePoints } from '@/hooks/usePoints';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import { useRemoteSync } from '@/hooks/useRemoteSync';
+import { setLastActiveProgram } from '@/lib/lastActiveProgram';
 
 export interface VideoChapter {
   /** seconds at which the chapter ends and triggers a checkpoint */
@@ -218,6 +219,17 @@ export default function CheckpointVideoPlayer({
           onLoadedMetadata={handleLoadedMetadata}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded}
+          onPlay={() => {
+            const path = window.location.pathname + window.location.search;
+            const programName = remoteMeta?.program || title || 'Workout';
+            const exName = remoteMeta?.exerciseName || title;
+            setLastActiveProgram({
+              id: path,
+              name: exName && exName !== programName ? `${programName} — ${exName}` : programName,
+              href: path,
+              unit: 'sessions',
+            });
+          }}
           className="w-full h-full"
         />
 
