@@ -423,9 +423,11 @@ const App = () => {
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <AuthProvider>
-              <VideoPlayerProvider>
-                <AppContent />
-              </VideoPlayerProvider>
+              <RemoteSyncProvider>
+                <VideoPlayerProvider>
+                  <AppContent />
+                </VideoPlayerProvider>
+              </RemoteSyncProvider>
             </AuthProvider>
           </TooltipProvider>
         </QueryClientProvider>
