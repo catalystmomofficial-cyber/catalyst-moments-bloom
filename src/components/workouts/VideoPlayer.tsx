@@ -3,6 +3,7 @@ import { Play, Gauge } from 'lucide-react';
 import { VideoPlayerProps } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import { useRemoteSync } from '@/hooks/useRemoteSync';
 
 export default function VideoPlayer({ videoUrl, title, thumbnail }: VideoPlayerProps) {
   console.log('VideoPlayer - URL:', videoUrl, 'Title:', title, 'Thumbnail:', thumbnail);
