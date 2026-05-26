@@ -20,6 +20,16 @@ const GlowAndGo = () => {
 
   useEffect(() => {
     document.title = "Glow & Go Prenatal Program";
+    setLastActiveProgram({
+      id: 'glow-and-go',
+      name: 'Glow & Go Prenatal',
+      href: '/glow-and-go',
+      stage: 'pregnancy',
+      unit: 'videos',
+      completed: watchedCount,
+      total: totalVideos,
+      ctaLabel: 'Continue Watching',
+    });
 
     // Canonical tag
     const link = document.createElement("link");
