@@ -1,8 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import type { RemoteAction } from '@/hooks/useRemoteSync';
-import { getDeviceType } from '@/hooks/useRemoteSync';
+import { getDeviceType, type RemoteAction } from '@/lib/remoteSyncTypes';
 
 export interface RemotePlayerState {
   sessionId: string;
