@@ -129,6 +129,19 @@ export default function CoreRestoreFoundationsProgram() {
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    const unlocked = Number(progress.unlocked_day) || 1;
+    setLastActiveProgram({
+      id: 'core-restore-foundations',
+      name: 'Core Restore Foundations',
+      href: '/workouts/core-restore-foundations',
+      stage: 'postpartum',
+      unit: 'days',
+      completed: progress.completed_at ? TOTAL_DAYS : Math.max(0, unlocked - 1),
+      total: TOTAL_DAYS,
+      streak: Number(progress.streak) || 0,
+      isComplete: !!progress.completed_at,
+      ctaLabel: progress.completed_at ? 'Review Program' : 'Continue Program',
+    });
   }, [progress]);
 
   const unlockedDay = progress.unlocked_day;
