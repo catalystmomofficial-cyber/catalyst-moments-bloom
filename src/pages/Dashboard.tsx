@@ -121,6 +121,7 @@ const Dashboard = () => {
   const { wellnessScore, previousWellnessScore, wellnessTrend, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
   const { user, profile, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
   const { stageInfo, hasJourney } = useContentFilter();
+  const lastActive = useLastActiveProgram();
   
   const isTTC = stageInfo?.journey === 'ttc';
   const isPregnant = stageInfo?.journey === 'pregnant';
