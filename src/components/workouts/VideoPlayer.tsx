@@ -13,6 +13,8 @@ export default function VideoPlayer({ videoUrl, title, thumbnail }: VideoPlayerP
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMp4 = /\.mp4($|[?])/i.test(videoUrl || '');
   const isYouTube = videoUrl && (/youtube\.com|youtu\.be/i.test(videoUrl));
+
+  useRemoteSync({ videoRef, meta: { title: title ?? 'Exercise' }, enabled: isMp4 });
   
   // Format YouTube URL properly for embedding
   const getYouTubeEmbedUrl = (url: string) => {
