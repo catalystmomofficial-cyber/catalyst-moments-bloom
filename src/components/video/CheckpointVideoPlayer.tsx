@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useRemoteSync } from '@/hooks/useRemoteSync';
 
 export interface VideoChapter {
   /** seconds at which the chapter ends and triggers a checkpoint */
@@ -25,6 +26,15 @@ interface CheckpointVideoPlayerProps {
   chapters?: VideoChapter[];
   /** If chapters not provided, auto-split every N seconds (default 180s = 3min). */
   autoChapterSeconds?: number;
+  /** Optional: remote controller wants to jump exercises / mark complete */
+  onRemoteAction?: (action: { type: 'next' | 'prev' | 'mark-complete' | 'chapter'; value?: number }) => void;
+  /** Optional: extra meta to broadcast to the remote (exercise context) */
+  remoteMeta?: {
+    program?: string;
+    exerciseIndex?: number;
+    totalExercises?: number;
+    exerciseName?: string;
+  };
 }
 
 const REWARD_BADGES = [
@@ -41,6 +51,8 @@ export default function CheckpointVideoPlayer({
   streakKey,
   chapters,
   autoChapterSeconds = 180,
+  onRemoteAction,
+  remoteMeta,
 }: CheckpointVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { user } = useAuth();
@@ -55,6 +67,24 @@ export default function CheckpointVideoPlayer({
   const [showReward, setShowReward] = useState<{ type: 'points' | 'badge'; payload: any } | null>(null);
   const [streak, setStreak] = useState<number>(0);
   const triggeredRef = useRef<Set<number>>(new Set());
+
+  useRemoteSync({
+    videoRef,
+    meta: {
+      title,
+      program: remoteMeta?.program ?? streakKey,
+      chapter: currentChapter,
+      totalChapters: resolvedChapters.length,
+      exerciseIndex: remoteMeta?.exerciseIndex,
+      totalExercises: remoteMeta?.totalExercises,
+      exerciseName: remoteMeta?.exerciseName ?? title,
+    },
+    onAction: (a) => {
+      if (a.type === 'next' || a.type === 'prev' || a.type === 'mark-complete' || a.type === 'chapter') {
+        onRemoteAction?.({ type: a.type, value: (a as any).value });
+      }
+    },
+  });
 
   // Auto-generate chapters from duration if none provided
   const handleLoadedMetadata = () => {

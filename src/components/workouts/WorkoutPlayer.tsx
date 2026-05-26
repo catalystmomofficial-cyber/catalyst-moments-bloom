@@ -182,11 +182,35 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
               title={currentExercise.name}
               streakKey={`workout-w${week}-d${day}-ex${currentExerciseIndex}`}
               autoChapterSeconds={180}
+              remoteMeta={{
+                program: `Workout • Week ${week} Day ${day}`,
+                exerciseIndex: currentExerciseIndex,
+                totalExercises: exercises.length,
+                exerciseName: currentExercise.name,
+              }}
+              onRemoteAction={(a) => {
+                if (a.type === 'next') skipToNext();
+                else if (a.type === 'prev' && currentExerciseIndex > 0) handleExerciseSelect(currentExerciseIndex - 1);
+                else if (a.type === 'mark-complete') markExerciseComplete();
+                else if (a.type === 'chapter' && typeof a.value === 'number') handleExerciseSelect(a.value);
+              }}
             />
           ) : (
             <VideoPlayer
               videoUrl={currentExercise.videoUrl}
               title={currentExercise.name}
+              remoteMeta={{
+                program: `Workout • Week ${week} Day ${day}`,
+                exerciseIndex: currentExerciseIndex,
+                totalExercises: exercises.length,
+                exerciseName: currentExercise.name,
+              }}
+              onRemoteAction={(a) => {
+                if (a.type === 'next') skipToNext();
+                else if (a.type === 'prev' && currentExerciseIndex > 0) handleExerciseSelect(currentExerciseIndex - 1);
+                else if (a.type === 'mark-complete') markExerciseComplete();
+                else if (a.type === 'chapter' && typeof a.value === 'number') handleExerciseSelect(a.value);
+              }}
             />
           )}
 

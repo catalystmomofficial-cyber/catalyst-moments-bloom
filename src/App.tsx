@@ -10,6 +10,8 @@ import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
 import { GoogleAuthOnboarding } from "./components/onboarding/GoogleAuthOnboarding";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { VideoPlayerProvider } from "@/contexts/VideoPlayerContext";
+import { RemoteSyncProvider } from "@/contexts/RemoteSyncContext";
+import RemoteControllerOverlay from "@/components/remote/RemoteControllerOverlay";
 import { ThemeProvider } from "@/components/theme-provider";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
@@ -385,6 +387,7 @@ function AppContent() {
         onClose={() => setShowCheckoutModal(false)} 
       />
       <GlobalVideoPlayer />
+      <RemoteControllerOverlay />
       <CookieConsentBanner />
     </BrowserRouter>
     </ErrorBoundary>
@@ -420,9 +423,11 @@ const App = () => {
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <AuthProvider>
-              <VideoPlayerProvider>
-                <AppContent />
-              </VideoPlayerProvider>
+              <RemoteSyncProvider>
+                <VideoPlayerProvider>
+                  <AppContent />
+                </VideoPlayerProvider>
+              </RemoteSyncProvider>
             </AuthProvider>
           </TooltipProvider>
         </QueryClientProvider>

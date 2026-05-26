@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Minimize2, Maximize2, X, Move } from 'lucide-react';
+import { useRemoteSync } from '@/hooks/useRemoteSync';
 
 interface InlineVideoPlayerProps {
   isOpen: boolean;
@@ -30,6 +31,9 @@ const InlineVideoPlayer = ({
   const containerRef = useRef<HTMLDivElement>(null);
   
   const isMp4 = /\.mp4($|[?])/i.test(videoUrl);
+
+  useRemoteSync({ videoRef, meta: { title: title ?? 'Video' }, enabled: isOpen && isMp4 });
+
 
   useEffect(() => {
     if (!isOpen) {

@@ -3,8 +3,9 @@ import { Play, Gauge } from 'lucide-react';
 import { VideoPlayerProps } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import { useRemoteSync } from '@/hooks/useRemoteSync';
 
-export default function VideoPlayer({ videoUrl, title, thumbnail }: VideoPlayerProps) {
+export default function VideoPlayer({ videoUrl, title, thumbnail, remoteMeta, onRemoteAction }: VideoPlayerProps) {
   console.log('VideoPlayer - URL:', videoUrl, 'Title:', title, 'Thumbnail:', thumbnail);
   
   const [showIframe, setShowIframe] = useState(false);
@@ -12,6 +13,23 @@ export default function VideoPlayer({ videoUrl, title, thumbnail }: VideoPlayerP
   const videoRef = useRef<HTMLVideoElement>(null);
   const isMp4 = /\.mp4($|[?])/i.test(videoUrl || '');
   const isYouTube = videoUrl && (/youtube\.com|youtu\.be/i.test(videoUrl));
+
+  useRemoteSync({
+    videoRef,
+    meta: {
+      title: remoteMeta?.exerciseName ?? title ?? 'Exercise',
+      program: remoteMeta?.program,
+      exerciseIndex: remoteMeta?.exerciseIndex,
+      totalExercises: remoteMeta?.totalExercises,
+      exerciseName: remoteMeta?.exerciseName,
+    },
+    enabled: isMp4,
+    onAction: (a) => {
+      if (a.type === 'next' || a.type === 'prev' || a.type === 'mark-complete' || a.type === 'chapter') {
+        onRemoteAction?.({ type: a.type, value: (a as any).value });
+      }
+    },
+  });
   
   // Format YouTube URL properly for embedding
   const getYouTubeEmbedUrl = (url: string) => {

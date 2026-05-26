@@ -20,6 +20,13 @@ export interface VideoPlayerProps {
   videoUrl?: string;
   title: string;
   thumbnail?: string;
+  remoteMeta?: {
+    program?: string;
+    exerciseIndex?: number;
+    totalExercises?: number;
+    exerciseName?: string;
+  };
+  onRemoteAction?: (action: { type: 'next' | 'prev' | 'mark-complete' | 'chapter'; value?: number }) => void;
 }
 
 export interface ExerciseTimerProps {
