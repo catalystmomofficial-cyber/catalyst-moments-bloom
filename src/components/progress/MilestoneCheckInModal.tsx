@@ -132,7 +132,7 @@ export const MilestoneCheckInModal = ({
     return () => window.removeEventListener('message', handler);
   }, [view]);
 
-  const handleBookingSuccess = async (booking?: { eventUri?: string; inviteoeUri?: string; inviteeUri?: string }) => {
+  const handleBookingSuccess = async (booking?: { eventUri?: string; inviteeUri?: string }) => {
     if (booked) return;
     setBooked(true);
 
