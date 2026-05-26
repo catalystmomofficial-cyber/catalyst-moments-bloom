@@ -57,6 +57,16 @@ export default function CheckpointVideoPlayer({
   const [streak, setStreak] = useState<number>(0);
   const triggeredRef = useRef<Set<number>>(new Set());
 
+  useRemoteSync({
+    videoRef,
+    meta: {
+      title,
+      program: streakKey,
+      chapter: currentChapter,
+      totalChapters: resolvedChapters.length,
+    },
+  });
+
   // Auto-generate chapters from duration if none provided
   const handleLoadedMetadata = () => {
     if (!videoRef.current) return;
