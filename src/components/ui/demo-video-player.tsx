@@ -60,6 +60,9 @@ const DemoVideoPlayer = ({
             ref={videoRef}
             className="w-full h-auto"
             poster="/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png"
+            playsInline
+            crossOrigin="anonymous"
+            {...{ 'x-webkit-airplay': 'allow', 'webkit-playsinline': '', disableRemotePlayback: false }}
             onEnded={handleVideoEnd}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
