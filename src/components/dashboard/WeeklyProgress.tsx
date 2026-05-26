@@ -78,9 +78,8 @@ export const WeeklyProgress = () => {
   useEffect(() => {
     setProgram(pickActiveProgram());
     setReady(true);
-    const onFocus = () => setProgram(pickActiveProgram());
-    window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
+    const unsub = subscribeLastActiveProgram(() => setProgram(pickActiveProgram()));
+    return unsub;
   }, []);
 
   if (!ready) {
