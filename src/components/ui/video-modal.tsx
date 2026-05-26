@@ -39,6 +39,8 @@ const VideoModal = ({ isOpen, onClose, videoUrl, title, isWelcomeVideo = false }
                   controls
                   autoPlay
                   playsInline
+                  crossOrigin="anonymous"
+                  {...{ 'x-webkit-airplay': 'allow', 'webkit-playsinline': '', disableRemotePlayback: false }}
                   className="w-full h-full"
                   title={title || "Video"}
                 />
