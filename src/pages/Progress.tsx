@@ -156,12 +156,18 @@ const Progress = () => {
 
   const { currentMilestone, progress: milestoneProgress } = getMilestoneProgress();
 
-  // Bi-weekly milestone check-in logic
+  // Bi-weekly milestone check-in logic (resets after each booking)
   const getBiweeklyCheckinStatus = () => {
-    // Use profile.created_at as program start, fall back to localStorage, then today
+    // Anchor: most recent of (last booked milestone) or (program start)
+    const lastBooked = (() => {
+      try {
+        const v = localStorage.getItem('cm_last_milestone_at');
+        return v ? new Date(v) : null;
+      } catch { return null; }
+    })();
+
     let startDate: Date;
     const stored = localStorage.getItem('cm_program_start_date');
-
     if (profile?.created_at) {
       startDate = new Date(profile.created_at);
     } else if (stored) {
@@ -171,27 +177,26 @@ const Progress = () => {
       localStorage.setItem('cm_program_start_date', startDate.toISOString());
     }
 
+    const anchor = lastBooked && lastBooked > startDate ? lastBooked : startDate;
     const today = new Date();
     const daysSinceStart = differenceInDays(today, startDate);
-    const currentCycle = Math.floor(daysSinceStart / 14); // which 14-day cycle we're in
-    const daysIntoCurrentCycle = daysSinceStart % 14;
-    const daysUntilNext = 14 - daysIntoCurrentCycle;
-    const isActive = daysIntoCurrentCycle === 0 && daysSinceStart > 0; // exactly on a 14-day mark
-    // Show as "active" window for the first 2 days of each cycle (so she doesn't miss it)
-    const isWithinWindow = daysIntoCurrentCycle <= 1 && daysSinceStart >= 14;
-    const nextMilestoneDate = new Date(startDate);
-    nextMilestoneDate.setDate(nextMilestoneDate.getDate() + (currentCycle + 1) * 14);
+    const daysSinceAnchor = differenceInDays(today, anchor);
+    const daysUntilNext = Math.max(0, 14 - daysSinceAnchor);
+    const isActive = daysSinceAnchor >= 14;
+    const nextMilestoneDate = new Date(anchor);
+    nextMilestoneDate.setDate(nextMilestoneDate.getDate() + 14);
 
     return {
       startDate,
       daysSinceStart,
-      currentCycle,
+      currentCycle: Math.floor(daysSinceStart / 14),
       daysUntilNext,
-      isActive: isActive || isWithinWindow,
+      isActive,
       nextMilestoneDate,
       weeksCompleted: Math.floor(daysSinceStart / 7),
     };
   };
+
 
   const biweeklyStatus = getBiweeklyCheckinStatus();
 
