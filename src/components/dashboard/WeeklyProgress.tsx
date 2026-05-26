@@ -120,6 +120,17 @@ export const WeeklyProgress = () => {
     ? Math.min(100, Math.round((program.completed / program.total) * 100))
     : 0;
 
+  const relativeTime = (ts: number) => {
+    const diff = Math.max(0, Date.now() - ts);
+    const m = Math.floor(diff / 60000);
+    if (m < 1) return 'just now';
+    if (m < 60) return `${m} min ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h} hr ago`;
+    const d = Math.floor(h / 24);
+    return `${d} day${d === 1 ? '' : 's'} ago`;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -127,7 +138,7 @@ export const WeeklyProgress = () => {
           <Activity className="h-5 w-5" />
           Program Progress
         </CardTitle>
-        <CardDescription>{program.name}</CardDescription>
+        <CardDescription className="line-clamp-2">{program.name}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {hasProgress ? (
@@ -161,9 +172,11 @@ export const WeeklyProgress = () => {
             </div>
           </>
         ) : (
-          <p className="text-sm text-muted-foreground">
-            Last played • pick up right where you left off.
-          </p>
+          <div className="rounded-lg bg-muted/30 p-4 space-y-1">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Last played</p>
+            <p className="text-sm font-medium">{relativeTime(program.lastActivity)}</p>
+            <p className="text-xs text-muted-foreground">Tap below to pick up right where you left off.</p>
+          </div>
         )}
 
         <Button
