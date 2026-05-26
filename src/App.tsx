@@ -387,6 +387,7 @@ function AppContent() {
         onClose={() => setShowCheckoutModal(false)} 
       />
       <GlobalVideoPlayer />
+      <RemoteControllerOverlay />
       <CookieConsentBanner />
     </BrowserRouter>
     </ErrorBoundary>
