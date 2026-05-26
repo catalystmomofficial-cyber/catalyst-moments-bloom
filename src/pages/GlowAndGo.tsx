@@ -79,6 +79,20 @@ const GlowAndGo = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setLastActiveProgram({
+      id: 'glow-and-go',
+      name: 'Glow & Go Prenatal',
+      href: '/glow-and-go',
+      stage: 'pregnancy',
+      unit: 'videos',
+      completed: watchedCount,
+      total: totalVideos,
+      ctaLabel: 'Continue Watching',
+    });
+  }, [watchedCount, totalVideos]);
+
+
   const handlePlay = (id: string, url: string, title: string) => {
     setWatched((prev) => {
       const next = { ...prev, [id]: true };
