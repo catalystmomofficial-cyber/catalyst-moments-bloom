@@ -330,22 +330,31 @@ const Dashboard = () => {
                       const pct = hasProgress
                         ? Math.min(100, Math.round(((lastActive.completed ?? 0) / (lastActive.total as number)) * 100))
                         : 0;
+                      const diffMs = Math.max(0, Date.now() - lastActive.lastActivity);
+                      const mins = Math.floor(diffMs / 60000);
+                      const relTime =
+                        mins < 1 ? 'Just now'
+                        : mins < 60 ? `${mins} min ago`
+                        : mins < 1440 ? `${Math.floor(mins / 60)} hr ago`
+                        : `${Math.floor(mins / 1440)} day${Math.floor(mins / 1440) === 1 ? '' : 's'} ago`;
+                      const stageLabel = lastActive.stage
+                        ? lastActive.stage.charAt(0).toUpperCase() + lastActive.stage.slice(1)
+                        : stageInfo?.phase || 'Recent';
                       return (
                         <PlanCard
                           key={`last-${lastActive.lastActivity}`}
-                          title={lastActive.name}
+                          title={lastActive.name || 'Recent session'}
                           category="Continue where you left off"
-                          description="Pick up your most recent session"
+                          description={hasProgress
+                            ? `${lastActive.completed ?? 0} of ${lastActive.total} ${lastActive.unit ?? 'sessions'} complete`
+                            : 'Pick up your most recent session'}
                           completed={!!lastActive.isComplete}
                           icon={<Activity className="h-5 w-5" />}
-                          time=""
+                          time={relTime}
                           link={lastActive.href}
                           buttonText={lastActive.ctaLabel ?? (lastActive.isComplete ? 'Review' : 'Resume')}
                           progress={pct}
-                          tags={[
-                            lastActive.stage ? lastActive.stage.charAt(0).toUpperCase() + lastActive.stage.slice(1) : 'Recent',
-                            lastActive.unit ?? 'sessions',
-                          ]}
+                          tags={[stageLabel, lastActive.unit ?? 'sessions']}
                         />
                       );
                     }
