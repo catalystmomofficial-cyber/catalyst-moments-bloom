@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useRemoteSync } from '@/hooks/useRemoteSync';
 
 export interface VideoChapter {
   /** seconds at which the chapter ends and triggers a checkpoint */
