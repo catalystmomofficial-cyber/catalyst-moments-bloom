@@ -121,14 +121,18 @@ export const MilestoneCheckInModal = ({
     const handler = (e: MessageEvent) => {
       if (typeof e.data !== 'object' || !e.data?.event) return;
       if (e.data.event === 'calendly.event_scheduled') {
-        handleBookingSuccess();
+        const payload = e.data?.payload ?? {};
+        handleBookingSuccess({
+          eventUri: payload?.event?.uri,
+          inviteeUri: payload?.invitee?.uri,
+        });
       }
     };
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
   }, [view]);
 
-  const handleBookingSuccess = async () => {
+  const handleBookingSuccess = async (booking?: { eventUri?: string; inviteeUri?: string }) => {
     if (booked) return;
     setBooked(true);
 
@@ -149,7 +153,18 @@ export const MilestoneCheckInModal = ({
       console.error('Award points failed', err);
     }
     try {
-      localStorage.setItem('cm_last_milestone_at', new Date().toISOString());
+      const bookedAt = new Date().toISOString();
+      localStorage.setItem('cm_last_milestone_at', bookedAt);
+      // Persist booking so /progress can render the "Upcoming Session" state
+      const record = {
+        bookedAt,
+        stage,
+        eventUri: booking?.eventUri ?? null,
+        // Invitee URI = canonical one-tap link to the booked meeting (reschedule, cancel, Zoom join)
+        inviteeUri: booking?.inviteeUri ?? null,
+      };
+      localStorage.setItem('cm_milestone_booking', JSON.stringify(record));
+      window.dispatchEvent(new CustomEvent('cm:milestone-booked', { detail: record }));
     } catch {}
 
     toast.success('🎉 Milestone booked! +150 points awarded', {

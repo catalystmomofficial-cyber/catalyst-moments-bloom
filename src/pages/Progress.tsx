@@ -62,6 +62,22 @@ const Progress = () => {
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null);
   const [milestoneOpen, setMilestoneOpen] = useState(false);
   const [activitySummary, setActivitySummary] = useState({ workouts: 0, activeDays: 0, points: 0 });
+  const [booking, setBooking] = useState<{ bookedAt: string; eventUri: string | null; inviteeUri: string | null; stage?: string } | null>(() => {
+    try {
+      const raw = localStorage.getItem('cm_milestone_booking');
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  });
+
+  // Refresh booking state when the modal fires the success event
+  useEffect(() => {
+    const onBooked = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail) setBooking(detail);
+    };
+    window.addEventListener('cm:milestone-booked', onBooked);
+    return () => window.removeEventListener('cm:milestone-booked', onBooked);
+  }, []);
 
 
   useEffect(() => {
