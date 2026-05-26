@@ -4,6 +4,8 @@ import { VideoPlayerProps } from './types';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { useRemoteSync } from '@/hooks/useRemoteSync';
+import { setLastActiveProgram } from '@/lib/lastActiveProgram';
+
 
 export default function VideoPlayer({ videoUrl, title, thumbnail, remoteMeta, onRemoteAction }: VideoPlayerProps) {
   console.log('VideoPlayer - URL:', videoUrl, 'Title:', title, 'Thumbnail:', thumbnail);
