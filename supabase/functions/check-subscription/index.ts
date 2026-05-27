@@ -175,6 +175,7 @@ serve(async (req) => {
       subscribed: hasActiveSub,
       subscription_tier: subscriptionTier,
       subscription_end: subscriptionEnd,
+      subscription_start: subscriptionStart,
       is_returning_customer: true,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
