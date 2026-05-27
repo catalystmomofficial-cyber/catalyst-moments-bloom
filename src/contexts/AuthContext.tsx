@@ -316,11 +316,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         subscribed: !!data.subscribed,
         subscription_tier: data.subscription_tier || null,
         subscription_end: data.subscription_end || null,
+        subscription_start: data.subscription_start || null,
         is_returning_customer: !!data.is_returning_customer,
       };
       setSubscribed(next.subscribed);
       setSubscriptionTier(next.subscription_tier);
       setSubscriptionEnd(next.subscription_end);
+      setSubscriptionStart(next.subscription_start);
       setIsReturningCustomer(next.is_returning_customer);
       try { localStorage.setItem('cm_subscription', JSON.stringify(next)); } catch {}
     } catch (error) {
