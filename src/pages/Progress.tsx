@@ -48,7 +48,7 @@ interface CheckIn {
 }
 
 const Progress = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, subscriptionStart, subscribed } = useAuth();
   const { currentJourney } = useContentFilter();
   const { toast } = useToast();
   const [checkIns, setCheckIns] = useState<CheckIn[]>([]);
