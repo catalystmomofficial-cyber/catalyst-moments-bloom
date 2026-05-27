@@ -186,13 +186,17 @@ const Progress = () => {
 
     let startDate: Date;
     const stored = localStorage.getItem('cm_program_start_date');
-    if (profile?.created_at) {
-      startDate = new Date(profile.created_at);
-    } else if (stored) {
+    if (subscriptionStart) {
+      // Anchor to actual Stripe subscription start so the 2-week cycle reflects paid membership, not account creation.
+      startDate = new Date(subscriptionStart);
+    } else if (subscribed && stored) {
       startDate = new Date(stored);
+    } else if (subscribed && profile?.created_at) {
+      startDate = new Date(profile.created_at);
     } else {
-      startDate = new Date();
-      localStorage.setItem('cm_program_start_date', startDate.toISOString());
+      // Not subscribed yet — anchor "now" so countdown shows 14 days, never instantly active.
+      startDate = stored ? new Date(stored) : new Date();
+      if (!stored) localStorage.setItem('cm_program_start_date', startDate.toISOString());
     }
 
     const anchor = lastBooked && lastBooked > startDate ? lastBooked : startDate;
