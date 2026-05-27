@@ -342,6 +342,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isReturningCustomer,
     subscriptionTier,
     subscriptionEnd,
+    subscriptionStart,
     isCheckingSubscription,
     showCheckoutModal,
     setShowCheckoutModal,
