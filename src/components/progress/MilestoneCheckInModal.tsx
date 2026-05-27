@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 export type MilestoneStage = 'ttc' | 'pregnant' | 'postpartum' | 'general';
 
-const CALENDLY_URL = 'https://calendly.com/catalystmom/2-week-milestone-check-in-catalyst-mom';
+const CALENDLY_URL = 'https://calendly.com/catalystmomofficial/2-week-milestone-check-in-catalyst-mom';
 
 interface MilestoneCheckInModalProps {
   open: boolean;
