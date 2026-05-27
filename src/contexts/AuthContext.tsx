@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [subscribed, setSubscribed] = useState<boolean>(cachedSub?.subscribed ?? false);
   const [subscriptionTier, setSubscriptionTier] = useState<string | null>(cachedSub?.subscription_tier ?? null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(cachedSub?.subscription_end ?? null);
+  const [subscriptionStart, setSubscriptionStart] = useState<string | null>(cachedSub?.subscription_start ?? null);
   const [isReturningCustomer, setIsReturningCustomer] = useState<boolean>(cachedSub?.is_returning_customer ?? false);
   const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
