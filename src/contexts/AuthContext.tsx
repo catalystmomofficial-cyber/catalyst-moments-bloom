@@ -25,6 +25,7 @@ interface AuthContextType {
   subscribed: boolean;
   subscriptionTier: string | null;
   subscriptionEnd: string | null;
+  subscriptionStart: string | null;
   isReturningCustomer: boolean;
   isCheckingSubscription: boolean;
   showCheckoutModal: boolean;
@@ -53,6 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [subscribed, setSubscribed] = useState<boolean>(cachedSub?.subscribed ?? false);
   const [subscriptionTier, setSubscriptionTier] = useState<string | null>(cachedSub?.subscription_tier ?? null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(cachedSub?.subscription_end ?? null);
+  const [subscriptionStart, setSubscriptionStart] = useState<string | null>(cachedSub?.subscription_start ?? null);
   const [isReturningCustomer, setIsReturningCustomer] = useState<boolean>(cachedSub?.is_returning_customer ?? false);
   const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
@@ -314,11 +316,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         subscribed: !!data.subscribed,
         subscription_tier: data.subscription_tier || null,
         subscription_end: data.subscription_end || null,
+        subscription_start: data.subscription_start || null,
         is_returning_customer: !!data.is_returning_customer,
       };
       setSubscribed(next.subscribed);
       setSubscriptionTier(next.subscription_tier);
       setSubscriptionEnd(next.subscription_end);
+      setSubscriptionStart(next.subscription_start);
       setIsReturningCustomer(next.is_returning_customer);
       try { localStorage.setItem('cm_subscription', JSON.stringify(next)); } catch {}
     } catch (error) {
@@ -338,6 +342,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isReturningCustomer,
     subscriptionTier,
     subscriptionEnd,
+    subscriptionStart,
     isCheckingSubscription,
     showCheckoutModal,
     setShowCheckoutModal,
