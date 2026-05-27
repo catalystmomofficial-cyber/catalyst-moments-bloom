@@ -25,6 +25,7 @@ interface AuthContextType {
   subscribed: boolean;
   subscriptionTier: string | null;
   subscriptionEnd: string | null;
+  subscriptionStart: string | null;
   isReturningCustomer: boolean;
   isCheckingSubscription: boolean;
   showCheckoutModal: boolean;
