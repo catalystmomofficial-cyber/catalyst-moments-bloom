@@ -374,7 +374,7 @@ const Progress = () => {
                       </div>
                       {upcoming.startTime ? (
                         <p className="text-sm text-muted-foreground">
-                          Your 2-Week Milestone Zoom call is locked in for{' '}
+                          Your 1:1 Progression Sync is locked in for{' '}
                           <strong className="text-foreground">
                             {format(upcoming.startTime, 'EEEE, MMM d')} at {format(upcoming.startTime, 'h:mm a')}
                           </strong>
@@ -382,7 +382,7 @@ const Progress = () => {
                         </p>
                       ) : (
                         <p className="text-sm text-muted-foreground">
-                          Your 2-Week Milestone Zoom call is confirmed. Check your email for the exact time — your join link is ready below.
+                          Your 1:1 Progression Sync is confirmed. Check your email for the exact time — your join link is ready below.
                         </p>
                       )}
                       <p className="text-xs text-muted-foreground mt-1">
