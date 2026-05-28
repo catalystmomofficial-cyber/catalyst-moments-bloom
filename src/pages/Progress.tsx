@@ -424,7 +424,7 @@ const Progress = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <h3 className="text-lg font-bold">2-Week Milestone Check-in</h3>
+                      <h3 className="text-lg font-bold">1:1 Progression Sync</h3>
                       <Badge variant={biweeklyStatus.isActive ? 'default' : 'outline'} className={biweeklyStatus.isActive ? 'animate-pulse' : ''}>
                         {biweeklyStatus.isActive ? 'Ready to Claim' : 'Upcoming'}
                       </Badge>
