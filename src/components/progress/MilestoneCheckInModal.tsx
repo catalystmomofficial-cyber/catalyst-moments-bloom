@@ -218,7 +218,7 @@ export const MilestoneCheckInModal = ({
                   <Icon className="w-8 h-8 text-primary" />
                 </motion.div>
                 <Badge variant="secondary" className="mx-auto w-fit">
-                  <Sparkles className="w-3 h-3 mr-1" /> 2-Week Milestone
+                  <Sparkles className="w-3 h-3 mr-1" /> 1:1 Progression Sync
                 </Badge>
                 <DialogTitle className="text-2xl md:text-3xl text-center font-bold">
                   {content.title}
