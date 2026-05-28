@@ -374,7 +374,7 @@ const Progress = () => {
                       </div>
                       {upcoming.startTime ? (
                         <p className="text-sm text-muted-foreground">
-                          Your 2-Week Milestone Zoom call is locked in for{' '}
+                          Your 1:1 Progression Sync is locked in for{' '}
                           <strong className="text-foreground">
                             {format(upcoming.startTime, 'EEEE, MMM d')} at {format(upcoming.startTime, 'h:mm a')}
                           </strong>
@@ -382,7 +382,7 @@ const Progress = () => {
                         </p>
                       ) : (
                         <p className="text-sm text-muted-foreground">
-                          Your 2-Week Milestone Zoom call is confirmed. Check your email for the exact time — your join link is ready below.
+                          Your 1:1 Progression Sync is confirmed. Check your email for the exact time — your join link is ready below.
                         </p>
                       )}
                       <p className="text-xs text-muted-foreground mt-1">
@@ -424,7 +424,7 @@ const Progress = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <h3 className="text-lg font-bold">2-Week Milestone Check-in</h3>
+                      <h3 className="text-lg font-bold">1:1 Progression Sync</h3>
                       <Badge variant={biweeklyStatus.isActive ? 'default' : 'outline'} className={biweeklyStatus.isActive ? 'animate-pulse' : ''}>
                         {biweeklyStatus.isActive ? 'Ready to Claim' : 'Upcoming'}
                       </Badge>
