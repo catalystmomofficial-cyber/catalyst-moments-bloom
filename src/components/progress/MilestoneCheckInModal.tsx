@@ -41,9 +41,9 @@ const STAGE_CONTENT: Record<MilestoneStage, {
   ttc: {
     icon: Flower2,
     accent: 'from-rose-400/20 via-pink-300/20 to-amber-300/20',
-    title: 'Two weeks of conscious movement, mama.',
-    subtitle: 'Hormone harmony in motion.',
-    body: 'You showed up for your body — and your future baby — every single day. This check-in is where we measure the invisible wins: nervous system calm, cycle rhythm, and the energy you\'ve been quietly rebuilding.',
+    title: '1:1 Progression Sync',
+    subtitle: 'Your Nervous System Sync is Unlocked!',
+    body: "You've logged 14 days of conscious routine. Let's look at your daily stress indicators and cycles to perfectly optimize your upcoming weeks for hormone harmony.",
     focusLabel: 'Your check-in focus',
     focus: [
       'Stress levels & nervous system reset',
@@ -54,9 +54,9 @@ const STAGE_CONTENT: Record<MilestoneStage, {
   pregnant: {
     icon: Baby,
     accent: 'from-amber-300/20 via-rose-300/20 to-emerald-300/20',
-    title: 'Two weeks of consistency for you and baby.',
-    subtitle: 'Strong body, calm mind, growing baby.',
-    body: 'Every movement you completed built strength your body will pull from on birth day. Let\'s look at how your trimester is unfolding and adjust your plan so you stay mobile, supported, and ready.',
+    title: '1:1 Progression Sync',
+    subtitle: 'Your Biomechanics Sync is Unlocked!',
+    body: "You've completed 2 weeks of intentional movement. Let's sit down to adapt your training, check your core comfort, and keep you feeling light and strong.",
     focusLabel: 'Your check-in focus',
     focus: [
       'Structural mobility & posture',
@@ -67,9 +67,9 @@ const STAGE_CONTENT: Record<MilestoneStage, {
   postpartum: {
     icon: Heart,
     accent: 'from-emerald-300/20 via-teal-300/20 to-sky-300/20',
-    title: '14 days of foundational recovery.',
-    subtitle: 'You\'re rebuilding from the inside out.',
-    body: 'This isn\'t about bouncing back — it\'s about coming home to your body. We\'ll review your pelvic floor reconnection, core re-education, and make sure every signal your body is sending is being heard.',
+    title: '1:1 Progression Sync',
+    subtitle: 'Your Foundation Recovery Sync is Unlocked!',
+    body: "You've dedicated 14 days to your rebuilding window. Let's review your core healing and pelvic floor data so we can safely level up your tracking plan.",
     focusLabel: 'Your check-in focus',
     focus: [
       'Pelvic floor health & reconnection',
@@ -80,9 +80,9 @@ const STAGE_CONTENT: Record<MilestoneStage, {
   general: {
     icon: Sparkles,
     accent: 'from-primary/20 via-secondary/20 to-accent/20',
-    title: 'Two weeks of showing up for you.',
-    subtitle: 'Let\'s celebrate the progress.',
-    body: 'You\'ve put in the reps. Let\'s look at the data, name the wins, and design the next 14 days with intention.',
+    title: '1:1 Progression Sync',
+    subtitle: 'Your Progression Sync is Unlocked!',
+    body: "You've completed 14 days of showing up. Let's review your data, celebrate the wins, and design the next 2 weeks with intention.",
     focusLabel: 'Your check-in focus',
     focus: [
       'Movement consistency',
