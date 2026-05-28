@@ -426,12 +426,12 @@ const Progress = () => {
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <h3 className="text-lg font-bold">1:1 Progression Sync</h3>
                       <Badge variant={biweeklyStatus.isActive ? 'default' : 'outline'} className={biweeklyStatus.isActive ? 'animate-pulse' : ''}>
-                        {biweeklyStatus.isActive ? 'Ready to Claim' : 'Upcoming'}
+                        {biweeklyStatus.isActive ? 'Your Expert Session is Unlocked!' : 'Upcoming'}
                       </Badge>
                     </div>
                     {biweeklyStatus.isActive ? (
                       <p className="text-sm text-muted-foreground">
-                        Your milestone check-in is ready! You've completed <strong>{biweeklyStatus.weeksCompleted} weeks</strong>. Time to measure your progress and celebrate your wins.
+                        You've dedicated 2 weeks to your health blueprint. Let's look closely at your tracking data together, celebrate your consistency, and calibrate your upcoming routine for maximum results.
                       </p>
                     ) : (
                       <p className="text-sm text-muted-foreground">
