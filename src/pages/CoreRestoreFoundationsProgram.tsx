@@ -128,6 +128,7 @@ export default function CoreRestoreFoundationsProgram() {
   const { awardPoints } = usePoints();
   const [progress, setProgress] = useState<LocalProgress>(() => loadProgress());
   const [selectedDay, setSelectedDay] = useState<number>(() => loadProgress().unlocked_day);
+  const [playingIntro, setPlayingIntro] = useState(false);
   const [celebration, setCelebration] = useState<null | {
     day: number;
     week: number;
