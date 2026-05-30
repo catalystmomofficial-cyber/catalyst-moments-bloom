@@ -37,6 +37,15 @@ const WEEK_1_VIDEOS = [
   "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%206.mp4",
   "https://media.catalystmomofficial.com/DR%20COURSE/DR%20WEEK%201/Day%207.mp4",
 ];
+const WEEK_2_VIDEOS = [
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%208.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%209.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%2010.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%2011.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%2012.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%2013.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%2014.mp4",
+];
 const DAY_PLACEHOLDER = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
 
 const WEEKS = [
