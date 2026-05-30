@@ -46,6 +46,8 @@ const WEEK_2_VIDEOS = [
   "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%2013.mp4",
   "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Day%2014.mp4",
 ];
+const WEEK_2_INTRO =
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Week%202%20Diastis%20Recti%20Intro.mp4";
 const DAY_PLACEHOLDER = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
 
 const WEEKS = [
@@ -126,6 +128,7 @@ export default function CoreRestoreFoundationsProgram() {
   const { awardPoints } = usePoints();
   const [progress, setProgress] = useState<LocalProgress>(() => loadProgress());
   const [selectedDay, setSelectedDay] = useState<number>(() => loadProgress().unlocked_day);
+  const [playingIntro, setPlayingIntro] = useState(false);
   const [celebration, setCelebration] = useState<null | {
     day: number;
     week: number;
@@ -135,6 +138,10 @@ export default function CoreRestoreFoundationsProgram() {
     streak: number;
   }>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    setPlayingIntro(false);
+  }, [selectedDay]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -162,12 +169,13 @@ export default function CoreRestoreFoundationsProgram() {
   const isViewingUnlocked = selectedDay <= unlockedDay && !isProgramComplete;
   const isViewingActiveDay = selectedDay === unlockedDay && !isProgramComplete;
   const isLocked = selectedDay > unlockedDay;
-  const videoSrc =
-    selWeek === 1
-      ? WEEK_1_VIDEOS[selDayInWeek - 1]
-      : selWeek === 2
-      ? WEEK_2_VIDEOS[selDayInWeek - 1]
-      : DAY_PLACEHOLDER;
+  const videoSrc = playingIntro
+    ? WEEK_2_INTRO
+    : selWeek === 1
+    ? WEEK_1_VIDEOS[selDayInWeek - 1]
+    : selWeek === 2
+    ? WEEK_2_VIDEOS[selDayInWeek - 1]
+    : DAY_PLACEHOLDER;
 
   const markDayComplete = async () => {
     if (!isViewingActiveDay) return;
@@ -293,6 +301,28 @@ export default function CoreRestoreFoundationsProgram() {
                 <p className="text-sm text-muted-foreground mt-1">
                   {selWeekMeta.title}: {selWeekMeta.description}
                 </p>
+                {selWeek === 2 && !isLocked && !playingIntro && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setPlayingIntro(true)}
+                    className="mt-2 -ml-2 text-primary hover:text-primary/80"
+                  >
+                    <Sparkles className="h-3.5 w-3.5 mr-1.5" />
+                    Watch Week Intro
+                  </Button>
+                )}
+                {playingIntro && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setPlayingIntro(false)}
+                    className="mt-2 -ml-2 text-muted-foreground hover:text-foreground"
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5 mr-1.5" />
+                    Back to Day {selectedDay}
+                  </Button>
+                )}
               </div>
               {isViewingUnlocked && (
                 <Button
@@ -319,7 +349,7 @@ export default function CoreRestoreFoundationsProgram() {
               <div className="rounded-2xl overflow-hidden border bg-black shadow-md">
                 <video
                   ref={videoRef}
-                  key={selectedDay}
+                  key={selectedDay + (playingIntro ? "-intro" : "")}
                   controls
                   playsInline
                   controlsList="nodownload"
@@ -351,6 +381,10 @@ export default function CoreRestoreFoundationsProgram() {
             {isProgramComplete ? (
               <p className="text-center text-sm text-muted-foreground py-2">
                 Your core is restored — beautiful work, mama. 💛
+              </p>
+            ) : playingIntro ? (
+              <p className="text-center text-sm text-muted-foreground py-2">
+                Watching Week 2 intro — enjoy the guidance, then jump into your day.
               </p>
             ) : isViewingActiveDay ? (
               <Button size="lg" className="w-full" onClick={markDayComplete}>
