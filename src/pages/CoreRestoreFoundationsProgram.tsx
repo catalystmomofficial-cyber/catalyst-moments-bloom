@@ -382,6 +382,10 @@ export default function CoreRestoreFoundationsProgram() {
               <p className="text-center text-sm text-muted-foreground py-2">
                 Your core is restored — beautiful work, mama. 💛
               </p>
+            ) : playingIntro ? (
+              <p className="text-center text-sm text-muted-foreground py-2">
+                Watching Week 2 intro — enjoy the guidance, then jump into your day.
+              </p>
             ) : isViewingActiveDay ? (
               <Button size="lg" className="w-full" onClick={markDayComplete}>
                 <Check className="h-4 w-4 mr-2" />
