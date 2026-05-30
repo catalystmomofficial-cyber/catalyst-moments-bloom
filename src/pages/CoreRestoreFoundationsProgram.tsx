@@ -140,6 +140,10 @@ export default function CoreRestoreFoundationsProgram() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    setPlayingIntro(false);
+  }, [selectedDay]);
+
+  useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     const unlocked = Number(progress.unlocked_day) || 1;
     setLastActiveProgram({
