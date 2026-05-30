@@ -349,7 +349,7 @@ export default function CoreRestoreFoundationsProgram() {
               <div className="rounded-2xl overflow-hidden border bg-black shadow-md">
                 <video
                   ref={videoRef}
-                  key={selectedDay}
+                  key={selectedDay + (playingIntro ? "-intro" : "")}
                   controls
                   playsInline
                   controlsList="nodownload"
