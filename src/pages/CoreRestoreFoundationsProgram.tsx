@@ -165,12 +165,13 @@ export default function CoreRestoreFoundationsProgram() {
   const isViewingUnlocked = selectedDay <= unlockedDay && !isProgramComplete;
   const isViewingActiveDay = selectedDay === unlockedDay && !isProgramComplete;
   const isLocked = selectedDay > unlockedDay;
-  const videoSrc =
-    selWeek === 1
-      ? WEEK_1_VIDEOS[selDayInWeek - 1]
-      : selWeek === 2
-      ? WEEK_2_VIDEOS[selDayInWeek - 1]
-      : DAY_PLACEHOLDER;
+  const videoSrc = playingIntro
+    ? WEEK_2_INTRO
+    : selWeek === 1
+    ? WEEK_1_VIDEOS[selDayInWeek - 1]
+    : selWeek === 2
+    ? WEEK_2_VIDEOS[selDayInWeek - 1]
+    : DAY_PLACEHOLDER;
 
   const markDayComplete = async () => {
     if (!isViewingActiveDay) return;
