@@ -140,7 +140,12 @@ export default function CoreRestoreFoundationsProgram() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    setPlayingIntro(false);
+    const INTRO_KEY = "core-restore-week2-intro-seen";
+    if (selectedDay === 8 && !localStorage.getItem(INTRO_KEY)) {
+      setPlayingIntro(true);
+    } else {
+      setPlayingIntro(false);
+    }
   }, [selectedDay]);
 
   useEffect(() => {
