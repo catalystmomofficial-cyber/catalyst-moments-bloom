@@ -140,7 +140,12 @@ export default function CoreRestoreFoundationsProgram() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    setPlayingIntro(false);
+    const INTRO_KEY = "core-restore-week2-intro-seen";
+    if (selectedDay === 8 && !localStorage.getItem(INTRO_KEY)) {
+      setPlayingIntro(true);
+    } else {
+      setPlayingIntro(false);
+    }
   }, [selectedDay]);
 
   useEffect(() => {
@@ -248,6 +253,11 @@ export default function CoreRestoreFoundationsProgram() {
 
   // Auto-celebrate when video ends
   const handleVideoEnded = () => {
+    if (playingIntro) {
+      localStorage.setItem("core-restore-week2-intro-seen", "1");
+      setPlayingIntro(false);
+      return;
+    }
     if (isViewingActiveDay) markDayComplete();
   };
 
@@ -301,28 +311,6 @@ export default function CoreRestoreFoundationsProgram() {
                 <p className="text-sm text-muted-foreground mt-1">
                   {selWeekMeta.title}: {selWeekMeta.description}
                 </p>
-                {selWeek === 2 && !isLocked && !playingIntro && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setPlayingIntro(true)}
-                    className="mt-2 -ml-2 text-primary hover:text-primary/80"
-                  >
-                    <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-                    Watch Week Intro
-                  </Button>
-                )}
-                {playingIntro && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setPlayingIntro(false)}
-                    className="mt-2 -ml-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <ArrowLeft className="h-3.5 w-3.5 mr-1.5" />
-                    Back to Day {selectedDay}
-                  </Button>
-                )}
               </div>
               {isViewingUnlocked && (
                 <Button
