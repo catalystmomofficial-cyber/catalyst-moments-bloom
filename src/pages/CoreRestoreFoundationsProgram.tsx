@@ -253,6 +253,11 @@ export default function CoreRestoreFoundationsProgram() {
 
   // Auto-celebrate when video ends
   const handleVideoEnded = () => {
+    if (playingIntro) {
+      localStorage.setItem("core-restore-week2-intro-seen", "1");
+      setPlayingIntro(false);
+      return;
+    }
     if (isViewingActiveDay) markDayComplete();
   };
 
