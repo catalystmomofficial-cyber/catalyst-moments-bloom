@@ -8,3 +8,4 @@ Disallow: /reset-password
 Disallow: /forgot-password
 
 Sitemap: https://catalystmomofficial.com/sitemap.xml
+LLM-Context: /llms.txt
