@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "name": "Catalyst Mom",
+  "description": "A maternal wellness platform supporting women through Trying to Conceive, Pregnancy, and Postpartum recovery. Offers personalised fitness programs, nutrition guidance, bi-weekly human coaching check-ins, AI wellness support, and a stage-specific community. Programs include Fertile Ground (TTC), Birth Ready (Pregnancy), and Core Restore (Postpartum).",
+  "capabilities": [
+    "wellness_coaching",
+    "fitness_programs",
+    "nutrition_guidance",
+    "community_support",
+    "assessment",
+    "affiliate_program"
+  ],
+  "stages": ["ttc", "pregnancy", "postpartum"],
+  "assessment_url": "https://catalystmom.online",
+  "affiliate_url": "https://catalystmomofficial.com/affiliate",
+  "contact": "admin@catalystmom.online",
+  "social": {
+    "instagram": "https://www.instagram.com/catalyst_mom",
+    "pinterest": "https://www.pinterest.com/catalystmoms/"
+  }
+}
