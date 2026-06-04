@@ -9,3 +9,24 @@ Disallow: /forgot-password
 
 Sitemap: https://catalystmomofficial.com/sitemap.xml
 LLM-Context: /llms.txt
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
