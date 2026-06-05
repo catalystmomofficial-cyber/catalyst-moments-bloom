@@ -331,7 +331,7 @@ const AssessmentResults = () => {
         <Card className="bg-gradient-to-r from-primary/10 to-primary/5">
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
-              <h3 className="text-2xl font-bold">Ready to Start Your Journey?</h3>
+              <h2 className="text-2xl font-bold">Ready to Start Your Journey?</h2>
               <p className="text-muted-foreground">
                 Based on your assessment, we've personalized your entire experience to help you achieve your goals.
               </p>

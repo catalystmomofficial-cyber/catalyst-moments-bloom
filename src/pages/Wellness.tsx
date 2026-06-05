@@ -335,7 +335,7 @@ const Wellness = () => {
                 <div className="space-y-6">
                   <div className="text-center py-8 border rounded-lg bg-muted/30">
                     <SmilePlus className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                    <h3 className="font-medium mb-1">Mood Tracking</h3>
+                    <h2 className="font-medium mb-1">Mood Tracking</h2>
                     <p className="text-muted-foreground mb-4 max-w-md mx-auto">
                       Track your daily mood to identify patterns and improve your emotional wellbeing.
                     </p>
@@ -365,7 +365,7 @@ const Wellness = () => {
               <TabsContent value="sleep">
                 <div className="text-center py-8 border rounded-lg bg-muted/30">
                   <MoonStar className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                  <h3 className="font-medium mb-1">Sleep Tracking</h3>
+                  <h2 className="font-medium mb-1">Sleep Tracking</h2>
                   <p className="text-muted-foreground mb-4 max-w-md mx-auto">
                     Monitor your sleep patterns to improve rest quality and energy levels.
                   </p>
@@ -376,7 +376,7 @@ const Wellness = () => {
               <TabsContent value="selfcare">
                 <div className="text-center py-8 border rounded-lg bg-muted/30">
                   <Heart className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                  <h3 className="font-medium mb-1">Self-Care Activities</h3>
+                  <h2 className="font-medium mb-1">Self-Care Activities</h2>
                   <p className="text-muted-foreground mb-4 max-w-md mx-auto">
                     Track and schedule regular self-care activities to maintain your wellbeing.
                   </p>
