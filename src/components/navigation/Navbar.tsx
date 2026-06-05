@@ -59,7 +59,7 @@ const Navbar = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-muted">
+    <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-muted">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-16">
           {/* Logo */}
@@ -68,7 +68,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-6">
             {links.map(link => (
               <Link
                 key={link.name}
@@ -78,7 +78,7 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-          </nav>
+          </div>
 
           {/* Auth Links + Notifications - Desktop */}
           <div className="hidden md:flex items-center gap-2">
@@ -108,7 +108,7 @@ const Navbar = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="pt-10">
-                <nav className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4">
                   {links.map(link => (
                     <Link
                       key={link.name}
@@ -131,13 +131,13 @@ const Navbar = () => {
                     )}
                     <AuthLinks />
                   </div>
-                </nav>
+                </div>
               </SheetContent>
             </Sheet>
           </div>
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 

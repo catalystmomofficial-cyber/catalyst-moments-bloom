@@ -8,7 +8,7 @@ import { CheckCircle } from "lucide-react";
 
 const BenefitsSection = () => {
   return (
-    <section className="section-padding bg-muted/30">
+    <section aria-label="Benefits" className="section-padding bg-muted/30">
       <div className="container container-padding mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
@@ -24,7 +24,7 @@ const BenefitsSection = () => {
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-catalyst-copper mr-3 mt-0.5 flex-shrink-0" />
                 <div>
-                  <h4 className="font-medium">Expert-Backed Content</h4>
+                  <h3 className="font-medium">Expert-Backed Content</h3>
                   <p className="text-sm text-muted-foreground">All programs developed by certified pre/postnatal specialists</p>
                 </div>
               </div>
@@ -32,7 +32,7 @@ const BenefitsSection = () => {
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-catalyst-copper mr-3 mt-0.5 flex-shrink-0" />
                 <div>
-                  <h4 className="font-medium">Flexible & Adaptable</h4>
+                  <h3 className="font-medium">Flexible & Adaptable</h3>
                   <p className="text-sm text-muted-foreground">Workouts and programs that adjust to your changing needs and time constraints</p>
                 </div>
               </div>
@@ -40,7 +40,7 @@ const BenefitsSection = () => {
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-catalyst-copper mr-3 mt-0.5 flex-shrink-0" />
                 <div>
-                  <h4 className="font-medium">Holistic Approach</h4>
+                  <h3 className="font-medium">Holistic Approach</h3>
                   <p className="text-sm text-muted-foreground">We address physical, mental and emotional wellbeing together</p>
                 </div>
               </div>
