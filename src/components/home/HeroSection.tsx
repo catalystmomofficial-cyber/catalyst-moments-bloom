@@ -68,7 +68,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
           </div>
         </div>
       </div>
-    </section>
+    </header>
   );
 };
 
