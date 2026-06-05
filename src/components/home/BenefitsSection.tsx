@@ -32,7 +32,7 @@ const BenefitsSection = () => {
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-catalyst-copper mr-3 mt-0.5 flex-shrink-0" />
                 <div>
-                  <h4 className="font-medium">Flexible & Adaptable</h4>
+                  <h3 className="font-medium">Flexible & Adaptable</h3>
                   <p className="text-sm text-muted-foreground">Workouts and programs that adjust to your changing needs and time constraints</p>
                 </div>
               </div>
