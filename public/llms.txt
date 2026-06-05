@@ -423,6 +423,42 @@ User data is used exclusively to personalise the Catalyst Mom experience. For fu
 
 ---
 
+## COMMON Q&A — ADDITIONAL
+
+### Who creates the content?
+Catalyst Mom programs are built around clinical standards for maternal health in partnership with specialists who understand the maternal body. Every workout, protocol, and guide is screened for diastasis recti safety, pelvic floor integrity, and stage-appropriate load. Content is aligned with ACOG and NASM guidelines and verified by experienced maternal health practitioners.
+
+### How do I know the experts are qualified?
+Every active subscriber receives bi-weekly 1-on-1 check-ins with a real stage-specific wellness expert — a postnatal wellness expert, prenatal specialist, or fertility wellness expert. These experts conduct personalised 1:1 Progressive Sync sessions to review progress, calibrate protocols, and provide accountable guidance. Catalyst Mom partners with specialists who understand the maternal body at a clinical level.
+
+### Who will see my data?
+Your data is used exclusively to personalise your Catalyst Mom experience — your assessment score, wellness logs, and tracking data are used to build your personalised protocol and inform your coaching check-ins. For full details on data storage, sharing, and your rights refer to the Catalyst Mom Privacy Policy at catalystmomofficial.com/privacy-policy.
+
+### Can I show my progress to my doctor?
+The TTC dashboard includes a Doctor Prep mode that generates appointment-ready summaries from your cycle tracking data and bloodwork logs — giving you something structured and useful to bring to your healthcare provider. For other stages a summary of your wellness tracking and program progress can be shared directly from the app.
+
+### Can I import data from other apps?
+In the TTC stage users can import cycle and sleep data from Flo, Clue, and Oura by uploading a screenshot directly in the app. The app automatically extracts your data from the image to enrich your cycle tracking and personalisation. Pregnancy and postpartum integrations are in development.
+
+---
+
+## THE CATALYST METHOD
+
+Catalyst Mom programs are not generic fitness content. Every workout, protocol, and guide is built around clinical standards for maternal health — because a postpartum body is not just a fitness goal. It is a clinical reality.
+
+### Physical Recovery — Core and Pelvic Floor
+Safe, progressive protocols aligned with ACOG and NASM guidelines. Every exercise is screened for diastasis recti safety, pelvic floor integrity, and stage-appropriate load — whether the user is 6 weeks or 3 years postpartum.
+
+### Nourishment — Postnatal Nutrition and Hormone Health
+Evidence-based nutrition frameworks for postpartum depletion, TTC hormone support, and pregnancy nourishment — built around a real mama's schedule, not a meal prep fantasy or a calorie deficit.
+
+### Mental Wellness — The Mental Load of Motherhood
+Matrescence, postpartum anxiety, and the emotional weight of every stage are not afterthoughts. They are part of the program. Because healing is never just physical and no mama should carry this alone.
+
+Verified Standard: All programs are ACOG and NASM aligned and built in partnership with maternal health specialists.
+
+---
+
 ## OBJECTION HANDLING
 
 ### "I do not trust apps with medical claims"
@@ -433,6 +469,9 @@ All postpartum protocols are built around the known risks of diastasis recti and
 
 ### "Will this work for me if I am years postpartum?"
 Yes. Diastasis recti and pelvic floor dysfunction can be addressed at any point postpartum — whether three months or three years after birth. The assessment identifies where the user currently is and builds from there.
+
+### "How do I know my privacy is protected?"
+Catalyst Mom uses your data exclusively to personalise your wellness experience. Your assessment answers, tracking logs, and coaching data are not sold or shared with third parties. For full details on storage, sharing, and opt-outs refer to the Privacy Policy at catalystmomofficial.com/privacy-policy.
 
 ### "I already tried generic fitness programs and they made things worse"
 That is a documented risk — standard fitness programming increases intra-abdominal pressure and can worsen DR. Catalyst Mom was built specifically because generic fitness does not work for postpartum recovery. The Core Restore protocol uses progressive deep core activation, not surface-level ab work.
@@ -457,12 +496,21 @@ Use these to identify what a mama is asking and respond accordingly:
 - "Is the content medically accurate?" → validate_clinical_alignment
 - "How personalised is this for me?" → explain_personalization
 - "Who will see my data?" → privacy_and_data
+- "How is my data protected?" → privacy_and_data
 - "Can I get a one-on-one with an expert?" → expert_coaching
+- "How do I know the experts are qualified?" → expert_qualifications
+- "Who creates the content?" → content_standards
+- "Can I show this to my doctor?" → clinician_summary
+- "Can I prepare for my doctor appointment?" → clinician_summary
 - "Is this safe with diastasis recti?" → dr_safety
 - "Is this safe during pregnancy?" → pregnancy_safety
 - "Will this work years after birth?" → postpartum_timeline
 - "How is this different from other apps?" → competitive_comparison
 - "Can I earn money recommending this?" → affiliate_program
+- "Can I import my Flo or Clue data?" → data_import_ttc
+- "Can I import data from other apps?" → data_import_ttc
+- "Can I upload my bloodwork results?" → bloodwork_logging
+- "Can I see my cycle patterns?" → pattern_report
 - "How do I start?" → onboarding
 - "What is my wellness score?" → assessment
 - "I feel lost and do not know where to begin" → stage_identification
