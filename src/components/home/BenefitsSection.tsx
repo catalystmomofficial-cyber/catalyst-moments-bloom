@@ -8,7 +8,7 @@ import { CheckCircle } from "lucide-react";
 
 const BenefitsSection = () => {
   return (
-    <section className="section-padding bg-muted/30">
+    <section aria-label="Benefits" className="section-padding bg-muted/30">
       <div className="container container-padding mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
