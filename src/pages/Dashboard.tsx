@@ -209,7 +209,7 @@ const Dashboard = () => {
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-semibold">Premium</h3>
+                        <span className="font-semibold">Premium</span>
                         <div className="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
                           <CheckCircle className="h-3 w-3" />
                           <span className="text-xs font-medium">Active</span>
@@ -242,7 +242,7 @@ const Dashboard = () => {
                       <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-500" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-semibold">Free Plan</h3>
+                      <span className="font-semibold">Free Plan</span>
                       <p className="text-xs text-muted-foreground">Limited access to features</p>
                     </div>
                   </div>
