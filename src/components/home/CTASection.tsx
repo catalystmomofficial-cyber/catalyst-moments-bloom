@@ -13,7 +13,7 @@ interface CTASectionProps {
 
 const CTASection = ({ onWatchDemo }: CTASectionProps) => {
   return (
-    <section className="py-20 bg-gradient-to-br from-catalyst-copper/10 to-white dark:from-catalyst-copper/15 dark:to-background">
+    <section aria-label="Call to Action" className="py-20 bg-gradient-to-br from-catalyst-copper/10 to-white dark:from-catalyst-copper/15 dark:to-background">
       <div className="container container-padding mx-auto text-center">
         <Badge variant="outline" className="mb-6 px-3 py-1 border-primary/30 text-primary dark:text-catalyst-gold dark:border-catalyst-gold/40">
           Join Us Today
