@@ -40,7 +40,7 @@ const BenefitsSection = () => {
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-catalyst-copper mr-3 mt-0.5 flex-shrink-0" />
                 <div>
-                  <h4 className="font-medium">Holistic Approach</h4>
+                  <h3 className="font-medium">Holistic Approach</h3>
                   <p className="text-sm text-muted-foreground">We address physical, mental and emotional wellbeing together</p>
                 </div>
               </div>
