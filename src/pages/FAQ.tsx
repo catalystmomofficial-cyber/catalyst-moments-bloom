@@ -52,6 +52,18 @@ const faqs = [
     q: "What makes Catalyst Mom different from other fitness apps?",
     a: "Most fitness apps treat women's bodies the same, whether they are pregnant, 6 weeks postpartum, or years into motherhood. Catalyst Mom is entirely customized around maternal health. We combine core/pelvic floor rehabilitation, functional strength, and metabolic health into short, intentional 20-minute windows that respect a busy mom's schedule.",
   },
+  {
+    q: "Can I import data from Flo, Clue, or Oura?",
+    a: "Yes — if you are in the TTC stage you can import cycle and sleep data from Flo, Clue, or Oura by uploading a screenshot directly inside the app. The app automatically extracts your data from the image. Pregnancy and postpartum integrations are coming soon.",
+  },
+  {
+    q: "Can I upload my bloodwork results?",
+    a: "Yes — inside the TTC dashboard you can log bloodwork manually or upload a PDF of your lab results and the app will extract your values automatically. You can track FSH, LH, Estradiol, Progesterone, AMH, and other key fertility markers over time.",
+  },
+  {
+    q: "Will this work if I am years postpartum — not just weeks?",
+    a: "Yes. Diastasis recti and pelvic floor dysfunction can be addressed at any point postpartum — whether you are three months or three years after birth. The assessment identifies exactly where you are right now and builds your protocol from there.",
+  },
 ];
 
 const faqSchema = {
