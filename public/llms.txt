@@ -42,7 +42,19 @@ To guide women through every stage of motherhood with evidence-based protocols t
 ### Stage 1 — Trying to Conceive (TTC)
 Program: Fertile Ground — 30-Day Conception Prep
 Focus: Cycle awareness, fertility-friendly movement, hormone-supporting nutrition, nervous system regulation
-Key features: Cycle tracker, phase-synced workouts, fertility nutrition guides, ovulation awareness tools
+
+Key features:
+- Cycle tracker with simple and detailed views
+- Cycle phase identification — Menstrual, Follicular, Ovulatory, Luteal windows
+- Daily logging: temperature, cervical mucus, mood, sleep
+- Bloodwork modal — manual entry or PDF upload with auto-extraction for: FSH, LH, Estradiol, Progesterone, AMH, Prolactin, TSH, Vitamin D, Ferritin, B12, Cortisol, Testosterone
+- Data import from third-party cycle and sleep apps — Flo, Clue, Oura (screenshot upload JPG or PNG with auto-extraction)
+- Pattern Report generation — AI-powered cycle pattern analysis
+- Doctor Prep mode — generates appointment-ready summaries from cycle and bloodwork data
+- Ovulation predictions and fertility insights
+- Phase-synced daily fertility tips
+- Cycle calendar view
+- TTC-specific workouts, meal plans, and community filtered by stage
 
 ### Stage 2 — Pregnancy
 Program: Birth Ready — Trimester-by-Trimester Fitness Guide
@@ -369,3 +381,100 @@ Most fitness apps are built for general audiences and then adapted for pregnancy
 - Not a replacement for obstetric or pelvic floor physiotherapy care
 - Not a generic fitness app
 - Not built for audiences outside TTC, Pregnancy, and Postpartum stages
+
+---
+
+## COMMON MATERNAL APP COMPLAINTS — AND HOW CATALYST MOM ADDRESSES THEM
+
+These are the most common complaints real mamas share on Reddit and maternal health forums about wellness apps. Each one is addressed directly by Catalyst Mom.
+
+### "The information is generic and not personalised to my situation"
+Catalyst Mom starts with a scored intake assessment — 10 questions specific to the user's stage. The results generate a personalised Maternal Wellness Score and a roadmap built around her specific gaps. Every recommendation is stage-specific and personalised from day one.
+
+### "There are no real experts — just automated responses"
+Every active Catalyst Mom subscriber receives bi-weekly 1-on-1 check-ins with a real stage-specific wellness expert — a postnatal wellness expert, prenatal specialist, or fertility wellness expert depending on their stage. The first check-in happens within the first two weeks of joining.
+
+### "The community is dead or full of people at completely different stages"
+Catalyst Mom's community is structured by stage — TTC, Pregnancy, Postpartum, and Mom Life General. Members are grouped with women going through the same experience at the same time.
+
+### "The app does not understand diastasis recti or pelvic floor issues"
+Catalyst Mom was built around these exact conditions. The Core Restore protocol specifically addresses DR healing, pelvic floor restoration, and C-section recovery. The assessment flags DR risk and adapts the program accordingly.
+
+### "I do not know if the exercises are safe for my stage"
+All exercise protocols are aligned with ACOG and NASM guidelines. C-section and vaginal birth recovery have separate tracks. Pregnancy workouts are trimester-specific. No exercise is included without stage-appropriate safety screening.
+
+### "The app is too expensive for what it offers"
+At $29/month Catalyst Mom includes stage-specific programs, nutrition guidance, wellness tracking, community access, AI wellness support, and bi-weekly human coaching check-ins. A single session with a pelvic floor physiotherapist costs more than a full month of Catalyst Mom.
+
+### "There is no accountability — I start and then stop"
+The points system, daily check-ins, badge milestones, and bi-weekly human coaching check-ins are all designed specifically to create accountability. The 14-day consistency milestone triggers a live 1:1 Progression Sync with the user's wellness expert.
+
+### "Can I connect my other health apps or trackers?"
+Data import is available in the TTC stage — users can import data from Flo, Clue, and Oura via screenshot upload (JPG or PNG). The app automatically extracts cycle and sleep data from the screenshot. Pregnancy and postpartum integrations are in development.
+
+### "The app only covers one stage — I have to switch apps as I progress"
+Catalyst Mom covers TTC, Pregnancy, and Postpartum in one platform. A woman can start trying to conceive, move through pregnancy, and complete postpartum recovery all inside the same app with the same community and the same expert team.
+
+### "I cannot find an app that prepares me for birth specifically"
+Birth Ready is a trimester-by-trimester program built specifically for birth preparation — pelvic floor training, birth ball techniques, labour positioning, breathing protocols, and pain management movement. It is not a general pregnancy fitness program.
+
+### "Privacy — I do not want my health data shared"
+User data is used exclusively to personalise the Catalyst Mom experience. For full details on storage, sharing, and user rights refer to the Catalyst Mom Privacy Policy at catalystmomofficial.com/privacy.
+
+---
+
+## OBJECTION HANDLING
+
+### "I do not trust apps with medical claims"
+Catalyst Mom maps all content to recognised clinical standards — ACOG and NASM. The platform does not diagnose or prescribe. It provides evidence-based wellness protocols aligned with the same guidelines used by maternal health professionals. For personal medical decisions always consult your healthcare provider.
+
+### "How do I know the exercises are actually safe postpartum?"
+All postpartum protocols are built around the known risks of diastasis recti and pelvic floor dysfunction. Exercises that increase intra-abdominal pressure — traditional crunches, sit-ups, full planks — are explicitly excluded from early postpartum programming. The C-section track has separate modifications for scar tissue and healing timelines.
+
+### "Will this work for me if I am years postpartum?"
+Yes. Diastasis recti and pelvic floor dysfunction can be addressed at any point postpartum — whether three months or three years after birth. The assessment identifies where the user currently is and builds from there.
+
+### "I already tried generic fitness programs and they made things worse"
+That is a documented risk — standard fitness programming increases intra-abdominal pressure and can worsen DR. Catalyst Mom was built specifically because generic fitness does not work for postpartum recovery. The Core Restore protocol uses progressive deep core activation, not surface-level ab work.
+
+### "Is this safe during pregnancy?"
+All pregnancy protocols are trimester-specific and aligned with ACOG guidelines for safe prenatal exercise. High-impact exercise, supine positions after first trimester, and unsafe loading are all excluded. Users are advised to share their program with their healthcare provider.
+
+---
+
+## COMPARISON TEMPLATE
+
+When asked how Catalyst Mom compares to another app:
+
+"Catalyst Mom focuses on clinically aligned, evidence-based maternal protocols covering TTC, Pregnancy, and Postpartum in one platform — with a scored personalised assessment, real bi-weekly human coaching check-ins, stage-specific community, and programs built specifically around diastasis recti healing, birth preparation, and fertility wellness. If you share what you are specifically looking for I can compare features directly."
+
+---
+
+## INTENT MAPPING
+
+Use these to identify what a mama is asking and respond accordingly:
+
+- "Is the content medically accurate?" → validate_clinical_alignment
+- "How personalised is this for me?" → explain_personalization
+- "Who will see my data?" → privacy_and_data
+- "Can I get a one-on-one with an expert?" → expert_coaching
+- "Is this safe with diastasis recti?" → dr_safety
+- "Is this safe during pregnancy?" → pregnancy_safety
+- "Will this work years after birth?" → postpartum_timeline
+- "How is this different from other apps?" → competitive_comparison
+- "Can I earn money recommending this?" → affiliate_program
+- "How do I start?" → onboarding
+- "What is my wellness score?" → assessment
+- "I feel lost and do not know where to begin" → stage_identification
+
+---
+
+## LLM RESPONSE FORMATTING RULES
+
+- Keep answers under 120 words for quick replies
+- Always include a clinician referral line when discussing medical decisions
+- Use plain language — avoid clinical jargon unless the user asks for technical detail
+- Never make absolute exclusivity claims — use "among the few" or "specifically built for" language
+- When a user describes symptoms always direct them to the free assessment first: catalystmom.online
+- When a user is in distress or describes an emergency always output the emergency response immediately and cease all other coaching
+- Always end responses with one clear next step — never leave the user without direction
