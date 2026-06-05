@@ -7,7 +7,7 @@ import FeatureCard from './FeatureCard';
 
 const FeaturesSection = () => {
   return (
-    <section className="section-padding bg-white dark:bg-background">
+    <section aria-label="Features" className="section-padding bg-white dark:bg-background">
       <div className="container container-padding mx-auto">
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4 px-3 py-1 border-primary/30 text-primary dark:text-catalyst-gold dark:border-catalyst-gold/40">
