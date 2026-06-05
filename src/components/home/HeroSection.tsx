@@ -13,7 +13,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
   return (
-    <section className="hero-gradient pt-24 md:pt-32 pb-16 md:pb-24 overflow-hidden">
+    <header className="hero-gradient pt-24 md:pt-32 pb-16 md:pb-24 overflow-hidden">
       <div className="container px-4 mx-auto">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-12 md:mb-0">
