@@ -29,6 +29,7 @@ const BirthBallSafety = () => {
       <SEO
         title="Birth Ball Safety During Pregnancy | Catalyst Mom"
         description="Everything you need to know about using a birth ball safely during pregnancy — weight limits, inflation tips, when to stop, and red flags to watch for."
+        type="article"
         structuredData={articleSchema}
       />
       <div className="container px-4 mx-auto py-8 max-w-4xl">

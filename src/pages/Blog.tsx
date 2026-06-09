@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
+import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
@@ -142,9 +143,12 @@ const Blog = () => {
                 >
                   {blog.featured_image_url && (
                     <div className="w-full h-48 overflow-hidden">
-                      <img 
-                        src={blog.featured_image_url} 
+                      <img
+                        src={supabaseImgSrc(blog.featured_image_url, 700)}
+                        srcSet={supabaseImgSrcSet(blog.featured_image_url, [400, 700])}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
                         alt={blog.title}
+                        loading="lazy"
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                     </div>

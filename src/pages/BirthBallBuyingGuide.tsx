@@ -15,6 +15,7 @@ const BirthBallBuyingGuide = () => {
       <SEO
         title="Birth Ball Buying Guide | Catalyst Mom"
         description="How to choose the right birth ball for pregnancy and labor. Size guide, safety tips, top picks, and everything you need to know before you buy."
+        type="article"
       />
       <div className="container px-4 mx-auto py-8 max-w-4xl">
         <Button variant="ghost" asChild className="mb-6">

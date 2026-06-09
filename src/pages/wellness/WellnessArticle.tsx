@@ -263,6 +263,7 @@ const WellnessArticle = () => {
       <SEO
         title={`${article.title} | Catalyst Mom`}
         description={DOMPurify.sanitize(article.content, { ALLOWED_TAGS: [] }).trim().substring(0, 160)}
+        type="article"
       />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">

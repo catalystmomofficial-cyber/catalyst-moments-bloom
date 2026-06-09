@@ -29,6 +29,7 @@ const BirthBallEducation = () => {
       <SEO
         title="Birth Ball Pelvic Floor Guide | Catalyst Mom"
         description="Learn how birth ball exercises support pelvic floor health during pregnancy. Evidence-based education on positioning, engagement, and postpartum recovery."
+        type="article"
         structuredData={articleSchema}
       />
       <div className="container px-4 mx-auto py-8 max-w-4xl">

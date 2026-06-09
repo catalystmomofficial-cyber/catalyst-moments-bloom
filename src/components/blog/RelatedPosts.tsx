@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
@@ -80,9 +81,12 @@ export const RelatedPosts = ({ currentPostId, currentTags = [] }: RelatedPostsPr
           >
             {post.featured_image_url && (
               <div className="w-full h-40 overflow-hidden">
-                <img 
-                  src={post.featured_image_url} 
+                <img
+                  src={supabaseImgSrc(post.featured_image_url, 600)}
+                  srcSet={supabaseImgSrcSet(post.featured_image_url, [300, 600])}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 300px"
                   alt={post.title}
+                  loading="lazy"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>

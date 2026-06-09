@@ -43,9 +43,11 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               <div className="absolute bottom-8 -right-8 w-40 h-40 bg-catalyst-copper/10 rounded-full animate-float"></div>
               <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
                 <AspectRatio ratio={4/5} className="bg-muted">
-                  <img 
-                    src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" 
-                    alt="Mom with baby using laptop" 
+                  <img
+                    src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80"
+                    srcSet="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=80 1200w"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    alt="Mom with baby using laptop"
                     className="object-cover h-full w-full"
                     onError={(e) => {
                       e.currentTarget.src = "/placeholder.svg";
