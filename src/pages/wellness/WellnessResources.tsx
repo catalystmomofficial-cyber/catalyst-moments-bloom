@@ -21,6 +21,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
 import momodoroCover from '@/assets/momodoro-planner-cover.png';
@@ -527,6 +528,10 @@ const WellnessResources = () => {
 
   return (
     <PageLayout>
+      <SEO
+        title="Wellness Resources for Moms | Catalyst Mom"
+        description="Guides, planners, and tools for maternal wellness — self-care, stress relief, sleep, nutrition, and mindfulness resources for pregnancy and postpartum."
+      />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">

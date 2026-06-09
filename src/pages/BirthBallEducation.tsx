@@ -8,6 +8,19 @@ import { ArrowLeft, Brain, Heart, TrendingUp, CheckCircle, AlertCircle } from 'l
 import { educationalContent } from '@/data/birthBallGuideData';
 import pelvicFloorDiagram from '@/assets/birth-ball/pelvic-floor-diagram.png';
 
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Birth Ball Pelvic Floor Guide",
+  "description": "Learn how birth ball exercises support pelvic floor health during pregnancy.",
+  "url": "https://catalystmomofficial.com/birth-ball-guide/education",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Catalyst Mom",
+    "logo": { "@type": "ImageObject", "url": "https://catalystmomofficial.com/catalyst-mom-logo.png" }
+  }
+};
+
 const BirthBallEducation = () => {
   const { pelvicFloor } = educationalContent;
 
@@ -16,6 +29,7 @@ const BirthBallEducation = () => {
       <SEO
         title="Birth Ball Pelvic Floor Guide | Catalyst Mom"
         description="Learn how birth ball exercises support pelvic floor health during pregnancy. Evidence-based education on positioning, engagement, and postpartum recovery."
+        structuredData={articleSchema}
       />
       <div className="container px-4 mx-auto py-8 max-w-4xl">
         <Button variant="ghost" asChild className="mb-6">

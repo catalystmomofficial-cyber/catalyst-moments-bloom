@@ -11,11 +11,25 @@ import { educationalContent } from '@/data/birthBallGuideData';
 const BirthBallFAQ = () => {
   const { troubleshooting, quickstart } = educationalContent;
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": troubleshooting.commonMistakes.map(item => ({
+      "@type": "Question",
+      "name": item.mistake,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.fix
+      }
+    }))
+  };
+
   return (
     <PageLayout>
       <SEO
         title="Birth Ball FAQ | Catalyst Mom"
         description="Answers to the most common birth ball questions — when to start, how to use, safety during pregnancy, and tips for labor and postpartum recovery."
+        structuredData={faqSchema}
       />
       <div className="container px-4 mx-auto py-8 max-w-4xl">
         <Button variant="ghost" asChild className="mb-6">

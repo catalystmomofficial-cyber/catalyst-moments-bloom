@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Video, Headphones, ArrowLeft, Star, Clock, Users } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 
 const WellnessArticle = () => {
   const { id } = useParams();
@@ -259,10 +260,14 @@ const WellnessArticle = () => {
 
   return (
     <PageLayout>
+      <SEO
+        title={`${article.title} | Catalyst Mom`}
+        description={DOMPurify.sanitize(article.content, { ALLOWED_TAGS: [] }).trim().substring(0, 160)}
+      />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="mb-6"
             onClick={() => window.history.back()}
           >
