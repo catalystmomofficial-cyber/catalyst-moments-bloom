@@ -284,7 +284,7 @@ const WellnessArticle = () => {
                 </Badge>
               </div>
               
-              <CardTitle className="text-2xl mb-4">{article.title}</CardTitle>
+              <h1 className="text-2xl font-semibold mb-4">{article.title}</h1>
               
               <div className="flex items-center gap-6 text-sm text-muted-foreground mb-4">
                 <div className="flex items-center gap-1">

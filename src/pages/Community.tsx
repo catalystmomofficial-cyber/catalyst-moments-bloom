@@ -85,7 +85,7 @@ const Community = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-bold mb-2 gradient-text">Community Hub</h2>
+            <h1 className="text-3xl font-bold mb-2 gradient-text">Community Hub</h1>
             <p className="text-muted-foreground mb-4 md:mb-0">Connect and share with other moms on similar journeys</p>
           </div>
           <div className="flex items-center space-x-3">
