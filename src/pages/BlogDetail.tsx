@@ -169,6 +169,7 @@ const BlogDetail = () => {
         description={blog.excerpt || blog.content.replace(/<[^>]*>/g, '').substring(0, 160)}
         image={blog.featured_image_url}
         canonical={`${window.location.origin}/blog/${slug}`}
+        type="article"
         structuredData={faqSchema ? [structuredData, faqSchema] : structuredData}
       />
       <article className="container mx-auto px-4 py-8" itemScope itemType="https://schema.org/BlogPosting">

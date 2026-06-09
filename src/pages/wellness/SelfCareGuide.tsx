@@ -1,5 +1,6 @@
 import React from 'react';
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -61,6 +62,10 @@ const SelfCareGuide = () => {
 
   return (
     <PageLayout>
+      <SEO
+        title="Self-Care Guide for Moms | Catalyst Mom"
+        description="Practical self-care routines for busy moms — 5-minute energy boosters, stress relief techniques, and restorative practices for pregnancy and postpartum."
+      />
       <div className="container px-4 mx-auto">
         <div className="flex items-center gap-4 mb-6">
           <Button variant="outline" size="sm" asChild>

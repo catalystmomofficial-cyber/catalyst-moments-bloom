@@ -1,5 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { logNotFound } from "@/lib/notFoundLogger";
 import { Button } from "@/components/ui/button";
 
@@ -14,6 +15,10 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
+      <Helmet>
+        <title>Page Not Found | Catalyst Mom</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <div className="text-center max-w-md">
         <h1 className="text-6xl font-bold mb-4 text-primary">404</h1>
         <p className="text-xl text-foreground mb-2">Page not found</p>

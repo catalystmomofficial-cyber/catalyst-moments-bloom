@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 
 const HTML = `
 <style>
@@ -233,6 +234,10 @@ const PrivacyPolicy = () => {
 
   return (
     <PageLayout withPadding={false}>
+      <SEO
+        title="Privacy Policy | Catalyst Mom"
+        description="Read the Catalyst Mom privacy policy to understand how we collect, use, and protect your personal information."
+      />
       <div dangerouslySetInnerHTML={{ __html: HTML }} />
     </PageLayout>
   );

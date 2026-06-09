@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { Camera, Image as ImageIcon, RefreshCw, AlertCircle } from 'lucide-react';
 import PageLayout from "@/components/layout/PageLayout";
+import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -144,6 +145,10 @@ const FoodCalorieChecker = () => {
 
   return (
     <PageLayout>
+      <SEO
+        title="Food Calorie Checker | Catalyst Mom"
+        description="Instantly look up nutrition info for any food. Track calories, protein, carbs, and fat during pregnancy and postpartum with our AI-powered calorie checker."
+      />
       <div className="container py-8">
         <h1 className="text-3xl font-bold mb-6">Food Calorie Checker</h1>
         
