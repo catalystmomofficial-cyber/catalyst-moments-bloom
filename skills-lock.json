@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "distribb": {
+      "source": "Bomx/distribb-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "d882a56a5633dc9c4c4b675f7c193bdccda735feac868d0dcfd48b3251201a8a"
+    }
+  }
+}
