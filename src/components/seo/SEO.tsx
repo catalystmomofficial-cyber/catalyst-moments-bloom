@@ -6,14 +6,18 @@ interface SEOProps {
   description: string;
   canonical?: string;
   image?: string;
-  structuredData?: Record<string, any>;
+  type?: "website" | "article";
+  structuredData?: Record<string, any> | Record<string, any>[];
+  noindex?: boolean;
 }
 
-const SEO = ({ title, description, canonical, image, structuredData }: SEOProps) => {
+const SEO = ({ title, description, canonical, image, type = "website", structuredData, noindex = false }: SEOProps) => {
   const location = useLocation();
   const url = canonical || `https://catalystmomofficial.com${location.pathname}`;
 
-  const jsonLd = structuredData ? JSON.stringify(structuredData) : undefined;
+  const schemas = structuredData
+    ? (Array.isArray(structuredData) ? structuredData : [structuredData])
+    : [];
 
   return (
     <Helmet>
@@ -22,12 +26,12 @@ const SEO = ({ title, description, canonical, image, structuredData }: SEOProps)
       <meta name="title" content={title} />
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
-      
-      {/* Robots */}
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
-      {/* Open Graph / Facebook */}
-      <meta property="og:type" content="article" />
+      {/* Robots */}
+      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"} />
+
+      {/* Open Graph */}
+      <meta property="og:type" content={type} />
       <meta property="og:site_name" content="Catalyst Mom" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
@@ -48,26 +52,22 @@ const SEO = ({ title, description, canonical, image, structuredData }: SEOProps)
       <meta name="twitter:description" content={description} />
       {image && <meta name="twitter:image" content={image} />}
       {image && <meta name="twitter:image:alt" content={title} />}
-      
-      {/* LinkedIn */}
-      <meta property="og:site_name" content="Catalyst Mom" />
-      
+
       {/* Pinterest */}
       <meta name="pinterest-rich-pin" content="true" />
-      {image && <meta property="og:image" content={image} />}
-      
+
       {/* Additional SEO */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       <meta name="language" content="English" />
-      
+
       {/* Sitemap reference */}
       <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
       {/* JSON-LD Structured Data */}
-      {jsonLd && (
-        <script type="application/ld+json">{jsonLd}</script>
-      )}
+      {schemas.map((schema, i) => (
+        <script key={i} type="application/ld+json">{JSON.stringify(schema)}</script>
+      ))}
     </Helmet>
   );
 };

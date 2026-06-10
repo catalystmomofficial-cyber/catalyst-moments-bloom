@@ -1,8 +1,13 @@
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 
 const Research = () => {
   return (
     <PageLayout>
+      <SEO
+        title="Pregnancy & Postpartum Research | Catalyst Mom"
+        description="Evidence-based research on pregnancy wellness, postpartum recovery, nutrition, and fitness. Science-backed insights for moms at every stage."
+      />
       <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap"
         rel="stylesheet"

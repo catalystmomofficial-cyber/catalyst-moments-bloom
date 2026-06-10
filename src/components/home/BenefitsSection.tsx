@@ -59,9 +59,12 @@ const BenefitsSection = () => {
               <div className="space-y-4">
                 <div className="rounded-xl overflow-hidden shadow-soft">
                   <AspectRatio ratio={1/1}>
-                    <img 
-                      src="https://images.unsplash.com/photo-1609220136736-443140cffec6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" 
+                    <img
+                      src="https://images.unsplash.com/photo-1609220136736-443140cffec6?auto=format&fit=crop&w=700&q=80"
+                      srcSet="https://images.unsplash.com/photo-1609220136736-443140cffec6?auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1609220136736-443140cffec6?auto=format&fit=crop&w=700&q=80 700w"
+                      sizes="(max-width: 768px) 50vw, 350px"
                       alt="Mother and baby"
+                      loading="lazy"
                       className="object-cover h-full w-full"
                       onError={(e) => {
                         e.currentTarget.src = "/placeholder.svg";
@@ -71,9 +74,12 @@ const BenefitsSection = () => {
                 </div>
                 <div className="rounded-xl overflow-hidden shadow-soft translate-x-6">
                   <AspectRatio ratio={4/5}>
-                    <img 
-                      src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+                    <img
+                      src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=700&q=80"
+                      srcSet="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=700&q=80 700w"
+                      sizes="(max-width: 768px) 50vw, 350px"
                       alt="Mother doing yoga"
+                      loading="lazy"
                       className="object-cover h-full w-full"
                       onError={(e) => {
                         e.currentTarget.src = "/placeholder.svg";
@@ -85,9 +91,12 @@ const BenefitsSection = () => {
               <div className="space-y-4 translate-y-10">
                 <div className="rounded-xl overflow-hidden shadow-soft">
                   <AspectRatio ratio={4/5}>
-                     <img 
-                       src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=800&q=80"
+                     <img
+                       src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=700&q=80"
+                       srcSet="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=700&q=80 700w"
+                       sizes="(max-width: 768px) 50vw, 350px"
                        alt="Woman using wellness app"
+                       loading="lazy"
                       className="object-cover h-full w-full"
                       onError={(e) => {
                         e.currentTarget.src = "/placeholder.svg";
@@ -97,9 +106,12 @@ const BenefitsSection = () => {
                 </div>
                 <div className="rounded-xl overflow-hidden shadow-soft">
                   <AspectRatio ratio={1/1}>
-                    <img 
-                      src="https://images.unsplash.com/photo-1591343395082-e120087004b4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80"
+                    <img
+                      src="https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=700&q=80"
+                      srcSet="https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=700&q=80 700w"
+                      sizes="(max-width: 768px) 50vw, 350px"
                       alt="Family outdoors"
+                      loading="lazy"
                       className="object-cover h-full w-full"
                       onError={(e) => {
                         e.currentTarget.src = "/placeholder.svg";

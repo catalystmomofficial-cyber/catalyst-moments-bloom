@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 
 const HTML = `
 <style>
@@ -221,6 +222,10 @@ const TermsOfService = () => {
 
   return (
     <PageLayout withPadding={false}>
+      <SEO
+        title="Terms of Service | Catalyst Mom"
+        description="Read the Catalyst Mom terms of service governing use of our pregnancy and postpartum wellness platform."
+      />
       <div dangerouslySetInnerHTML={{ __html: HTML }} />
     </PageLayout>
   );

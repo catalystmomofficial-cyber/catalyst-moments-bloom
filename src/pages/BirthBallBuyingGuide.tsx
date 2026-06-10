@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,11 @@ const BirthBallBuyingGuide = () => {
 
   return (
     <PageLayout>
+      <SEO
+        title="Birth Ball Buying Guide | Catalyst Mom"
+        description="How to choose the right birth ball for pregnancy and labor. Size guide, safety tips, top picks, and everything you need to know before you buy."
+        type="article"
+      />
       <div className="container px-4 mx-auto py-8 max-w-4xl">
         <Button variant="ghost" asChild className="mb-6">
           <Link to="/birth-ball-guide">

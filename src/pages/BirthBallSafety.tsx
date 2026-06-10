@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -7,11 +8,30 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowLeft, ShieldCheck, Droplets, AlertTriangle, CheckCircle } from 'lucide-react';
 import { educationalContent } from '@/data/birthBallGuideData';
 
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Birth Ball Safety During Pregnancy",
+  "description": "Everything you need to know about using a birth ball safely during pregnancy.",
+  "url": "https://catalystmomofficial.com/birth-ball-guide/safety",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Catalyst Mom",
+    "logo": { "@type": "ImageObject", "url": "https://catalystmomofficial.com/catalyst-mom-logo.png" }
+  }
+};
+
 const BirthBallSafety = () => {
   const { safety } = educationalContent;
 
   return (
     <PageLayout>
+      <SEO
+        title="Birth Ball Safety During Pregnancy | Catalyst Mom"
+        description="Everything you need to know about using a birth ball safely during pregnancy — weight limits, inflation tips, when to stop, and red flags to watch for."
+        type="article"
+        structuredData={articleSchema}
+      />
       <div className="container px-4 mx-auto py-8 max-w-4xl">
         <Button variant="ghost" asChild className="mb-6">
           <Link to="/birth-ball-guide">

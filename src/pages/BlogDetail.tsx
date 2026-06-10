@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
+import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
@@ -169,6 +170,7 @@ const BlogDetail = () => {
         description={blog.excerpt || blog.content.replace(/<[^>]*>/g, '').substring(0, 160)}
         image={blog.featured_image_url}
         canonical={`${window.location.origin}/blog/${slug}`}
+        type="article"
         structuredData={faqSchema ? [structuredData, faqSchema] : structuredData}
       />
       <article className="container mx-auto px-4 py-8" itemScope itemType="https://schema.org/BlogPosting">
@@ -184,8 +186,10 @@ const BlogDetail = () => {
           />
           {blog.featured_image_url && (
             <figure className="w-full h-96 overflow-hidden rounded-lg mb-8">
-              <img 
-                src={blog.featured_image_url} 
+              <img
+                src={supabaseImgSrc(blog.featured_image_url, 1200)}
+                srcSet={supabaseImgSrcSet(blog.featured_image_url, [400, 800, 1200])}
+                sizes="(max-width: 1024px) 100vw, 1200px"
                 alt={`Featured image for ${blog.title} - Catalyst Mom Blog`}
                 itemProp="image"
                 className="w-full h-full object-cover"

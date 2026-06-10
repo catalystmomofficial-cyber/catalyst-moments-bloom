@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Clock, CheckCircle, XCircle } from "lucide-react";
 import PageLayout from "@/components/layout/PageLayout";
+import SEO from "@/components/seo/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import AffiliateSignupModal from "@/components/affiliate/AffiliateSignupModal";
@@ -82,6 +83,10 @@ export default function Affiliate() {
 
   return (
     <PageLayout>
+      <SEO
+        title="Affiliate Program | Catalyst Mom"
+        description="Join the Catalyst Mom affiliate program. Earn commissions sharing pregnancy and postpartum wellness resources you already love."
+      />
       <div className="affiliate-landing">
         <style>{`
           .affiliate-landing {

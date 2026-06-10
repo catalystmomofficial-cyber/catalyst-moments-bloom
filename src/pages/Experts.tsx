@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
+import SEO from '@/components/seo/SEO';
 
 const useReveal = <T extends HTMLElement>() => {
   const ref = useRef<T | null>(null);
@@ -24,6 +25,10 @@ const Experts = () => {
 
   return (
     <PageLayout>
+      <SEO
+        title="Our Experts | Catalyst Mom"
+        description="Meet the certified fitness trainers, registered dietitians, and maternal health specialists behind Catalyst Mom's pregnancy and postpartum programs."
+      />
       <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
         rel="stylesheet"
