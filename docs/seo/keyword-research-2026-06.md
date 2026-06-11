@@ -74,6 +74,22 @@ Mom blogs rank alongside Calm and Mayo — winnable with list formats.
 | self care for new moms postpartum | Informational | Low | Spoke; bridges to postpartum clusters |
 | mom burnout signs and recovery | Informational | Medium | Spoke; links to community |
 
+## Cluster 6 — TTC / Trying to Conceive (Catalyst Mom offers TTC tools)
+
+Head terms ("how to get pregnant") are owned by Mayo/WebMD/American Pregnancy —
+but method-specific and tool-adjacent long-tail is winnable, and it feeds the
+app's TTC pattern reports and cycle tracking directly.
+
+| Keyword | Intent | SERP difficulty | Action |
+|---|---|---|---|
+| how to track ovulation when trying to conceive | Informational | Medium | Pillar → TTC dashboard/pattern reports (Flo and clinic blogs rank — beatable) |
+| how to get pregnant faster | Informational | High (WebMD/Mayo) | Cover via tips listicle, win featured-snippet fragments not the head term |
+| basal body temperature chart TTC | Informational | Medium | Spoke; tool-shaped content |
+| ovulation predictor kit how to use / when to test | Informational | Low-Medium | Spoke; product-guide format |
+| cervical mucus stages fertility | Informational | Medium | Spoke; visual/explainer format |
+| TTC diet fertility foods | Informational | Medium | Spoke; bridges to nutrition cluster + meal plan tool |
+| when to see a fertility specialist | Informational | Medium | Spoke; trust-building, links to experts page |
+
 ---
 
 ## Recommended priority order
@@ -86,6 +102,9 @@ Mom blogs rank alongside Calm and Mayo — winnable with list formats.
 4. **Postpartum workout plan** — plan-format content around the medical SERPs.
 5. **Self-care listicles** — cheap top-of-funnel volume, internal-link them into
    clusters 2-4.
+6. **TTC ovulation-tracking pillar + spokes** — feeds the TTC pattern reports
+   feature; widens the funnel to pre-pregnancy users who later convert through
+   pregnancy and postpartum content.
 
 ## Internal linking matrix (hub-and-spoke)
 
