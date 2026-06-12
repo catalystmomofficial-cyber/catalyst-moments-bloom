@@ -234,6 +234,18 @@ const FAQ = () => {
                     <div className="faq-answer">
                       <div className="faq-answer-inner">
                         <p>{item.a}</p>
+                        {idx === 0 && (
+                          <p>
+                            Read more recovery tips on our{' '}
+                            <Link to="/blog" className="underline hover:opacity-80">wellness blog</Link>.
+                          </p>
+                        )}
+                        {idx === 7 && (
+                          <p>
+                            Learn more about why we built Catalyst Mom on our{' '}
+                            <Link to="/about" className="underline hover:opacity-80">about page</Link>.
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

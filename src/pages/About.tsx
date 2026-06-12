@@ -423,7 +423,10 @@ const About = () => {
               </div>
             </div>
             <p>
-              Every workout is designed for where she actually is — not where the internet assumes she should be. Every guide is built around the real challenges: diastasis recti, pelvic floor weakness, fertility, the postpartum core, the mental weight of matrescence.
+              Every workout is designed for where she actually is — not where the internet assumes she should be. Every guide is built around the real challenges: diastasis recti, pelvic floor weakness, fertility, the postpartum core, the mental weight of matrescence. These standards are detailed on our{' '}
+              <Link to="/research" className="underline hover:opacity-80">research page</Link>, and informed by the{' '}
+              <Link to="/experts" className="underline hover:opacity-80">specialists</Link>{' '}
+              we partner with.
             </p>
             <p>
               And it is led by women, for women. <strong>Because every Catalyst Mom is a woman who has been through it</strong> — and is now lighting the way for the one behind her.
@@ -472,6 +475,13 @@ const About = () => {
                 </div>
               </div>
             </div>
+            <p>
+              Want to see these beliefs in action? Browse our{' '}
+              <Link to="/blog" className="underline hover:opacity-80">wellness blog</Link>{' '}
+              for evidence-based articles, or visit our{' '}
+              <Link to="/faq" className="underline hover:opacity-80">FAQ page</Link>{' '}
+              if you have questions about getting started.
+            </p>
           </article>
         </div>
 
