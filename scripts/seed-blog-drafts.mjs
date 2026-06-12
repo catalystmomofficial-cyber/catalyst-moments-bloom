@@ -57,6 +57,34 @@ export const DRAFTS = [
 
 <h2>Keep Going</h2>
 <p>Want guided routines with pictures and timers? Our free <a href="/birth-ball-guide">Birth Ball Guide</a> includes trimester-by-trimester exercises, an <a href="/birth-ball-guide/early-labor">early labor section</a>, and a <a href="/birth-ball-guide/breathing-practice">breathing practice</a> to pair with every movement.</p>
+<h2>The Honest Part Most Blogs Skip</h2>
+<p>No movement — ball, walking, curb-walking, pineapple, any of it — starts labor before your body and baby are ready. What birth ball work actually does is remove the mechanical obstacles (tight pelvis, awkward baby position) so that when labor is ready to start, nothing is in its way. That reframe matters: if you bounce for three days and nothing happens, the ball did not fail. Your body is still finishing its prep.</p>
+
+<h2>A Realistic Day-by-Day Rhythm (38+ Weeks)</h2>
+<table>
+<thead><tr><th>Time</th><th>Movement</th><th>How long</th></tr></thead>
+<tbody>
+<tr><td>Morning</td><td>Gentle bouncing while having breakfast or watching TV</td><td>10 min</td></tr>
+<tr><td>Midday</td><td>Hip circles, both directions</td><td>5 min</td></tr>
+<tr><td>Afternoon</td><td>Replace your desk or sofa chair with the ball</td><td>20–30 min of just sitting</td></tr>
+<tr><td>Evening</td><td>Figure 8s, then the kneeling lean while your partner massages your back</td><td>10 min</td></tr>
+</tbody>
+</table>
+<p>Consistency over days beats one heroic two-hour session. Sitting on the ball instead of slouching into a couch may be the single most useful habit on this list — couch-slouching encourages baby into a back-to-your-back position, which is associated with longer, harder back labor.</p>
+
+<h2>Signs It Is Helping — and Signs to Stop</h2>
+<ul>
+<li><strong>Encouraging:</strong> more pelvic pressure, lightning-crawl sensations, loss of mucus plug, baby feeling lower, irregular practice contractions becoming more noticeable.</li>
+<li><strong>Stop and call your provider:</strong> bleeding, fluid leaking, painful regular contractions before 37 weeks, dizziness, or a noticeable drop in baby movement.</li>
+</ul>
+
+<h2>Birth Ball &amp; Labor FAQ</h2>
+<h3>How long should I bounce on a birth ball to encourage labor?</h3>
+<p>Short, frequent sessions — 10–15 minutes a few times a day — outperform marathon sessions and will not exhaust you before the actual event. There is no evidence that more hours equals faster labor.</p>
+<h3>Can bouncing on a birth ball break your water?</h3>
+<p>Gentle bouncing will not rupture healthy membranes. If your water does release while on the ball, it was ready to go regardless — note the time, color, and amount, and call your provider.</p>
+<h3>Does it work at 38 or 39 weeks?</h3>
+<p>You can absolutely do all of these movements then — they improve comfort and positioning at any late-pregnancy week. Just hold the expectation loosely: the closer your body already is to labor, the more these movements appear to "work."</p>
 ${DISCLAIMER}`,
   },
   {
@@ -97,6 +125,24 @@ ${DISCLAIMER}`,
 <li>5'10" and taller: 75 cm ball</li>
 </ul>
 <p>Check the fit: sitting on the ball, your hips should be level with or slightly higher than your knees. More sizing help and anti-burst safety tips in our <a href="/birth-ball-guide/safety">safety guide</a> and <a href="/birth-ball-guide/faq">FAQ</a>.</p>
+<h2>The Positions Labor Nurses Actually Set Up</h2>
+<p>If you do end up with a peanut ball, these are the two configurations used most on labor floors:</p>
+<ul>
+<li><strong>Side-lying:</strong> you lie on your side, the peanut ball goes between your knees with both legs resting over it. This keeps the pelvic outlet open during epidural rest, and nurses typically rotate you to the other side every 30–60 minutes.</li>
+<li><strong>Flying cowgirl:</strong> lying on your side, your top leg drapes forward over the ball while the bottom leg stays straight. Often used to help a baby rotate out of a posterior position.</li>
+</ul>
+<p>Knowing the names means you can simply ask your nurse, "Can we try the peanut ball side-lying?" — most will be delighted you know what it is.</p>
+
+<h2>Our Honest Buying Advice</h2>
+<p>This is the part most gear roundups will not tell you, because they earn commission on both balls: <strong>most moms should not buy a peanut ball.</strong> It is a single-purpose tool for a window of hours, hospitals increasingly stock them, and used ones resell constantly because they get used once. Put the money toward a quality anti-burst round ball (under $30) that you will sit on daily for months — or toward a postnatal program you will actually use, like <a href="/workouts/core-restore-foundations">Core Restore Foundations</a>.</p>
+
+<h2>Peanut Ball vs Birth Ball FAQ</h2>
+<h3>Can I use a regular gym exercise ball as a birth ball?</h3>
+<p>If it is anti-burst rated (it should say so explicitly) and sized so your hips sit level with or above your knees, yes — birth balls and quality exercise balls are the same product with different marketing. Avoid cheap, thin-walled balls.</p>
+<h3>What size peanut ball do I need?</h3>
+<p>Most women fit a 50 cm peanut ball; very tall women (5'10"+) may prefer 60 cm. When in doubt, the smaller size is usually the right call — oversized peanut balls strain the hips.</p>
+<h3>Do I need either one for a planned C-section?</h3>
+<p>For the birth itself, no. But the round ball still earns its place in pregnancy (back pain, posture) and in <a href="/blog/c-section-recovery-exercises-week-by-week">post-cesarean recovery</a> as a gentle core tool later on.</p>
 ${DISCLAIMER}`,
   },
   {
@@ -211,6 +257,30 @@ ${DISCLAIMER}`,
 
 <h2>What to Do With Your Result</h2>
 <p>If you found a gap, do not panic and do not start crunches. Begin with breath-led deep core work — our guide to <a href="/blog/diastasis-recti-exercises">safe diastasis recti exercises</a> covers the exact starting moves, and the <a href="/workouts/core-restore-foundations">Core Restore Foundations program</a> turns them into a progressive weekly plan.</p>
+<h2>A Fact That Should Lower Your Stress</h2>
+<p>By the third trimester, essentially <strong>100% of pregnant women have some degree of ab separation</strong> — it is how the body makes room, not an injury. Around 60% still measure a gap at six weeks postpartum, and roughly a third without targeted work still have one at a year. So a positive self-test does not mean something went wrong; it means you now have a baseline and a plan.</p>
+
+<h2>Track It Properly: A Simple Log</h2>
+<p>Re-test every two weeks, same time of day, and log four things. Tension is the number that predicts how your core <em>functions</em> — watch it as closely as width.</p>
+<table>
+<thead><tr><th>Date</th><th>Width above navel</th><th>Width at navel</th><th>Tissue feel (soft / springy / firm)</th></tr></thead>
+<tbody>
+<tr><td>Week 0</td><td>e.g., 3 fingers</td><td>e.g., 3.5 fingers</td><td>soft</td></tr>
+<tr><td>Week 2</td><td>…</td><td>…</td><td>…</td></tr>
+<tr><td>Week 4</td><td>…</td><td>…</td><td>…</td></tr>
+</tbody>
+</table>
+
+<h2>What a Pelvic Floor PT Checks That You Cannot</h2>
+<p>The finger test is a screening tool, not a full assessment. A pelvic floor physical therapist will also evaluate how your linea alba behaves under load, whether your pelvic floor co-contracts with your deep abs, your breathing mechanics, and any doming patterns during real movements. If your self-test shows 4+ fingers, a very soft trench, or no change after 6–8 weeks of consistent work, that one-hour assessment is the highest-value next step available.</p>
+
+<h2>Diastasis Self-Test FAQ</h2>
+<h3>Does everyone have a gap right after birth?</h3>
+<p>Yes — immediately postpartum, separation is universal and expected. That is why testing before 2–3 weeks gives misleadingly scary numbers. Wait, then measure.</p>
+<h3>Can diastasis recti get worse on its own?</h3>
+<p>It can, if daily mechanics keep loading the midline — repeated crunch-style sit-ups out of bed, breath-holding while lifting, chronic constipation straining. The fix is the same habit set covered in our <a href="/blog/exercises-to-avoid-diastasis-recti">exercises-to-avoid guide</a>.</p>
+<h3>Is a 1–2 finger gap something to fix?</h3>
+<p>Up to about one finger with firm tension is considered functionally normal post-baby. Two fingers with good tension and no symptoms is usually fine too — train normally and re-check occasionally.</p>
 ${DISCLAIMER}`,
   },
   {
@@ -248,6 +318,31 @@ ${DISCLAIMER}`,
 
 <h2>When Can I Go Back to Normal Workouts?</h2>
 <p>When you can do the foundational moves with zero doming and your gap shows firm tension (re-test with our <a href="/blog/how-to-check-diastasis-recti-at-home">self-check guide</a>), begin re-introducing harder exercises one at a time. The <a href="/workouts/core-restore-foundations">Core Restore Foundations program</a> sequences this return for you, from first breath work to full strength training.</p>
+<h2>The Gray Zone: It Depends on YOUR Core Today</h2>
+<p>Here is the nuance most "avoid lists" miss: these are not banned exercises, they are <strong>not-yet exercises</strong>. The same front plank that domes your midline at 6 weeks postpartum may be perfectly safe at 16 weeks. The exercise is never the problem — the mismatch between load and your current capacity is. That is why the doming check beats any list, including this one.</p>
+
+<h2>How to Re-Test an Exercise Back In</h2>
+<ol>
+<li><strong>Pick the easiest version.</strong> Wall push-up before incline, incline before floor.</li>
+<li><strong>Do 3 slow reps while watching or feeling your midline.</strong> Hand on your belly works if you cannot see it.</li>
+<li><strong>Pass:</strong> flat midline, no bulge, you could breathe normally → keep it, add 2 reps each session.</li>
+<li><strong>Fail:</strong> any doming, pulling at the midline, or breath-holding → shelve it for two more weeks and stay with the regression.</li>
+<li><strong>One new exercise per week, maximum.</strong> If something flares, you will know exactly which one.</li>
+</ol>
+
+<h2>Exercises People Worry About Unnecessarily</h2>
+<ul>
+<li><strong>Walking</strong> — safe from day one for most moms, and genuinely useful for recovery. Walk freely.</li>
+<li><strong>Swimming</strong> — once postpartum bleeding has fully stopped and any incision is healed, the water's support makes it one of the friendliest full-body options.</li>
+<li><strong>Carrying your baby</strong> — unavoidable and fine; just exhale on the lift and keep baby close to your body.</li>
+<li><strong>Squats to a chair</strong> — these strengthen exactly the muscles that protect your midline. Encouraged, not avoided.</li>
+</ul>
+
+<h2>FAQ</h2>
+<h3>Will I ever be able to do crunches again?</h3>
+<p>Almost certainly yes. Once your midline holds tension under load, crunches are just another exercise to re-test in with the 5-step process above. Many moms are back to full ab training within 4–6 months of consistent rehab.</p>
+<h3>How long do I need to avoid these exercises?</h3>
+<p>It is capacity-based, not calendar-based — typically 8–16 weeks of progressive deep-core work before the most demanding moves pass the doming test. Track it with the <a href="/blog/how-to-check-diastasis-recti-at-home">self-test</a> every two weeks.</p>
 ${DISCLAIMER}`,
   },
   {
@@ -300,6 +395,29 @@ ${DISCLAIMER}`,
 
 <h2>Make It a Plan, Not a Guess</h2>
 <p>Our <a href="/workouts/core-restore-foundations">Core Restore Foundations program</a> is built for exactly this comeback, and the <a href="/workout-plan">workout plan builder</a> can schedule your weekly progression around real life with a newborn.</p>
+<h2>What No One Tells You About C-Section Recovery</h2>
+<ul>
+<li><strong>Numbness around the scar is normal — for months.</strong> Nerves regrow slowly; many moms describe a numb or tingling band above the incision for 6–12 months. Sensation usually returns gradually.</li>
+<li><strong>The "shelf" is not permanent for most moms.</strong> The overhang above the scar is a mix of healing tissue, fluid, and core weakness — all three improve with time, scar mobility work, and the deep-core training in this guide.</li>
+<li><strong>Your first laugh, cough, and sneeze will be memorable.</strong> Keep a small pillow within reach for the first two weeks and brace it gently against the incision.</li>
+<li><strong>Emotional recovery counts as recovery.</strong> An unplanned cesarean in particular can take processing. Talking it through — with your provider, a counselor, or moms who have been there in our <a href="/community">community</a> — is part of healing, not separate from it.</li>
+</ul>
+
+<h2>Scar Massage: The Most Skipped Step</h2>
+<p>Once your provider confirms the incision is fully closed (commonly around 6–8 weeks), gentle scar mobilization helps prevent the scar tissue from adhering to layers beneath it — adhesions are a sneaky source of later core and hip discomfort.</p>
+<ol>
+<li>With clean hands, place two fingers just above the scar.</li>
+<li>Move the skin gently in small circles, then side-to-side and up-and-down — you are moving the tissue, not rubbing the surface.</li>
+<li>Work along the full scar for 3–5 minutes, once a day. Mild pulling is normal; sharp pain means stop and ask your provider or a pelvic floor PT.</li>
+</ol>
+
+<h2>C-Section Recovery FAQ</h2>
+<h3>When can I lift my toddler again?</h3>
+<p>The standard guidance is nothing heavier than your newborn for the first two weeks and gradual return after that as pain allows — but ask your own surgeon, especially if your delivery had complications. When you do lift, exhale, brace gently, and bring your toddler close before standing.</p>
+<h3>When does the C-section pooch go away?</h3>
+<p>Swelling settles over roughly 6–12 weeks; the deeper rebuild of core tension takes the months of progressive work outlined above. If the area still bulges noticeably at 6+ months despite consistent training, ask a provider to rule out diastasis recti or a hernia.</p>
+<h3>Can I sleep on my stomach?</h3>
+<p>As soon as it does not hurt — for most moms somewhere between 2 and 6 weeks. A pillow under your hips eases the transition.</p>
 ${DISCLAIMER}`,
   },
   {
@@ -346,6 +464,26 @@ ${DISCLAIMER}`,
 <li><strong>Accept the lasagna.</strong> When friends offer food, say yes.</li>
 </ul>
 <p>Want this customized to your preferences, allergies, and calorie needs? Build yours with the <a href="/meal-plan">Catalyst Mom meal plan tool</a>, and check any food quickly with the <a href="/food-calories">food calorie checker</a>.</p>
+<h2>The 3am Snack Station (Build It Today)</h2>
+<p>The meal plan above survives daylight hours. Night feeds are where nutrition quietly falls apart — you are ravenous at 3am and the only thing within reach is whatever requires zero hands and zero light. The fix is a small basket stocked weekly, placed wherever you feed:</p>
+<ul>
+<li>A large insulated water bottle with a straw (one-handed, no cap to drop)</li>
+<li>Single-serve nut butter packets and a banana or apple</li>
+<li>Oat energy balls or granola bars (lactation-friendly oats, no crumb explosion)</li>
+<li>A small container of trail mix you can eat by feel in the dark</li>
+</ul>
+<p>This one habit closes most of the 300–500 calorie gap on the hardest days, which protects both your energy and your supply.</p>
+
+<h2>Your One-Trip Grocery List for This Plan</h2>
+<p><strong>Proteins:</strong> eggs, Greek yogurt, chicken thighs, salmon, ground turkey, canned tuna, white beans, lentils. <strong>Grains:</strong> oats, quinoa, brown rice, whole grain bread and pasta, couscous. <strong>Produce:</strong> spinach, broccoli, sweet potatoes, bananas, berries, apples, avocados, salad greens. <strong>Fats &amp; extras:</strong> peanut/almond butter, walnuts, ground flaxseed, chia seeds, olive oil, hummus, string cheese. One trip (or one delivery order) covers all seven days.</p>
+
+<h2>Breastfeeding Nutrition FAQ</h2>
+<h3>Do I need to avoid any foods while breastfeeding?</h3>
+<p>Far fewer than the internet suggests. Standard guidance: limit high-mercury fish (shark, swordfish, king mackerel), keep caffeine under ~300 mg/day (2–3 coffees), and time alcohol carefully or skip it. Spicy food, garlic, beans — fine for most babies. Only restrict a food if your pediatrician identifies a specific reaction.</p>
+<h3>Can I lose weight while breastfeeding?</h3>
+<p>Gently, yes — a gradual loss of about 0.5 kg (1 lb) per week is considered compatible with supply for most moms once feeding is established. Aggressive cuts below ~1,800 calories are where supply commonly suffers. Focus on food quality first; the plan above supports both goals.</p>
+<h3>Does this plan work if I am pumping or combo feeding?</h3>
+<p>Yes — milk production costs the same calories regardless of how the milk leaves. Exclusive pumpers should be extra deliberate about the snack station, since pump sessions are easy to under-fuel.</p>
 ${DISCLAIMER}`,
   },
   {
@@ -389,6 +527,25 @@ ${DISCLAIMER}`,
 
 <h2>When Food Is Not Enough</h2>
 <p>If supply is genuinely struggling — slow weight gain, fewer wet diapers — see a lactation consultant before relying on any food or supplement. Latch and feeding frequency fix more supply problems than every galactagogue combined.</p>
+<h2>What Probably Will Not Help (Save Your Money)</h2>
+<p>The honest list nobody selling supplements writes:</p>
+<ul>
+<li><strong>Commercial lactation cookies.</strong> The active ingredient is usually plain oats — the same oats from your pantry at ten times the price, wrapped in sugar. Make the oat energy balls instead.</li>
+<li><strong>Fenugreek capsules.</strong> The most-sold galactagogue has genuinely mixed evidence — some studies show small gains, others show <em>decreased</em> supply in a subset of women, plus GI upset and a maple-syrup smell. If you try it, treat it as an experiment with a two-week deadline, not a default.</li>
+<li><strong>Expensive "supply support" drinks.</strong> Hydration helps; a particular blue sports drink has no magic ingredient. Water plus electrolytes does the same job.</li>
+<li><strong>Eating dairy to "make" dairy.</strong> Milk does not require milk — calcium matters for <em>your</em> bones, but cows make milk from grass. Any calcium source works.</li>
+</ul>
+
+<h2>A Day of Eating for Supply</h2>
+<p>What the list looks like assembled: overnight oats with flax, walnuts, and berries (breakfast) → lentil-spinach soup with whole grain bread (lunch) → two oat energy balls and a yogurt (snacks) → salmon, sweet potato, and broccoli (dinner) → and roughly 13 cups of fluids spread across the day, one glass anchored to every feed. That single day covers eleven of the twelve foods above without a single exotic ingredient.</p>
+
+<h2>Milk Supply FAQ</h2>
+<h3>How fast will I see a difference from eating better?</h3>
+<p>Supply responds to total intake within days — many moms notice the difference from simply closing a calorie/hydration gap within 2–3 days. No food changes supply overnight, and none can outwork infrequent milk removal.</p>
+<h3>I think my supply dropped suddenly — is it food?</h3>
+<p>Usually not. The common culprits are a returning period, a stretch of skipped or shortened feeds, a new hormonal contraceptive, stress and sleep collapse, or baby becoming more efficient (which looks like less time at breast but is not a supply drop). Check those before changing your diet.</p>
+<h3>Do I need galactagogues at all if baby is gaining well?</h3>
+<p>No. Wet diapers and weight gain are the real scoreboard. If those are on track, your supply is fine — eat for your own energy and recovery.</p>
 ${DISCLAIMER}`,
   },
   {
@@ -448,6 +605,32 @@ ${DISCLAIMER}`,
 
 <h2>Make It Stick</h2>
 <p>Anchor each practice to something you already do — feed the baby, then drink the water; start the dishwasher, then stretch. Explore more guided practices in our <a href="/wellness/self-care">self-care hub</a> and track how you feel in your <a href="/dashboard">wellness dashboard</a>.</p>
+<h2>Why "Sleep When the Baby Sleeps" Keeps Failing You</h2>
+<p>The most-given advice in motherhood fails for a structural reason: baby's nap is the only block of time when nobody is touching you, and your brain knows it. Spending every nap asleep means the laundry, the texts, and — crucially — <em>you</em> never get a turn, so you lie there wired instead. The fix is a split: the first nap of the day is yours (rest or genuine downtime, not chores), and later naps go to whatever reduces tomorrow's stress. Permission to be strategic beats pressure to be asleep.</p>
+
+<h2>The Burnout Check-In: 5 Questions</h2>
+<p>Run this monthly. Two or more "yes" answers means your self-care needs to be scheduled, not squeezed in:</p>
+<ol>
+<li>Do small requests (one more snack, one more story) regularly trigger outsized irritation?</li>
+<li>Have you stopped doing the one hobby or habit that used to feel like you?</li>
+<li>Do you fantasize more about being alone than about anything fun?</li>
+<li>Are you getting sick more often, or carrying constant low-grade exhaustion that sleep does not fix?</li>
+<li>When someone asks how you are, is the honest answer "I do not actually know"?</li>
+</ol>
+<p>If most answers are yes and the feeling includes hopelessness or persistent sadness, that is beyond burnout — talk to your doctor; postpartum depression and anxiety are common and treatable at any point, not just the first weeks.</p>
+
+<h2>Getting Your Partner On Board (Scripts That Work)</h2>
+<ul>
+<li>Swap vague for specific: not "I need more help," but <strong>"I need Saturday 8–9am. You have the kids. I will not be reachable."</strong></li>
+<li>Trade explicitly: each partner gets one protected hour per weekend, named in advance, defended like a work meeting.</li>
+<li>Put recurring self-care on the shared calendar. If it is not scheduled, it gets negotiated away — every time.</li>
+</ul>
+
+<h2>Self-Care FAQ</h2>
+<h3>Is self-care selfish when my kids need me?</h3>
+<p>The evidence says the opposite: maternal burnout degrades patience, mood, and even safety behaviors. The five-minute practices in this list are maintenance on the person your whole family runs on. It is infrastructure, not indulgence.</p>
+<h3>What if I genuinely have no five minutes?</h3>
+<p>Then borrow them from an existing block: the shower becomes two minutes longer, one feed happens with headphones and your playlist, three deep breaths happen at every red light. Attach care to what already exists rather than finding new time — and ask in the <a href="/community">community</a> what other moms in your exact season do; their answers are often the most realistic ones.</p>
 ${DISCLAIMER}`,
   },
   {
