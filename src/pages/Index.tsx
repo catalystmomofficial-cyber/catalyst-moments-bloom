@@ -24,15 +24,6 @@ const isStandaloneMode = () =>
 const homeStructuredData = [
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Catalyst Mom",
-    "url": "https://catalystmomofficial.com",
-    "logo": "https://catalystmomofficial.com/catalyst-mom-logo.png",
-    "sameAs": ["https://catalystmom.online"],
-    "dateModified": new Date().toISOString().split('T')[0],
-  },
-  {
-    "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Catalyst Mom",
     "url": "https://catalystmomofficial.com",
