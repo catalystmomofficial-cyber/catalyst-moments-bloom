@@ -9,6 +9,25 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import AffiliateSignupModal from "@/components/affiliate/AffiliateSignupModal";
 
+const affiliateFaqs: [string, string][] = [
+  ['Do I have to be a member to refer friends?', 'Yes. To earn the $29 bounty, you must be an active subscriber yourself. This ensures our community is built by people who actually use and believe in the platform.'],
+  ['Why do I have to wait until their 2nd month?', 'This protects the community from abuse and ensures you are being rewarded for bringing in mamas who truly want to be here. Once their 2nd payment clears, you get paid.'],
+  ['Is there a limit to how much I can earn?', 'No. If you refer 1 person, you earn $29. If you refer 100 people, you earn $2,900. Your impact has no ceiling.'],
+  ['How do I receive my payments?', 'Payments are processed via PayPal or Direct Bank Transfer. You can set your preference inside your Partner Dashboard.'],
+  ['What if my referral cancels in the first month?', 'Since the bounty is based on long-term community growth, we only pay out for members who stay for at least two months. If they cancel in month 1, no bounty is triggered.'],
+  ['Do you provide images and videos for me to use?', 'Yes. Upon approval you will get a welcome kit with high-quality graphics, Reel ideas, and talking points to make sharing easy and authentic.'],
+];
+
+const affiliateFaqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": affiliateFaqs.map(([q, a]) => ({
+    "@type": "Question",
+    "name": q,
+    "acceptedAnswer": { "@type": "Answer", "text": a },
+  })),
+};
+
 export default function Affiliate() {
   const { user } = useAuth();
   const [affiliateStatus, setAffiliateStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
@@ -86,6 +105,7 @@ export default function Affiliate() {
       <SEO
         title="Affiliate Program | Catalyst Mom"
         description="Join the Catalyst Mom affiliate program. Earn commissions sharing pregnancy and postpartum wellness resources you already love."
+        structuredData={affiliateFaqSchema}
       />
       <div className="affiliate-landing">
         <style>{`
@@ -179,7 +199,7 @@ export default function Affiliate() {
           .affiliate-landing .faq-section { background: var(--cream); }
           .affiliate-landing .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
           .affiliate-landing .faq-item { padding: 2rem; border: 1px solid rgba(181,101,29,0.15); background: white; }
-          .affiliate-landing .faq-q { font-weight: 600; font-size: 0.95rem; color: var(--charcoal); margin-bottom: 0.8rem; line-height: 1.4; }
+          .affiliate-landing .faq-q { font-weight: 600; font-size: 0.95rem; color: var(--charcoal); margin: 0 0 0.8rem; line-height: 1.4; }
           .affiliate-landing .faq-a { font-size: 0.88rem; color: var(--warm-gray); line-height: 1.7; }
           .affiliate-landing .cta-section { background: var(--dark-brown); padding: 6rem 2rem; text-align: center; position: relative; overflow: hidden; }
           .affiliate-landing .cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(181,101,29,0.2) 0%, transparent 70%); }
@@ -360,17 +380,10 @@ export default function Affiliate() {
             <div className="section-eyebrow">Common Questions</div>
             <h2 className="display section-title">Everything you need <em>to know.</em></h2>
             <div className="faq-grid">
-              {[
-                ['Do I have to be a member to refer friends?', 'Yes. To earn the $29 bounty, you must be an active subscriber yourself. This ensures our community is built by people who actually use and believe in the platform.'],
-                ['Why do I have to wait until their 2nd month?', 'This protects the community from abuse and ensures you are being rewarded for bringing in mamas who truly want to be here. Once their 2nd payment clears, you get paid.'],
-                ['Is there a limit to how much I can earn?', 'No. If you refer 1 person, you earn $29. If you refer 100 people, you earn $2,900. Your impact has no ceiling.'],
-                ['How do I receive my payments?', 'Payments are processed via PayPal or Direct Bank Transfer. You can set your preference inside your Partner Dashboard.'],
-                ['What if my referral cancels in the first month?', 'Since the bounty is based on long-term community growth, we only pay out for members who stay for at least two months. If they cancel in month 1, no bounty is triggered.'],
-                ['Do you provide images and videos for me to use?', 'Yes. Upon approval you will get a welcome kit with high-quality graphics, Reel ideas, and talking points to make sharing easy and authentic.'],
-              ].map(([q, a]) => (
+              {affiliateFaqs.map(([q, a]) => (
                 <div className="faq-item" key={q}>
-                  <div className="faq-q">{q}</div>
-                  <div className="faq-a">{a}</div>
+                  <h3 className="faq-q">{q}</h3>
+                  <p className="faq-a">{a}</p>
                 </div>
               ))}
             </div>

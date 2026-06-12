@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
 import SEO from '@/components/seo/SEO';
 
@@ -88,10 +89,21 @@ const Research = () => {
                 <div className="cs-main-left">
                   <h3>We don't guess<br /><em>with your recovery.</em></h3>
                   <p>
-                    Every Catalyst Mom protocol is aligned with the clinical guidelines set by
-                    ACOG and NASM — the gold standard for prenatal and postnatal care. We combine
+                    Every Catalyst Mom protocol is aligned with the clinical guidelines set by{' '}
+                    <a href="https://www.acog.org/womens-health/faqs/exercise-during-pregnancy" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>
+                      ACOG
+                    </a>{' '}
+                    and{' '}
+                    <a href="https://www.nasm.org/resources/blog/pre-and-postnatal-exercise-specialist" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>
+                      NASM
+                    </a>{' '}
+                    — the gold standard for prenatal and postnatal care. We combine
                     these evidence-based standards with real-world results from our community to
-                    create programs that actually work for the modern mama.
+                    create programs that actually work for the modern mama. Read more about our{' '}
+                    <Link to="/about" style={{ color: 'inherit', textDecoration: 'underline' }}>story</Link>{' '}
+                    or browse our{' '}
+                    <Link to="/blog" style={{ color: 'inherit', textDecoration: 'underline' }}>wellness blog</Link>{' '}
+                    for articles grounded in this research.
                   </p>
                 </div>
                 <div className="cs-standards">

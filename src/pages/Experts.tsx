@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
 import SEO from '@/components/seo/SEO';
 
@@ -146,7 +147,11 @@ const Experts = () => {
                 </div>
                 <div className="badge-inner">
                   <div className="badge-text">
-                    Clinical Standards<br />ACOG &amp; NASM Aligned
+                    Clinical Standards<br />
+                    <a href="https://www.acog.org/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>ACOG</a>
+                    {' & '}
+                    <a href="https://www.nasm.org/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>NASM</a>
+                    {' '}Aligned
                   </div>
                 </div>
               </div>
@@ -159,7 +164,11 @@ const Experts = () => {
               <p className="future-body">
                 We are currently partnering with OBGYNs, pelvic floor physiotherapists,
                 registered dietitians, and maternal mental health specialists. Our advisory
-                circle will be announced soon.
+                circle will be announced soon. In the meantime, read{' '}
+                <Link to="/research" style={{ color: 'inherit', textDecoration: 'underline' }}>our research standards</Link>{' '}
+                or visit our{' '}
+                <Link to="/blog" style={{ color: 'inherit', textDecoration: 'underline' }}>wellness blog</Link>{' '}
+                for expert-informed articles.
               </p>
             </div>
           </div>
