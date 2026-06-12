@@ -4,9 +4,9 @@
 INSERT INTO public.blogs (title, slug, excerpt, content, tags, featured_image_url, author, status)
 VALUES
 (
-  'How to Use a Birth Ball to Help Induce Labor: What Works and What Is Myth',
+  'How to Use a Birth Ball to Help Induce Labor',
   'birth-ball-to-induce-labor',
-  'Can bouncing on a birth ball really kickstart labor? Here is what the research says, the movements midwives actually recommend, and how to do them safely at home.',
+  'Can bouncing on a birth ball really kickstart labor? What the research says, the movements midwives recommend, and how to do them safely at home.',
   '<h2>Can a Birth Ball Really Induce Labor?</h2>
 <p>Short answer: a birth ball will not flip a switch and start labor on its own — no tool can. But research and midwife experience agree that birth ball movements can help create the <strong>conditions</strong> labor needs: an open pelvis, a well-positioned baby, and gentle, consistent pressure on the cervix.</p>
 <p>A randomized study of first-time mothers found that women who used birth ball exercises had a meaningfully shorter average labor (about 14.4 hours vs 19.2 hours in the control group) and reported less pain. So while "induce" is too strong a word, "prepare and encourage" is exactly right.</p>
@@ -48,7 +48,7 @@ VALUES
 (
   'Peanut Ball vs Birth Ball: Which One Do You Actually Need?',
   'peanut-ball-vs-birth-ball',
-  'They look similar and both live in delivery rooms, but a peanut ball and a birth ball do very different jobs. Here is how to choose — or why you might want both.',
+  'They both live in delivery rooms, but a peanut ball and a birth ball do very different jobs. Here is how to choose — or why you might want both.',
   '<h2>The Quick Answer</h2>
 <p>A <strong>birth ball</strong> (round) is for <em>active, upright movement</em> — sitting, bouncing, rocking, and hip circles during pregnancy and early labor. A <strong>peanut ball</strong> (peanut-shaped) is for <em>resting positions</em> — it goes between your knees while you lie on your side, keeping the pelvis open when you cannot be upright, such as with an epidural.</p>
 
@@ -87,9 +87,9 @@ VALUES
   'draft'
 ),
 (
-  'Diastasis Recti Exercises: The Safe Way to Rebuild Your Core After Baby',
+  'Diastasis Recti Exercises: Rebuild Your Core After Baby',
   'diastasis-recti-exercises',
-  'Ab separation does not heal with crunches — it heals with the right deep-core work. These are the evidence-backed exercises that restore strength and close the gap.',
+  'Ab separation does not heal with crunches. These evidence-backed deep-core exercises restore strength, rebuild tension, and help close the gap.',
   '<h2>What Diastasis Recti Actually Is</h2>
 <p>During pregnancy, the connective tissue between your "six-pack" muscles (the linea alba) stretches to make room for baby. For about 60% of moms, that separation — diastasis recti — persists after birth. The result: a soft belly that will not flatten, a doming ridge when you sit up, low-back pain, or a core that just feels disconnected.</p>
 <p>Here is the reframe that changes everything: healing is less about <em>closing the gap</em> and more about <em>rebuilding tension</em> across it with your deepest abdominal layer, the transverse abdominis (TVA).</p>
@@ -119,6 +119,39 @@ VALUES
 
 <h2>Want a Structured Plan?</h2>
 <p>Our <a href="/workouts/core-restore-foundations">Core Restore Foundations program</a> walks you through this exact progression week by week, with video coaching and built-in checkpoints. If you are more than 8 weeks postpartum and seeing no change, a pelvic floor physical therapist is worth every penny.</p>
+
+<h2>How Long Does Recovery Take?</h2>
+<p>With consistent daily work, most moms see meaningful change in <strong>6–12 weeks</strong>: the gap narrows, the midline firms up, and everyday movements stop feeling unstable. Full return to high-impact exercise commonly takes 3–6 months. Two honest caveats: progress is rarely linear (hormones, sleep, and carrying a growing baby all tug at it), and a small, firm residual gap is completely compatible with a strong, pain-free core. Function beats centimeters.</p>
+
+<h2>Your First 4 Weeks: A Sample Progression</h2>
+<table>
+<thead><tr><th>Week</th><th>Daily focus (about 10 minutes)</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Breathing with TVA engagement only — 3 sets of 10, morning and evening. Learn the exhale-engage pattern until it is automatic.</td></tr>
+<tr><td>2</td><td>Add heel slides (8 per side) and glute bridges (10). Keep checking: no doming.</td></tr>
+<tr><td>3</td><td>Add modified side planks (3 x 10 seconds per side). Increase bridge holds to 5 seconds.</td></tr>
+<tr><td>4</td><td>Add bird dogs (6 per side). Re-test your gap and compare width <em>and</em> tension to week 0.</td></tr>
+</tbody>
+</table>
+<p>From week 5 onward, progress one variable at a time — longer holds, more reps, then more challenging positions. The <a href="/workouts/core-restore-foundations">Core Restore Foundations program</a> continues this progression through full strength training.</p>
+
+<h2>Beyond Exercise: Habits That Speed Healing</h2>
+<ul>
+<li><strong>Posture resets.</strong> Stack ribs over pelvis when standing and feeding. A rib cage flared toward the ceiling keeps constant stretch on the midline.</li>
+<li><strong>Smart lifting mechanics.</strong> Bring baby (and car seat) close to your body, exhale as you lift, and avoid twisting mid-lift.</li>
+<li><strong>Manage constipation.</strong> Straining is a direct pressure spike on the healing midline — fiber, water, and a footstool under your feet genuinely matter here. Our <a href="/meal-plan">meal plan tool</a> can build a fiber-forward week.</li>
+<li><strong>Sleep and protein.</strong> Connective tissue rebuilds with collagen, and collagen needs protein and rest. Aim for protein at every meal.</li>
+</ul>
+
+<h2>Diastasis Recti FAQ</h2>
+<h3>Can diastasis recti heal years after pregnancy?</h3>
+<p>Yes. The same deep-core retraining works whether you are 6 weeks or 6 years postpartum. Older diastasis often takes a little longer because compensation habits are ingrained, but the tissue still responds to progressive loading.</p>
+<h3>Will a waist trainer or binder fix it?</h3>
+<p>No. Compression garments can give comfort and gentle support in early postpartum, but they do not strengthen anything — and aggressive waist trainers can push pressure downward onto the pelvic floor. Use a soft wrap as scaffolding while you do the exercises, not instead of them.</p>
+<h3>Can I lift weights with diastasis recti?</h3>
+<p>Yes, with two rules: exhale and engage before every rep, and choose loads where you can keep a flat midline (no doming). Many moms get stronger throughout recovery — the lifts just get selected and scaled deliberately.</p>
+<h3>When should I see a pelvic floor physical therapist?</h3>
+<p>If your gap is wider than four fingers, feels deep and soft with no improvement after 6–8 weeks of consistent work, or you have pain, bulging, or leaking, book the appointment. One assessment usually pays for itself in months of better-targeted work.</p>
 <p><em>This article is for educational purposes only and is not medical advice. Always consult your healthcare provider before starting or changing any exercise, nutrition, or fertility plan.</em></p>',
   ARRAY['postpartum', 'fitness', 'core'],
   'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=80',
@@ -126,7 +159,7 @@ VALUES
   'draft'
 ),
 (
-  'How to Check for Diastasis Recti at Home (60-Second Self-Test)',
+  'How to Check for Diastasis Recti at Home (60-Second Test)',
   'how-to-check-diastasis-recti-at-home',
   'A simple finger-width test you can do on your living room floor tells you whether you have ab separation, how wide it is, and what to do next.',
   '<h2>The 60-Second Test</h2>
@@ -170,9 +203,9 @@ VALUES
   'draft'
 ),
 (
-  '9 Exercises to Avoid With Diastasis Recti (And What to Do Instead)',
+  '9 Exercises to Avoid With Diastasis Recti (+ Safe Swaps)',
   'exercises-to-avoid-diastasis-recti',
-  'Some of the most popular ab exercises actively widen ab separation. Here are the nine to skip while you heal — each with a safe swap that trains the same muscles.',
+  'Some popular ab exercises actively widen ab separation. Here are nine to skip while you heal — each with a safe swap that trains the same muscles.',
   '<h2>Why Some Exercises Make the Gap Worse</h2>
 <p>Diastasis recti heals when you build tension in the deep core <em>without</em> spiking pressure against the stretched midline. Any movement that bulges your belly outward, cones your midline, or loads your core before it can resist that load works against you. The test is simple: <strong>if you see doming, stop.</strong></p>
 
@@ -208,9 +241,9 @@ VALUES
   'draft'
 ),
 (
-  'C-Section Recovery Exercises Week by Week: A Gentle Return to Strength',
+  'C-Section Recovery Exercises: A Week-by-Week Guide',
   'c-section-recovery-exercises-week-by-week',
-  'A cesarean is major abdominal surgery — your comeback should respect that. This week-by-week movement guide rebuilds your core safely from day one to month three.',
+  'A cesarean is major surgery — your comeback should respect that. This week-by-week guide rebuilds your core safely from day one to month three.',
   '<h2>The Golden Rule</h2>
 <p>A cesarean cuts through skin, fascia, and the uterine wall. Healing takes a minimum of 6 weeks for the surface and months for deep tissue. The plan below is a typical progression — <strong>your OB clears each phase, not the calendar.</strong> Pain, pulling at the incision, or increased bleeding means step back.</p>
 
@@ -261,7 +294,7 @@ VALUES
   'draft'
 ),
 (
-  'The 7-Day Breastfeeding Meal Plan: Eat for Energy, Recovery, and Milk Supply',
+  '7-Day Breastfeeding Meal Plan for New Moms',
   'breastfeeding-meal-plan-7-day',
   'Breastfeeding burns 300-500 extra calories a day. This realistic one-week meal plan keeps you nourished and your supply strong - no cooking marathons required.',
   '<h2>What Your Body Needs Right Now</h2>
@@ -308,7 +341,7 @@ VALUES
   'draft'
 ),
 (
-  '12 Foods That Support Milk Supply (Backed by Nutrition Science, Not Folklore)',
+  '12 Foods That Support Milk Supply, Backed by Science',
   'foods-to-increase-milk-supply',
   'From oats to flaxseed, here are the foods with real evidence (or at least real nutrition) behind their milk-boosting reputation - and how to eat more of them.',
   '<h2>First, the Honest Truth</h2>
@@ -412,9 +445,9 @@ VALUES
   'draft'
 ),
 (
-  'How to Track Ovulation When TTC: 5 Methods Ranked From Free to High-Tech',
+  'How to Track Ovulation When TTC: 5 Methods Ranked',
   'how-to-track-ovulation-ttc',
-  'Your fertile window is about six days a month - and finding it is the single highest-impact thing you can do while trying to conceive. Here is every tracking method, ranked.',
+  'Your fertile window is about six days a month. Finding it is the highest-impact thing you can do while TTC. Every tracking method, ranked.',
   '<h2>Why Tracking Changes Everything</h2>
 <p>Pregnancy is only possible during the <strong>fertile window</strong>: the five days before ovulation, the day of ovulation, and roughly a day after. Sperm survive up to five days; the egg lasts about 24 hours. Your best odds come from intercourse in the 1–2 days <em>before</em> ovulation — which means predicting it, not just spotting it after the fact.</p>
 
@@ -438,6 +471,36 @@ VALUES
 
 <h2>When to Loop In a Professional</h2>
 <p>Under 35: after a year of well-timed trying. 35 or older: after six months. Sooner if your cycles are very irregular or absent — that is data worth investigating, not just working around. And while you are trying, our guide to <a href="/blog/how-to-get-pregnant-faster-ttc-tips">evidence-based TTC tips</a> covers the lifestyle side.</p>
+
+<h2>A Sample One-Cycle Tracking Routine</h2>
+<table>
+<thead><tr><th>Cycle phase</th><th>What to do</th></tr></thead>
+<tbody>
+<tr><td>Day 1 (period starts)</td><td>Log it. This anchors every other calculation.</td></tr>
+<tr><td>Days 1–7</td><td>Take BBT each morning before getting up. Nothing else needed yet.</td></tr>
+<tr><td>About 5 days before expected ovulation</td><td>Start daily OPK strips (same time each afternoon) and begin checking cervical mucus.</td></tr>
+<tr><td>Positive OPK or egg-white mucus</td><td>This is the green light — prioritize the next 2–3 days.</td></tr>
+<tr><td>2–3 days after suspected ovulation</td><td>Look for the sustained BBT rise that confirms ovulation happened.</td></tr>
+<tr><td>End of cycle</td><td>Review the month: did the OPK, mucus, and temperature shift agree? Each cycle sharpens next month''s prediction.</td></tr>
+</tbody>
+</table>
+
+<h2>5 Common Tracking Mistakes</h2>
+<ol>
+<li><strong>Assuming day 14.</strong> Ovulation timing varies enormously; track your body, not a textbook cycle.</li>
+<li><strong>Testing OPKs with morning urine.</strong> The LH surge often starts mid-morning — early afternoon testing catches it more reliably.</li>
+<li><strong>Taking BBT after getting up.</strong> Even a trip to the bathroom first can distort the reading. Thermometer on the nightstand, reading before your feet hit the floor.</li>
+<li><strong>Stopping intercourse after the positive OPK.</strong> The surge means ovulation is coming in 24–36 hours — the next two days still count, a lot.</li>
+<li><strong>Switching methods every month.</strong> Each method needs 2–3 cycles of your own data before its predictions get sharp. Pick a combo and stay with it.</li>
+</ol>
+
+<h2>Ovulation Tracking FAQ</h2>
+<h3>Can I ovulate without ever getting a positive OPK?</h3>
+<p>Yes. Some women have short LH surges that a once-a-day test misses. If your BBT shows a clear sustained rise but OPKs stay negative, trust the temperature pattern — or test twice daily around your expected surge.</p>
+<h3>Can I get pregnant outside the fertile window?</h3>
+<p>Conception requires an egg, so functionally no — but the window is wider than it feels because sperm survive up to five days. The practical takeaway: starting "too early" costs nothing; starting after ovulation usually misses the month.</p>
+<h3>How do I track with irregular cycles?</h3>
+<p>Lean on real-time signals (cervical mucus and OPKs) rather than calendar prediction, and give it more testing days. Persistently irregular or absent cycles deserve a medical conversation — they are the most common treatable cause of slow conception.</p>
 <p><em>This article is for educational purposes only and is not medical advice. Always consult your healthcare provider before starting or changing any exercise, nutrition, or fertility plan.</em></p>',
   ARRAY['ttc', 'wellness'],
   'https://images.unsplash.com/photo-1506629905589-5d5b48f62a6a?auto=format&fit=crop&w=1200&q=80',
@@ -445,7 +508,7 @@ VALUES
   'draft'
 ),
 (
-  'How to Get Pregnant Faster: 8 Evidence-Based TTC Tips (and 3 Myths to Drop)',
+  'How to Get Pregnant Faster: 8 Evidence-Based Tips',
   'how-to-get-pregnant-faster-ttc-tips',
   'Skip the old wives tales. These are the conception strategies actually supported by research - timing, nutrition, lifestyle, and when to ask for help.',
   '<h2>The 8 Things That Actually Move the Needle</h2>
@@ -475,6 +538,33 @@ VALUES
 
 <h2>When to Ask for Help</h2>
 <p>Under 35: after 12 months of well-timed trying. 35+: after 6 months. Right away if you have very irregular cycles, known reproductive conditions, or a partner with known fertility issues. Asking early is not giving up — it is gathering information.</p>
+
+<h2>The Other Half: Male Fertility Quick Wins</h2>
+<p>Roughly 40–50% of conception delays involve a male factor, and sperm regenerate on a ~72-day cycle — meaning changes made today show up in about ten weeks. The highest-impact moves:</p>
+<ul>
+<li><strong>Cool things down.</strong> Skip hot tubs and saunas, and keep laptops off laps. Sperm production is temperature-sensitive.</li>
+<li><strong>Same lifestyle rules.</strong> No smoking, minimal alcohol, Mediterranean-style eating, and regular (not extreme) exercise all measurably improve sperm parameters.</li>
+<li><strong>Check medications.</strong> Testosterone supplements in particular can shut down sperm production — ask the prescriber before TTC.</li>
+<li><strong>A semen analysis is cheap and fast.</strong> If months are passing, this simple test should happen early, not as a last resort.</li>
+</ul>
+
+<h2>Your First Three Months TTC: A Simple Plan</h2>
+<table>
+<thead><tr><th>Month</th><th>Focus</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Start prenatal vitamins (both partners can take fertility-supportive supplements), book preconception checkups, begin <a href="/blog/how-to-track-ovulation-ttc">tracking your cycle</a> to learn your pattern.</td></tr>
+<tr><td>2</td><td>Dial in timing: OPKs plus cervical mucus, intercourse every 1–2 days through the fertile window. Clean up sleep, alcohol, and smoking for real.</td></tr>
+<tr><td>3</td><td>Keep the routine, review what your tracking shows. Irregular data this far in is worth a doctor conversation now rather than at the 12-month mark.</td></tr>
+</tbody>
+</table>
+
+<h2>TTC FAQ</h2>
+<h3>How long does it take most couples to conceive?</h3>
+<p>With well-timed trying, roughly 30% conceive in the first cycle, about 80% within six months, and 85–90% within a year. A few months of trying without success is statistically normal, not a red flag.</p>
+<h3>Does coming off birth control delay pregnancy?</h3>
+<p>For most methods, fertility returns within a cycle or two — many women conceive the first month after stopping the pill. The exception is the contraceptive injection, which can take several months to clear. There is no required "wash-out" period.</p>
+<h3>Do ovulation apps really work?</h3>
+<p>Apps are excellent record-keepers and decent predictors once they have several cycles of your data — but their forecasts are statistical guesses. Confirm with body signals (OPKs, cervical mucus) before trusting any app''s fertile-window highlight, especially with irregular cycles.</p>
 <p><em>This article is for educational purposes only and is not medical advice. Always consult your healthcare provider before starting or changing any exercise, nutrition, or fertility plan.</em></p>',
   ARRAY['ttc', 'wellness', 'nutrition'],
   'https://images.unsplash.com/photo-1609220136736-443140cffec6?auto=format&fit=crop&w=1200&q=80',
