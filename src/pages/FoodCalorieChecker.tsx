@@ -1,5 +1,6 @@
 
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Camera, Image as ImageIcon, RefreshCw, AlertCircle } from 'lucide-react';
 import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
@@ -151,7 +152,23 @@ const FoodCalorieChecker = () => {
       />
       <div className="container py-8">
         <h1 className="text-3xl font-bold mb-6">Food Calorie Checker</h1>
-        
+
+        <p className="text-muted-foreground mb-6 leading-relaxed">
+          Snap a photo or upload an image of your meal and our AI-powered tool will estimate the
+          calories, protein, carbs, and fat it contains — helpful for tracking your nutrition
+          during pregnancy, postpartum recovery, or while trying to conceive. Nutritional needs
+          change at every stage of motherhood, and this tool uses reference data in the spirit of{' '}
+          <a href="https://fdc.nal.usda.gov/" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+            USDA FoodData Central
+          </a>{' '}
+          to give you a quick estimate. For a deeper dive into postnatal nutrition and hormone
+          health, read our{' '}
+          <Link to="/research" className="underline hover:text-primary">research standards</Link>{' '}
+          or browse the{' '}
+          <Link to="/blog" className="underline hover:text-primary">wellness blog</Link>{' '}
+          for articles on building sustainable eating habits.
+        </p>
+
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>Capture Food Image</CardTitle>

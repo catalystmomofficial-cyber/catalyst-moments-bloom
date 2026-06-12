@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
 import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -93,7 +94,21 @@ const Blog = () => {
             Expert advice and insights for every stage of motherhood
           </p>
 
-          <CategoryFilter 
+          <p className="text-muted-foreground mb-8 leading-relaxed">
+            Welcome to the Catalyst Mom wellness blog, where we share evidence-based articles on
+            pregnancy, postpartum recovery, TTC (trying to conceive), nutrition, and the mental
+            load of motherhood. Every article is grounded in the same{' '}
+            <Link to="/research" className="underline hover:text-primary">clinical research standards</Link>{' '}
+            that shape our programs, and written with input from our{' '}
+            <Link to="/experts" className="underline hover:text-primary">team of specialists</Link>.
+            New posts are added regularly to help you navigate every stage of motherhood with
+            confidence. If you have questions about how Catalyst Mom works, check out our{' '}
+            <Link to="/faq" className="underline hover:text-primary">FAQ page</Link>, or learn more{' '}
+            <Link to="/about" className="underline hover:text-primary">about our story</Link>{' '}
+            and why we built this community.
+          </p>
+
+          <CategoryFilter
             selectedCategory={selectedCategory}
             onCategoryChange={setSelectedCategory}
           />
