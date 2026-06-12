@@ -6,7 +6,9 @@ import VideoModal from "@/components/ui/video-modal";
 import HeroSection from '@/components/home/HeroSection';
 import FeaturesSection from '@/components/home/FeaturesSection';
 import BenefitsSection from '@/components/home/BenefitsSection';
+import AboutSection from '@/components/home/AboutSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
+import HomeFAQSection, { homeFaqSchema } from '@/components/home/HomeFAQSection';
 import CTASection from '@/components/home/CTASection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
@@ -18,6 +20,26 @@ import { useAuth } from '@/contexts/AuthContext';
 const isStandaloneMode = () =>
   window.matchMedia('(display-mode: standalone)').matches ||
   (navigator as any).standalone === true;
+
+const homeStructuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Catalyst Mom",
+    "url": "https://catalystmomofficial.com",
+    "logo": "https://catalystmomofficial.com/catalyst-mom-logo.png",
+    "sameAs": ["https://catalystmom.online"],
+    "dateModified": new Date().toISOString().split('T')[0],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Catalyst Mom",
+    "url": "https://catalystmomofficial.com",
+    "dateModified": new Date().toISOString().split('T')[0],
+  },
+  homeFaqSchema,
+];
 
 const Index = () => {
   const navigate = useNavigate();
@@ -65,22 +87,29 @@ const Index = () => {
 
   return (
     <PageLayout withPadding={false}>
-      <SEO 
+      <SEO
         title="Catalyst Mom – Wellness, Fitness & Nutrition for Moms"
         description="Personalized workouts, meal plans, and community support for every stage of motherhood."
+        structuredData={homeStructuredData}
       />
       {/* Hero Section */}
       <HeroSection onWatchVideo={openWelcomeVideo} />
 
       {/* Features Section */}
       <FeaturesSection />
-      
+
       {/* Benefits Section */}
       <BenefitsSection />
-      
+
+      {/* About Section */}
+      <AboutSection />
+
       {/* Testimonial Section */}
       <TestimonialsSection />
-      
+
+      {/* FAQ Section */}
+      <HomeFAQSection />
+
       {/* CTA Section */}
       <CTASection onWatchDemo={(url, title) => openVideoModal(url, title)} />
 
