@@ -65,9 +65,9 @@ const Index = () => {
 
   return (
     <PageLayout withPadding={false}>
-      <SEO 
-        title="Catalyst Mom – Wellness, Fitness & Nutrition for Moms"
-        description="Personalized workouts, meal plans, and community support for every stage of motherhood."
+      <SEO
+        title="Catalyst Mom – Wellness for Every Stage of Motherhood"
+        description="Personalized workouts, meal plans, birth ball guides, and community support for TTC, pregnancy, and postpartum — your full motherhood journey."
       />
       {/* Hero Section */}
       <HeroSection onWatchVideo={openWelcomeVideo} />
