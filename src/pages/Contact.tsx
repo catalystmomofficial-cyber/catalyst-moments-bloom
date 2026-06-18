@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Instagram, Facebook, HelpCircle } from "lucide-react";
 
-const SUPPORT_EMAIL = "catalystmomofficial@gmail.com";
+const SUPPORT_EMAIL = "admin@catalystmom.online";
 
 const Contact = () => {
   const structuredData = {

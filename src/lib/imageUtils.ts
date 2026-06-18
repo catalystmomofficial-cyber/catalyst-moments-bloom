@@ -1,21 +1,18 @@
 /**
- * Convert a Supabase public storage URL to a resized render URL.
- * Falls back to the original URL for non-Supabase sources.
+ * Return a Supabase public storage URL as-is.
+ * (Image transformation/render endpoint is not enabled on this project, so
+ * we serve the original public object URL which is always available.)
  */
-export function supabaseImgSrc(url: string, width: number, quality = 80): string {
-  if (!url || !url.includes('/storage/v1/object/public/')) return url;
-  return (
-    url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/') +
-    `?width=${width}&quality=${quality}`
-  );
+export function supabaseImgSrc(url: string, _width?: number, _quality = 80): string {
+  return url;
 }
 
 /**
- * Build a srcSet string for a Supabase storage image at multiple widths.
+ * srcSet is not used for Supabase storage since the render/resize endpoint
+ * is unavailable. Returning an empty string lets the browser fall back to `src`.
  */
-export function supabaseImgSrcSet(url: string, widths: number[], quality = 80): string {
-  if (!url || !url.includes('/storage/v1/object/public/')) return '';
-  return widths.map(w => `${supabaseImgSrc(url, w, quality)} ${w}w`).join(', ');
+export function supabaseImgSrcSet(_url: string, _widths: number[], _quality = 80): string {
+  return '';
 }
 
 /**

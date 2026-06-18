@@ -99,6 +99,15 @@ function AppContent() {
           <meta property="og:title" content="Catalyst Mom | Wellness, Fitness & Nutrition" />
           <meta property="og:description" content="Personalized wellness, fitness, and nutrition for moms." />
           <meta property="og:url" content={window.location.href} />
+          <script type="application/ld+json">{JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Catalyst Mom",
+            "url": "https://catalystmomofficial.com",
+            "logo": "https://catalystmomofficial.com/catalyst-mom-logo.png",
+            "sameAs": ["https://catalystmom.online"],
+            "dateModified": new Date().toISOString().split('T')[0],
+          })}</script>
         </Helmet>
         <ScrollToTop />
         <SubscriptionRefresher />
