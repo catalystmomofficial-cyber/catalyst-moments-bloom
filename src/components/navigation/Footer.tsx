@@ -146,6 +146,7 @@ const Footer = () => {
               <li><Link to="/experts" className="text-sm text-muted-foreground hover:text-primary transition-colors">Experts</Link></li>
               <li><Link to="/research" className="text-sm text-muted-foreground hover:text-primary transition-colors">Our Standard</Link></li>
               <li><Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</Link></li>
+              <li><Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</Link></li>
             </ul>
           </div>
           
@@ -171,6 +172,9 @@ const Footer = () => {
             </Link>
             <Link to="/terms" className="text-xs text-muted-foreground hover:text-primary transition-colors">
               Terms of Service
+            </Link>
+            <Link to="/medical-disclaimer" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+              Medical Disclaimer
             </Link>
             <span className="text-xs flex items-center text-muted-foreground">
               Made with <Heart className="h-3 w-3 mx-1 text-red-500 animate-pulse-soft" /> for moms

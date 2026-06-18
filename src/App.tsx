@@ -73,6 +73,8 @@ import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
 import CreditPurchaseSuccess from "./pages/CreditPurchaseSuccess";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import About from "./pages/About";
+import Contact from "./pages/Contact";
+import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import Unsubscribe from "./pages/Unsubscribe";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
@@ -124,6 +126,8 @@ function AppContent() {
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         
         {/* Protected Routes - Require Login and Subscription */}
