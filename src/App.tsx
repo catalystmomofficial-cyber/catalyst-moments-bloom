@@ -49,6 +49,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import GlowAndGo from "./pages/GlowAndGo";
+import BirthBallProgram from "./pages/BirthBallProgram";
 import Affiliate from "./pages/Affiliate";
 import AffiliateDashboard from "./pages/AffiliateDashboard";
 import Admin from "./pages/Admin";
@@ -325,6 +326,13 @@ function AppContent() {
           <PrivateRoute>
             <SubscriptionGuard>
               <GlowAndGo />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/programs/birth-ball" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallProgram />
             </SubscriptionGuard>
           </PrivateRoute>
         } />
