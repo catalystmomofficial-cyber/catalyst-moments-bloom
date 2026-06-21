@@ -74,7 +74,7 @@ serve(async (req) => {
       status: 200,
       headers: {
         "Content-Type": "application/rss+xml; charset=utf-8",
-        "Cache-Control": "public, max-age=3600",
+        "Cache-Control": "public, max-age=300, s-maxage=300, stale-while-revalidate=600",
         "Access-Control-Allow-Origin": "*",
       },
     });

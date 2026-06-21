@@ -14,7 +14,8 @@
       "source": "/rss.xml",
       "headers": [
         { "key": "Content-Type", "value": "application/rss+xml; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600" }
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=300, stale-while-revalidate=600" },
+        { "key": "CDN-Cache-Control", "value": "public, max-age=300" }
       ]
     },
     {

@@ -435,7 +435,7 @@ const Dashboard = () => {
                   <Link to="/community?filter=ttc">Community</Link>
                 </Button>
                 <Button asChild variant="outline" size="sm" className="flex-1">
-                  <Link to="/resources">Resources</Link>
+                  <Link to="/wellness/resources">Resources</Link>
                 </Button>
               </div>
             ) : null}
