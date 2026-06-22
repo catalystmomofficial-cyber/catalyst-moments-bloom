@@ -812,6 +812,15 @@ ${DISCLAIMER}`,
 <p>For <strong>night wakings</strong>, use a short, boring "night-wake script" — the same calm words or actions every time, no new props, no long conversations, lights dim. Predictability (even unexciting predictability) is what gets a child back to sleep fastest.</p>
 <p>For <strong>bedtime worries</strong>, younger kids (ages 3–5) often do well with a "worry box" — they draw or "write" the worry, drop it in, and you promise to revisit it tomorrow. School-age kids (5–9) tend to respond better to a body-scan exercise: noticing toes, legs, tummy, arms, and head relaxing one at a time without moving.</p>
 
+<h2>Tried-and-True Extras Many Parents Add</h2>
+<p>Beyond the core routine, a few low-effort additions show up again and again in parent communities as things that genuinely help — they work best layered into Steps 1–2 above, not as replacements:</p>
+<ul>
+<li><strong>A warm bath with a touch of lavender.</strong> 30–60 minutes before bed, a warm bath — lavender-scented wash or oil, if your child tolerates scents — is one of the most commonly reported relaxation boosters before the rest of the routine.</li>
+<li><strong>A smart speaker for white noise.</strong> No dedicated machine needed — an Alexa, Google Home, or even a phone app playing white noise does the same job. Consistency matters more than the device.</li>
+<li><strong>Audiobooks or quiet drawing</strong> as a calming-activity swap on nights reading aloud isn't realistic — same low-stimulation, low-light goal, different format.</li>
+<li><strong>A weighted blanket</strong> isn't only for high-energy kids — many parents of typically-developing children report calmer, longer sleep with one. Check sizing/weight guidelines for your child first.</li>
+</ul>
+
 <h2>Quick Reference: Sleep Needs by Age</h2>
 <table>
 <thead><tr><th>Age</th><th>Recommended Sleep (24 hrs)</th></tr></thead>
