@@ -34,6 +34,8 @@ export interface TTCCycleLog {
   cervical_mucus: string | null;
   flow_intensity: string | null;
   period_status: string | null;
+  mood: string | null;
+  sleep_hours: number | null;
 }
 
 // Fields a user can edit/save for a given day.
@@ -44,6 +46,8 @@ export interface CycleLogInput {
   cervical_mucus?: string | null;
   flow_intensity?: string | null;
   period_status?: string | null;
+  mood?: string | null;
+  sleep_hours?: number | null;
 }
 
 export type MapPhase = 'menstrual' | 'follicular' | 'ovulation' | 'luteal';
@@ -229,23 +233,34 @@ export function useTTCData() {
   }, {});
 
   // Upsert a single day's log into ttc_cycle_logs (the same table Import writes to).
+  // mood / sleep_hours are newer columns; if the DB hasn't been migrated yet we
+  // retry without them so day logging never breaks.
   const saveCycleLog = useCallback(async (dateISO: string, fields: CycleLogInput) => {
     if (!user) return { error: new Error('Not signed in') };
-    const row: Record<string, unknown> = {
+    const base: Record<string, unknown> = {
       user_id: user.id,
       log_date: dateISO,
       cycle_day: calcCycleDay(settings, dateISO),
     };
-    if (fields.basal_body_temp !== undefined) row.basal_body_temp = fields.basal_body_temp;
-    if (fields.symptoms !== undefined) row.symptoms = fields.symptoms;
-    if (fields.notes !== undefined) row.notes = fields.notes;
-    if (fields.cervical_mucus !== undefined) row.cervical_mucus = fields.cervical_mucus;
-    if (fields.flow_intensity !== undefined) row.flow_intensity = fields.flow_intensity;
-    if (fields.period_status !== undefined) row.period_status = fields.period_status;
+    if (fields.basal_body_temp !== undefined) base.basal_body_temp = fields.basal_body_temp;
+    if (fields.symptoms !== undefined) base.symptoms = fields.symptoms;
+    if (fields.notes !== undefined) base.notes = fields.notes;
+    if (fields.cervical_mucus !== undefined) base.cervical_mucus = fields.cervical_mucus;
+    if (fields.flow_intensity !== undefined) base.flow_intensity = fields.flow_intensity;
+    if (fields.period_status !== undefined) base.period_status = fields.period_status;
 
-    const { error } = await (supabase as any)
-      .from('ttc_cycle_logs')
-      .upsert(row, { onConflict: 'user_id,log_date' });
+    const optional: Record<string, unknown> = {};
+    if (fields.mood !== undefined) optional.mood = fields.mood;
+    if (fields.sleep_hours !== undefined) optional.sleep_hours = fields.sleep_hours;
+
+    const upsert = (row: Record<string, unknown>) =>
+      (supabase as any).from('ttc_cycle_logs').upsert(row, { onConflict: 'user_id,log_date' });
+
+    let { error } = await upsert({ ...base, ...optional });
+    // Fall back gracefully if mood/sleep_hours columns aren't present yet.
+    if (error && Object.keys(optional).length > 0 && /mood|sleep_hours|column|schema cache/i.test(error.message ?? '')) {
+      ({ error } = await upsert(base));
+    }
     if (!error) await refresh();
     return { error };
   }, [user, settings, refresh]);

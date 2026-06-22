@@ -13,6 +13,9 @@ const SYMPTOM_OPTIONS = [
   'Nausea', 'Spotting', 'Clear CM', 'Mood swings', 'Backache',
 ];
 
+const CM_OPTIONS = ['Dry', 'Sticky', 'Creamy', 'Watery', 'Egg white'];
+const MOOD_OPTIONS = ['Great', 'Good', 'Okay', 'Low', 'Irritable', 'Anxious'];
+
 interface DayLogModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -30,6 +33,9 @@ const prettyDate = (iso: string) => {
 export const DayLogModal = ({ open, onOpenChange, dateISO, existing, onSave, onSaved }: DayLogModalProps) => {
   const [temp, setTemp] = useState('');
   const [symptoms, setSymptoms] = useState<string[]>([]);
+  const [cervicalMucus, setCervicalMucus] = useState<string | null>(null);
+  const [mood, setMood] = useState<string | null>(null);
+  const [sleep, setSleep] = useState('');
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -38,6 +44,9 @@ export const DayLogModal = ({ open, onOpenChange, dateISO, existing, onSave, onS
     if (!open) return;
     setTemp(existing?.basal_body_temp != null ? String(existing.basal_body_temp) : '');
     setSymptoms(existing?.symptoms ?? []);
+    setCervicalMucus(existing?.cervical_mucus ?? null);
+    setMood(existing?.mood ?? null);
+    setSleep(existing?.sleep_hours != null ? String(existing.sleep_hours) : '');
     setNotes(existing?.notes ?? '');
   }, [open, dateISO, existing]);
 
@@ -52,9 +61,18 @@ export const DayLogModal = ({ open, onOpenChange, dateISO, existing, onSave, onS
       setSaving(false);
       return;
     }
+    const parsedSleep = sleep.trim() === '' ? null : Number(sleep);
+    if (parsedSleep !== null && (Number.isNaN(parsedSleep) || parsedSleep < 0 || parsedSleep > 24)) {
+      toast.error('Enter sleep hours between 0 and 24');
+      setSaving(false);
+      return;
+    }
     const { error } = await onSave(dateISO, {
       basal_body_temp: parsedTemp,
       symptoms,
+      cervical_mucus: cervicalMucus,
+      mood,
+      sleep_hours: parsedSleep,
       notes: notes.trim() === '' ? null : notes.trim(),
     });
     setSaving(false);
@@ -110,6 +128,65 @@ export const DayLogModal = ({ open, onOpenChange, dateISO, existing, onSave, onS
                 );
               })}
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Cervical mucus</Label>
+            <div className="flex flex-wrap gap-2">
+              {CM_OPTIONS.map((c) => {
+                const active = cervicalMucus === c;
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setCervicalMucus(active ? null : c)}
+                    className={`rounded-full px-3 py-1 text-sm border transition-colors ${
+                      active
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : 'bg-background text-muted-foreground border-border hover:border-primary/50'
+                    }`}
+                  >
+                    {c}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Mood</Label>
+            <div className="flex flex-wrap gap-2">
+              {MOOD_OPTIONS.map((m) => {
+                const active = mood === m;
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setMood(active ? null : m)}
+                    className={`rounded-full px-3 py-1 text-sm border transition-colors ${
+                      active
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : 'bg-background text-muted-foreground border-border hover:border-primary/50'
+                    }`}
+                  >
+                    {m}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="sleep">Sleep (hours)</Label>
+            <Input
+              id="sleep"
+              type="number"
+              inputMode="decimal"
+              step="0.5"
+              placeholder="e.g. 7.5"
+              value={sleep}
+              onChange={(e) => setSleep(e.target.value)}
+            />
           </div>
 
           <div className="space-y-2">
