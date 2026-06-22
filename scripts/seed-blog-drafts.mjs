@@ -833,6 +833,9 @@ ${DISCLAIMER}`,
 
 <h2>The Bottom Line</h2>
 <p>Better sleep for kids tends to come from the boring, repeatable stuff — a cool dark quiet room, the same wind-down in the same order, and a day with enough light, movement, and screen boundaries to make sleep pressure build naturally. None of it works overnight, and none of it requires a bottle. Give a new routine a real two weeks before deciding it isn't working — and on the nights it falls apart anyway, going back to the routine the next night is the whole strategy. Your child's body remembers the rhythm even when one night doesn't go to plan.</p>
+
+<h2>Want More Like This?</h2>
+<p>Browse more guides for every stage of motherhood in our <a href="/wellness/resources">Wellness Resources</a> library, and follow <a href="https://www.instagram.com/catalyst_mom/?hl=en" target="_blank" rel="noopener noreferrer">@catalyst_mom on Instagram</a> or <a href="https://www.facebook.com/profile.php?id=61554306726027" target="_blank" rel="noopener noreferrer">Facebook</a> for daily bedtime-routine tips.</p>
 <p><em>This article is for general education and is not medical advice. If sleep problems are severe, sudden, or accompanied by snoring, gasping, or daytime symptoms, talk to your child's pediatrician — there are treatable causes (like sleep apnea) that a routine alone won't fix.</em></p>`,
   },
 ];
