@@ -890,7 +890,7 @@ export type Database = {
           phone: string | null
           points_used: number | null
           questions: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           amount_paid?: number | null
@@ -910,7 +910,7 @@ export type Database = {
           phone?: string | null
           points_used?: number | null
           questions?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           amount_paid?: number | null
@@ -930,7 +930,7 @@ export type Database = {
           phone?: string | null
           points_used?: number | null
           questions?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
