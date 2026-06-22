@@ -32,7 +32,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
                 <Link to="/about" className="flex items-center">
-                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                  About Our Mission <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
@@ -59,6 +59,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
                   <Button 
                     size="icon" 
                     className="rounded-full bg-white/90 hover:bg-white text-catalyst-copper"
+                    aria-label="Watch video story"
                     onClick={() => onWatchVideo("https://www.youtube.com/embed/j7f75AzL9Hg", "Mom Fitness Journey")}
                   >
                     <Play className="h-5 w-5 ml-0.5" />
