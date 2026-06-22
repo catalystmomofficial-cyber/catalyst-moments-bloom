@@ -13,6 +13,8 @@ const STATIC_PAGES = [
   { loc: '/',                             changefreq: 'daily',   priority: '1.0' },
   { loc: '/blog',                         changefreq: 'daily',   priority: '0.9' },
   { loc: '/about',                        changefreq: 'monthly', priority: '0.7' },
+  { loc: '/contact',                      changefreq: 'yearly',  priority: '0.4' },
+  { loc: '/medical-disclaimer',           changefreq: 'yearly',  priority: '0.3' },
   { loc: '/experts',                      changefreq: 'monthly', priority: '0.7' },
   { loc: '/research',                     changefreq: 'monthly', priority: '0.6' },
   { loc: '/faq',                          changefreq: 'monthly', priority: '0.6' },

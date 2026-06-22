@@ -63,7 +63,7 @@ const Progress = () => {
   const [shareContent, setShareContent] = useState<'achievement' | 'progress'>('progress');
   const [selectedAchievement, setSelectedAchievement] = useState<any>(null);
   const [milestoneOpen, setMilestoneOpen] = useState(false);
-  const [activitySummary, setActivitySummary] = useState({ workouts: 0, activeDays: 0, points: 0 });
+  const [activitySummary, setActivitySummary] = useState<{ workouts: number; activeDays: number; points: number; activeDates: string[] }>({ workouts: 0, activeDays: 0, points: 0, activeDates: [] });
   const [booking, setBooking] = useState<{ bookedAt: string; eventUri: string | null; inviteeUri: string | null; stage?: string } | null>(() => {
     try {
       const raw = localStorage.getItem('cm_milestone_booking');
@@ -245,9 +245,10 @@ const Progress = () => {
       ]);
 
       const workouts = completions?.length ?? 0;
-      const activeDays = new Set((completions ?? []).map((c: any) => (c.completed_at || '').slice(0, 10))).size;
+      const activeDateSet = new Set((completions ?? []).map((c: any) => (c.completed_at || '').slice(0, 10)).filter(Boolean));
+      const activeDays = activeDateSet.size;
       const earned = (tx ?? []).reduce((sum: number, t: any) => sum + (t.points || 0), 0);
-      setActivitySummary({ workouts, activeDays, points: earned || (pts?.total_points ?? 0) });
+      setActivitySummary({ workouts, activeDays, points: earned || (pts?.total_points ?? 0), activeDates: [...activeDateSet] });
     })();
   }, [user, milestoneOpen]);
 
@@ -481,6 +482,7 @@ const Progress = () => {
             points: activitySummary.points,
             weeks: biweeklyStatus.weeksCompleted,
           }}
+          activeDates={activitySummary.activeDates}
         />
 
 

@@ -187,9 +187,9 @@ const BirthBallGuideCard = () => {
               size="lg"
               asChild
             >
-              <Link to="/birth-ball-guide">
+              <Link to="/programs/birth-ball">
                 <BookOpen className="mr-2 h-4 w-4" />
-                {hasStartedProgram ? 'Continue Ball Workouts' : 'Start Interactive Guide'}
+                {hasStartedProgram ? 'Continue Ball Workouts' : 'Start Birth Ball Program'}
               </Link>
             </Button>
             <Button variant="outline" className="w-full" asChild>

@@ -21,6 +21,8 @@ const BirthBallBreathingPractice = () => {
           </Link>
         </Button>
 
+        <h1 className="sr-only">Breathing Practice Tool for Pregnancy and Labor</h1>
+
         <BreathingPractice />
       </div>
     </PageLayout>

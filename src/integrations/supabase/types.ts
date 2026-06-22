@@ -890,7 +890,7 @@ export type Database = {
           phone: string | null
           points_used: number | null
           questions: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           amount_paid?: number | null
@@ -910,7 +910,7 @@ export type Database = {
           phone?: string | null
           points_used?: number | null
           questions?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           amount_paid?: number | null
@@ -930,7 +930,7 @@ export type Database = {
           phone?: string | null
           points_used?: number | null
           questions?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -1674,9 +1674,11 @@ export type Database = {
           flow_intensity: string | null
           id: string
           log_date: string
+          mood: string | null
           notes: string | null
           ovulation_test: string | null
           period_status: string | null
+          sleep_hours: number | null
           symptoms: string[] | null
           user_id: string
         }
@@ -1688,9 +1690,11 @@ export type Database = {
           flow_intensity?: string | null
           id?: string
           log_date: string
+          mood?: string | null
           notes?: string | null
           ovulation_test?: string | null
           period_status?: string | null
+          sleep_hours?: number | null
           symptoms?: string[] | null
           user_id: string
         }
@@ -1702,9 +1706,11 @@ export type Database = {
           flow_intensity?: string | null
           id?: string
           log_date?: string
+          mood?: string | null
           notes?: string | null
           ovulation_test?: string | null
           period_status?: string | null
+          sleep_hours?: number | null
           symptoms?: string[] | null
           user_id?: string
         }

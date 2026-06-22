@@ -26,6 +26,7 @@ interface BlogPost {
   excerpt: string;
   author: string;
   published_at: string;
+  updated_at?: string;
   featured_image_url?: string;
   tags?: string[];
 }
@@ -141,7 +142,7 @@ const BlogDetail = () => {
     "description": blog.excerpt || blog.content.substring(0, 160),
     "image": blog.featured_image_url || `${window.location.origin}/og-image.png`,
     "datePublished": blog.published_at,
-    "dateModified": blog.published_at,
+    "dateModified": blog.updated_at || blog.published_at,
     "author": {
       "@type": "Person",
       "name": blog.author

@@ -49,6 +49,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import GlowAndGo from "./pages/GlowAndGo";
+import BirthBallProgram from "./pages/BirthBallProgram";
 import Affiliate from "./pages/Affiliate";
 import AffiliateDashboard from "./pages/AffiliateDashboard";
 import Admin from "./pages/Admin";
@@ -72,6 +73,8 @@ import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
 import CreditPurchaseSuccess from "./pages/CreditPurchaseSuccess";
 import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import About from "./pages/About";
+import Contact from "./pages/Contact";
+import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import Unsubscribe from "./pages/Unsubscribe";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
@@ -132,6 +135,8 @@ function AppContent() {
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         
         {/* Protected Routes - Require Login and Subscription */}
@@ -334,6 +339,13 @@ function AppContent() {
           <PrivateRoute>
             <SubscriptionGuard>
               <GlowAndGo />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/programs/birth-ball" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallProgram />
             </SubscriptionGuard>
           </PrivateRoute>
         } />
