@@ -253,8 +253,8 @@ const WorkoutPlanDetail = () => {
                   <Button variant="outline" className="w-full" onClick={() => navigate('/wellness')}>
                     Track Progress
                   </Button>
-                  <Button variant="outline" className="w-full" onClick={() => navigate('/workout-plan')}>
-                    Create New Plan
+                  <Button variant="outline" className="w-full" onClick={() => navigate('/dashboard')}>
+                    Back to Dashboard
                   </Button>
                 </CardContent>
               </Card>

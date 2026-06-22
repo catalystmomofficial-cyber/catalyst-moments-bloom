@@ -80,12 +80,12 @@ const SavedWorkoutPlans = () => {
                 Access your personalized workout plans anytime
               </p>
             </div>
-            <Button 
-              onClick={() => navigate('/workout-plan')}
+            <Button
+              onClick={() => navigate('/dashboard')}
               className="flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              Create New Plan
+              Back to Dashboard
             </Button>
           </div>
 
@@ -97,8 +97,8 @@ const SavedWorkoutPlans = () => {
                 <p className="text-muted-foreground mb-6">
                   Create your first personalized workout plan to get started on your fitness journey.
                 </p>
-                <Button onClick={() => navigate('/workout-plan')}>
-                  Create Your First Plan
+                <Button onClick={() => navigate('/dashboard')}>
+                  Go to Dashboard
                 </Button>
               </CardContent>
             </Card>
