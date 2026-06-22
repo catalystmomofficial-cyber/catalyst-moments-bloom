@@ -758,6 +758,74 @@ ${DISCLAIMER}`,
 <p>Apps are excellent record-keepers and decent predictors once they have several cycles of your data — but their forecasts are statistical guesses. Confirm with body signals (OPKs, cervical mucus) before trusting any app's fertile-window highlight, especially with irregular cycles.</p>
 ${DISCLAIMER}`,
   },
+  {
+    title: 'Natural Sleep Tips for Kids — No Supplements Needed',
+    slug: 'natural-sleep-tips-for-kids',
+    tags: ['wellness', 'sleep', 'parenting tips'],
+    // TODO: set a real featured image in /admin before publishing (upload to the
+    // blog-images bucket — a sleeping child / cozy bedroom photo, 1200x630, subject centered).
+    featured_image_url: '',
+    excerpt: 'A calmer room, a 3-step bedtime routine, and daytime habits that help kids fall asleep faster and stay asleep — no supplements required.',
+    content: `
+<h2>Bedtime Battles Are Not Just "a Phase"</h2>
+<p>If bedtime in your house involves three trips back to the bedroom, a negotiation over one more book, and a kid who is somehow wide awake at 9pm — you are not doing anything wrong, and you do not need a gummy vitamin or a melatonin drop to fix it. Sleep researchers and pediatric sleep coaches keep landing on the same three levers: the room, the routine, and the day that came before it. Get those right and most "my kid won't sleep" problems get dramatically smaller on their own.</p>
+
+<h2>Step 1: Build a Room That Says "Sleep Now"</h2>
+<ul>
+<li><strong>Temperature.</strong> Aim for 68–75°F (20–24°C). An overheated room is one of the most common, most overlooked sleep disruptors — breathable cotton pajamas and lightweight bedding help more than people expect.</li>
+<li><strong>Lighting.</strong> Start dimming household lights 1–2 hours before bed. Blackout curtains block streetlights and early sun; if your child is afraid of the dark, a very dim amber or red nightlight won't suppress melatonin the way a white or blue one will.</li>
+<li><strong>Noise.</strong> Keep the room under about 45 dB — roughly the volume of a quiet conversation. A white noise machine is a legitimate tool here, not a crutch: unfamiliar or inconsistent sounds are one of the most common reasons kids wake mid-night.</li>
+<li><strong>The sleep-only rule.</strong> Keep the bedroom for sleeping and quiet reading only — no toys, no screens, no energetic play. The fewer competing associations the room has, the faster "bed" reads as "time to sleep" to your child's brain.</li>
+</ul>
+
+<h2>Step 2: A 3-Step Routine That Actually Works</h2>
+<p>Consistent bedtime routines are consistently linked to kids falling asleep faster, sleeping longer, and waking less — and the routine matters more than any single ingredient inside it. Aim for 20–45 minutes, same order, same time, every night.</p>
+<h3>1. Connection Time (10–15 min)</h3>
+<p>Quiet one-on-one bonding to release oxytocin and signal safety: an "I love you because…" game and gentle back rubs for toddlers, "Rose, Thorn, Bud" for preschoolers (one good thing, one hard thing, one thing to look forward to), or a simple daily reflection — "what went well, what could improve" — for school-age kids.</p>
+<h3>2. Calming Activities (15–20 min)</h3>
+<p>Help your child's nervous system shift out of "day mode." Reading together (skip adventure or suspense at bedtime), a gentle lotion massage, quiet music or white noise, or a slow "lazy breathing" exercise — in slow, out even slower — all work toward the same goal: lower cortisol, more melatonin.</p>
+<h3>3. Sleep Prep (5–10 min)</h3>
+<p>The practical wind-down: teeth, bathroom, pajamas, dimming lights room by room, saying goodnight to toys one by one. Try the "put-down method" — placing your child in bed drowsy but still awake, rather than already asleep — which builds independence and reduces reliance on rocking or feeding to fall asleep. Close with the same short bedtime phrase every night ("Night night, I love you, time for sleep now") so your child's brain learns that phrase means the routine is over.</p>
+<p><strong>Give it 1–2 weeks before judging it.</strong> Most resistance fades once a routine becomes predictable — the consistency is doing the work, not any single step in isolation.</p>
+
+<h2>Step 3: The Day Sets Up the Night</h2>
+<ul>
+<li><strong>Get outside daily.</strong> Natural light, especially in the morning and afternoon, is one of the strongest regulators of a child's circadian rhythm. Aim for 30–60 minutes of outdoor play.</li>
+<li><strong>Let them burn energy.</strong> Active play builds the "sleep pressure" that makes falling asleep easier — just wrap up high-energy play 60–90 minutes before bed so there's time to wind down.</li>
+<li><strong>Keep wake times consistent</strong>, weekends included. This anchors the body clock more than people expect.</li>
+<li><strong>Screen curfew.</strong> Screens off 30–60 minutes before bed (ideally 1–2 hours) — blue light suppresses the melatonin that tells the brain it's night.</li>
+<li><strong>Mind the dinner plate.</strong> Protein, complex carbs, vegetables; skip sugary treats and caffeine sources (yes, including chocolate) in the evening.</li>
+<li><strong>Protect the last hour.</strong> Screen-free, low-stimulation: coloring, puzzles, building blocks, quiet conversation.</li>
+</ul>
+
+<h2>When Your Child Has More Energy Than the Routine Allows</h2>
+<p>For high-energy or ADHD kids, the same framework still works — it just needs more runway:</p>
+<ul>
+<li>Start the routine earlier; many of these kids need 90+ minutes to fully wind down.</li>
+<li>Burn energy on purpose before the routine starts (jumping jacks, a two-minute dance party), finishing 60–90 minutes before bed.</li>
+<li>Sensory tools help: weighted blankets, firm hugs, compression pajamas.</li>
+<li>Visual timers make "5 more minutes" concrete for a time-blind brain.</li>
+<li>Reduce decision fatigue: "red or blue pajamas?" instead of an open-ended "which pajamas?"</li>
+</ul>
+
+<h2>Night Wakings and Bedtime Worries</h2>
+<p>For <strong>night wakings</strong>, use a short, boring "night-wake script" — the same calm words or actions every time, no new props, no long conversations, lights dim. Predictability (even unexciting predictability) is what gets a child back to sleep fastest.</p>
+<p>For <strong>bedtime worries</strong>, younger kids (ages 3–5) often do well with a "worry box" — they draw or "write" the worry, drop it in, and you promise to revisit it tomorrow. School-age kids (5–9) tend to respond better to a body-scan exercise: noticing toes, legs, tummy, arms, and head relaxing one at a time without moving.</p>
+
+<h2>Quick Reference: Sleep Needs by Age</h2>
+<table>
+<thead><tr><th>Age</th><th>Recommended Sleep (24 hrs)</th></tr></thead>
+<tbody>
+<tr><td>1–2 years</td><td>11–14 hours, including naps</td></tr>
+<tr><td>3–5 years</td><td>10–13 hours</td></tr>
+<tr><td>6–12 years</td><td>9–12 hours</td></tr>
+</tbody>
+</table>
+
+<h2>The Bottom Line</h2>
+<p>Better sleep for kids tends to come from the boring, repeatable stuff — a cool dark quiet room, the same wind-down in the same order, and a day with enough light, movement, and screen boundaries to make sleep pressure build naturally. None of it works overnight, and none of it requires a bottle. Give a new routine a real two weeks before deciding it isn't working — and on the nights it falls apart anyway, going back to the routine the next night is the whole strategy. Your child's body remembers the rhythm even when one night doesn't go to plan.</p>
+<p><em>This article is for general education and is not medical advice. If sleep problems are severe, sudden, or accompanied by snoring, gasping, or daytime symptoms, talk to your child's pediatrician — there are treatable causes (like sleep apnea) that a routine alone won't fix.</em></p>`,
+  },
 ];
 
 // ---------------------------------------------------------------------------
