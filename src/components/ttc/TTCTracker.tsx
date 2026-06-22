@@ -86,11 +86,11 @@ const ImportCycleDataModal = ({ open, onClose }: { open: boolean; onClose: () =>
       if (Array.isArray(parsed.cycle_logs) && parsed.cycle_logs.length > 0) {
         const rows = parsed.cycle_logs.map((log: any) => ({
           user_id: user.id,
-          date: log.date,
+          log_date: log.date,
           cycle_day: log.cycle_day ?? null,
           symptoms: log.symptoms ?? [],
         }));
-        await (supabase as any).from('ttc_cycle_logs').upsert(rows, { onConflict: 'user_id,date', ignoreDuplicates: false });
+        await (supabase as any).from('ttc_cycle_logs').upsert(rows, { onConflict: 'user_id,log_date', ignoreDuplicates: false });
       }
 
       await awardPoints(50, 'cycle_import', 'Imported cycle data from app screenshot');
@@ -212,14 +212,6 @@ export const TTCTracker = () => {
   const today = todayISODate();
   const todayLog = logByDate[today] ?? null;
   const todayTemperature = todayLog?.basal_body_temp ?? null;
-
-  // Other detailed-view signals (CM / mood / sleep) are not yet persisted.
-  const handleLogCycleData = (type: string) => {
-    toast({
-      title: "Cycle data logged",
-      description: `${type} has been recorded in your TTC tracker`,
-    });
-  };
 
   const getPhaseColor = (phase: string) => {
     switch (phase) {
@@ -428,7 +420,7 @@ export const TTCTracker = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleLogCycleData('Cervical Mucus')}
+                    onClick={() => setDayLogOpen(true)}
                     className="flex items-center gap-2"
                   >
                     <Droplets className="h-4 w-4" />
@@ -437,7 +429,7 @@ export const TTCTracker = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleLogCycleData('Mood')}
+                    onClick={() => setDayLogOpen(true)}
                     className="flex items-center gap-2"
                   >
                     <Heart className="h-4 w-4" />
@@ -446,7 +438,7 @@ export const TTCTracker = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleLogCycleData('Sleep')}
+                    onClick={() => setDayLogOpen(true)}
                     className="flex items-center gap-2"
                   >
                     <Moon className="h-4 w-4" />
