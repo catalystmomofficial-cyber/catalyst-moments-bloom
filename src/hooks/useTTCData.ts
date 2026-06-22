@@ -24,6 +24,30 @@ export interface TTCDailyCheckin {
   created_at: string;
 }
 
+// One row per user per day in ttc_cycle_logs (the real per-day store).
+export interface TTCCycleLog {
+  log_date: string;
+  cycle_day: number | null;
+  basal_body_temp: number | null;
+  symptoms: string[] | null;
+  notes: string | null;
+  cervical_mucus: string | null;
+  flow_intensity: string | null;
+  period_status: string | null;
+}
+
+// Fields a user can edit/save for a given day.
+export interface CycleLogInput {
+  basal_body_temp?: number | null;
+  symptoms?: string[];
+  notes?: string | null;
+  cervical_mucus?: string | null;
+  flow_intensity?: string | null;
+  period_status?: string | null;
+}
+
+export type MapPhase = 'menstrual' | 'follicular' | 'ovulation' | 'luteal';
+
 export type CyclePhase = 'menstrual' | 'follicular' | 'ovulation' | 'early_luteal' | 'late_luteal';
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -124,24 +148,73 @@ export function fertilityTipsForGap(gap: string | null, phase: CyclePhase | null
   return pool.slice(0, 3);
 }
 
+// Effective cycle / period lengths with sane fallbacks.
+export const cycleLengthOf = (settings: TTCCycleSettings | null): number =>
+  Math.min(Math.max(settings?.average_cycle_length || 28, 20), 45);
+
+export const periodLengthOf = (settings: TTCCycleSettings | null): number =>
+  Math.min(Math.max(settings?.average_period_length || 5, 1), 10);
+
+// Days until the next predicted period (1-based cycle day → days remaining).
+export const daysUntilNextPeriod = (cycleDay: number | null, cycleLength: number): number | null => {
+  if (!cycleDay) return null;
+  return Math.max(0, cycleLength - cycleDay + 1);
+};
+
+// Cycle-length-aware phase for a given cycle day (used to colour the 28-day map).
+export const mapPhaseForDay = (day: number, cycleLength: number, periodLength: number): MapPhase => {
+  const ovulation = cycleLength - 14; // luteal phase is ~14 days
+  if (day <= periodLength) return 'menstrual';
+  if (day >= ovulation - 1 && day <= ovulation + 1) return 'ovulation';
+  if (day < ovulation - 1) return 'follicular';
+  return 'luteal';
+};
+
+// Short "window" label for the ring's phase pill.
+export const windowLabel = (p: CyclePhase | null): string => {
+  switch (p) {
+    case 'menstrual': return 'Menstrual phase';
+    case 'follicular': return 'Follicular phase';
+    case 'ovulation': return 'Fertile window';
+    case 'early_luteal':
+    case 'late_luteal': return 'Luteal window';
+    default: return 'Cycle';
+  }
+};
+
+// Short subtitle describing the current phase.
+export const phaseDescription = (p: CyclePhase | null): string => {
+  switch (p) {
+    case 'menstrual': return 'Menstrual phase';
+    case 'follicular': return 'Pre-ovulation phase';
+    case 'ovulation': return 'Fertile window — peak fertility';
+    case 'early_luteal':
+    case 'late_luteal': return 'Post-ovulation phase';
+    default: return 'Set your cycle to see your phase';
+  }
+};
+
 export function useTTCData() {
   const { user } = useAuth();
   const [settings, setSettings] = useState<TTCCycleSettings | null>(null);
   const [todayCheckin, setTodayCheckin] = useState<TTCDailyCheckin | null>(null);
   const [allCheckins, setAllCheckins] = useState<TTCDailyCheckin[]>([]);
+  const [logs, setLogs] = useState<TTCCycleLog[]>([]);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
     if (!user) { setLoading(false); return; }
     setLoading(true);
-    const [s, c] = await Promise.all([
+    const [s, c, l] = await Promise.all([
       supabase.from('ttc_cycle_settings').select('*').eq('user_id', user.id).maybeSingle(),
       supabase.from('ttc_daily_checkins').select('*').eq('user_id', user.id).order('checkin_date', { ascending: false }).limit(120),
+      supabase.from('ttc_cycle_logs').select('*').eq('user_id', user.id).order('log_date', { ascending: false }).limit(180),
     ]);
     setSettings((s.data as TTCCycleSettings) ?? null);
     const checkins = (c.data as TTCDailyCheckin[]) ?? [];
     setAllCheckins(checkins);
     setTodayCheckin(checkins.find(x => x.checkin_date === todayISO()) ?? null);
+    setLogs((l.data as TTCCycleLog[]) ?? []);
     setLoading(false);
   }, [user]);
 
@@ -150,14 +223,46 @@ export function useTTCData() {
   const cycleDay = calcCycleDay(settings);
   const phase = calcPhase(cycleDay);
 
+  const logByDate = logs.reduce<Record<string, TTCCycleLog>>((acc, log) => {
+    acc[log.log_date] = log;
+    return acc;
+  }, {});
+
+  // Upsert a single day's log into ttc_cycle_logs (the same table Import writes to).
+  const saveCycleLog = useCallback(async (dateISO: string, fields: CycleLogInput) => {
+    if (!user) return { error: new Error('Not signed in') };
+    const row: Record<string, unknown> = {
+      user_id: user.id,
+      log_date: dateISO,
+      cycle_day: calcCycleDay(settings, dateISO),
+    };
+    if (fields.basal_body_temp !== undefined) row.basal_body_temp = fields.basal_body_temp;
+    if (fields.symptoms !== undefined) row.symptoms = fields.symptoms;
+    if (fields.notes !== undefined) row.notes = fields.notes;
+    if (fields.cervical_mucus !== undefined) row.cervical_mucus = fields.cervical_mucus;
+    if (fields.flow_intensity !== undefined) row.flow_intensity = fields.flow_intensity;
+    if (fields.period_status !== undefined) row.period_status = fields.period_status;
+
+    const { error } = await (supabase as any)
+      .from('ttc_cycle_logs')
+      .upsert(row, { onConflict: 'user_id,log_date' });
+    if (!error) await refresh();
+    return { error };
+  }, [user, settings, refresh]);
+
   return {
     settings,
     todayCheckin,
     allCheckins,
+    logs,
+    logByDate,
     loading,
     cycleDay,
     phase,
     refresh,
+    saveCycleLog,
+    cycleLength: cycleLengthOf(settings),
+    periodLength: periodLengthOf(settings),
     hasSettings: !!settings?.last_period_start,
   };
 }

@@ -1,78 +1,68 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { Calendar, X, Thermometer, Plus, Pencil } from 'lucide-react';
+import { useTTCData, mapPhaseForDay, type MapPhase } from '@/hooks/useTTCData';
+import { DayLogModal } from './DayLogModal';
 
-interface CycleDay {
-  date: number;
-  phase: 'menstrual' | 'follicular' | 'fertile' | 'luteal';
-  fertility: 'low' | 'medium' | 'high';
-  symptoms?: string[];
-  temperature?: number;
-  notes?: string;
+const MAP_PHASE_COLOR: Record<MapPhase, string> = {
+  menstrual: '#D9B08C',
+  follicular: '#F4C5A0',
+  ovulation: '#B5651D',
+  luteal: '#FAE0CC',
+};
+
+const phaseTitle: Record<MapPhase, string> = {
+  menstrual: 'Menstrual',
+  follicular: 'Follicular',
+  ovulation: 'Fertile Window',
+  luteal: 'Luteal',
+};
+
+const toISO = (d: Date) => d.toISOString().slice(0, 10);
+const addDays = (iso: string, n: number): string => {
+  const d = new Date(iso + 'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+};
+const shortDate = (iso: string) =>
+  new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+interface CalendarDay {
+  cycleDay: number;
+  dateISO: string;
+  phase: MapPhase;
+  isToday: boolean;
 }
 
 export const CycleCalendar = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDay, setSelectedDay] = useState<CycleDay | null>(null);
-  
-  // Mock cycle data for 28-day cycle
-  const generateCycleData = (): CycleDay[] => {
-    const days: CycleDay[] = [];
-    for (let i = 1; i <= 28; i++) {
-      let phase: CycleDay['phase'];
-      let fertility: CycleDay['fertility'];
-      
-      if (i <= 5) {
-        phase = 'menstrual';
-        fertility = 'low';
-      } else if (i <= 13) {
-        phase = 'follicular';
-        fertility = i >= 10 ? 'medium' : 'low';
-      } else if (i <= 17) {
-        phase = 'fertile';
-        fertility = 'high';
-      } else {
-        phase = 'luteal';
-        fertility = 'low';
-      }
-      
-      days.push({
-        date: i,
-        phase,
-        fertility,
-        temperature: 97.2 + Math.random() * 1.5,
-        symptoms: phase === 'menstrual' ? ['cramping', 'fatigue'] : 
-                 phase === 'fertile' ? ['clear CM', 'mild pain'] : [],
-        notes: i === 14 ? 'Ovulation day - peak fertility!' : ''
-      });
-    }
-    return days;
-  };
+  const { settings, cycleDay, cycleLength, periodLength, logByDate, saveCycleLog, hasSettings } = useTTCData();
+  const [selectedISO, setSelectedISO] = useState<string | null>(null);
+  const [dayLogOpen, setDayLogOpen] = useState(false);
 
-  const cycleData = generateCycleData();
+  const today = toISO(new Date());
 
-  const getPhaseColor = (phase: string) => {
-    switch (phase) {
-      case 'menstrual': return 'bg-red-500';
-      case 'follicular': return 'bg-blue-500';
-      case 'fertile': return 'bg-green-500';
-      case 'luteal': return 'bg-yellow-500';
-      default: return 'bg-gray-300';
-    }
-  };
+  // Day 1 of the *current* cycle = today minus (cycleDay - 1) days.
+  const cycleStartISO = cycleDay ? addDays(today, -(cycleDay - 1)) : null;
 
-  const getFertilityIcon = (fertility: string) => {
-    switch (fertility) {
-      case 'high': return '🥚';
-      case 'medium': return '🌙';
-      case 'low': return '💧';
-      default: return '';
-    }
-  };
+  const days = useMemo<CalendarDay[]>(() => {
+    if (!cycleStartISO) return [];
+    return Array.from({ length: cycleLength }, (_, i) => {
+      const day = i + 1;
+      const dateISO = addDays(cycleStartISO, i);
+      return {
+        cycleDay: day,
+        dateISO,
+        phase: mapPhaseForDay(day, cycleLength, periodLength),
+        isToday: dateISO === today,
+      };
+    });
+  }, [cycleStartISO, cycleLength, periodLength, today]);
+
+  const selectedLog = selectedISO ? logByDate[selectedISO] ?? null : null;
+  const selectedDay = selectedISO ? days.find((d) => d.dateISO === selectedISO) ?? null : null;
 
   return (
     <Dialog>
@@ -82,183 +72,125 @@ export const CycleCalendar = () => {
           View Full Cycle Calendar
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <span>Cycle Calendar - {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
-          </DialogTitle>
+          <DialogTitle>Cycle Calendar</DialogTitle>
         </DialogHeader>
-        
-        <div className="space-y-6">
-          {/* Calendar Navigation */}
-          <div className="flex items-center justify-between">
-            <Button variant="outline" size="sm" onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() - 1)))}>
-              <ChevronLeft className="w-4 h-4" />
-              Previous
-            </Button>
-            <div className="text-lg font-semibold">
-              {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-            </div>
-            <Button variant="outline" size="sm" onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() + 1)))}>
-              Next
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
 
-          {/* Legend */}
-          <div className="flex flex-wrap gap-4 p-4 bg-muted/30 rounded-lg">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-              <span className="text-sm">Menstrual</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-              <span className="text-sm">Follicular</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-              <span className="text-sm">Fertile Window</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
-              <span className="text-sm">Luteal</span>
-            </div>
-          </div>
+        {/* Shared day-log modal for tapping a day */}
+        {selectedISO && (
+          <DayLogModal
+            open={dayLogOpen}
+            onOpenChange={setDayLogOpen}
+            dateISO={selectedISO}
+            existing={selectedLog}
+            onSave={saveCycleLog}
+          />
+        )}
 
-          {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-2">
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="p-2 text-center font-medium text-muted-foreground">
-                {day}
-              </div>
-            ))}
-            
-            {cycleData.map((day) => (
-              <Card 
-                key={day.date} 
-                className={`cursor-pointer hover:shadow-md transition-all duration-200 min-h-[80px] ${
-                  selectedDay?.date === day.date ? 'ring-2 ring-primary' : ''
-                }`}
-                onClick={() => setSelectedDay(day)}
-              >
-                <CardContent className="p-2 text-center">
-                  <div className="flex flex-col items-center space-y-1">
-                    <div className={`w-6 h-6 rounded-full ${getPhaseColor(day.phase)} text-white text-xs flex items-center justify-center`}>
-                      {day.date}
+        {!hasSettings || !cycleStartISO ? (
+          <div className="text-center py-10 text-muted-foreground">
+            <Calendar className="h-10 w-10 mx-auto mb-3 opacity-50" />
+            <p className="font-medium text-foreground mb-1">Set up your cycle first</p>
+            <p className="text-sm">Add your last period date in the tracker settings to see your full cycle map.</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Legend */}
+            <div className="flex flex-wrap gap-4 p-4 bg-muted/30 rounded-lg">
+              {(['menstrual', 'follicular', 'ovulation', 'luteal'] as MapPhase[]).map((p) => (
+                <div key={p} className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full" style={{ background: MAP_PHASE_COLOR[p] }} />
+                  <span className="text-sm">{phaseTitle[p]}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Cycle-day grid (each cell is a real date) */}
+            <div className="grid grid-cols-7 gap-2">
+              {days.map((day) => {
+                const hasLog = !!logByDate[day.dateISO];
+                return (
+                  <button
+                    key={day.dateISO}
+                    type="button"
+                    onClick={() => setSelectedISO(day.dateISO)}
+                    className={`rounded-lg p-2 text-center transition-all hover:shadow-md ${
+                      selectedISO === day.dateISO ? 'ring-2 ring-primary' : ''
+                    }`}
+                    style={{ boxShadow: day.isToday ? '0 0 0 2px #2C2218' : undefined }}
+                  >
+                    <div
+                      className="w-7 h-7 mx-auto rounded-full text-white text-xs flex items-center justify-center"
+                      style={{ background: MAP_PHASE_COLOR[day.phase] }}
+                    >
+                      {day.cycleDay}
                     </div>
-                    <div className="text-lg">{getFertilityIcon(day.fertility)}</div>
-                    <Badge variant="outline" className="text-xs">
-                      {day.fertility}
-                    </Badge>
+                    <div className="text-[10px] text-muted-foreground mt-1">{shortDate(day.dateISO)}</div>
+                    {hasLog && <div className="w-1 h-1 mx-auto mt-1 rounded-full bg-primary" />}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Day details */}
+            {selectedDay && (
+              <Card className="border-primary">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between text-base">
+                    <span>
+                      Day {selectedDay.cycleDay} · {phaseTitle[selectedDay.phase]} · {shortDate(selectedDay.dateISO)}
+                    </span>
+                    <Button variant="ghost" size="sm" onClick={() => setSelectedISO(null)}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="font-medium mb-1 text-sm">Basal Temperature</h4>
+                      <p className="text-lg">
+                        {selectedLog?.basal_body_temp != null ? `${selectedLog.basal_body_temp}°F` : '—'}
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-1 text-sm">Symptoms</h4>
+                      {selectedLog?.symptoms && selectedLog.symptoms.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {selectedLog.symptoms.map((s, i) => (
+                            <Badge key={i} variant="secondary">{s}</Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">None logged</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {selectedLog?.notes && (
+                    <div>
+                      <h4 className="font-medium mb-1 text-sm">Notes</h4>
+                      <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">{selectedLog.notes}</p>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 flex-wrap">
+                    <Button size="sm" variant="outline" onClick={() => setDayLogOpen(true)}>
+                      <Pencil className="w-4 h-4 mr-1" /> Edit Day
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => setDayLogOpen(true)}>
+                      <Plus className="w-4 h-4 mr-1" /> Add Symptoms
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => setDayLogOpen(true)}>
+                      <Thermometer className="w-4 h-4 mr-1" /> Log Temperature
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            )}
           </div>
-
-          {/* Day Details */}
-          {selectedDay && (
-            <Card className="border-primary">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Day {selectedDay.date} - {selectedDay.phase.charAt(0).toUpperCase() + selectedDay.phase.slice(1)} Phase</span>
-                  <Button variant="ghost" size="sm" onClick={() => setSelectedDay(null)}>
-                    <X className="w-4 h-4" />
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <h4 className="font-medium mb-2">Fertility Level</h4>
-                    <Badge className={`${
-                      selectedDay.fertility === 'high' ? 'bg-green-500' :
-                      selectedDay.fertility === 'medium' ? 'bg-yellow-500' : 'bg-gray-500'
-                    } text-white`}>
-                      {selectedDay.fertility.toUpperCase()}
-                    </Badge>
-                  </div>
-                  
-                  {selectedDay.temperature && (
-                    <div>
-                      <h4 className="font-medium mb-2">Basal Temperature</h4>
-                      <p className="text-lg">{selectedDay.temperature.toFixed(1)}°F</p>
-                    </div>
-                  )}
-                  
-                  {selectedDay.symptoms && selectedDay.symptoms.length > 0 && (
-                    <div>
-                      <h4 className="font-medium mb-2">Symptoms</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedDay.symptoms.map((symptom, idx) => (
-                          <Badge key={idx} variant="secondary">{symptom}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                {selectedDay.notes && (
-                  <div>
-                    <h4 className="font-medium mb-2">Notes</h4>
-                    <p className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg">
-                      {selectedDay.notes}
-                    </p>
-                  </div>
-                )}
-                
-                {/* Actionable Insights */}
-                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="text-sm font-medium text-blue-800 mb-2">Today's Recommendations</h4>
-                  <div className="space-y-2 text-sm">
-                    {selectedDay.phase === 'fertile' && (
-                      <>
-                        <div className="flex items-center space-x-2">
-                          <span>🍯</span>
-                          <span>Try fertility smoothie: spinach, berries, Greek yogurt</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span>🧘‍♀️</span>
-                          <span>10-minute fertility yoga session</span>
-                        </div>
-                      </>
-                    )}
-                    {selectedDay.phase === 'luteal' && (
-                      <>
-                        <div className="flex items-center space-x-2">
-                          <span>🚶‍♀️</span>
-                          <span>Gentle 15-minute walk</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span>🛁</span>
-                          <span>Relaxing evening bath with Epsom salts</span>
-                        </div>
-                      </>
-                    )}
-                    {selectedDay.phase === 'menstrual' && (
-                      <>
-                        <div className="flex items-center space-x-2">
-                          <span>🍵</span>
-                          <span>Herbal tea: ginger or chamomile</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span>🌿</span>
-                          <span>Light stretching or restorative yoga</span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="flex gap-2 flex-wrap">
-                  <Button size="sm" variant="outline" onClick={() => toast.info('Day editing coming soon')}>Edit Day</Button>
-                  <Button size="sm" variant="outline" onClick={() => toast.info('Symptom logging coming soon')}>Add Symptoms</Button>
-                  <Button size="sm" variant="outline" onClick={() => toast.info('Temperature logging coming soon')}>Log Temperature</Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+        )}
       </DialogContent>
     </Dialog>
   );

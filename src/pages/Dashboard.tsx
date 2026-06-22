@@ -185,55 +185,48 @@ const Dashboard = () => {
                 <Dialog open={isJourneySelectorOpen} onOpenChange={setIsJourneySelectorOpen}>
                   <DialogTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2 w-full md:w-auto justify-center min-w-0">
-                      <Baby className="h-4 w-4 shrink-0" /> 
+                      <Baby className="h-4 w-4 shrink-0" />
                       <span className="truncate">{stageInfo?.phase || 'Update Journey'}</span>
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <JourneySelector 
+                    <JourneySelector
                       onComplete={() => setIsJourneySelectorOpen(false)}
                       isOnboarding={false}
                     />
                   </DialogContent>
                 </Dialog>
+                <PointsBalance />
               </div>
             </div>
         
             {/* Subscription Status + Points Balance + Affiliate */}
             <div className="mb-8 space-y-3">
               {subscribed ? (
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-lg border border-primary/20 bg-gradient-to-r from-primary/5 to-transparent">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="bg-primary/10 p-2 rounded-lg shrink-0">
-                      <Crown className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold">Premium</span>
-                        <div className="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
-                          <CheckCircle className="h-3 w-3" />
-                          <span className="text-xs font-medium">Active</span>
-                        </div>
-                      </div>
-                      {subscriptionEnd && (
-                        <p className="text-xs text-muted-foreground">
-                          Renews {new Date(subscriptionEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                        </p>
-                      )}
-                    </div>
+                <div
+                  className="flex items-center justify-between gap-3 rounded-full px-4 py-2"
+                  style={{ background: 'rgba(244,197,160,0.25)' }}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <CheckCircle className="h-4 w-4 shrink-0" style={{ color: '#8B4513' }} />
+                    <span className="text-sm font-medium truncate" style={{ color: '#8B4513' }}>
+                      Catalyst Mom Active
+                    </span>
+                    {subscriptionEnd && (
+                      <span className="text-xs text-muted-foreground hidden sm:inline">
+                        · Renews {new Date(subscriptionEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleManageSubscription}
-                      disabled={isManagingSubscription}
-                      className="gap-1"
-                    >
-                      <CreditCard className="h-4 w-4" />
-                      Manage
-                    </Button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={handleManageSubscription}
+                    disabled={isManagingSubscription}
+                    className="text-xs font-medium shrink-0 hover:underline disabled:opacity-50"
+                    style={{ color: '#8B4513' }}
+                  >
+                    Manage
+                  </button>
                 </div>
               ) : (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-lg border border-amber-200 dark:border-amber-900/30 bg-gradient-to-r from-amber-50 to-transparent dark:from-amber-950/20">
@@ -251,8 +244,6 @@ const Dashboard = () => {
                   </div>
                 </div>
               )}
-
-              <PointsBalance />
 
               <div className="flex justify-end">
                 <AffiliateButton variant="outline" size="sm" />

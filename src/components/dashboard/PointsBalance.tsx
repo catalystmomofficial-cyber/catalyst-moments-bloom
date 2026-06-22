@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
+/**
+ * Compact points pill — sits on the stage row at the top of the dashboard.
+ * Reads the same user_points.total_points source as before (negative values included)
+ * and refreshes on the existing 'points-updated' event.
+ */
 export const PointsBalance = () => {
   const { user } = useAuth();
   const [points, setPoints] = useState<number | null>(null);
@@ -29,22 +33,19 @@ export const PointsBalance = () => {
   }, [user]);
 
   return (
-    <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent">
-      <CardContent className="p-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="bg-primary/10 p-2 rounded-lg shrink-0">
-            <Sparkles className="h-5 w-5 text-primary" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs text-muted-foreground">Points Balance</p>
-            <p className="font-semibold text-lg">{points ?? '—'} Points</p>
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground hidden sm:block max-w-[55%] text-right">
-          Redeem for exclusive digital products and premium services.
-        </p>
-      </CardContent>
-    </Card>
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full font-medium whitespace-nowrap"
+      style={{
+        background: 'rgba(244,197,160,0.3)',
+        color: '#8B4513',
+        padding: '7px 14px',
+        fontSize: '13px',
+      }}
+      title="Points balance"
+    >
+      <Sparkles className="h-3.5 w-3.5" />
+      {points ?? '—'} pts
+    </span>
   );
 };
 

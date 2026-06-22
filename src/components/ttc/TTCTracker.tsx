@@ -9,8 +9,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { supabase } from '@/integrations/supabase/client';
-import { useTTCData } from '@/hooks/useTTCData';
+import {
+  useTTCData, windowLabel, phaseDescription, daysUntilNextPeriod, mapPhaseForDay,
+  type MapPhase,
+} from '@/hooks/useTTCData';
 import { CycleCalendar } from './CycleCalendar';
+import { DayLogModal } from './DayLogModal';
 import { TTCBloodworkModal } from './TTCBloodworkModal';
 import { TTCCycleSettingsModal } from './TTCCycleSettingsModal';
 import { TTCPatternReport } from './TTCPatternReport';
@@ -165,10 +169,26 @@ const ImportCycleDataModal = ({ open, onClose }: { open: boolean; onClose: () =>
   );
 };
 
+// Phase colours for the 28-day cycle map (brand palette).
+const MAP_PHASE_COLOR: Record<MapPhase, string> = {
+  menstrual: '#D9B08C',   // deep peach
+  follicular: '#F4C5A0',  // peach
+  ovulation: '#B5651D',   // copper
+  luteal: '#FAE0CC',      // peach light
+};
+
+const RING_RADIUS = 86;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+
+const todayISODate = () => new Date().toISOString().slice(0, 10);
+
 // ─── TTCTracker ───────────────────────────────────────────────────────────────
 export const TTCTracker = () => {
   const { toast } = useToast();
-  const { settings, refresh, cycleDay, phase } = useTTCData();
+  const {
+    settings, refresh, cycleDay, phase, cycleLength, periodLength, logByDate, saveCycleLog,
+  } = useTTCData();
+  const [dayLogOpen, setDayLogOpen] = useState(false);
 
   const ttcPhaseToLocal = (p: string | null): 'menstrual' | 'follicular' | 'fertile' | 'luteal' => {
     if (p === 'menstrual') return 'menstrual';
@@ -184,27 +204,17 @@ export const TTCTracker = () => {
   };
 
   const [viewMode, setViewMode] = useState<'simple' | 'detailed'>('simple');
-  const [temperatureLocked, setTemperatureLocked] = useState(false);
-  const [todayTemperature, setTodayTemperature] = useState<number | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [bloodworkOpen, setBloodworkOpen] = useState(false);
   const [reportMode, setReportMode] = useState<'doctor_prep' | 'pattern_report' | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const handleLogCycleData = (type: string) => {
-    if (type === 'Temperature') {
-      if (temperatureLocked) {
-        toast({
-          title: "Temperature already logged",
-          description: "You've already recorded your temperature today",
-          variant: "destructive"
-        });
-        return;
-      }
-      setTemperatureLocked(true);
-      setTodayTemperature(97.8);
-    }
+  const today = todayISODate();
+  const todayLog = logByDate[today] ?? null;
+  const todayTemperature = todayLog?.basal_body_temp ?? null;
 
+  // Other detailed-view signals (CM / mood / sleep) are not yet persisted.
+  const handleLogCycleData = (type: string) => {
     toast({
       title: "Cycle data logged",
       description: `${type} has been recorded in your TTC tracker`,
@@ -224,6 +234,13 @@ export const TTCTracker = () => {
   return (
     <>
       <ImportCycleDataModal open={importOpen} onClose={() => setImportOpen(false)} />
+      <DayLogModal
+        open={dayLogOpen}
+        onOpenChange={setDayLogOpen}
+        dateISO={today}
+        existing={todayLog}
+        onSave={saveCycleLog}
+      />
       <TTCBloodworkModal open={bloodworkOpen} onClose={() => setBloodworkOpen(false)} />
       <TTCCycleSettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} initial={settings} onSaved={refresh} />
       {reportMode && (
@@ -274,41 +291,87 @@ export const TTCTracker = () => {
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
-              <div className="text-center p-4 bg-muted/30 rounded-lg">
-                <div className="text-2xl font-bold mb-1">Day {currentCycle.day}</div>
-                <Badge className={getPhaseColor(currentCycle.phase)}>
-                  {currentCycle.phase.charAt(0).toUpperCase() + currentCycle.phase.slice(1)} Window
-                </Badge>
-                <p className="text-sm text-muted-foreground mt-2">
-                  {currentCycle.phase === 'fertile' ? 'High fertility - optimal time for conception' :
-                   currentCycle.phase === 'luteal' ? 'Post-ovulation phase' :
-                   currentCycle.phase === 'follicular' ? 'Pre-ovulation phase' :
-                   'Menstrual phase'}
+              {/* Cycle ring */}
+              <div className="flex flex-col items-center p-6 bg-card rounded-2xl border">
+                <div className="relative" style={{ width: 200, height: 200 }}>
+                  <svg width="200" height="200" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="100" cy="100" r={RING_RADIUS} fill="none" stroke="#F5EBE0" strokeWidth="14" />
+                    <circle
+                      cx="100" cy="100" r={RING_RADIUS} fill="none" stroke="#B5651D" strokeWidth="14"
+                      strokeLinecap="round"
+                      strokeDasharray={`${(Math.min(cycleDay ?? 0, cycleLength) / cycleLength) * RING_CIRCUMFERENCE} ${RING_CIRCUMFERENCE}`}
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-[11px] font-medium tracking-[0.08em] uppercase text-muted-foreground">Cycle day</span>
+                    <span className="text-[44px] font-bold leading-none my-1 text-foreground">{cycleDay ?? '—'}</span>
+                    <span
+                      className="text-[11px] font-medium px-3 py-1 rounded-full"
+                      style={{ color: '#B5651D', background: 'rgba(181,101,29,0.1)' }}
+                    >
+                      {windowLabel(phase)}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mt-3 text-center">
+                  {phaseDescription(phase)}
+                  {daysUntilNextPeriod(cycleDay, cycleLength) != null && (
+                    <> · {daysUntilNextPeriod(cycleDay, cycleLength)} days until next period</>
+                  )}
                 </p>
-                {todayTemperature && (
-                  <div className="mt-2 text-sm">
+                {todayTemperature != null && (
+                  <p className="text-sm mt-1">
                     <span className="font-medium">Today's BBT: </span>
                     <span className="text-primary">{todayTemperature}°F</span>
-                  </div>
+                  </p>
                 )}
+              </div>
+
+              {/* 28-day cycle map */}
+              <div className="p-4 bg-card rounded-2xl border">
+                <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-muted-foreground mb-2.5">
+                  {cycleLength}-day cycle map
+                </p>
+                <div className="flex gap-0.5">
+                  {Array.from({ length: cycleLength }, (_, i) => {
+                    const day = i + 1;
+                    const p = mapPhaseForDay(day, cycleLength, periodLength);
+                    const isToday = cycleDay === day;
+                    return (
+                      <div
+                        key={day}
+                        title={`Day ${day}`}
+                        className="flex-1 rounded-sm"
+                        style={{
+                          height: 28,
+                          background: MAP_PHASE_COLOR[p],
+                          boxShadow: isToday ? '0 0 0 2px #2C2218' : undefined,
+                          transform: isToday ? 'scaleY(1.15)' : undefined,
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="flex justify-between mt-2 text-[9.5px] text-muted-foreground">
+                  <span>Period</span><span>Follicular</span><span>Ovulation</span><span>Luteal</span>
+                </div>
               </div>
 
               {viewMode === 'simple' ? (
                 <div className="grid grid-cols-2 gap-3">
                   <Button
-                    variant={temperatureLocked ? "default" : "outline"}
+                    variant="outline"
                     size="sm"
-                    onClick={() => handleLogCycleData('Temperature')}
+                    onClick={() => setDayLogOpen(true)}
                     className="flex items-center gap-2"
-                    disabled={temperatureLocked}
                   >
                     <Thermometer className="h-4 w-4" />
-                    {temperatureLocked ? 'Temp Logged' : 'Log Temp'}
+                    Log Temp
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleLogCycleData('Symptoms')}
+                    onClick={() => setDayLogOpen(true)}
                     className="flex items-center gap-2"
                   >
                     <Heart className="h-4 w-4" />
@@ -354,14 +417,13 @@ export const TTCTracker = () => {
               ) : (
                 <div className="grid grid-cols-2 gap-3">
                   <Button
-                    variant={temperatureLocked ? "default" : "outline"}
+                    variant="outline"
                     size="sm"
-                    onClick={() => handleLogCycleData('Temperature')}
+                    onClick={() => setDayLogOpen(true)}
                     className="flex items-center gap-2"
-                    disabled={temperatureLocked}
                   >
                     <Thermometer className="h-4 w-4" />
-                    {temperatureLocked ? 'Temp Logged' : 'Log Temp'}
+                    Log Temp
                   </Button>
                   <Button
                     variant="outline"
