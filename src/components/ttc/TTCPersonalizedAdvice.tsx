@@ -194,13 +194,13 @@ export const TTCPersonalizedAdvice = ({
             {advice.map((item) => (
               <Card key={item.id} className="border-l-4 border-l-primary">
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between space-x-4">
-                    <div className="flex items-start space-x-3 flex-1">
-                      <div className="p-2 bg-primary/10 rounded-full">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="flex items-start space-x-3 min-w-0 flex-1">
+                      <div className="p-2 bg-primary/10 rounded-full shrink-0">
                         {item.icon}
                       </div>
-                      <div className="space-y-2 flex-1">
-                        <div className="flex items-center space-x-2">
+                      <div className="space-y-2 min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
                           <h4 className="font-medium">{item.title}</h4>
                           <Badge className={getPriorityColor(item.priority)} variant="secondary">
                             {item.priority}
@@ -213,7 +213,7 @@ export const TTCPersonalizedAdvice = ({
                       </div>
                     </div>
                     {item.actionable && (
-                      <Button size="sm" variant="outline" asChild>
+                      <Button size="sm" variant="outline" asChild className="shrink-0">
                         <Link to="/wellness/resources">Learn More</Link>
                       </Button>
                     )}
