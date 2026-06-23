@@ -10,9 +10,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { supabase } from '@/integrations/supabase/client';
 import {
-  useTTCData, windowLabel, phaseDescription, daysUntilNextPeriod, mapPhaseForDay,
+  useTTCData, daysUntilNextPeriod, mapPhaseForDay,
   type MapPhase,
 } from '@/hooks/useTTCData';
+import { BloomRing } from './BloomRing';
 import { CycleCalendar } from './CycleCalendar';
 import { DayLogModal } from './DayLogModal';
 import { TTCBloodworkModal } from './TTCBloodworkModal';
@@ -177,9 +178,6 @@ const MAP_PHASE_COLOR: Record<MapPhase, string> = {
   luteal: '#FAE0CC',      // peach light
 };
 
-const RING_RADIUS = 86;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
-
 const todayISODate = () => new Date().toISOString().slice(0, 10);
 
 // ─── TTCTracker ───────────────────────────────────────────────────────────────
@@ -285,32 +283,16 @@ export const TTCTracker = () => {
             <TabsContent value="overview" className="space-y-4">
               {/* Cycle ring */}
               <div className="flex flex-col items-center p-6 bg-card rounded-2xl border">
-                <div className="relative" style={{ width: 200, height: 200 }}>
-                  <svg width="200" height="200" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="100" cy="100" r={RING_RADIUS} fill="none" stroke="#F5EBE0" strokeWidth="14" />
-                    <circle
-                      cx="100" cy="100" r={RING_RADIUS} fill="none" stroke="#B5651D" strokeWidth="14"
-                      strokeLinecap="round"
-                      strokeDasharray={`${(Math.min(cycleDay ?? 0, cycleLength) / cycleLength) * RING_CIRCUMFERENCE} ${RING_CIRCUMFERENCE}`}
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-[11px] font-medium tracking-[0.08em] uppercase text-muted-foreground">Cycle day</span>
-                    <span className="text-[44px] font-bold leading-none my-1 text-foreground">{cycleDay ?? '—'}</span>
-                    <span
-                      className="text-[11px] font-medium px-3 py-1 rounded-full"
-                      style={{ color: '#B5651D', background: 'rgba(181,101,29,0.1)' }}
-                    >
-                      {windowLabel(phase)}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground mt-3 text-center">
-                  {phaseDescription(phase)}
-                  {daysUntilNextPeriod(cycleDay, cycleLength) != null && (
-                    <> · {daysUntilNextPeriod(cycleDay, cycleLength)} days until next period</>
-                  )}
-                </p>
+                <BloomRing
+                  cycleDay={cycleDay}
+                  cycleLength={cycleLength}
+                  phase={phase}
+                  subnote={
+                    daysUntilNextPeriod(cycleDay, cycleLength) != null
+                      ? `${daysUntilNextPeriod(cycleDay, cycleLength)} days until next period`
+                      : null
+                  }
+                />
                 {todayTemperature != null && (
                   <p className="text-sm mt-1">
                     <span className="font-medium">Today's BBT: </span>
