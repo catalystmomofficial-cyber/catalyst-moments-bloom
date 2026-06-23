@@ -303,24 +303,26 @@ export const TTCTracker = () => {
 
               {/* 28-day cycle map */}
               <div className="p-4 bg-card rounded-2xl border">
-                <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-muted-foreground mb-2.5">
+                <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-muted-foreground mb-3">
                   {cycleLength}-day cycle map
                 </p>
-                <div className="flex gap-0.5">
+                <div className="flex items-end gap-1 h-10">
                   {Array.from({ length: cycleLength }, (_, i) => {
                     const day = i + 1;
                     const p = mapPhaseForDay(day, cycleLength, periodLength);
                     const isToday = cycleDay === day;
+                    // Bar height reflects fertility relevance, not decoration: the
+                    // fertile window is the tallest, period/luteal are shortest.
+                    const heightPct = p === 'ovulation' ? 100 : p === 'follicular' ? 70 : 60;
                     return (
                       <div
                         key={day}
-                        title={`Day ${day}`}
-                        className="flex-1 rounded-sm"
+                        title={`Day ${day} · ${p}`}
+                        className="flex-1 rounded-full transition-[height] duration-300"
                         style={{
-                          height: 28,
+                          height: `${isToday ? Math.min(heightPct + 15, 100) : heightPct}%`,
                           background: MAP_PHASE_COLOR[p],
-                          boxShadow: isToday ? '0 0 0 2px #2C2218' : undefined,
-                          transform: isToday ? 'scaleY(1.15)' : undefined,
+                          boxShadow: isToday ? '0 0 0 2px #2C2218, 0 0 8px rgba(181,101,29,0.5)' : undefined,
                         }}
                       />
                     );
