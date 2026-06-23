@@ -159,7 +159,7 @@ export const ContractionTracker = () => {
 
   const phaseStyles: Record<string, string> = {
     destructive: 'bg-destructive/10 border-destructive/40 text-destructive',
-    warning: 'bg-orange-50 border-orange-200 text-orange-800',
+    warning: 'bg-orange-50 dark:bg-orange-950/40 border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-300',
     info: 'bg-catalyst-cream border-catalyst-tan text-catalyst-brown',
     muted: 'bg-muted/40 border-border text-foreground/80',
   };
@@ -282,7 +282,7 @@ export const ContractionTracker = () => {
           </div>
         )}
 
-        <div className="p-3 rounded-lg bg-orange-50 border border-orange-200 text-xs text-orange-900">
+        <div className="p-3 rounded-lg bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-xs text-orange-900">
           <p className="font-semibold mb-1">Call your provider if:</p>
           <ul className="space-y-0.5">
             <li>• Waves are 5 minutes apart for 1 hour (5-1-1)</li>

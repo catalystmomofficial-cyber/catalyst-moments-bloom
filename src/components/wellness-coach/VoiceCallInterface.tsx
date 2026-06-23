@@ -367,7 +367,7 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
                 
                 {callState === 'connected' && (
                   <div className="space-y-2">
-                    <p className="text-sm text-green-600 font-medium">Connected</p>
+                    <p className="text-sm text-green-600 dark:text-green-400 font-medium">Connected</p>
                     <p className="text-lg font-mono">{formatDuration(callDuration)}</p>
                     <div className="flex justify-center items-center gap-2">
                       {isCoachSpeaking ? (
@@ -375,12 +375,12 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
                           <div className="w-1 h-4 bg-blue-500 rounded-full animate-pulse" />
                           <div className="w-1 h-6 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
                           <div className="w-1 h-5 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
-                          <span className="text-xs text-blue-600 ml-2">Dr. Maya speaking...</span>
+                          <span className="text-xs text-blue-600 dark:text-blue-400 ml-2">Dr. Maya speaking...</span>
                         </div>
                       ) : isListening ? (
                         <div className="flex items-center gap-1">
                           <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                          <span className="text-xs text-red-600">Listening...</span>
+                          <span className="text-xs text-red-600 dark:text-red-400">Listening...</span>
                         </div>
                       ) : (
                         <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
@@ -435,9 +435,9 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
                         }
                         setIsMuted(!isMuted);
                       }}
-                      className={`rounded-full w-12 h-12 ${isListening ? 'bg-red-100 border-red-300' : ''}`}
+                      className={`rounded-full w-12 h-12 ${isListening ? 'bg-red-100 dark:bg-red-950/40 border-red-300 dark:border-red-700' : ''}`}
                     >
-                      {isListening ? <Mic className="h-5 w-5 text-red-600" /> : <MicOff className="h-5 w-5" />}
+                      {isListening ? <Mic className="h-5 w-5 text-red-600 dark:text-red-400" /> : <MicOff className="h-5 w-5" />}
                     </Button>
                     
                     <Button

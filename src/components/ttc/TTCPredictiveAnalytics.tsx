@@ -83,9 +83,9 @@ export const TTCPredictiveAnalytics = ({
   };
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 80) return 'text-green-600';
-    if (confidence >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (confidence >= 80) return 'text-green-600 dark:text-green-400';
+    if (confidence >= 60) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-red-600 dark:text-red-400';
   };
 
   if (!prediction) {
@@ -147,10 +147,10 @@ export const TTCPredictiveAnalytics = ({
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-green-200 bg-green-50">
+            <Card className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/40">
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2 mb-2">
-                  <Calendar className="h-4 w-4 text-green-600" />
+                  <Calendar className="h-4 w-4 text-green-600 dark:text-green-400" />
                   <span className="font-medium">Fertile Window</span>
                 </div>
                 <div className="text-sm font-semibold">
@@ -162,10 +162,10 @@ export const TTCPredictiveAnalytics = ({
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-blue-200 bg-blue-50">
+            <Card className="border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/40">
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2 mb-2">
-                  <Calendar className="h-4 w-4 text-blue-600" />
+                  <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   <span className="font-medium">Next Period</span>
                 </div>
                 <div className="text-lg font-bold">{formatDate(prediction.nextPeriod)}</div>
@@ -175,10 +175,10 @@ export const TTCPredictiveAnalytics = ({
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-purple-200 bg-purple-50">
+            <Card className="border-2 border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40">
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2 mb-2">
-                  <Clock className="h-4 w-4 text-purple-600" />
+                  <Clock className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                   <span className="font-medium">Best Timing</span>
                 </div>
                 <div className="text-sm font-semibold">Every other day</div>
@@ -223,7 +223,7 @@ export const TTCPredictiveAnalytics = ({
               <div className="space-y-2">
                 {recentSigns.map((sign, index) => (
                   <div key={index} className="text-xs text-muted-foreground flex items-center space-x-2">
-                    <span className="text-green-600">✓</span>
+                    <span className="text-green-600 dark:text-green-400">✓</span>
                     <span>{sign}</span>
                   </div>
                 ))}
@@ -244,15 +244,15 @@ export const TTCPredictiveAnalytics = ({
         </CardContent>
       </Card>
 
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800">
         <CardContent className="p-4">
           <div className="flex items-start space-x-3">
-            <AlertCircle className="h-4 w-4 text-blue-600 mt-1" />
+            <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-1" />
             <div className="space-y-1">
-              <p className="text-sm font-medium text-blue-800">
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
                 Improve Prediction Accuracy
               </p>
-              <p className="text-xs text-blue-600">
+              <p className="text-xs text-blue-600 dark:text-blue-400">
                 Log temperature, symptoms, and mood daily for more accurate predictions.
                 The more data we have, the better we can understand your unique patterns.
               </p>

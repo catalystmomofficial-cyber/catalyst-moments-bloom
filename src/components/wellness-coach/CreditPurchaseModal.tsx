@@ -76,8 +76,8 @@ const CreditPurchaseModal = ({ isOpen, onClose, currentCredits, requiredCredits 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={`p-2 rounded-full ${
-                        id === 'small' ? 'bg-blue-100 text-blue-600' :
-                        id === 'medium' ? 'bg-purple-100 text-purple-600' :
+                        id === 'small' ? 'bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' :
+                        id === 'medium' ? 'bg-purple-100 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400' :
                         'bg-amber-100 text-amber-600'
                       }`}>
                         <Icon className="h-5 w-5" />

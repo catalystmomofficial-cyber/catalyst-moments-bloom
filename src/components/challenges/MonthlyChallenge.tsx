@@ -145,7 +145,7 @@ export const MonthlyChallenge = () => {
           </div>
           <Progress value={progressPercentage} className="h-3" />
           {isCompleted && !isAwarded && (
-            <p className="text-xs text-green-600 font-medium">
+            <p className="text-xs text-green-600 dark:text-green-400 font-medium">
               ✓ Challenge completed! Badge will be awarded when challenge ends.
             </p>
           )}

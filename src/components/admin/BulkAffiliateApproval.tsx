@@ -58,7 +58,7 @@ export const BulkAffiliateApproval = () => {
       <CardContent className="space-y-4">
         {approvedCount !== null && (
           <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
             <span className="text-sm text-green-700 dark:text-green-300">
               Successfully approved {approvedCount} affiliate applications
             </span>

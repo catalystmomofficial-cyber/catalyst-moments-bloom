@@ -171,7 +171,7 @@ const BirthBallExercise = () => {
                 <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Settings className="h-5 w-5 text-purple-600" />
+                      <Settings className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                       <CardTitle>Exercise Modifications</CardTitle>
                       <Badge variant="outline" className="ml-2">
                         {enhancements.modifications.length} options
@@ -328,7 +328,7 @@ const BirthBallExercise = () => {
             <ul className="space-y-2">
               {exercise.benefits.map((benefit, index) => (
                 <li key={index} className="flex items-start gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-600 mt-1 flex-shrink-0" />
+                  <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 mt-1 flex-shrink-0" />
                   <span className="text-muted-foreground">{benefit}</span>
                 </li>
               ))}

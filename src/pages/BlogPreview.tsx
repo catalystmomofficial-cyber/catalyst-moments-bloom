@@ -412,7 +412,7 @@ export default function BlogPreview() {
               {blog.scheduled_publish_at && (
                 <>
                   <span>•</span>
-                  <span className="text-yellow-600 font-semibold">
+                  <span className="text-yellow-600 dark:text-yellow-400 font-semibold">
                     Scheduled: {format(new Date(blog.scheduled_publish_at), 'PPP p')}
                   </span>
                 </>

@@ -90,10 +90,10 @@ export const TTCCommunityChallenge = () => {
 
   const getChallengeColor = (type: string) => {
     switch (type) {
-      case 'tracking': return 'bg-blue-100 text-blue-800';
-      case 'wellness': return 'bg-green-100 text-green-800';
-      case 'education': return 'bg-purple-100 text-purple-800';
-      case 'community': return 'bg-pink-100 text-pink-800';
+      case 'tracking': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
+      case 'wellness': return 'bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300';
+      case 'education': return 'bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300';
+      case 'community': return 'bg-pink-100 dark:bg-pink-950/40 text-pink-800 dark:text-pink-300';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -147,7 +147,7 @@ export const TTCCommunityChallenge = () => {
         {activechallenges.length > 0 && (
           <div className="space-y-4">
             <h3 className="font-medium text-sm flex items-center">
-              <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+              <CheckCircle className="mr-2 h-4 w-4 text-green-600 dark:text-green-400" />
               Your Active Challenges
             </h3>
             
@@ -214,7 +214,7 @@ export const TTCCommunityChallenge = () => {
         {availableChallenges.length > 0 && (
           <div className="space-y-4">
             <h3 className="font-medium text-sm flex items-center">
-              <Target className="mr-2 h-4 w-4 text-blue-600" />
+              <Target className="mr-2 h-4 w-4 text-blue-600 dark:text-blue-400" />
               Available Challenges
             </h3>
             
@@ -270,11 +270,11 @@ export const TTCCommunityChallenge = () => {
               <div className="text-xs text-muted-foreground">Active Members</div>
             </div>
             <div className="space-y-1">
-              <div className="text-lg font-bold text-green-600">89%</div>
+              <div className="text-lg font-bold text-green-600 dark:text-green-400">89%</div>
               <div className="text-xs text-muted-foreground">Completion Rate</div>
             </div>
             <div className="space-y-1">
-              <div className="text-lg font-bold text-purple-600">42</div>
+              <div className="text-lg font-bold text-purple-600 dark:text-purple-400">42</div>
               <div className="text-xs text-muted-foreground">Success Stories</div>
             </div>
           </div>

@@ -268,15 +268,15 @@ export const MoodCheckIn = () => {
           
           {/* Actionable Advice Preview */}
           {getActionableAdvice().length > 0 && (
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="text-sm font-medium text-blue-800 mb-2">Quick Suggestions</h4>
+            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/40 rounded-lg border border-blue-200 dark:border-blue-800">
+              <h4 className="text-sm font-medium text-blue-800 dark:text-blue-300 mb-2">Quick Suggestions</h4>
               <div className="space-y-2">
                 {getActionableAdvice().map((item, index) => (
                   <div key={index} className="flex items-start space-x-2 text-sm">
                     <span className="text-lg">{item.icon}</span>
                     <div>
-                      <div className="font-medium text-blue-800">{item.title}</div>
-                      <div className="text-blue-600">{item.action}</div>
+                      <div className="font-medium text-blue-800 dark:text-blue-300">{item.title}</div>
+                      <div className="text-blue-600 dark:text-blue-400">{item.action}</div>
                     </div>
                   </div>
                 ))}

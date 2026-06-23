@@ -71,7 +71,7 @@ export const BlogSchedulerSetup = () => {
 
         {cronJobExists && (
           <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
-            <CheckCircle className="h-4 w-4 text-green-600" />
+            <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
             <AlertDescription className="text-green-600 dark:text-green-400">
               Automatic blog scheduling is active! Scheduled posts will be published every hour.
             </AlertDescription>

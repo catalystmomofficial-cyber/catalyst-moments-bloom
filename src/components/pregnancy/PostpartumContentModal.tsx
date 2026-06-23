@@ -342,7 +342,7 @@ export const PostpartumContentModal = ({ isOpen, onClose, topic, onComplete }: P
                 <TabsTrigger key={module.id} value={index.toString()} className="flex items-center gap-2">
                   {getModuleIcon(module.type)}
                   <span className="hidden sm:inline">{module.title.split(':')[0]}</span>
-                  {moduleProgress[module.id] && <CheckCircle className="h-3 w-3 text-green-600" />}
+                  {moduleProgress[module.id] && <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400" />}
                 </TabsTrigger>
               ))}
             </TabsList>

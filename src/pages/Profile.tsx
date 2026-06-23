@@ -245,7 +245,7 @@ const Profile = () => {
               )}
               
               {success && (
-                <Alert className="mb-4 bg-green-50 text-green-800 border-green-200">
+                <Alert className="mb-4 bg-green-50 dark:bg-green-950/40 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800">
                   <AlertDescription>Profile updated successfully!</AlertDescription>
                 </Alert>
               )}
