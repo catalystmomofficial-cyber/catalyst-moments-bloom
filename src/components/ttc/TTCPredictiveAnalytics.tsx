@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, Calendar, Target, AlertCircle, BarChart3, Clock } from 'lucide-react';
+import { TrendingUp, Calendar, Target, AlertCircle, BarChart3, Clock, Settings } from 'lucide-react';
 import { daysUntilNextPeriod, type TTCCycleLog } from '@/hooks/useTTCData';
 
 interface TTCPredictiveAnalyticsProps {
@@ -11,6 +11,7 @@ interface TTCPredictiveAnalyticsProps {
   cycleLength: number;
   logs: TTCCycleLog[];
   onViewDetailedAnalytics: () => void;
+  onOpenSettings: () => void;
 }
 
 interface CyclePrediction {
@@ -37,6 +38,7 @@ export const TTCPredictiveAnalytics = ({
   cycleLength,
   logs,
   onViewDetailedAnalytics,
+  onOpenSettings,
 }: TTCPredictiveAnalyticsProps) => {
   // Real prediction math derived from the user's own cycle settings — no simulated/fabricated data.
   const prediction: CyclePrediction | null = useMemo(() => {
@@ -98,6 +100,12 @@ export const TTCPredictiveAnalytics = ({
             Set your last period start date to see predictions tailored to your cycle.
           </CardDescription>
         </CardHeader>
+        <CardContent>
+          <Button onClick={onOpenSettings} className="w-full sm:w-auto">
+            <Settings className="mr-2 h-4 w-4" />
+            Set My Cycle Dates
+          </Button>
+        </CardContent>
       </Card>
     );
   }

@@ -512,6 +512,7 @@ export const TTCTracker = () => {
                 cycleLength={cycleLength}
                 logs={logs}
                 onViewDetailedAnalytics={() => setReportMode('pattern_report')}
+                onOpenSettings={() => setSettingsOpen(true)}
               />
             </TabsContent>
           </Tabs>
