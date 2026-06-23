@@ -136,6 +136,26 @@ export default {
 					'80%': {
 						transform: 'translate(calc(100% * var(--tx-4, -1)), calc(100% * var(--ty-4, -1)))'
 					}
+				},
+				'pulse-intense': {
+					'0%, 100%': {
+						opacity: '0.15',
+						transform: 'scale(1)',
+						filter: 'blur(30px)'
+					},
+					'50%': {
+						opacity: '0.5',
+						transform: 'scale(1.4)',
+						filter: 'blur(45px)'
+					}
+				},
+				'spin-slow': {
+					from: {
+						transform: 'rotate(0deg)'
+					},
+					to: {
+						transform: 'rotate(360deg)'
+					}
 				}
 			},
 			animation: {
@@ -144,6 +164,8 @@ export default {
 				'fade-in': 'fade-in 0.5s ease-out',
 				'pulse-soft': 'pulse-soft 3s infinite ease-in-out',
 				'float': 'float 6s ease-in-out infinite',
+				'pulse-intense': 'pulse-intense 3s ease-in-out infinite',
+				'spin-slow': 'spin-slow 20s linear infinite',
 				'background-gradient': 'background-gradient var(--background-gradient-speed, 15s) cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite'
 			},
 			fontFamily: {
