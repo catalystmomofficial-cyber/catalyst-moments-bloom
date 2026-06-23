@@ -184,7 +184,7 @@ const todayISODate = () => new Date().toISOString().slice(0, 10);
 export const TTCTracker = () => {
   const { toast } = useToast();
   const {
-    settings, refresh, cycleDay, phase, cycleLength, periodLength, logByDate, saveCycleLog,
+    settings, refresh, cycleDay, phase, cycleLength, periodLength, logByDate, logs, saveCycleLog, hasSettings,
   } = useTTCData();
   const [dayLogOpen, setDayLogOpen] = useState(false);
 
@@ -506,7 +506,13 @@ export const TTCTracker = () => {
             </TabsContent>
 
             <TabsContent value="predictions">
-              <TTCPredictiveAnalytics />
+              <TTCPredictiveAnalytics
+                hasSettings={hasSettings}
+                cycleDay={cycleDay}
+                cycleLength={cycleLength}
+                logs={logs}
+                onViewDetailedAnalytics={() => setReportMode('pattern_report')}
+              />
             </TabsContent>
           </Tabs>
         </CardContent>
