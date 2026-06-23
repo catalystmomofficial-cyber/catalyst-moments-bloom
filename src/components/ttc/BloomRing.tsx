@@ -9,7 +9,7 @@ interface BloomRingProps {
   subnote?: string | null;
 }
 
-const SIZE = 256;
+const SIZE = 200;
 const STROKE = 14;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -71,7 +71,7 @@ export const BloomRing = ({ cycleDay, cycleLength, phase, subnote }: BloomRingPr
         {/* Rotating dashed orbit */}
         <div
           className="absolute rounded-full border-4 border-dashed animate-spin-slow motion-reduce:animate-none"
-          style={{ inset: 16, borderColor: `${color}4D` }}
+          style={{ inset: 12, borderColor: `${color}4D` }}
           aria-hidden
         />
 
@@ -109,10 +109,10 @@ export const BloomRing = ({ cycleDay, cycleLength, phase, subnote }: BloomRingPr
             <circle
               cx={cx}
               cy={cy}
-              r={8}
+              r={6}
               fill={color}
               style={{
-                filter: `drop-shadow(0 0 8px ${color})`,
+                filter: `drop-shadow(0 0 6px ${color})`,
                 transition: 'cx 1.8s cubic-bezier(0.4, 0, 0.2, 1), cy 1.8s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             />
@@ -124,12 +124,12 @@ export const BloomRing = ({ cycleDay, cycleLength, phase, subnote }: BloomRingPr
           <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-1">
             Cycle Day
           </span>
-          <span className="text-6xl font-bold leading-none text-foreground">
+          <span className="text-5xl font-bold leading-none text-foreground">
             {hasCycle ? cycleDay : '—'}
           </span>
           {hasCycle && (
             <div
-              className="mt-4 rounded-full border px-4 py-1.5"
+              className="mt-3 rounded-full border px-3 py-1"
               style={{ background: `${color}1A`, borderColor: `${color}33` }}
             >
               <span className="text-xs font-bold" style={{ color }}>
