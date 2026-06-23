@@ -9,6 +9,8 @@ import { supabase } from '@/integrations/supabase/client';
 export const BlogSchedulerSetup = () => {
   const [cronJobExists, setCronJobExists] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [lastRunAt, setLastRunAt] = useState<string | null>(null);
+  const [lastRunStatus, setLastRunStatus] = useState<string | null>(null);
 
   const sqlQuery = `SELECT cron.schedule(
   'publish-scheduled-blogs-hourly',
@@ -28,17 +30,16 @@ export const BlogSchedulerSetup = () => {
 
   const checkCronJob = async () => {
     try {
-      const { data, error } = await supabase.rpc('get_all_blogs', { 
-        search_query: null, 
-        page_number: 1, 
-        page_size: 1 
-      });
-      
-      // If we can query, try to check for cron jobs
-      // Note: This is a simple check - actual verification requires SQL Editor access
-      setCronJobExists(false);
+      const { data, error } = await supabase.rpc('check_blog_scheduler_status');
+      if (error) throw error;
+
+      const status = data?.[0];
+      setCronJobExists(Boolean(status?.job_exists && status?.active));
+      setLastRunAt(status?.last_run_at ?? null);
+      setLastRunStatus(status?.last_run_status ?? null);
     } catch (error) {
       console.error('Error checking cron job:', error);
+      setCronJobExists(false);
     } finally {
       setChecking(false);
     }
@@ -74,6 +75,11 @@ export const BlogSchedulerSetup = () => {
             <CheckCircle className="h-4 w-4 text-green-600" />
             <AlertDescription className="text-green-600 dark:text-green-400">
               Automatic blog scheduling is active! Scheduled posts will be published every hour.
+              {lastRunAt && (
+                <>
+                  {' '}Last run: {new Date(lastRunAt).toLocaleString()} ({lastRunStatus}).
+                </>
+              )}
             </AlertDescription>
           </Alert>
         )}

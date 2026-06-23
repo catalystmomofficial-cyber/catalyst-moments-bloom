@@ -2161,6 +2161,16 @@ export type Database = {
         Returns: undefined
       }
       award_challenge_badges: { Args: never; Returns: undefined }
+      check_blog_scheduler_status: {
+        Args: never
+        Returns: {
+          active: boolean
+          job_exists: boolean
+          last_run_at: string
+          last_run_status: string
+          schedule: string
+        }[]
+      }
       create_affiliate_application: {
         Args: {
           audience_size_param: string
