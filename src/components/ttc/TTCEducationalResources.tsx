@@ -98,10 +98,10 @@ export const TTCEducationalResources = () => {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'fertility': return 'bg-red-100 text-red-800';
-      case 'nutrition': return 'bg-green-100 text-green-800';
-      case 'stress': return 'bg-blue-100 text-blue-800';
-      case 'exercise': return 'bg-purple-100 text-purple-800';
+      case 'fertility': return 'bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300';
+      case 'nutrition': return 'bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300';
+      case 'stress': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
+      case 'exercise': return 'bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300';
       default: return 'bg-gray-100 text-gray-800';
     }
   };

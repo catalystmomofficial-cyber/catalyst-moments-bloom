@@ -483,7 +483,7 @@ const PlanCard = ({
     <CardContent className="p-6">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-3">
-          <div className={`p-2 rounded-md ${completed ? 'bg-green-100' : 'bg-primary/10'}`}>
+          <div className={`p-2 rounded-md ${completed ? 'bg-green-100 dark:bg-green-950/40' : 'bg-primary/10'}`}>
             {icon}
           </div>
           <div>

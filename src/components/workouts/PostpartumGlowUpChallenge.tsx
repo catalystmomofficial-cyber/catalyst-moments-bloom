@@ -306,13 +306,13 @@ export default function PostpartumGlowUpChallenge() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+          <Badge variant="outline" className="bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800">
             Postpartum
           </Badge>
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+          <Badge variant="outline" className="bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800">
             Beginner
           </Badge>
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+          <Badge variant="outline" className="bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800">
             4 Weeks
           </Badge>
         </div>

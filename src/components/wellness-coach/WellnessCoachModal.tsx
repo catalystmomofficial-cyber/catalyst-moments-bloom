@@ -303,7 +303,7 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
                       <Badge variant="secondary" className="text-xs px-2 py-0">
                         {currentCoach.specialty}
                       </Badge>
-                      <span className="text-xs text-green-600 font-medium">Online</span>
+                      <span className="text-xs text-green-600 dark:text-green-400 font-medium">Online</span>
                     </div>
                   </div>
                 </>

@@ -169,7 +169,7 @@ export const PregnancyTracker = () => {
             <Baby className="mr-2 h-5 w-5" />
             Pregnancy Journey
           </div>
-          <Badge variant="secondary" className="bg-pink-100 text-pink-800">
+          <Badge variant="secondary" className="bg-pink-100 dark:bg-pink-950/40 text-pink-800 dark:text-pink-300">
             Week {pregnancyData.week}
           </Badge>
         </CardTitle>
@@ -200,40 +200,40 @@ export const PregnancyTracker = () => {
 
             {/* Quick Tracking */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 bg-blue-50 rounded-lg">
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-lg">
                 <div className="flex items-center justify-between">
-                  <Heart className="h-4 w-4 text-blue-600" />
+                  <Heart className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   <span className="text-sm font-medium">{pregnancyData.mood}/10</span>
                 </div>
-                <p className="text-xs text-blue-700 mt-1">Mood Today</p>
+                <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">Mood Today</p>
               </div>
-              <div className="p-3 bg-green-50 rounded-lg">
+              <div className="p-3 bg-green-50 dark:bg-green-950/40 rounded-lg">
                 <div className="flex items-center justify-between">
-                  <Zap className="h-4 w-4 text-green-600" />
+                  <Zap className="h-4 w-4 text-green-600 dark:text-green-400" />
                   <span className="text-sm font-medium">{pregnancyData.energy}/10</span>
                 </div>
-                <p className="text-xs text-green-700 mt-1">Energy Level</p>
+                <p className="text-xs text-green-700 dark:text-green-300 mt-1">Energy Level</p>
               </div>
-              <div className="p-3 bg-purple-50 rounded-lg">
+              <div className="p-3 bg-purple-50 dark:bg-purple-950/40 rounded-lg">
                 <div className="flex items-center justify-between">
-                  <Moon className="h-4 w-4 text-purple-600" />
+                  <Moon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                   <span className="text-sm font-medium">{pregnancyData.sleep}/10</span>
                 </div>
-                <p className="text-xs text-purple-700 mt-1">Sleep Quality</p>
+                <p className="text-xs text-purple-700 dark:text-purple-300 mt-1">Sleep Quality</p>
               </div>
-              <div className="p-3 bg-pink-50 rounded-lg">
+              <div className="p-3 bg-pink-50 dark:bg-pink-950/40 rounded-lg">
                 <div className="flex items-center justify-between">
-                  <Scale className="h-4 w-4 text-pink-600" />
+                  <Scale className="h-4 w-4 text-pink-600 dark:text-pink-400" />
                   <span className="text-sm font-medium">{pregnancyData.weight}lbs</span>
                 </div>
-                <p className="text-xs text-pink-700 mt-1">Current Weight</p>
+                <p className="text-xs text-pink-700 dark:text-pink-300 mt-1">Current Weight</p>
               </div>
             </div>
 
             {/* Personalized Tip */}
-            <div className="p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200">
+            <div className="p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200 dark:border-pink-800">
               <h4 className="font-medium text-sm mb-2 flex items-center">
-                <MessageCircle className="h-4 w-4 mr-2 text-pink-600" />
+                <MessageCircle className="h-4 w-4 mr-2 text-pink-600 dark:text-pink-400" />
                 Your Daily Tip
               </h4>
               <p className="text-sm text-gray-700">{getPersonalizedTip()}</p>
@@ -245,7 +245,7 @@ export const PregnancyTracker = () => {
               <h4 className="font-medium text-sm">Current Symptoms</h4>
               <div className="flex flex-wrap gap-2">
                 {pregnancyData.symptoms.map((symptom, index) => (
-                  <Badge key={index} variant="outline" className="bg-pink-50 border-pink-200">
+                  <Badge key={index} variant="outline" className="bg-pink-50 dark:bg-pink-950/40 border-pink-200 dark:border-pink-800">
                     {symptom}
                   </Badge>
                 ))}
@@ -306,7 +306,7 @@ export const PregnancyTracker = () => {
               preview
             >
             <div className="space-y-3">
-              <div className="p-4 bg-blue-50 rounded-lg">
+              <div className="p-4 bg-blue-50 dark:bg-blue-950/40 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Week {pregnancyData.week} Development</h4>
                 <p className="text-sm text-gray-700">
                   {pregnancyData.trimester === 1 
@@ -318,7 +318,7 @@ export const PregnancyTracker = () => {
                 </p>
               </div>
               
-              <div className="p-4 bg-green-50 rounded-lg">
+              <div className="p-4 bg-green-50 dark:bg-green-950/40 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Your Body This Week</h4>
                 <p className="text-sm text-gray-700">
                   {pregnancyData.trimester === 1 
@@ -330,7 +330,7 @@ export const PregnancyTracker = () => {
                 </p>
               </div>
 
-              <div className="p-4 bg-purple-50 rounded-lg">
+              <div className="p-4 bg-purple-50 dark:bg-purple-950/40 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Wellness Focus</h4>
                 <p className="text-sm text-gray-700">
                   {pregnancyData.trimester === 1 

@@ -193,19 +193,19 @@ export function BlogSEOAnalyzer({ title, content, excerpt, keywords = [] }: Blog
 
   const getScoreColor = (level: string) => {
     switch (level) {
-      case 'excellent': return 'text-green-600';
-      case 'good': return 'text-blue-600';
-      case 'needs-improvement': return 'text-yellow-600';
-      default: return 'text-red-600';
+      case 'excellent': return 'text-green-600 dark:text-green-400';
+      case 'good': return 'text-blue-600 dark:text-blue-400';
+      case 'needs-improvement': return 'text-yellow-600 dark:text-yellow-400';
+      default: return 'text-red-600 dark:text-red-400';
     }
   };
 
   const getScoreIcon = (level: string) => {
     switch (level) {
-      case 'excellent': return <CheckCircle className="h-5 w-5 text-green-600" />;
-      case 'good': return <CheckCircle className="h-5 w-5 text-blue-600" />;
-      case 'needs-improvement': return <AlertTriangle className="h-5 w-5 text-yellow-600" />;
-      default: return <AlertCircle className="h-5 w-5 text-red-600" />;
+      case 'excellent': return <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />;
+      case 'good': return <CheckCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />;
+      case 'needs-improvement': return <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />;
+      default: return <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />;
     }
   };
 

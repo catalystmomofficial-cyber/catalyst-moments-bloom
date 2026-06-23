@@ -136,7 +136,7 @@ export const AIEditAssistant: React.FC<AIEditAssistantProps> = ({ content, onApp
         {previewContent && (
           <div className="space-y-3 pt-4 border-t">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-green-600">Edit Preview Ready</span>
+              <span className="text-sm font-medium text-green-600 dark:text-green-400">Edit Preview Ready</span>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" onClick={handleDiscard}>
                   <RotateCcw className="mr-1 h-3 w-3" />

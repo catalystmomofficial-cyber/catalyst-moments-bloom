@@ -137,20 +137,20 @@ export const PostpartumPrepGuide = () => {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'recovery': return 'bg-pink-100 text-pink-800';
-      case 'mental': return 'bg-purple-100 text-purple-800';
-      case 'baby': return 'bg-blue-100 text-blue-800';
-      case 'nutrition': return 'bg-green-100 text-green-800';
-      case 'home': return 'bg-yellow-100 text-yellow-800';
+      case 'recovery': return 'bg-pink-100 dark:bg-pink-950/40 text-pink-800 dark:text-pink-300';
+      case 'mental': return 'bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300';
+      case 'baby': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
+      case 'nutrition': return 'bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300';
+      case 'home': return 'bg-yellow-100 dark:bg-yellow-950/40 text-yellow-800 dark:text-yellow-300';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getImportanceColor = (importance: string) => {
     switch (importance) {
-      case 'high': return 'bg-red-100 text-red-800';
-      case 'medium': return 'bg-orange-100 text-orange-800';
-      case 'low': return 'bg-blue-100 text-blue-800';
+      case 'high': return 'bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300';
+      case 'medium': return 'bg-orange-100 dark:bg-orange-950/40 text-orange-800 dark:text-orange-300';
+      case 'low': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -165,7 +165,7 @@ export const PostpartumPrepGuide = () => {
             <Baby className="mr-2 h-5 w-5" />
             Postpartum Prep Guide
           </div>
-          <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+          <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300">
             Week {currentWeek}
           </Badge>
         </CardTitle>
@@ -175,7 +175,7 @@ export const PostpartumPrepGuide = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Progress Overview */}
-        <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+        <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 dark:border-purple-800">
           <div className="flex items-center justify-between mb-2">
             <h4 className="font-medium text-sm">Your Prep Progress</h4>
             <span className="text-sm font-medium">{progressPercentage.toFixed(0)}%</span>
@@ -200,8 +200,8 @@ export const PostpartumPrepGuide = () => {
                 key={item.id}
                 className={`p-3 border rounded-lg transition-all cursor-pointer ${
                   item.completed 
-                    ? 'bg-green-50 border-green-200' 
-                    : 'bg-white hover:bg-purple-50 hover:border-purple-200'
+                    ? 'bg-green-50 dark:bg-green-950/40 border-green-200 dark:border-green-800' 
+                    : 'bg-white hover:bg-purple-50 dark:hover:bg-purple-950/40 hover:border-purple-200 dark:hover:border-purple-800'
                 }`}
                 onClick={() => openTopicContent(item)}
               >
@@ -214,7 +214,7 @@ export const PostpartumPrepGuide = () => {
                       <h4 className={`font-medium text-sm ${item.completed ? 'line-through text-gray-500' : ''}`}>
                         {item.title}
                       </h4>
-                      {item.completed && <CheckCircle className="h-4 w-4 text-green-600" />}
+                      {item.completed && <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />}
                     </div>
                     
                     <p className={`text-xs mb-2 ${item.completed ? 'text-gray-500' : 'text-gray-700'}`}>
@@ -281,13 +281,13 @@ export const PostpartumPrepGuide = () => {
                       <div 
                         key={item.id}
                         className={`p-2 border rounded text-sm cursor-pointer ${
-                          item.completed ? 'bg-green-50 text-gray-500' : 'hover:bg-gray-50'
+                          item.completed ? 'bg-green-50 dark:bg-green-950/40 text-gray-500' : 'hover:bg-gray-50'
                         }`}
                         onClick={() => openTopicContent(item)}
                       >
                         <div className="flex items-center justify-between">
                           <span className={item.completed ? 'line-through' : ''}>{item.title}</span>
-                          {item.completed && <CheckCircle className="h-3 w-3 text-green-600" />}
+                          {item.completed && <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400" />}
                         </div>
                       </div>
                     ))}
@@ -323,8 +323,8 @@ export const PostpartumPrepGuide = () => {
           </TabsContent>
         </Tabs>
 
-        <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-xs text-blue-700 leading-relaxed">
+        <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-lg border border-blue-200 dark:border-blue-800">
+          <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
             💝 <strong>Remember:</strong> This is gentle preparation, not a checklist to stress over. 
             Do what feels right for you and your family. You've got this, mama!
           </p>

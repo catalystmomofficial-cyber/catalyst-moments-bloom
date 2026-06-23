@@ -107,7 +107,7 @@ const BirthBallGuideCard = () => {
           
           {/* Badges */}
           <div className="absolute top-4 left-4 flex gap-2">
-            <Badge variant="secondary" className="bg-white/90 text-purple-700 hover:bg-white">
+            <Badge variant="secondary" className="bg-white/90 text-purple-700 dark:text-purple-300 hover:bg-white">
               Pregnancy
             </Badge>
             <Badge variant="outline" className="border-white/80 text-white bg-black/20">
@@ -119,7 +119,7 @@ const BirthBallGuideCard = () => {
           {hasStartedProgram && isHovered && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
-                <Play className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" />
+                <Play className="w-6 h-6 text-purple-600 dark:text-purple-400 ml-1" fill="currentColor" />
               </div>
             </div>
           )}

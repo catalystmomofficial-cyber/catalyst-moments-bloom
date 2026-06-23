@@ -223,7 +223,7 @@ export const PregnancyJournal = () => {
 
               {entry.milestone && (
                 <div className="mb-3">
-                  <Badge className="bg-pink-100 text-pink-800 text-xs">
+                  <Badge className="bg-pink-100 dark:bg-pink-950/40 text-pink-800 dark:text-pink-300 text-xs">
                     🎉 {entry.milestone}
                   </Badge>
                 </div>

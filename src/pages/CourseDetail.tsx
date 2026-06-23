@@ -219,18 +219,18 @@ export default function CourseDetail() {
 
   const getDifficultyColor = (level: string) => {
     switch (level.toLowerCase()) {
-      case 'beginner': return 'bg-green-50 text-green-700 border-green-200';
-      case 'intermediate': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
-      case 'advanced': return 'bg-red-50 text-red-700 border-red-200';
+      case 'beginner': return 'bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800';
+      case 'intermediate': return 'bg-yellow-50 dark:bg-yellow-950/40 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800';
+      case 'advanced': return 'bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800';
       default: return 'bg-muted text-muted-foreground';
     }
   };
 
   const getCategoryColor = (category: string) => {
     switch (category.toLowerCase()) {
-      case 'postpartum': return 'bg-purple-50 text-purple-700 border-purple-200';
-      case 'fitness': return 'bg-blue-50 text-blue-700 border-blue-200';
-      case 'nutrition': return 'bg-green-50 text-green-700 border-green-200';
+      case 'postpartum': return 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800';
+      case 'fitness': return 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+      case 'nutrition': return 'bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800';
       default: return 'bg-muted text-muted-foreground';
     }
   };
@@ -421,7 +421,7 @@ export default function CourseDetail() {
                             <CardDescription>{week.description}</CardDescription>
                           </div>
                           {userProgress && userProgress.current_week >= week.week_number && (
-                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                           )}
                         </div>
                       </CardHeader>
@@ -502,10 +502,10 @@ export default function CourseDetail() {
                       </div>
 
                       {userProgress.completed_at && (
-                        <div className="text-center p-4 bg-green-50 rounded-lg">
-                          <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                          <h3 className="font-semibold text-green-800">Congratulations!</h3>
-                          <p className="text-green-700">You completed this challenge on {new Date(userProgress.completed_at).toLocaleDateString()}</p>
+                        <div className="text-center p-4 bg-green-50 dark:bg-green-950/40 rounded-lg">
+                          <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
+                          <h3 className="font-semibold text-green-800 dark:text-green-300">Congratulations!</h3>
+                          <p className="text-green-700 dark:text-green-300">You completed this challenge on {new Date(userProgress.completed_at).toLocaleDateString()}</p>
                         </div>
                       )}
                     </CardContent>

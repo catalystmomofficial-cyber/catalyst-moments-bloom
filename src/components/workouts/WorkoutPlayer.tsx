@@ -116,7 +116,7 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Course
           </Button>
-          <Badge variant="outline" className="bg-purple-50 text-purple-700">
+          <Badge variant="outline" className="bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">
             Week {week} • Day {day}
           </Badge>
         </div>
@@ -142,7 +142,7 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Course
         </Button>
-        <Badge variant="outline" className="bg-purple-50 text-purple-700">
+        <Badge variant="outline" className="bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300">
           Week {week} • Day {day}
         </Badge>
       </div>
@@ -168,7 +168,7 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl">{currentExercise.name}</CardTitle>
             {currentExercise.completed && (
-              <Check className="h-5 w-5 text-green-600" />
+              <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
             )}
           </div>
           <p className="text-muted-foreground">{currentExercise.description}</p>
@@ -263,15 +263,15 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
 
       {/* Complete Workout */}
       {allExercisesComplete && (
-        <Card className="border-green-200 bg-green-50">
+        <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/40">
           <CardContent className="text-center py-8">
             <div className="space-y-4">
               <div className="bg-green-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
                 <Check className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-green-800">Workout Complete!</h3>
-                <p className="text-green-700">
+                <h3 className="text-xl font-bold text-green-800 dark:text-green-300">Workout Complete!</h3>
+                <p className="text-green-700 dark:text-green-300">
                   Great job finishing Week {week}, Day {day}! You're one step closer to your glow up.
                 </p>
               </div>

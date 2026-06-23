@@ -37,18 +37,18 @@ export function CourseCard({ course, userProgress, onEnroll, onContinue }: Cours
 
   const getDifficultyColor = (level: string) => {
     switch (level.toLowerCase()) {
-      case 'beginner': return 'bg-green-500/10 text-green-700 border-green-200';
-      case 'intermediate': return 'bg-yellow-500/10 text-yellow-700 border-yellow-200';
-      case 'advanced': return 'bg-red-500/10 text-red-700 border-red-200';
+      case 'beginner': return 'bg-green-500/10 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800';
+      case 'intermediate': return 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800';
+      case 'advanced': return 'bg-red-500/10 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800';
       default: return 'bg-muted text-muted-foreground';
     }
   };
 
   const getCategoryColor = (category: string) => {
     switch (category.toLowerCase()) {
-      case 'postpartum': return 'bg-purple-500/10 text-purple-700 border-purple-200';
-      case 'fitness': return 'bg-blue-500/10 text-blue-700 border-blue-200';
-      case 'nutrition': return 'bg-green-500/10 text-green-700 border-green-200';
+      case 'postpartum': return 'bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800';
+      case 'fitness': return 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+      case 'nutrition': return 'bg-green-500/10 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800';
       default: return 'bg-muted text-muted-foreground';
     }
   };

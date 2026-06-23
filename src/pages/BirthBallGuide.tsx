@@ -51,42 +51,42 @@ const BirthBallGuide = () => {
       description: 'Choose the right birth ball for your height',
       icon: ShoppingCart,
       link: '/birth-ball-guide/buying-guide',
-      color: 'text-blue-600'
+      color: 'text-blue-600 dark:text-blue-400'
     },
     {
       title: 'Safety & Comfort',
       description: 'Important tips for safe practice',
       icon: Shield,
       link: '/birth-ball-guide/safety',
-      color: 'text-green-600'
+      color: 'text-green-600 dark:text-green-400'
     },
     {
       title: 'FAQs',
       description: 'Common questions and solutions',
       icon: HelpCircle,
       link: '/birth-ball-guide/faq',
-      color: 'text-orange-600'
+      color: 'text-orange-600 dark:text-orange-400'
     },
     {
       title: 'Pelvic Floor Education',
       description: 'Understanding your body mechanics',
       icon: GraduationCap,
       link: '/birth-ball-guide/education',
-      color: 'text-purple-600'
+      color: 'text-purple-600 dark:text-purple-400'
     },
     {
       title: 'Early Labor Techniques',
       description: 'Birth ball movements for labor comfort',
       icon: Heart,
       link: '/birth-ball-guide/early-labor',
-      color: 'text-red-600'
+      color: 'text-red-600 dark:text-red-400'
     },
     {
       title: 'Saved Exercises',
       description: `${savedExercises.length} favorite exercise${savedExercises.length !== 1 ? 's' : ''} saved`,
       icon: Heart,
       link: '/birth-ball-guide/saved',
-      color: 'text-pink-600'
+      color: 'text-pink-600 dark:text-pink-400'
     },
   ];
 

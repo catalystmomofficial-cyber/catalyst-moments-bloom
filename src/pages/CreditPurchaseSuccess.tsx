@@ -62,12 +62,12 @@ const CreditPurchaseSuccess = () => {
             </div>
           ) : success ? (
             <div className="space-y-6">
-              <div className="h-20 w-20 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-                <CheckCircle2 className="h-12 w-12 text-green-600" />
+              <div className="h-20 w-20 mx-auto bg-green-100 dark:bg-green-950/40 rounded-full flex items-center justify-center">
+                <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400" />
               </div>
               
               <div>
-                <h2 className="text-2xl font-bold text-green-600">Purchase Successful!</h2>
+                <h2 className="text-2xl font-bold text-green-600 dark:text-green-400">Purchase Successful!</h2>
                 <p className="text-muted-foreground mt-2">
                   Thank you for your purchase
                 </p>

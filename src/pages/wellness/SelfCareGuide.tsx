@@ -14,7 +14,7 @@ const SelfCareGuide = () => {
       title: "5-Minute Energy Boosters",
       description: "Quick activities to revitalize your energy",
       icon: "⚡",
-      color: "bg-orange-100 text-orange-800",
+      color: "bg-orange-100 dark:bg-orange-950/40 text-orange-800 dark:text-orange-300",
       activities: [
         "Power stretching sequence",
         "Cold water face splash",
@@ -26,7 +26,7 @@ const SelfCareGuide = () => {
       title: "Stress Relief Techniques",
       description: "Immediate stress-busting practices",
       icon: "🧘‍♀️",
-      color: "bg-purple-100 text-purple-800",
+      color: "bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300",
       activities: [
         "4-7-8 breathing technique",
         "Progressive muscle relaxation",
@@ -38,7 +38,7 @@ const SelfCareGuide = () => {
       title: "Mood Lifters",
       description: "Activities to brighten your day",
       icon: "🌟",
-      color: "bg-yellow-100 text-yellow-800",
+      color: "bg-yellow-100 dark:bg-yellow-950/40 text-yellow-800 dark:text-yellow-300",
       activities: [
         "Gratitude list creation",
         "Positive affirmations",
@@ -50,7 +50,7 @@ const SelfCareGuide = () => {
       title: "Physical Comfort",
       description: "Body care and comfort practices",
       icon: "💆‍♀️",
-      color: "bg-pink-100 text-pink-800",
+      color: "bg-pink-100 dark:bg-pink-950/40 text-pink-800 dark:text-pink-300",
       activities: [
         "Self-massage techniques",
         "Warm compress therapy",

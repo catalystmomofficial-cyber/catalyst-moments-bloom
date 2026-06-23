@@ -221,10 +221,10 @@ export const PregnancyWellnessDigest = () => {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'workout': return 'bg-blue-100 text-blue-800';
-      case 'nutrition': return 'bg-green-100 text-green-800';
+      case 'workout': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
+      case 'nutrition': return 'bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300';
       case 'hydration': return 'bg-cyan-100 text-cyan-800';
-      case 'mindfulness': return 'bg-purple-100 text-purple-800';
+      case 'mindfulness': return 'bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300';
       case 'sleep': return 'bg-indigo-100 text-indigo-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -241,7 +241,7 @@ export const PregnancyWellnessDigest = () => {
             <Calendar className="mr-2 h-5 w-5" />
             Today's Wellness Digest
           </div>
-          <Badge variant="secondary" className="bg-green-100 text-green-800">
+          <Badge variant="secondary" className="bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300">
             {completedCount}/{tips.length} Complete
           </Badge>
         </CardTitle>
@@ -256,7 +256,7 @@ export const PregnancyWellnessDigest = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Progress Summary */}
-        <div className="p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200">
+        <div className="p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-pink-200 dark:border-pink-800">
           <div className="flex items-center justify-between mb-2">
             <h4 className="font-medium text-sm">Daily Progress</h4>
             <span className="text-sm font-medium">{progressPercentage.toFixed(0)}%</span>
@@ -286,7 +286,7 @@ export const PregnancyWellnessDigest = () => {
                 key={tip.id} 
                 className={`p-3 border rounded-lg transition-all ${
                   tip.completed 
-                    ? 'bg-green-50 border-green-200' 
+                    ? 'bg-green-50 dark:bg-green-950/40 border-green-200 dark:border-green-800' 
                     : 'bg-white hover:bg-gray-50'
                 }`}
               >
@@ -299,12 +299,12 @@ export const PregnancyWellnessDigest = () => {
                       <h4 className={`font-medium text-sm ${tip.completed ? 'line-through text-gray-500' : ''}`}>
                         {tip.title}
                       </h4>
-                      {tip.completed && <CheckCircle className="h-4 w-4 text-green-600" />}
+                      {tip.completed && <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />}
                     </div>
                     <p className={`text-xs mb-2 ${tip.completed ? 'text-gray-500' : 'text-gray-700'}`}>
                       {tip.description}
                     </p>
-                    <p className="text-xs text-blue-600 font-medium">
+                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
                       💡 {tip.benefit}
                     </p>
                   </div>
@@ -320,7 +320,7 @@ export const PregnancyWellnessDigest = () => {
                         {tip.action}
                       </Button>
                     ) : (
-                      <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                      <Badge variant="secondary" className="bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300 text-xs">
                         Done!
                       </Badge>
                     )}
@@ -332,14 +332,14 @@ export const PregnancyWellnessDigest = () => {
 
           <TabsContent value="workout" className="space-y-3">
             {tips.filter(tip => tip.category === 'workout').map((tip) => (
-              <div key={tip.id} className="p-3 border rounded-lg bg-blue-50">
+              <div key={tip.id} className="p-3 border rounded-lg bg-blue-50 dark:bg-blue-950/40">
                 <div className="flex items-center gap-2 mb-2">
                   {tip.icon}
                   <h4 className="font-medium text-sm">{tip.title}</h4>
                 </div>
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-blue-600 font-medium">💪 {tip.benefit}</p>
+                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">💪 {tip.benefit}</p>
                   <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>
@@ -350,14 +350,14 @@ export const PregnancyWellnessDigest = () => {
 
           <TabsContent value="nutrition" className="space-y-3">
             {tips.filter(tip => tip.category === 'nutrition').map((tip) => (
-              <div key={tip.id} className="p-3 border rounded-lg bg-green-50">
+              <div key={tip.id} className="p-3 border rounded-lg bg-green-50 dark:bg-green-950/40">
                 <div className="flex items-center gap-2 mb-2">
                   {tip.icon}
                   <h4 className="font-medium text-sm">{tip.title}</h4>
                 </div>
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-green-600 font-medium">🌱 {tip.benefit}</p>
+                  <p className="text-xs text-green-600 dark:text-green-400 font-medium">🌱 {tip.benefit}</p>
                   <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>
@@ -368,14 +368,14 @@ export const PregnancyWellnessDigest = () => {
 
           <TabsContent value="mindfulness" className="space-y-3">
             {tips.filter(tip => tip.category === 'mindfulness' || tip.category === 'sleep').map((tip) => (
-              <div key={tip.id} className="p-3 border rounded-lg bg-purple-50">
+              <div key={tip.id} className="p-3 border rounded-lg bg-purple-50 dark:bg-purple-950/40">
                 <div className="flex items-center gap-2 mb-2">
                   {tip.icon}
                   <h4 className="font-medium text-sm">{tip.title}</h4>
                 </div>
                 <p className="text-xs text-gray-700 mb-2">{tip.description}</p>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-purple-600 font-medium">🧘 {tip.benefit}</p>
+                  <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">🧘 {tip.benefit}</p>
                   <Button size="sm" variant="outline" className="text-xs h-8" onClick={() => handleTipAction(tip.category)}>
                     {tip.action}
                   </Button>

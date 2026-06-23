@@ -144,7 +144,7 @@ const BirthBallTrimester = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <CheckCircle className="h-5 w-5 text-green-600" />
+                <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                 What to Do
               </CardTitle>
             </CardHeader>
@@ -152,7 +152,7 @@ const BirthBallTrimester = () => {
               <ul className="space-y-2">
                 {program.whatToDo.map((item, index) => (
                   <li key={index} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-green-600 mt-1 flex-shrink-0" />
+                    <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-1 flex-shrink-0" />
                     <span className="text-sm text-muted-foreground">{item}</span>
                   </li>
                 ))}

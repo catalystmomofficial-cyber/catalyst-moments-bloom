@@ -100,7 +100,7 @@ export const AffiliateApplicationManager: React.FC = () => {
       case 'pending':
         return <Badge variant="outline">Pending</Badge>;
       case 'approved':
-        return <Badge className="bg-green-100 text-green-800">Approved</Badge>;
+        return <Badge className="bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300">Approved</Badge>;
       case 'rejected':
         return <Badge variant="destructive">Rejected</Badge>;
       default:

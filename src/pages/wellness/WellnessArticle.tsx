@@ -242,9 +242,9 @@ const WellnessArticle = () => {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'video': return 'bg-blue-100 text-blue-800';
-      case 'audio': return 'bg-purple-100 text-purple-800';
-      case 'ebook': return 'bg-green-100 text-green-800';
+      case 'video': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
+      case 'audio': return 'bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300';
+      case 'ebook': return 'bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300';
       default: return 'bg-gray-100 text-gray-800';
     }
   };

@@ -124,12 +124,12 @@ export const PregnancyCommunity = () => {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'general': return 'bg-blue-100 text-blue-800';
-      case 'symptoms': return 'bg-orange-100 text-orange-800';
-      case 'nutrition': return 'bg-green-100 text-green-800';
-      case 'exercise': return 'bg-purple-100 text-purple-800';
-      case 'mental': return 'bg-pink-100 text-pink-800';
-      case 'high-risk': return 'bg-red-100 text-red-800';
+      case 'general': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
+      case 'symptoms': return 'bg-orange-100 dark:bg-orange-950/40 text-orange-800 dark:text-orange-300';
+      case 'nutrition': return 'bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300';
+      case 'exercise': return 'bg-purple-100 dark:bg-purple-950/40 text-purple-800 dark:text-purple-300';
+      case 'mental': return 'bg-pink-100 dark:bg-pink-950/40 text-pink-800 dark:text-pink-300';
+      case 'high-risk': return 'bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -246,7 +246,7 @@ export const PregnancyCommunity = () => {
                           variant="ghost"
                           size="sm"
                           onClick={() => likePost(post.id)}
-                          className={`h-8 px-2 text-xs ${post.isSupported ? 'text-pink-600' : 'text-gray-500'}`}
+                          className={`h-8 px-2 text-xs ${post.isSupported ? 'text-pink-600 dark:text-pink-400' : 'text-gray-500'}`}
                         >
                           <Heart className={`h-3 w-3 mr-1 ${post.isSupported ? 'fill-current' : ''}`} />
                           {post.likes} {post.isSupported ? 'Supported' : 'Support'}
@@ -273,7 +273,7 @@ export const PregnancyCommunity = () => {
 
           <TabsContent value="first" className="space-y-3 max-h-[400px] overflow-y-auto">
             {filterPostsByTrimester(1).map((post) => (
-              <div key={post.id} className="p-3 border rounded-lg bg-blue-50">
+              <div key={post.id} className="p-3 border rounded-lg bg-blue-50 dark:bg-blue-950/40">
                 <div className="flex items-start gap-3">
                   <div className="text-xl">{post.avatar}</div>
                   <div className="flex-1">
@@ -295,7 +295,7 @@ export const PregnancyCommunity = () => {
 
           <TabsContent value="second" className="space-y-3 max-h-[400px] overflow-y-auto">
             {filterPostsByTrimester(2).map((post) => (
-              <div key={post.id} className="p-3 border rounded-lg bg-green-50">
+              <div key={post.id} className="p-3 border rounded-lg bg-green-50 dark:bg-green-950/40">
                 <div className="flex items-start gap-3">
                   <div className="text-xl">{post.avatar}</div>
                   <div className="flex-1">
@@ -317,7 +317,7 @@ export const PregnancyCommunity = () => {
 
           <TabsContent value="third" className="space-y-3 max-h-[400px] overflow-y-auto">
             {filterPostsByTrimester(3).map((post) => (
-              <div key={post.id} className="p-3 border rounded-lg bg-purple-50">
+              <div key={post.id} className="p-3 border rounded-lg bg-purple-50 dark:bg-purple-950/40">
                 <div className="flex items-start gap-3">
                   <div className="text-xl">{post.avatar}</div>
                   <div className="flex-1">
@@ -338,8 +338,8 @@ export const PregnancyCommunity = () => {
           </TabsContent>
         </Tabs>
 
-        <div className="p-3 bg-pink-50 rounded-lg border border-pink-200">
-          <p className="text-xs text-pink-700 leading-relaxed">
+        <div className="p-3 bg-pink-50 dark:bg-pink-950/40 rounded-lg border border-pink-200 dark:border-pink-800">
+          <p className="text-xs text-pink-700 dark:text-pink-300 leading-relaxed">
             💗 <strong>Community Guidelines:</strong> Be kind, supportive, and respectful. 
             Remember that medical advice should come from healthcare providers. We're here to support each other! 
           </p>

@@ -181,7 +181,7 @@ export default function Courses() {
         <Card>
           <CardContent className="flex items-center space-x-4 p-6">
             <div className="p-3 bg-green-500/10 rounded-full">
-              <Target className="h-6 w-6 text-green-600" />
+              <Target className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <div>
               <p className="text-2xl font-bold">{enrolledCourses.length}</p>
@@ -193,7 +193,7 @@ export default function Courses() {
         <Card>
           <CardContent className="flex items-center space-x-4 p-6">
             <div className="p-3 bg-purple-500/10 rounded-full">
-              <Users className="h-6 w-6 text-purple-600" />
+              <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
               <p className="text-2xl font-bold">500+</p>

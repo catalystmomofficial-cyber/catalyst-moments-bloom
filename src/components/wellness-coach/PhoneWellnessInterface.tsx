@@ -223,7 +223,7 @@ const PhoneWellnessInterface = ({ isOpen, onClose }: PhoneWellnessInterfaceProps
                 <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
                   <PhoneCall className="h-8 w-8 text-white" />
                 </div>
-                <p className="text-lg font-medium text-green-600">Connected with Dr. Maya</p>
+                <p className="text-lg font-medium text-green-600 dark:text-green-400">Connected with Dr. Maya</p>
                 <p className="text-sm text-muted-foreground">Enjoy your wellness coaching session!</p>
                 <Button onClick={endCall} variant="destructive" size="sm">
                   <PhoneOff className="h-4 w-4 mr-2" />
