@@ -85,19 +85,19 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
     <Card className="overflow-hidden border-catalyst-copper/20 bg-gradient-to-br from-background to-catalyst-copper/5">
       <CardContent className="p-5 space-y-4">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-bold tracking-tight text-[#394a4a]">CM</span>
-            <div className="rounded-full bg-[#d3e6e6] w-10 h-10 flex items-center justify-center">
-              <UserRound className="h-5 w-5 text-[#394a4a]" />
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
+          <div className="flex flex-col">
+            <div className="flex items-center">
+              <span className="text-2xl font-bold tracking-tight text-[#394a4a] z-10">CM</span>
+              <div className="rounded-full bg-[#d3e6e6] w-9 h-9 flex items-center justify-center -ml-2.5 z-20">
+                <UserRound className="h-5 w-5 text-[#394a4a]" />
+              </div>
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium -ml-2.5">
                 Wellness Coach
               </p>
-              <p className="text-sm font-medium capitalize">
-                {output.meta.timeOfDay} · {output.meta.state.replace('_', ' ')}
-              </p>
             </div>
+            <p className="text-sm font-medium capitalize mt-1">
+              {output.meta.timeOfDay} · {output.meta.state.replace('_', ' ')}
+            </p>
           </div>
           <Badge variant="outline" className={urgencyTone}>
             {output.urgencyLevel}
