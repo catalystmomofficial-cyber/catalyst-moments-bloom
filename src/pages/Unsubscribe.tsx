@@ -116,7 +116,7 @@ const Unsubscribe = () => {
 
           {state === 'success' && (
             <div className="flex flex-col items-center gap-2">
-              <CheckCircle2 className="h-8 w-8 text-green-600" />
+              <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
               <p className="text-foreground font-medium">You've been unsubscribed.</p>
               <p className="text-sm text-muted-foreground">
                 We're sorry to see you go.
@@ -126,7 +126,7 @@ const Unsubscribe = () => {
 
           {state === 'already' && (
             <div className="flex flex-col items-center gap-2">
-              <CheckCircle2 className="h-8 w-8 text-green-600" />
+              <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
               <p className="text-foreground font-medium">You're already unsubscribed.</p>
             </div>
           )}

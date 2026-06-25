@@ -100,7 +100,7 @@ export const NutritionSection = () => {
               {recipe.tags.map((tag) => (
                 <span 
                   key={tag}
-                  className="text-xs py-1 px-2 bg-green-100 text-green-700 rounded-full"
+                  className="text-xs py-1 px-2 bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 rounded-full"
                 >
                   {tag}
                 </span>

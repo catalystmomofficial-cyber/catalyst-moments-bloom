@@ -162,7 +162,7 @@ const Community = () => {
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold leading-tight">{g.name}</h3>
                         <div className="flex items-center gap-1">
-                          {g.isFree && <Badge variant="outline" className="text-xs text-green-600 border-green-600">Free</Badge>}
+                          {g.isFree && <Badge variant="outline" className="text-xs text-green-600 dark:text-green-400 border-green-600">Free</Badge>}
                           <Badge variant="secondary" className="text-xs capitalize">{g.badge || g.journey}</Badge>
                         </div>
                       </div>

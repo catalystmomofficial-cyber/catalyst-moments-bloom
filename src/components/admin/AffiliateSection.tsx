@@ -104,21 +104,21 @@ const AffiliateSection = () => {
     switch (status) {
       case 'approved':
         return (
-          <Badge className="bg-green-500/20 text-green-600 border-green-500/30">
+          <Badge className="bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30">
             <Check className="h-3 w-3 mr-1" />
             Approved
           </Badge>
         );
       case 'rejected':
         return (
-          <Badge className="bg-red-500/20 text-red-600 border-red-500/30">
+          <Badge className="bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30">
             <X className="h-3 w-3 mr-1" />
             Rejected
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
+          <Badge className="bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-500/30">
             <Clock className="h-3 w-3 mr-1" />
             Pending
           </Badge>

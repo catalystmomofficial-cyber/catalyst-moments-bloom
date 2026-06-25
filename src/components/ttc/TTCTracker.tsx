@@ -10,9 +10,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { supabase } from '@/integrations/supabase/client';
 import {
-  useTTCData, windowLabel, phaseDescription, daysUntilNextPeriod, mapPhaseForDay,
+  useTTCData, daysUntilNextPeriod, mapPhaseForDay,
   type MapPhase,
 } from '@/hooks/useTTCData';
+import { BloomRing } from './BloomRing';
 import { CycleCalendar } from './CycleCalendar';
 import { DayLogModal } from './DayLogModal';
 import { TTCBloodworkModal } from './TTCBloodworkModal';
@@ -177,16 +178,13 @@ const MAP_PHASE_COLOR: Record<MapPhase, string> = {
   luteal: '#FAE0CC',      // peach light
 };
 
-const RING_RADIUS = 86;
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
-
 const todayISODate = () => new Date().toISOString().slice(0, 10);
 
 // ─── TTCTracker ───────────────────────────────────────────────────────────────
 export const TTCTracker = () => {
   const { toast } = useToast();
   const {
-    settings, refresh, cycleDay, phase, cycleLength, periodLength, logByDate, saveCycleLog,
+    settings, refresh, cycleDay, phase, cycleLength, periodLength, logByDate, logs, saveCycleLog, hasSettings,
   } = useTTCData();
   const [dayLogOpen, setDayLogOpen] = useState(false);
 
@@ -215,10 +213,10 @@ export const TTCTracker = () => {
 
   const getPhaseColor = (phase: string) => {
     switch (phase) {
-      case 'menstrual': return 'bg-red-100 text-red-800';
-      case 'follicular': return 'bg-blue-100 text-blue-800';
-      case 'fertile': return 'bg-green-100 text-green-800';
-      case 'luteal': return 'bg-yellow-100 text-yellow-800';
+      case 'menstrual': return 'bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300';
+      case 'follicular': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
+      case 'fertile': return 'bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300';
+      case 'luteal': return 'bg-yellow-100 dark:bg-yellow-950/40 text-yellow-800 dark:text-yellow-300';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -285,32 +283,16 @@ export const TTCTracker = () => {
             <TabsContent value="overview" className="space-y-4">
               {/* Cycle ring */}
               <div className="flex flex-col items-center p-6 bg-card rounded-2xl border">
-                <div className="relative" style={{ width: 200, height: 200 }}>
-                  <svg width="200" height="200" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="100" cy="100" r={RING_RADIUS} fill="none" stroke="#F5EBE0" strokeWidth="14" />
-                    <circle
-                      cx="100" cy="100" r={RING_RADIUS} fill="none" stroke="#B5651D" strokeWidth="14"
-                      strokeLinecap="round"
-                      strokeDasharray={`${(Math.min(cycleDay ?? 0, cycleLength) / cycleLength) * RING_CIRCUMFERENCE} ${RING_CIRCUMFERENCE}`}
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-[11px] font-medium tracking-[0.08em] uppercase text-muted-foreground">Cycle day</span>
-                    <span className="text-[44px] font-bold leading-none my-1 text-foreground">{cycleDay ?? '—'}</span>
-                    <span
-                      className="text-[11px] font-medium px-3 py-1 rounded-full"
-                      style={{ color: '#B5651D', background: 'rgba(181,101,29,0.1)' }}
-                    >
-                      {windowLabel(phase)}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground mt-3 text-center">
-                  {phaseDescription(phase)}
-                  {daysUntilNextPeriod(cycleDay, cycleLength) != null && (
-                    <> · {daysUntilNextPeriod(cycleDay, cycleLength)} days until next period</>
-                  )}
-                </p>
+                <BloomRing
+                  cycleDay={cycleDay}
+                  cycleLength={cycleLength}
+                  phase={phase}
+                  subnote={
+                    daysUntilNextPeriod(cycleDay, cycleLength) != null
+                      ? `${daysUntilNextPeriod(cycleDay, cycleLength)} days until next period`
+                      : null
+                  }
+                />
                 {todayTemperature != null && (
                   <p className="text-sm mt-1">
                     <span className="font-medium">Today's BBT: </span>
@@ -321,24 +303,26 @@ export const TTCTracker = () => {
 
               {/* 28-day cycle map */}
               <div className="p-4 bg-card rounded-2xl border">
-                <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-muted-foreground mb-2.5">
+                <p className="text-[11px] font-medium tracking-[0.07em] uppercase text-muted-foreground mb-3">
                   {cycleLength}-day cycle map
                 </p>
-                <div className="flex gap-0.5">
+                <div className="flex items-end gap-1 h-10">
                   {Array.from({ length: cycleLength }, (_, i) => {
                     const day = i + 1;
                     const p = mapPhaseForDay(day, cycleLength, periodLength);
                     const isToday = cycleDay === day;
+                    // Bar height reflects fertility relevance, not decoration: the
+                    // fertile window is the tallest, period/luteal are shortest.
+                    const heightPct = p === 'ovulation' ? 100 : p === 'follicular' ? 70 : 60;
                     return (
                       <div
                         key={day}
-                        title={`Day ${day}`}
-                        className="flex-1 rounded-sm"
+                        title={`Day ${day} · ${p}`}
+                        className="flex-1 rounded-full transition-[height] duration-300"
                         style={{
-                          height: 28,
+                          height: `${isToday ? Math.min(heightPct + 15, 100) : heightPct}%`,
                           background: MAP_PHASE_COLOR[p],
-                          boxShadow: isToday ? '0 0 0 2px #2C2218' : undefined,
-                          transform: isToday ? 'scaleY(1.15)' : undefined,
+                          boxShadow: isToday ? '0 0 0 2px #2C2218, 0 0 8px rgba(181,101,29,0.5)' : undefined,
                         }}
                       />
                     );
@@ -522,7 +506,14 @@ export const TTCTracker = () => {
             </TabsContent>
 
             <TabsContent value="predictions">
-              <TTCPredictiveAnalytics />
+              <TTCPredictiveAnalytics
+                hasSettings={hasSettings}
+                cycleDay={cycleDay}
+                cycleLength={cycleLength}
+                logs={logs}
+                onViewDetailedAnalytics={() => setReportMode('pattern_report')}
+                onOpenSettings={() => setSettingsOpen(true)}
+              />
             </TabsContent>
           </Tabs>
         </CardContent>

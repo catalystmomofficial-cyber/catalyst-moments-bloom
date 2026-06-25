@@ -21,7 +21,7 @@ const journeyOptions: JourneyOption[] = [
     title: 'Trying to Conceive',
     description: 'Supporting your fertility journey with personalized nutrition, workouts, and tracking tools',
     icon: <Heart className="h-6 w-6" />,
-    color: 'bg-red-100 text-red-600',
+    color: 'bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400',
     stages: [
       { value: 'ttc_1-3', label: '1-3 months trying', description: 'Just started your TTC journey' },
       { value: 'ttc_4-6', label: '4-6 months trying', description: 'Building healthy habits' },
@@ -34,7 +34,7 @@ const journeyOptions: JourneyOption[] = [
     title: 'Pregnant',
     description: 'Your personalized pregnancy companion with safe workouts, nutrition, and weekly insights',
     icon: <Baby className="h-6 w-6" />,
-    color: 'bg-blue-100 text-blue-600',
+    color: 'bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400',
     stages: [
       { value: 'trimester_1', label: 'First Trimester (1-12 weeks)', description: 'Early pregnancy support' },
       { value: 'trimester_2', label: 'Second Trimester (13-26 weeks)', description: 'Growth and energy phase' },
@@ -46,7 +46,7 @@ const journeyOptions: JourneyOption[] = [
     title: 'Postpartum',
     description: 'Recovery-focused workouts, healing nutrition, and mental wellness support for new moms',
     icon: <Sparkles className="h-6 w-6" />,
-    color: 'bg-purple-100 text-purple-600',
+    color: 'bg-purple-100 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400',
     stages: [
       { value: 'postpartum_0-6', label: '0-6 weeks postpartum', description: 'Initial recovery phase' },
       { value: 'postpartum_6-12', label: '6-12 weeks postpartum', description: 'Gentle movement return' },
@@ -60,7 +60,7 @@ const journeyOptions: JourneyOption[] = [
     title: 'Toddler Mom',
     description: 'Staying healthy while chasing little ones - quick workouts and practical wellness tips',
     icon: <Users className="h-6 w-6" />,
-    color: 'bg-green-100 text-green-600',
+    color: 'bg-green-100 dark:bg-green-950/40 text-green-600 dark:text-green-400',
     stages: [
       { value: 'toddler_1-2', label: '1-2 year old', description: 'High energy phase' },
       { value: 'toddler_2-3', label: '2-3 years old', description: 'Growing independence' },

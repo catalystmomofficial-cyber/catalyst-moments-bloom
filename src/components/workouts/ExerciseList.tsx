@@ -28,7 +28,7 @@ export default function ExerciseList({
                 index === currentExerciseIndex
                   ? 'border-primary bg-primary/5'
                   : exercise.completed
-                  ? 'border-green-200 bg-green-50'
+                  ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/40'
                   : 'border-border'
               }`}
             >

@@ -96,28 +96,28 @@ const Wellness = () => {
                   ? `Assessment baseline${assessmentData?.tier ? ` · ${assessmentData.tier}` : ''}`
                   : "Complete mood check-in"
             }
-            color="bg-yellow-100"
+            color="bg-yellow-100 dark:bg-yellow-950/40"
           />
           <WellnessQuickCard
             title="Sleep"
             icon={<MoonStar className="h-5 w-5 text-primary" />}
             value={sleepDisplay}
             trend={latestEntry ? "Last night's sleep" : "Log your sleep"}
-            color="bg-blue-100"
+            color="bg-blue-100 dark:bg-blue-950/40"
           />
           <WellnessQuickCard
             title="Self-Care"
             icon={<Heart className="h-5 w-5 text-primary" />}
             value={selfCareDisplay}
             trend="Daily self-care goal"
-            color="bg-red-100"
+            color="bg-red-100 dark:bg-red-950/40"
           />
           <WellnessQuickCard
             title="Hydration"
             icon={<Utensils className="h-5 w-5 text-primary" />}
             value={hydrationDisplay}
             trend="Glasses of water today"
-            color="bg-blue-100"
+            color="bg-blue-100 dark:bg-blue-950/40"
           />
         </div>
         
@@ -248,7 +248,7 @@ const Wellness = () => {
                           category="Pregnancy"
                           time="8 min read"
                           icon={<Heart className="h-5 w-5" />}
-                          color="bg-pink-100"
+                          color="bg-pink-100 dark:bg-pink-950/40"
                           onClick={() => window.location.assign('/wellness/resources')}
                         />
                         <WellnessResourceCard
@@ -257,7 +257,7 @@ const Wellness = () => {
                           category="Mental Health"
                           time="6 min read"
                           icon={<SmilePlus className="h-5 w-5" />}
-                          color="bg-purple-100"
+                          color="bg-purple-100 dark:bg-purple-950/40"
                           onClick={() => window.location.assign('/wellness/resources')}
                         />
                       </>
@@ -271,7 +271,7 @@ const Wellness = () => {
                           category="Sleep"
                           time="5 min read"
                           icon={<MoonStar className="h-5 w-5" />}
-                          color="bg-blue-100"
+                          color="bg-blue-100 dark:bg-blue-950/40"
                           onClick={() => window.location.assign('/wellness/resources')}
                         />
                         <WellnessResourceCard
@@ -280,7 +280,7 @@ const Wellness = () => {
                           category="Recovery"
                           time="10 min read"
                           icon={<Heart className="h-5 w-5" />}
-                          color="bg-green-100"
+                          color="bg-green-100 dark:bg-green-950/40"
                           onClick={() => window.location.assign('/wellness/resources')}
                         />
                       </>
@@ -303,7 +303,7 @@ const Wellness = () => {
                           category="Mental Health"
                           time="5 min read"
                           icon={<SmilePlus className="h-5 w-5" />}
-                          color="bg-purple-100"
+                          color="bg-purple-100 dark:bg-purple-950/40"
                           onClick={() => window.location.assign('/wellness/resources')}
                         />
                       </>
@@ -315,7 +315,7 @@ const Wellness = () => {
                       category="Mental Wellbeing"
                       time="Audio: 5 min"
                       icon={<Heart className="h-5 w-5" />}
-                      color="bg-red-100"
+                      color="bg-red-100 dark:bg-red-950/40"
                       onClick={() => window.location.assign('/wellness/resources')}
                     />
                     <WellnessResourceCard
@@ -324,7 +324,7 @@ const Wellness = () => {
                       category="Nutrition"
                       time="8 min read"
                       icon={<Utensils className="h-5 w-5" />}
-                      color="bg-green-100"
+                      color="bg-green-100 dark:bg-green-950/40"
                       onClick={() => window.location.assign('/wellness/resources')}
                     />
                   </div>

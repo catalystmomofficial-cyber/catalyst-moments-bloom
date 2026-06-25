@@ -709,7 +709,7 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
                   variant="ghost"
                   size="icon"
                   onClick={startCall}
-                  className="rounded-full text-green-600 hover:text-green-700 hover:bg-green-50"
+                  className="rounded-full text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-950/40"
                 >
                   <Phone className="h-4 w-4" />
                 </Button>
@@ -718,7 +718,7 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
                   variant="ghost"
                   size="icon"
                   onClick={endCall}
-                  className="rounded-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="rounded-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/40"
                 >
                   <PhoneOff className="h-4 w-4" />
                 </Button>
@@ -874,7 +874,7 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
               variant="ghost"
               size="icon"
               onClick={isRecording ? stopVoiceRecording : startVoiceRecording}
-              className={`rounded-full ${isRecording ? 'text-red-600 bg-red-50' : ''}`}
+              className={`rounded-full ${isRecording ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40' : ''}`}
             >
               {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
             </Button>

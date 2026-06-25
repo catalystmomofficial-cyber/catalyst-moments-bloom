@@ -110,7 +110,7 @@ const EnhancedGroupsList = ({ onManage, onViewAll }: EnhancedGroupsListProps) =>
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm font-medium truncate">{g.name}</p>
                         {g.isFree && (
-                          <Badge variant="outline" className="text-xs text-green-600 border-green-600">Free</Badge>
+                          <Badge variant="outline" className="text-xs text-green-600 dark:text-green-400 border-green-600">Free</Badge>
                         )}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground">

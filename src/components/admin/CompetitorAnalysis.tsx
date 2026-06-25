@@ -94,25 +94,25 @@ export const CompetitorAnalysis: React.FC<CompetitorAnalysisProps> = ({ onSelect
 
   const getVolumeColor = (volume: string) => {
     switch (volume?.toLowerCase()) {
-      case 'high': return 'bg-green-100 text-green-700 border-green-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+      case 'high': return 'bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800';
+      case 'medium': return 'bg-yellow-100 dark:bg-yellow-950/40 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800';
       default: return 'bg-gray-100 text-gray-700 border-gray-200';
     }
   };
 
   const getDifficultyColor = (diff: string) => {
     switch (diff?.toLowerCase()) {
-      case 'low': return 'bg-green-100 text-green-700';
-      case 'medium': return 'bg-yellow-100 text-yellow-700';
-      case 'high': return 'bg-red-100 text-red-700';
+      case 'low': return 'bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300';
+      case 'medium': return 'bg-yellow-100 dark:bg-yellow-950/40 text-yellow-700 dark:text-yellow-300';
+      case 'high': return 'bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300';
       default: return 'bg-gray-100 text-gray-700';
     }
   };
 
   const getImpactColor = (impact: string) => {
     switch (impact?.toLowerCase()) {
-      case 'high': return 'text-green-600 bg-green-50';
-      case 'medium': return 'text-yellow-600 bg-yellow-50';
+      case 'high': return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/40';
+      case 'medium': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/40';
       default: return 'text-gray-600 bg-gray-50';
     }
   };

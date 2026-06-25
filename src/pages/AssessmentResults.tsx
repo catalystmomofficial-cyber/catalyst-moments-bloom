@@ -111,9 +111,9 @@ const AssessmentResults = () => {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 70) return 'text-green-600';
-    if (score >= 40) return 'text-yellow-600';
-    return 'text-orange-600';
+    if (score >= 70) return 'text-green-600 dark:text-green-400';
+    if (score >= 40) return 'text-yellow-600 dark:text-yellow-400';
+    return 'text-orange-600 dark:text-orange-400';
   };
 
   const getTierBadge = (tier: string | null) => {

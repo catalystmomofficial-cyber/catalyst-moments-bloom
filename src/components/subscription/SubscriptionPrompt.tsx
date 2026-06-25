@@ -58,23 +58,23 @@ const SubscriptionPrompt = ({ isOpen, onClose }: SubscriptionPromptProps) => {
               
               <div className="space-y-2 text-sm">
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <span>All workout programs & courses</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <span>Personalized nutrition plans</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <span>Access to dedicated Wellness Coach</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <span>Progress tracking & analytics</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <Check className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <span>Community support</span>
                 </div>
               </div>

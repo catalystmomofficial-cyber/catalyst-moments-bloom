@@ -23,7 +23,9 @@ import {
   Video,
   CalendarCheck
 } from 'lucide-react';
-import { format, differenceInDays } from 'date-fns';
+import { format } from 'date-fns';
+import { useBiweeklyMilestoneStatus } from '@/hooks/useBiweeklyMilestone';
+import { useScrollToHash } from '@/hooks/useScrollToHash';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Link } from 'react-router-dom';
 import { AchievementBadge } from '@/components/social/AchievementBadge';
@@ -48,7 +50,7 @@ interface CheckIn {
 }
 
 const Progress = () => {
-  const { user, profile, subscriptionStart, subscribed } = useAuth();
+  const { user, profile } = useAuth();
   const { currentJourney } = useContentFilter();
   const { toast } = useToast();
   const [checkIns, setCheckIns] = useState<CheckIn[]>([]);
@@ -174,53 +176,10 @@ const Progress = () => {
 
   const { currentMilestone, progress: milestoneProgress } = getMilestoneProgress();
 
-  // Bi-weekly milestone check-in logic (resets after each booking)
-  const getBiweeklyCheckinStatus = () => {
-    // Anchor: most recent of (last booked milestone) or (program start)
-    const lastBooked = (() => {
-      try {
-        const v = localStorage.getItem('cm_last_milestone_at');
-        return v ? new Date(v) : null;
-      } catch { return null; }
-    })();
-
-    let startDate: Date;
-    const stored = localStorage.getItem('cm_program_start_date');
-    if (subscriptionStart) {
-      // Anchor to actual Stripe subscription start so the 2-week cycle reflects paid membership, not account creation.
-      startDate = new Date(subscriptionStart);
-    } else if (subscribed && stored) {
-      startDate = new Date(stored);
-    } else if (subscribed && profile?.created_at) {
-      startDate = new Date(profile.created_at);
-    } else {
-      // Not subscribed yet — anchor "now" so countdown shows 14 days, never instantly active.
-      startDate = stored ? new Date(stored) : new Date();
-      if (!stored) localStorage.setItem('cm_program_start_date', startDate.toISOString());
-    }
-
-    const anchor = lastBooked && lastBooked > startDate ? lastBooked : startDate;
-    const today = new Date();
-    const daysSinceStart = differenceInDays(today, startDate);
-    const daysSinceAnchor = differenceInDays(today, anchor);
-    const daysUntilNext = Math.max(0, 14 - daysSinceAnchor);
-    const isActive = daysSinceAnchor >= 14;
-    const nextMilestoneDate = new Date(anchor);
-    nextMilestoneDate.setDate(nextMilestoneDate.getDate() + 14);
-
-    return {
-      startDate,
-      daysSinceStart,
-      currentCycle: Math.floor(daysSinceStart / 14),
-      daysUntilNext,
-      isActive,
-      nextMilestoneDate,
-      weeksCompleted: Math.floor(daysSinceStart / 7),
-    };
-  };
-
-
-  const biweeklyStatus = getBiweeklyCheckinStatus();
+  // Bi-weekly milestone check-in status (resets after each booking) — shared with the
+  // intent signal banner so both surfaces agree on the same Progression Sync cadence.
+  const biweeklyStatus = useBiweeklyMilestoneStatus();
+  useScrollToHash();
 
   // Map current journey -> milestone stage
   const milestoneStage: MilestoneStage = (() => {
@@ -410,7 +369,7 @@ const Progress = () => {
           }
 
           return (
-            <Card className={`mb-8 border-2 transition-all ${
+            <Card id="progression-sync" className={`mb-8 border-2 transition-all ${
               biweeklyStatus.isActive
                 ? 'border-primary bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 shadow-lg'
                 : 'border-muted bg-muted/20'

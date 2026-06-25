@@ -91,11 +91,11 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ onSelectPost }
 
   const getTypeColor = (type: string) => {
     switch (type?.toLowerCase()) {
-      case 'pillar': return 'bg-purple-100 text-purple-700 border-purple-200';
-      case 'educational': return 'bg-blue-100 text-blue-700 border-blue-200';
-      case 'inspirational': return 'bg-pink-100 text-pink-700 border-pink-200';
-      case 'product': return 'bg-green-100 text-green-700 border-green-200';
-      case 'community': return 'bg-orange-100 text-orange-700 border-orange-200';
+      case 'pillar': return 'bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800';
+      case 'educational': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800';
+      case 'inspirational': return 'bg-pink-100 dark:bg-pink-950/40 text-pink-700 dark:text-pink-300 border-pink-200 dark:border-pink-800';
+      case 'product': return 'bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800';
+      case 'community': return 'bg-orange-100 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800';
       default: return 'bg-gray-100 text-gray-700';
     }
   };
@@ -220,11 +220,11 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ onSelectPost }
                   <p className="text-xs text-muted-foreground">Total Posts</p>
                 </div>
                 <div className="p-3 bg-card border rounded-lg text-center">
-                  <p className="text-2xl font-bold text-purple-600">{calendar.monthlyGoals.pillarContent}</p>
+                  <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{calendar.monthlyGoals.pillarContent}</p>
                   <p className="text-xs text-muted-foreground">Pillar Content</p>
                 </div>
                 <div className="p-3 bg-card border rounded-lg text-center">
-                  <p className="text-2xl font-bold text-green-600">{calendar.monthlyGoals.productPosts}</p>
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">{calendar.monthlyGoals.productPosts}</p>
                   <p className="text-xs text-muted-foreground">Product Posts</p>
                 </div>
                 <div className="p-3 bg-card border rounded-lg text-center">

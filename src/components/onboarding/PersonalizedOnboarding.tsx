@@ -100,19 +100,19 @@ export const PersonalizedOnboarding = () => {
     if (tier === 'high') {
       return {
         message: `Amazing! You scored ${score}/100 on your wellness assessment. You're doing great, and we'll help you maintain and optimize your health.`,
-        color: 'text-green-600',
+        color: 'text-green-600 dark:text-green-400',
         icon: '🌟'
       };
     } else if (tier === 'medium') {
       return {
         message: `You scored ${score}/100 on your wellness assessment. There's room for improvement, and we have the perfect plan to help you thrive!`,
-        color: 'text-yellow-600',
+        color: 'text-yellow-600 dark:text-yellow-400',
         icon: '💪'
       };
     } else {
       return {
         message: `Your assessment score was ${score}/100. Don't worry - you're in exactly the right place! We'll work together to transform your wellness journey.`,
-        color: 'text-orange-600',
+        color: 'text-orange-600 dark:text-orange-400',
         icon: '🚀'
       };
     }
@@ -235,7 +235,7 @@ export const PersonalizedOnboarding = () => {
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
-                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
                     <h4 className="font-medium">AI Wellness Coach</h4>
                     <p className="text-sm text-muted-foreground">
@@ -245,7 +245,7 @@ export const PersonalizedOnboarding = () => {
                 </div>
 
                 <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
-                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
                     <h4 className="font-medium">Tailored Check-Ins</h4>
                     <p className="text-sm text-muted-foreground">
@@ -255,7 +255,7 @@ export const PersonalizedOnboarding = () => {
                 </div>
 
                 <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
-                  <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
                     <h4 className="font-medium">Smart Recommendations</h4>
                     <p className="text-sm text-muted-foreground">

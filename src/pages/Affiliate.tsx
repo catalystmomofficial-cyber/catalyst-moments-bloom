@@ -228,7 +228,7 @@ export default function Affiliate() {
               <a className="btn-ghost" href="#how">See How It Works</a>
             </div>
             {affiliateStatus === 'rejected' && (
-              <div className="mt-8 max-w-md mx-auto p-4 bg-red-50/10 border border-red-300/30 rounded-lg text-left">
+              <div className="mt-8 max-w-md mx-auto p-4 bg-red-50 dark:bg-red-950/40/10 border border-red-300 dark:border-red-700/30 rounded-lg text-left">
                 <div className="flex items-center gap-2 text-red-200">
                   <XCircle className="h-5 w-5" />
                   <span className="font-medium">Previous application not approved</span>

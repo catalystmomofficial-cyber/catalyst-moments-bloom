@@ -182,9 +182,9 @@ export const BlogPostGenerator = () => {
       </Card>
 
       {lastGeneratedPost && (
-        <Card className="border-green-200 bg-green-50/50">
+        <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/40/50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-700">
+            <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300">
               <CheckCircle className="h-5 w-5" />
               Blog Post Published Successfully!
             </CardTitle>
@@ -207,7 +207,7 @@ export const BlogPostGenerator = () => {
                 <p className="text-sm font-semibold text-muted-foreground">Tags:</p>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {lastGeneratedPost.tags.map((tag: string) => (
-                    <span key={tag} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                    <span key={tag} className="text-xs bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 px-2 py-1 rounded">
                       {tag}
                     </span>
                   ))}

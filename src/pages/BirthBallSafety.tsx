@@ -88,7 +88,7 @@ const BirthBallSafety = () => {
                 <ul className="space-y-3">
                   {section.tips?.map((tip, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                       <span className="text-muted-foreground">{tip}</span>
                     </li>
                   ))}
@@ -107,7 +107,7 @@ const BirthBallSafety = () => {
             <ul className="space-y-3">
               {educationalContent.troubleshooting.properUse.map((item, index) => (
                 <li key={index} className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
                   <span className="text-muted-foreground">{item}</span>
                 </li>
               ))}
