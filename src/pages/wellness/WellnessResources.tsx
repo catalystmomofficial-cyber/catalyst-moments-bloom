@@ -43,6 +43,20 @@ const MOMODORO_PDF =
 const SELFCARE_PDF =
   'https://catalystmomofficial.com/catalyst%20guide/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
 
+// Cover artwork from the uploaded design. These load directly in the
+// visitor's browser. If a URL ever expires, the branded ProductCoverArt
+// fallback renders instead (see CoverImage below), so no broken images.
+const MOMODORO_COVER =
+  'https://lh3.googleusercontent.com/aida/AP1WRLsL6nYWLmASR47Zdnhv0jFGiOwXBW3yADaEBgvPNy9S77AQducxJU4H5PvGDmBsO3Y_OOcdnl4Lp3A5nbBPwGkVcNGbXcHgGtJ0xDxfpLr5AwgFezLyVcXJBCsEB0OaQhFE8E9wuEYCLf0SCAbDlFu-AVplTqEbF3DkECjNuSO1HIfaGu3DUkdi07xHFI8za2b-FJ660ROk0XKvVR_MZqLHrFjeXaUW8Lq30om5jm2rwyfUI1RaOEBaJ3c';
+const SELFCARE_COVER =
+  'https://lh3.googleusercontent.com/aida/AP1WRLsvPRlKsy0DawEbDzjS-fpXytfhPj5ijmyf-9WcpCD2kr4eiodD0uGzHb2Pox7udZMYyO3rlwFenwB2IRZ6DACbOX95Ix8MSRt0iGWom2H_wAdaOOCCbLc6IYsttGXpklq8EuXsrgEG6qTNHQ5Nf88N9RsN7BMee7FeSbySLQY1tbp4qQKUN9ZJkfhPa1LRPW5ggOc2ndkCSWOosJKTKhc0ptvuip5jAK653jYO9o5v47FRW54JUAUAG9c';
+const SLEEP_COVER =
+  'https://lh3.googleusercontent.com/aida/AP1WRLs4Zub3j0sq_JpaOVo_EHHjUgQQWXFl7YINFdCvR0Ja5CXkcrPrCTp8XhtZlnbB9GB4U4-pPD9oAvx8ZDpMjhfOAK-T_CpH-hnT7MfFQ0r32cIQl6KgZzsd8wyqAdK6bT_SM9I3VNB7vRJwDv8hGbMdaWCE9Fusuztlfl-yyi0PlUO8VteHRHgCKKCrsASqP1RESTapSBF6JxzI8yWXac1IZnZ1mO0mtoPKMefvwSn3mYwOK3dLY1pnPg';
+const EMOTIONAL_COVER =
+  'https://lh3.googleusercontent.com/aida/AP1WRLv6RbJ9F8jv8Mle4WqGO7FQsEk-720FO0Lb2l_fq7vU8nhVBX9YyKhQZaqyQNOu3i-SiE39GbgI9DnOXfCy_5dvyj823T_d06lKRDndBQyRuZOsnDSyj3SQ641xYWhBPd71wk7drZ0-M7dcHqjjxTgQ4ZeC6P-mGKZyQ4FexBumf7l1TxZUtvhj7u-SxoF6vawOQ-N7JaqSrbORZsk_d6snBwVt4ikE_NeVbokeFL2nczXoyB47x30aH2Q';
+const FEATURED_COVER =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuA94RdhacOaHABjSMA4_n-5QXnXd3IBNz6f9fvdYtjSy3I-q3RHA-PSCvQpUhYL2SV_PfRAH_3o0yrG2Tk03GUhBM81cslb8z15OshV7ojnHazkNj7nOBIhMZfYLMUlHGwgwA6LRI04aJeCe24f3YcllmNVwtS2bNik5Y6tIjZR8gCCsKYvL_o0bn-G8lYAlgIqFaFmgjnDK4mIovk_DjYQFqd9I7G0lfIw5P03sFJDxWJkKHeRVvRsq4iUobE0DXWvJkbNyvoCYBw';
+
 type Product = {
   slug: string;
   title: string;
@@ -67,6 +81,7 @@ const PRODUCTS: Product[] = [
     tagline: '15-Minute Focus Sessions for Busy Moms',
     description:
       'A beautifully structured premium time-management tool that helps busy moms organize their days and reclaim their time — one focused 15-minute session at a time.',
+    cover: MOMODORO_COVER,
     pdf: MOMODORO_PDF,
     cta: 'Download Planner',
     priceCents: 1200,
@@ -80,6 +95,7 @@ const PRODUCTS: Product[] = [
     tagline: 'Simple Daily Habits to Feel Energized, Relaxed & In Control',
     description:
       'A practical, stress-relief system designed specifically to help busy mothers find calm, recharge, and feel in control — every single day.',
+    cover: SELFCARE_COVER,
     pdf: SELFCARE_PDF,
     cta: 'Download System',
     priceCents: 1700,
@@ -93,6 +109,7 @@ const PRODUCTS: Product[] = [
     tagline: 'Maximize Rest as a New or Expecting Mom',
     description:
       'A practical guide to resetting your sleep patterns and maximizing rest, even with a newborn or during pregnancy.',
+    cover: SLEEP_COVER,
     fallbackIcon: <Moon className="w-10 h-10" />,
     pdf: '#',
     cta: 'Download Guide',
@@ -107,6 +124,7 @@ const PRODUCTS: Product[] = [
     tagline: 'Process and Release the Invisible Mental Load',
     description:
       'A guided workbook to help you identify, process, and lighten the invisible emotional and mental load of motherhood.',
+    cover: EMOTIONAL_COVER,
     fallbackIcon: <HeartHandshake className="w-10 h-10" />,
     pdf: '#',
     cta: 'Download Workbook',
@@ -196,6 +214,37 @@ const ProductCoverArt = ({
         </div>
       );
   }
+};
+
+// Renders the real cover image when available; if the image fails to
+// load (e.g. a temporary URL expired), it gracefully falls back to the
+// branded ProductCoverArt so the card is never blank.
+const CoverImage = ({
+  src,
+  alt,
+  slug,
+  fallbackIcon,
+}: {
+  src?: string;
+  alt: string;
+  slug: string;
+  fallbackIcon?: React.ReactNode;
+}) => {
+  const [errored, setErrored] = useState(false);
+
+  if (src && !errored) {
+    return (
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        onError={() => setErrored(true)}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+      />
+    );
+  }
+
+  return <ProductCoverArt slug={slug} fallbackIcon={fallbackIcon} />;
 };
 
 type PaymentMethod = 'points' | 'stripe';
@@ -743,7 +792,12 @@ const WellnessResources = () => {
             <section className="mb-8">
               <div className="relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden shadow-soft group cursor-pointer">
                 <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-105">
-                  <ProductCoverArt slug={featured.slug} fallbackIcon={featured.fallbackIcon} />
+                  <CoverImage
+                    src={FEATURED_COVER}
+                    alt={featured.title}
+                    slug={featured.slug}
+                    fallbackIcon={featured.fallbackIcon}
+                  />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                 <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end text-white">
@@ -779,16 +833,12 @@ const WellnessResources = () => {
                     className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-xl transition-all duration-500"
                   >
                     <div className="relative w-full aspect-[4/3] overflow-hidden">
-                      {p.cover ? (
-                        <img
-                          src={p.cover}
-                          alt={`${p.title} cover`}
-                          loading="lazy"
-                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <ProductCoverArt slug={p.slug} fallbackIcon={p.fallbackIcon} />
-                      )}
+                      <CoverImage
+                        src={p.cover}
+                        alt={`${p.title} cover`}
+                        slug={p.slug}
+                        fallbackIcon={p.fallbackIcon}
+                      />
                       <div className="absolute top-3 right-3">
                         {isOwned ? (
                           <div className="bg-white/90 backdrop-blur-sm text-emerald-600 rounded-full p-1.5 shadow-sm">
