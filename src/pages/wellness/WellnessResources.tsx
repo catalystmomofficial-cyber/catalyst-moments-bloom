@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +19,8 @@ import {
   Zap,
   CreditCard,
   Loader2,
+  Moon,
+  HeartHandshake,
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import SEO from '@/components/seo/SEO';
@@ -47,13 +49,17 @@ type Product = {
   title: string;
   tagline: string;
   description: string;
-  cover: string;
+  cover?: string;
+  fallbackIcon?: React.ReactNode;
   pdf: string;
   cta: string;
   priceCents: number;
   pointsCost: number;
   demand: string;
+  category: string;
 };
+
+const CATEGORIES = ['All', 'Self-Care', 'Sleep', 'Mindfulness'];
 
 const PRODUCTS: Product[] = [
   {
@@ -68,6 +74,7 @@ const PRODUCTS: Product[] = [
     priceCents: 1200,
     pointsCost: 1200,
     demand: 'HIGH',
+    category: 'Self-Care',
   },
   {
     slug: 'busy-mom-self-care',
@@ -81,6 +88,35 @@ const PRODUCTS: Product[] = [
     priceCents: 1700,
     pointsCost: 1700,
     demand: 'HIGH',
+    category: 'Self-Care',
+  },
+  {
+    slug: 'sleep-reset-guide',
+    title: 'Sleep Reset Guide',
+    tagline: 'Maximize Rest as a New or Expecting Mom',
+    description:
+      'A practical guide to resetting your sleep patterns and maximizing rest, even with a newborn or during pregnancy.',
+    fallbackIcon: <Moon className="w-10 h-10" />,
+    pdf: '#',
+    cta: 'Download Guide',
+    priceCents: 1500,
+    pointsCost: 1500,
+    demand: 'MEDIUM',
+    category: 'Sleep',
+  },
+  {
+    slug: 'emotional-load-workbook',
+    title: 'Emotional Load Workbook',
+    tagline: 'Process and Release the Invisible Mental Load',
+    description:
+      'A guided workbook to help you identify, process, and lighten the invisible emotional and mental load of motherhood.',
+    fallbackIcon: <HeartHandshake className="w-10 h-10" />,
+    pdf: '#',
+    cta: 'Download Workbook',
+    priceCents: 1000,
+    pointsCost: 1000,
+    demand: 'MEDIUM',
+    category: 'Mindfulness',
   },
 ];
 
@@ -211,7 +247,6 @@ const PurchaseModal = ({
   };
 
   // PayPal Smart Buttons use onApprove callback below — no manual handler needed.
-
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -474,6 +509,7 @@ const WellnessResources = () => {
   const [owned, setOwned] = useState<Set<string>>(new Set());
   const [points, setPoints] = useState(0);
   const [modalProduct, setModalProduct] = useState<Product | null>(null);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const refresh = useCallback(async () => {
     if (!user) {
@@ -526,6 +562,56 @@ const WellnessResources = () => {
     })();
   }, [user, refresh]);
 
+  const featured = useMemo(
+    () => PRODUCTS.find((p) => p.demand === 'HIGH') ?? PRODUCTS[0],
+    [],
+  );
+
+  const filteredProducts = useMemo(
+    () =>
+      activeCategory === 'All'
+        ? PRODUCTS
+        : PRODUCTS.filter((p) => p.category === activeCategory),
+    [activeCategory],
+  );
+
+  const renderUnlockButton = (p: Product) => {
+    const isOwned = owned.has(p.slug);
+    const hasEnoughPoints = points >= p.pointsCost;
+    const shortfall = Math.max(0, p.priceCents - points);
+
+    if (isOwned) {
+      return (
+        <>
+          <Download className="w-4 h-4 mr-2" /> {p.cta}
+        </>
+      );
+    }
+    if (hasEnoughPoints) {
+      return (
+        <>
+          <Zap className="w-4 h-4 mr-2" />
+          Unlock with {p.pointsCost.toLocaleString()} pts
+        </>
+      );
+    }
+    if (points > 0) {
+      return (
+        <>
+          <Lock className="w-4 h-4 mr-2" />
+          Use {points.toLocaleString()} pts + pay $
+          {(shortfall / 100).toFixed(2)}
+        </>
+      );
+    }
+    return (
+      <>
+        <Lock className="w-4 h-4 mr-2" />
+        Unlock for ${(p.priceCents / 100).toFixed(2)}
+      </>
+    );
+  };
+
   return (
     <PageLayout>
       <SEO
@@ -534,60 +620,75 @@ const WellnessResources = () => {
       />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+          {/* Hero */}
+          <div className="relative text-center mb-10 overflow-hidden">
+            <div className="absolute -top-4 -left-4 w-48 h-48 bg-catalyst-copper/10 rounded-full animate-pulse-soft" />
+            <div className="absolute bottom-0 -right-8 w-32 h-32 bg-catalyst-copper/10 rounded-full animate-float" />
+            <h1 className="relative text-3xl md:text-4xl font-bold text-foreground mb-3">
               Wellness Resources
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="relative text-lg text-muted-foreground max-w-2xl mx-auto mb-4">
               Premium digital guides crafted to support every stage of your
               motherhood journey.
             </p>
+            <Badge variant="outline" className="relative gap-1.5 border-catalyst-copper/30 text-catalyst-copper px-3 py-1.5 text-sm">
+              <Sparkles className="w-4 h-4" />
+              {points.toLocaleString()} points available
+            </Badge>
           </div>
 
+          {/* Category filter */}
+          <div className="flex gap-2 overflow-x-auto pb-2 mb-8 -mx-1 px-1">
+            {CATEGORIES.map((category) => (
+              <Button
+                key={category}
+                size="sm"
+                variant={activeCategory === category ? 'default' : 'outline'}
+                className={`rounded-full shrink-0 ${
+                  activeCategory === category
+                    ? 'bg-catalyst-copper hover:bg-catalyst-copper/90'
+                    : 'border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5'
+                }`}
+                onClick={() => setActiveCategory(category)}
+              >
+                {category}
+              </Button>
+            ))}
+          </div>
+
+          {/* Featured */}
+          {featured && (
+            <Card className="mb-8 border-catalyst-copper/20 bg-catalyst-copper/5">
+              <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-4 justify-between">
+                <div>
+                  <Badge className="mb-2 bg-catalyst-copper text-white border-none hover:bg-catalyst-copper/90 gap-1">
+                    <Flame className="w-3 h-3" /> Mama Favorite
+                  </Badge>
+                  <h2 className="text-xl font-semibold text-foreground mb-1">{featured.title}</h2>
+                  <p className="text-muted-foreground max-w-xl">{featured.tagline}</p>
+                </div>
+                <Button
+                  className="shrink-0 bg-catalyst-copper hover:bg-catalyst-copper/90 gap-2"
+                  onClick={() => setModalProduct(featured)}
+                >
+                  {renderUnlockButton(featured)}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Product grid */}
           <section className="mb-8">
             <div className="flex items-center gap-2 mb-5">
-              <Sparkles className="h-5 w-5 text-primary" />
+              <Sparkles className="h-5 w-5 text-catalyst-copper" />
               <h2 className="text-xl font-semibold">
                 Journey-Specific Resources
               </h2>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              {PRODUCTS.map((p) => {
+              {filteredProducts.map((p) => {
                 const isOwned = owned.has(p.slug);
-                const hasEnoughPoints = points >= p.pointsCost;
-                const shortfall = Math.max(0, p.priceCents - points);
-
-                let buttonLabel: React.ReactNode;
-                if (isOwned) {
-                  buttonLabel = (
-                    <>
-                      <Download className="w-4 h-4 mr-2" /> {p.cta}
-                    </>
-                  );
-                } else if (hasEnoughPoints) {
-                  buttonLabel = (
-                    <>
-                      <Zap className="w-4 h-4 mr-2" />
-                      Unlock with {p.pointsCost.toLocaleString()} pts
-                    </>
-                  );
-                } else if (points > 0) {
-                  buttonLabel = (
-                    <>
-                      <Lock className="w-4 h-4 mr-2" />
-                      Use {points.toLocaleString()} pts + pay $
-                      {(shortfall / 100).toFixed(2)}
-                    </>
-                  );
-                } else {
-                  buttonLabel = (
-                    <>
-                      <Lock className="w-4 h-4 mr-2" />
-                      Unlock for ${(p.priceCents / 100).toFixed(2)}
-                    </>
-                  );
-                }
 
                 return (
                   <Card
@@ -595,12 +696,18 @@ const WellnessResources = () => {
                     className="group relative overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-2xl transition-all duration-500 aspect-[3/4]"
                   >
                     {/* Full-card background */}
-                    <img
-                      src={p.cover}
-                      alt={`${p.title} cover`}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                    {p.cover ? (
+                      <img
+                        src={p.cover}
+                        alt={`${p.title} cover`}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-catalyst-copper/30 to-catalyst-brown/60 text-white">
+                        {p.fallbackIcon}
+                      </div>
+                    )}
                     {/* Dark gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
 
@@ -611,7 +718,7 @@ const WellnessResources = () => {
                           <CheckCircle2 className="w-4 h-4" />
                         </div>
                       ) : (
-                        <Badge className="bg-orange-500/95 text-white border-0 backdrop-blur gap-1">
+                        <Badge className="bg-catalyst-copper/95 text-white border-0 backdrop-blur gap-1">
                           <Flame className="w-3 h-3" /> Demand: {p.demand}
                         </Badge>
                       )}
@@ -644,7 +751,7 @@ const WellnessResources = () => {
                             rel="noopener noreferrer"
                             download
                           >
-                            {buttonLabel}
+                            {renderUnlockButton(p)}
                           </a>
                         </Button>
                       ) : (
@@ -653,7 +760,7 @@ const WellnessResources = () => {
                           className="w-full bg-white text-black hover:bg-white/90"
                           onClick={() => setModalProduct(p)}
                         >
-                          {buttonLabel}
+                          {renderUnlockButton(p)}
                         </Button>
                       )}
                     </CardContent>
