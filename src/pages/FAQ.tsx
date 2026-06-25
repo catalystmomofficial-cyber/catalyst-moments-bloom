@@ -83,6 +83,7 @@ const FAQ = () => {
     <PageLayout>
       <Helmet>
         <title>FAQ — Catalyst Mom</title>
+        <meta name="description" content="Answers to common questions about Catalyst Mom's TTC, pregnancy, and postpartum programs — cycle tracking, coaching, pricing, and how the app works." />
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
