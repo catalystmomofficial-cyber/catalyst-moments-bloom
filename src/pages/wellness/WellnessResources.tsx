@@ -33,6 +33,10 @@ import {
   PayPalScriptProvider,
   PayPalButtons,
 } from '@paypal/react-paypal-js';
+import momodoroCover from '@/assets/momodoro-planner-cover.jpg';
+import selfCareCover from '@/assets/busy-mom-self-care-cover.jpg';
+import sleepResetCover from '@/assets/sleep-reset-guide-cover.jpg';
+import emotionalLoadCover from '@/assets/emotional-load-workbook-cover.jpg';
 
 const PAYPAL_CLIENT_ID =
   (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) ||
@@ -43,19 +47,13 @@ const MOMODORO_PDF =
 const SELFCARE_PDF =
   'https://catalystmomofficial.com/catalyst%20guide/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
 
-// Cover artwork from the uploaded design. These load directly in the
-// visitor's browser. If a URL ever expires, the branded ProductCoverArt
-// fallback renders instead (see CoverImage below), so no broken images.
-const MOMODORO_COVER =
-  'https://lh3.googleusercontent.com/aida/AP1WRLsL6nYWLmASR47Zdnhv0jFGiOwXBW3yADaEBgvPNy9S77AQducxJU4H5PvGDmBsO3Y_OOcdnl4Lp3A5nbBPwGkVcNGbXcHgGtJ0xDxfpLr5AwgFezLyVcXJBCsEB0OaQhFE8E9wuEYCLf0SCAbDlFu-AVplTqEbF3DkECjNuSO1HIfaGu3DUkdi07xHFI8za2b-FJ660ROk0XKvVR_MZqLHrFjeXaUW8Lq30om5jm2rwyfUI1RaOEBaJ3c';
-const SELFCARE_COVER =
-  'https://lh3.googleusercontent.com/aida/AP1WRLsvPRlKsy0DawEbDzjS-fpXytfhPj5ijmyf-9WcpCD2kr4eiodD0uGzHb2Pox7udZMYyO3rlwFenwB2IRZ6DACbOX95Ix8MSRt0iGWom2H_wAdaOOCCbLc6IYsttGXpklq8EuXsrgEG6qTNHQ5Nf88N9RsN7BMee7FeSbySLQY1tbp4qQKUN9ZJkfhPa1LRPW5ggOc2ndkCSWOosJKTKhc0ptvuip5jAK653jYO9o5v47FRW54JUAUAG9c';
-const SLEEP_COVER =
-  'https://lh3.googleusercontent.com/aida/AP1WRLs4Zub3j0sq_JpaOVo_EHHjUgQQWXFl7YINFdCvR0Ja5CXkcrPrCTp8XhtZlnbB9GB4U4-pPD9oAvx8ZDpMjhfOAK-T_CpH-hnT7MfFQ0r32cIQl6KgZzsd8wyqAdK6bT_SM9I3VNB7vRJwDv8hGbMdaWCE9Fusuztlfl-yyi0PlUO8VteHRHgCKKCrsASqP1RESTapSBF6JxzI8yWXac1IZnZ1mO0mtoPKMefvwSn3mYwOK3dLY1pnPg';
-const EMOTIONAL_COVER =
-  'https://lh3.googleusercontent.com/aida/AP1WRLv6RbJ9F8jv8Mle4WqGO7FQsEk-720FO0Lb2l_fq7vU8nhVBX9YyKhQZaqyQNOu3i-SiE39GbgI9DnOXfCy_5dvyj823T_d06lKRDndBQyRuZOsnDSyj3SQ641xYWhBPd71wk7drZ0-M7dcHqjjxTgQ4ZeC6P-mGKZyQ4FexBumf7l1TxZUtvhj7u-SxoF6vawOQ-N7JaqSrbORZsk_d6snBwVt4ikE_NeVbokeFL2nczXoyB47x30aH2Q';
-const FEATURED_COVER =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuA94RdhacOaHABjSMA4_n-5QXnXd3IBNz6f9fvdYtjSy3I-q3RHA-PSCvQpUhYL2SV_PfRAH_3o0yrG2Tk03GUhBM81cslb8z15OshV7ojnHazkNj7nOBIhMZfYLMUlHGwgwA6LRI04aJeCe24f3YcllmNVwtS2bNik5Y6tIjZR8gCCsKYvL_o0bn-G8lYAlgIqFaFmgjnDK4mIovk_DjYQFqd9I7G0lfIw5P03sFJDxWJkKHeRVvRsq4iUobE0DXWvJkbNyvoCYBw';
+// Cover artwork from the uploaded design, bundled locally so it never
+// expires or depends on external hosting. If a cover is ever missing,
+// the branded ProductCoverArt fallback renders instead (see CoverImage).
+const MOMODORO_COVER = momodoroCover;
+const SELFCARE_COVER = selfCareCover;
+const SLEEP_COVER = sleepResetCover;
+const EMOTIONAL_COVER = emotionalLoadCover;
 
 type Product = {
   slug: string;
@@ -793,7 +791,7 @@ const WellnessResources = () => {
               <div className="relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden shadow-soft group cursor-pointer">
                 <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-105">
                   <CoverImage
-                    src={FEATURED_COVER}
+                    src={featured.cover}
                     alt={featured.title}
                     slug={featured.slug}
                     fallbackIcon={featured.fallbackIcon}
