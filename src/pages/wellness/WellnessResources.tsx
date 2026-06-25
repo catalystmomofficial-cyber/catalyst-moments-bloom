@@ -21,12 +21,11 @@ import {
   Loader2,
   Moon,
   HeartHandshake,
+  Clock,
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import SEO from '@/components/seo/SEO';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
-import busyMomSelfCareCover from '@/assets/busy-mom-self-care-cover.png';
-import momodoroCover from '@/assets/momodoro-planner-cover.png';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
@@ -68,7 +67,6 @@ const PRODUCTS: Product[] = [
     tagline: '15-Minute Focus Sessions for Busy Moms',
     description:
       'A beautifully structured premium time-management tool that helps busy moms organize their days and reclaim their time — one focused 15-minute session at a time.',
-    cover: momodoroCover,
     pdf: MOMODORO_PDF,
     cta: 'Download Planner',
     priceCents: 1200,
@@ -82,7 +80,6 @@ const PRODUCTS: Product[] = [
     tagline: 'Simple Daily Habits to Feel Energized, Relaxed & In Control',
     description:
       'A practical, stress-relief system designed specifically to help busy mothers find calm, recharge, and feel in control — every single day.',
-    cover: busyMomSelfCareCover,
     pdf: SELFCARE_PDF,
     cta: 'Download System',
     priceCents: 1700,
@@ -119,6 +116,87 @@ const PRODUCTS: Product[] = [
     category: 'Mindfulness',
   },
 ];
+
+const ProductCoverArt = ({
+  slug,
+  fallbackIcon,
+}: {
+  slug: string;
+  fallbackIcon?: React.ReactNode;
+}) => {
+  switch (slug) {
+    case 'momodoro-planner':
+      return (
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-gradient-to-br from-catalyst-tan via-catalyst-gold to-catalyst-brown overflow-hidden">
+          <div className="absolute inset-4 border border-white/30 rounded-sm" />
+          <Clock className="w-12 h-12 text-white/90 mb-4" strokeWidth={1.5} />
+          <p className="font-serif text-2xl tracking-[0.15em] text-white leading-snug">
+            THE MOMODORO
+            <br />
+            PLANNER
+          </p>
+          <p className="mt-3 text-xs tracking-[0.2em] text-white/80 uppercase">
+            15-Minute Focus Sessions
+          </p>
+        </div>
+      );
+    case 'busy-mom-self-care':
+      return (
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-gradient-to-br from-catalyst-sage via-catalyst-peach to-catalyst-beige overflow-hidden">
+          <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-white/40 blur-2xl" />
+          <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full bg-catalyst-copper/20 blur-2xl" />
+          <HeartHandshake className="relative w-12 h-12 text-catalyst-brown mb-4" strokeWidth={1.5} />
+          <p className="relative font-semibold text-xl text-catalyst-brown leading-snug">
+            The Busy Mom's
+            <br />
+            Self-Care System
+          </p>
+          <p className="relative mt-2 text-xs tracking-wide text-catalyst-brown/70 uppercase">
+            A Practical Guide to Thriving
+          </p>
+        </div>
+      );
+    case 'sleep-reset-guide':
+      return (
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-gradient-to-b from-slate-900 via-slate-800 to-catalyst-brown overflow-hidden">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span
+              key={i}
+              className="absolute w-1 h-1 rounded-full bg-white/70"
+              style={{ top: `${(i * 37) % 90}%`, left: `${(i * 53) % 95}%` }}
+            />
+          ))}
+          <Moon className="relative w-14 h-14 text-catalyst-gold mb-4" strokeWidth={1.5} />
+          <p className="relative font-semibold text-xl text-white leading-snug">
+            Sleep Reset Guide
+          </p>
+          <p className="relative mt-2 text-xs tracking-wide text-white/70 uppercase">
+            Find Rest &amp; Restore Balance
+          </p>
+        </div>
+      );
+    case 'emotional-load-workbook':
+      return (
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-catalyst-cream overflow-hidden">
+          <div className="absolute top-6 left-6 w-20 h-20 rounded-full bg-catalyst-copper/80" />
+          <div className="absolute bottom-10 right-8 w-24 h-24 rounded-full border-8 border-catalyst-brown/60" />
+          <div className="absolute -bottom-6 left-10 w-16 h-16 rounded-full bg-catalyst-gold/70" />
+          <HeartHandshake className="relative z-10 w-12 h-12 text-catalyst-brown mb-4" strokeWidth={1.5} />
+          <p className="relative z-10 font-semibold text-xl text-catalyst-brown leading-snug">
+            Emotional Load
+            <br />
+            Workbook
+          </p>
+        </div>
+      );
+    default:
+      return (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-catalyst-copper/30 to-catalyst-brown/60 text-white">
+          {fallbackIcon}
+        </div>
+      );
+  }
+};
 
 type PaymentMethod = 'points' | 'stripe';
 
@@ -704,9 +782,7 @@ const WellnessResources = () => {
                         className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-catalyst-copper/30 to-catalyst-brown/60 text-white">
-                        {p.fallbackIcon}
-                      </div>
+                      <ProductCoverArt slug={p.slug} fallbackIcon={p.fallbackIcon} />
                     )}
                     {/* Dark gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
