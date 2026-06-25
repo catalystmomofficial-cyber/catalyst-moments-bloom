@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Lock, ArrowRight, UserRound } from 'lucide-react';
+import { Lock, ArrowRight, BrainCircuit } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useCoachHistory } from '@/hooks/useCoachHistory';
@@ -89,7 +89,7 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
             <div className="flex items-center">
               <span className="text-2xl font-bold tracking-tight text-[#394a4a] z-10">CM</span>
               <div className="rounded-full bg-[#d3e6e6] w-9 h-9 flex items-center justify-center -ml-2.5 z-20">
-                <UserRound className="h-5 w-5 text-[#394a4a]" />
+                <BrainCircuit strokeWidth={2.5} className="h-5 w-5 text-[#394a4a]" />
               </div>
               <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium -ml-2.5">
                 Wellness Coach
