@@ -58,7 +58,7 @@ type Product = {
   category: string;
 };
 
-const CATEGORIES = ['All', 'Self-Care', 'Sleep', 'Mindfulness'];
+const CATEGORIES = ['All Resources', 'Self-Care', 'Sleep', 'Mindfulness'];
 
 const PRODUCTS: Product[] = [
   {
@@ -127,62 +127,62 @@ const ProductCoverArt = ({
   switch (slug) {
     case 'momodoro-planner':
       return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-gradient-to-br from-catalyst-tan via-catalyst-gold to-catalyst-brown overflow-hidden">
-          <div className="absolute inset-4 border border-white/30 rounded-sm" />
-          <Clock className="w-12 h-12 text-white/90 mb-4" strokeWidth={1.5} />
-          <p className="font-serif text-2xl tracking-[0.15em] text-white leading-snug">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-catalyst-tan via-catalyst-gold to-catalyst-brown overflow-hidden">
+          <div className="absolute inset-3 border border-white/30 rounded-sm" />
+          <Clock className="w-9 h-9 text-white/90 mb-3" strokeWidth={1.5} />
+          <p className="font-serif text-lg tracking-[0.12em] text-white leading-snug">
             THE MOMODORO
             <br />
             PLANNER
           </p>
-          <p className="mt-3 text-xs tracking-[0.2em] text-white/80 uppercase">
+          <p className="mt-2 text-[10px] tracking-[0.18em] text-white/80 uppercase">
             15-Minute Focus Sessions
           </p>
         </div>
       );
     case 'busy-mom-self-care':
       return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-gradient-to-br from-catalyst-sage via-catalyst-peach to-catalyst-beige overflow-hidden">
-          <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-white/40 blur-2xl" />
-          <div className="absolute bottom-0 right-0 w-48 h-48 rounded-full bg-catalyst-copper/20 blur-2xl" />
-          <HeartHandshake className="relative w-12 h-12 text-catalyst-brown mb-4" strokeWidth={1.5} />
-          <p className="relative font-semibold text-xl text-catalyst-brown leading-snug">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-catalyst-sage via-catalyst-peach to-catalyst-beige overflow-hidden">
+          <div className="absolute -top-8 -left-8 w-32 h-32 rounded-full bg-white/40 blur-2xl" />
+          <div className="absolute bottom-0 right-0 w-36 h-36 rounded-full bg-catalyst-copper/20 blur-2xl" />
+          <HeartHandshake className="relative w-9 h-9 text-catalyst-brown mb-3" strokeWidth={1.5} />
+          <p className="relative font-semibold text-base text-catalyst-brown leading-snug">
             The Busy Mom's
             <br />
             Self-Care System
           </p>
-          <p className="relative mt-2 text-xs tracking-wide text-catalyst-brown/70 uppercase">
+          <p className="relative mt-1.5 text-[10px] tracking-wide text-catalyst-brown/70 uppercase">
             A Practical Guide to Thriving
           </p>
         </div>
       );
     case 'sleep-reset-guide':
       return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-gradient-to-b from-slate-900 via-slate-800 to-catalyst-brown overflow-hidden">
-          {Array.from({ length: 12 }).map((_, i) => (
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-gradient-to-b from-slate-900 via-slate-800 to-catalyst-brown overflow-hidden">
+          {Array.from({ length: 10 }).map((_, i) => (
             <span
               key={i}
               className="absolute w-1 h-1 rounded-full bg-white/70"
               style={{ top: `${(i * 37) % 90}%`, left: `${(i * 53) % 95}%` }}
             />
           ))}
-          <Moon className="relative w-14 h-14 text-catalyst-gold mb-4" strokeWidth={1.5} />
-          <p className="relative font-semibold text-xl text-white leading-snug">
+          <Moon className="relative w-10 h-10 text-catalyst-gold mb-3" strokeWidth={1.5} />
+          <p className="relative font-semibold text-base text-white leading-snug">
             Sleep Reset Guide
           </p>
-          <p className="relative mt-2 text-xs tracking-wide text-white/70 uppercase">
+          <p className="relative mt-1.5 text-[10px] tracking-wide text-white/70 uppercase">
             Find Rest &amp; Restore Balance
           </p>
         </div>
       );
     case 'emotional-load-workbook':
       return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 bg-catalyst-cream overflow-hidden">
-          <div className="absolute top-6 left-6 w-20 h-20 rounded-full bg-catalyst-copper/80" />
-          <div className="absolute bottom-10 right-8 w-24 h-24 rounded-full border-8 border-catalyst-brown/60" />
-          <div className="absolute -bottom-6 left-10 w-16 h-16 rounded-full bg-catalyst-gold/70" />
-          <HeartHandshake className="relative z-10 w-12 h-12 text-catalyst-brown mb-4" strokeWidth={1.5} />
-          <p className="relative z-10 font-semibold text-xl text-catalyst-brown leading-snug">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-catalyst-cream overflow-hidden">
+          <div className="absolute top-5 left-5 w-16 h-16 rounded-full bg-catalyst-copper/80" />
+          <div className="absolute bottom-8 right-6 w-20 h-20 rounded-full border-8 border-catalyst-brown/60" />
+          <div className="absolute -bottom-5 left-8 w-12 h-12 rounded-full bg-catalyst-gold/70" />
+          <HeartHandshake className="relative z-10 w-9 h-9 text-catalyst-brown mb-3" strokeWidth={1.5} />
+          <p className="relative z-10 font-semibold text-base text-catalyst-brown leading-snug">
             Emotional Load
             <br />
             Workbook
@@ -587,7 +587,7 @@ const WellnessResources = () => {
   const [owned, setOwned] = useState<Set<string>>(new Set());
   const [points, setPoints] = useState(0);
   const [modalProduct, setModalProduct] = useState<Product | null>(null);
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('All Resources');
 
   const refresh = useCallback(async () => {
     if (!user) {
@@ -647,7 +647,7 @@ const WellnessResources = () => {
 
   const filteredProducts = useMemo(
     () =>
-      activeCategory === 'All'
+      activeCategory === 'All Resources'
         ? PRODUCTS
         : PRODUCTS.filter((p) => p.category === activeCategory),
     [activeCategory],
@@ -699,21 +699,25 @@ const WellnessResources = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
           {/* Hero */}
-          <div className="relative text-center mb-10 overflow-hidden">
-            <div className="absolute -top-4 -left-4 w-48 h-48 bg-catalyst-copper/10 rounded-full animate-pulse-soft" />
-            <div className="absolute bottom-0 -right-8 w-32 h-32 bg-catalyst-copper/10 rounded-full animate-float" />
-            <h1 className="relative text-3xl md:text-4xl font-bold text-foreground mb-3">
-              Wellness Resources
-            </h1>
-            <p className="relative text-lg text-muted-foreground max-w-2xl mx-auto mb-4">
-              Premium digital guides crafted to support every stage of your
-              motherhood journey.
-            </p>
-            <Badge variant="outline" className="relative gap-1.5 border-catalyst-copper/30 text-catalyst-copper px-3 py-1.5 text-sm">
-              <Sparkles className="w-4 h-4" />
-              {points.toLocaleString()} points available
-            </Badge>
-          </div>
+          <section className="relative py-6 md:py-10 mb-8 text-center md:text-left md:flex md:items-center md:justify-between gap-8 overflow-hidden">
+            <div className="md:max-w-2xl">
+              <h1 className="text-3xl md:text-5xl font-bold text-catalyst-copper mb-3 leading-tight">
+                Premium Wellness Resources
+              </h1>
+              <p className="text-lg text-muted-foreground mb-4">
+                Digital guides crafted for every stage of your motherhood
+                journey. Nurture your mind, body, and soul with curated
+                professional wisdom.
+              </p>
+              <Badge variant="outline" className="gap-1.5 border-catalyst-copper/30 text-catalyst-copper px-3 py-1.5 text-sm">
+                <Sparkles className="w-4 h-4" />
+                {points.toLocaleString()} points available
+              </Badge>
+            </div>
+            <div className="hidden md:block w-40 h-40 opacity-20 animate-float shrink-0">
+              <Sparkles className="w-full h-full text-catalyst-copper" strokeWidth={1} />
+            </div>
+          </section>
 
           {/* Category filter */}
           <div className="flex gap-2 overflow-x-auto pb-2 mb-8 -mx-1 px-1">
@@ -722,10 +726,10 @@ const WellnessResources = () => {
                 key={category}
                 size="sm"
                 variant={activeCategory === category ? 'default' : 'outline'}
-                className={`rounded-full shrink-0 ${
+                className={`rounded-full shrink-0 whitespace-nowrap ${
                   activeCategory === category
-                    ? 'bg-catalyst-copper hover:bg-catalyst-copper/90'
-                    : 'border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5'
+                    ? 'bg-catalyst-copper hover:bg-catalyst-copper/90 text-white shadow-sm'
+                    : 'border-catalyst-copper/20 text-catalyst-copper bg-catalyst-cream hover:bg-catalyst-copper/10'
                 }`}
                 onClick={() => setActiveCategory(category)}
               >
@@ -736,34 +740,35 @@ const WellnessResources = () => {
 
           {/* Featured */}
           {featured && (
-            <Card className="mb-8 border-catalyst-copper/20 bg-catalyst-copper/5">
-              <CardContent className="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-4 justify-between">
-                <div>
-                  <Badge className="mb-2 bg-catalyst-copper text-white border-none hover:bg-catalyst-copper/90 gap-1">
-                    <Flame className="w-3 h-3" /> Mama Favorite
-                  </Badge>
-                  <h2 className="text-xl font-semibold text-foreground mb-1">{featured.title}</h2>
-                  <p className="text-muted-foreground max-w-xl">{featured.tagline}</p>
+            <section className="mb-8">
+              <div className="relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden shadow-soft group cursor-pointer">
+                <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-105">
+                  <ProductCoverArt slug={featured.slug} fallbackIcon={featured.fallbackIcon} />
                 </div>
-                <Button
-                  className="shrink-0 bg-catalyst-copper hover:bg-catalyst-copper/90 gap-2"
-                  onClick={() => setModalProduct(featured)}
-                >
-                  {renderUnlockButton(featured)}
-                </Button>
-              </CardContent>
-            </Card>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end text-white">
+                  <Badge className="mb-3 w-fit bg-catalyst-copper text-white border-none gap-1 tracking-wide">
+                    <Flame className="w-3 h-3" /> MAMA FAVORITE
+                  </Badge>
+                  <h2 className="text-2xl md:text-3xl font-semibold mb-1 drop-shadow-md">
+                    {featured.title}
+                  </h2>
+                  <p className="text-white/85 max-w-xl mb-4 drop-shadow-sm">
+                    {featured.tagline}
+                  </p>
+                  <Button
+                    className="w-fit bg-catalyst-copper hover:bg-catalyst-copper/90 gap-2"
+                    onClick={() => setModalProduct(featured)}
+                  >
+                    {renderUnlockButton(featured)}
+                  </Button>
+                </div>
+              </div>
+            </section>
           )}
 
           {/* Product grid */}
           <section className="mb-8">
-            <div className="flex items-center gap-2 mb-5">
-              <Sparkles className="h-5 w-5 text-catalyst-copper" />
-              <h2 className="text-xl font-semibold">
-                Journey-Specific Resources
-              </h2>
-            </div>
-
             <div className="grid gap-6 md:grid-cols-2">
               {filteredProducts.map((p) => {
                 const isOwned = owned.has(p.slug);
@@ -771,55 +776,54 @@ const WellnessResources = () => {
                 return (
                   <Card
                     key={p.slug}
-                    className="group relative overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-2xl transition-all duration-500 aspect-[3/4]"
+                    className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-xl transition-all duration-500"
                   >
-                    {/* Full-card background */}
-                    {p.cover ? (
-                      <img
-                        src={p.cover}
-                        alt={`${p.title} cover`}
-                        loading="lazy"
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    ) : (
-                      <ProductCoverArt slug={p.slug} fallbackIcon={p.fallbackIcon} />
-                    )}
-                    {/* Dark gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
-
-                    {/* Top-right demand / owned chip */}
-                    <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
-                      {isOwned ? (
-                        <div className="bg-emerald-500 text-white rounded-full p-1.5 shadow-lg">
-                          <CheckCircle2 className="w-4 h-4" />
-                        </div>
+                    <div className="relative w-full aspect-[4/3] overflow-hidden">
+                      {p.cover ? (
+                        <img
+                          src={p.cover}
+                          alt={`${p.title} cover`}
+                          loading="lazy"
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
                       ) : (
-                        <Badge className="bg-catalyst-copper/95 text-white border-0 backdrop-blur gap-1">
-                          <Flame className="w-3 h-3" /> Demand: {p.demand}
-                        </Badge>
+                        <ProductCoverArt slug={p.slug} fallbackIcon={p.fallbackIcon} />
                       )}
+                      <div className="absolute top-3 right-3">
+                        {isOwned ? (
+                          <div className="bg-white/90 backdrop-blur-sm text-emerald-600 rounded-full p-1.5 shadow-sm">
+                            <CheckCircle2 className="w-4 h-4" />
+                          </div>
+                        ) : (
+                          <Badge className="bg-white/90 text-catalyst-copper border-0 backdrop-blur gap-1 shadow-sm">
+                            <Flame className="w-3 h-3" /> {p.demand}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Bottom content */}
-                    <CardContent className="absolute inset-x-0 bottom-0 p-6 space-y-4">
-                      <div className="flex items-baseline gap-3">
-                        <span className="text-2xl font-bold text-white">
+                    <CardContent className="p-5 space-y-3">
+                      <div className="flex justify-between items-start gap-3">
+                        <h4 className="font-semibold text-foreground group-hover:text-catalyst-copper transition-colors leading-snug">
+                          {p.title}
+                        </h4>
+                        <span className="text-lg font-bold text-catalyst-copper shrink-0">
                           ${(p.priceCents / 100).toFixed(2)}
-                        </span>
-                        <span className="text-sm font-medium text-white/80">
-                          or {p.pointsCost.toLocaleString()} pts
                         </span>
                       </div>
 
-                      <p className="text-sm text-white/80 leading-relaxed line-clamp-2">
+                      <p className="text-sm text-muted-foreground line-clamp-2">
                         {p.description}
+                      </p>
+
+                      <p className="text-xs text-catalyst-copper/80 font-medium">
+                        or {p.pointsCost.toLocaleString()} pts
                       </p>
 
                       {isOwned ? (
                         <Button
                           asChild
-                          size="lg"
-                          className="w-full bg-white text-black hover:bg-white/90"
+                          className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90"
                         >
                           <a
                             href={p.pdf}
@@ -832,8 +836,7 @@ const WellnessResources = () => {
                         </Button>
                       ) : (
                         <Button
-                          size="lg"
-                          className="w-full bg-white text-black hover:bg-white/90"
+                          className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90"
                           onClick={() => setModalProduct(p)}
                         >
                           {renderUnlockButton(p)}
