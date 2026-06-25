@@ -31,6 +31,8 @@ import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionW
 import { MonthlyChallenge } from '@/components/challenges/MonthlyChallenge';
 import { PersonalizedCoachCard } from '@/components/wellness-coach/PersonalizedCoachCard';
 import { PushNotificationPrompt } from '@/components/notifications/PushNotificationPrompt';
+import { IntentSignalBanner } from '@/components/dashboard/IntentSignalBanner';
+import { useScrollToHash } from '@/hooks/useScrollToHash';
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -122,7 +124,8 @@ const Dashboard = () => {
   const { user, profile, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
   const { stageInfo, hasJourney } = useContentFilter();
   const lastActive = useLastActiveProgram();
-  
+  useScrollToHash();
+
   const isTTC = stageInfo?.journey === 'ttc';
   const isPregnant = stageInfo?.journey === 'pregnant';
   const isPostpartum = stageInfo?.journey === 'postpartum';
@@ -164,6 +167,9 @@ const Dashboard = () => {
           </div>
         ) : (
           <>
+            {/* Intent Signal Banner — highest priority eligible signal, if any */}
+            <IntentSignalBanner />
+
             {/* Push Notification Prompt */}
             <div className="mb-4">
               <PushNotificationPrompt />
@@ -302,7 +308,9 @@ const Dashboard = () => {
                     <PostpartumPrepGuide />
                   </div>
                 ) : isTTC ? (
-                  <TTCTracker />
+                  <div id="ttc-tracker">
+                    <TTCTracker />
+                  </div>
                 ) : (
                   (() => {
                     const glowUpId = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
