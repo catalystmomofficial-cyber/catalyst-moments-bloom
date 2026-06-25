@@ -1369,6 +1369,54 @@ export type Database = {
         }
         Relationships: []
       }
+      pregnancy_journal_entries: {
+        Row: {
+          baby_kicks: number | null
+          content: string | null
+          created_at: string
+          entry_date: string
+          id: string
+          milestone: string | null
+          mood: number | null
+          photo_urls: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+          week: number | null
+          weight: number | null
+        }
+        Insert: {
+          baby_kicks?: number | null
+          content?: string | null
+          created_at?: string
+          entry_date?: string
+          id?: string
+          milestone?: string | null
+          mood?: number | null
+          photo_urls?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+          week?: number | null
+          weight?: number | null
+        }
+        Update: {
+          baby_kicks?: number | null
+          content?: string | null
+          created_at?: string
+          entry_date?: string
+          id?: string
+          milestone?: string | null
+          mood?: number | null
+          photo_urls?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          week?: number | null
+          weight?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           affiliate_status: string
