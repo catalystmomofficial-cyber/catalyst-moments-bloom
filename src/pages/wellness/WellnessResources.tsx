@@ -831,7 +831,7 @@ const WellnessResources = () => {
                     key={p.slug}
                     className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-xl transition-all duration-500"
                   >
-                    <div className="relative w-full aspect-[4/3] overflow-hidden">
+                    <div className="relative w-full aspect-[3/4] overflow-hidden">
                       <CoverImage
                         src={p.cover}
                         alt={`${p.title} cover`}
