@@ -352,7 +352,6 @@ export default function CoreRestoreFoundationsProgram() {
                   controls
                   playsInline
                   controlsList="nodownload"
-                  crossOrigin="anonymous"
                   {...{
                     "x-webkit-airplay": "allow",
                     "webkit-playsinline": "",
