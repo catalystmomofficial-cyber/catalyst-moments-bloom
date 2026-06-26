@@ -421,6 +421,92 @@ ${DISCLAIMER}`,
 ${DISCLAIMER}`,
   },
   {
+    title: 'Postpartum Exercise: A Real Week-by-Week Timeline',
+    slug: 'postpartum-exercise-timeline',
+    tags: ['postpartum', 'fitness'],
+    // TODO: set a real featured image in /admin before publishing (upload to the
+    // blog-images bucket — a mom walking with a stroller / gentle postpartum movement,
+    // 1200x630, subject centered).
+    featured_image_url: '',
+    excerpt: 'The 6-week checkup is a starting line, not a finish line. Here is the honest, evidence-based timeline for returning to walking, strength, and running after birth - vaginal or C-section.',
+    content: `
+<p>One mom in our community told us: <em>"This is my third baby and my only C-section. With my other two I bounced back, but this one is really hard, and I'm the heaviest I've ever been."</em> If any part of that sounds like you, take a breath: nothing has gone wrong. Every birth writes its own recovery, and the timeline you were quietly sold - "cleared at six weeks, back to normal" - was never the real one.</p>
+<p>Here is the honest version, mama: what is actually happening in your body week by week, what "clearance" really means, and how to come back to walking, strength, and running in the order that protects your core and pelvic floor.</p>
+
+<h2>The One Thing to Know First</h2>
+<p>The six-week postpartum visit is a <strong>medical checkpoint, not an automatic green light</strong> for running, HIIT, or heavy lifting. It is the start of your rebuild, not the finish line. The safest comeback is gradual and guided by your symptoms - not by the calendar alone.</p>
+
+<h2>What Is Actually Happening in Your Body (Weeks 0-6)</h2>
+<h3>What happens in the first two weeks postpartum?</h3>
+<p>The early days are about healing, not fitness. Your uterus is shrinking back toward its pre-pregnancy size, you are bleeding (lochia), hormones are shifting sharply, and any tear or incision is just beginning to knit together. Feeling "okay" and being mechanically ready to load your body are two different things - especially for the pelvic floor and abdominal wall, which carried nine months of pressure.</p>
+<p>What genuinely helps right now: rest, short gentle walks, slow diaphragmatic breathing, and reconnecting with your pelvic floor (a soft contract and, just as important, a full relax). ACOG confirms that gentle pelvic floor exercises and light walking can begin in the days after an uncomplicated vaginal birth, if you feel ready.</p>
+<h3>What is happening between weeks 2 and 6?</h3>
+<p>Bleeding gradually fades from red to pink to a pale yellow-white. Stitches heal on the surface, though deeper tissue - particularly after a C-section - takes much longer. Your core is relearning how to fire, and your joints may still feel loose from pregnancy and breastfeeding hormones. This is the window to build walking tolerance and add light, symptom-free bodyweight movement, while backing off anything that triggers pain, heaviness, leaking, or a bleeding flare-up.</p>
+
+<h2>What "Cleared at 6 Weeks" Really Means</h2>
+<p>At your postpartum visit, your provider checks that the big things are on track: incision and tissue healing, bleeding, blood pressure, and overall recovery. That matters. But here is the gap almost nobody explains - a standard visit usually does <strong>not</strong> assess whether your deep core and pelvic floor can handle impact: the single-leg control, pressure management, and load tolerance that running and jumping demand.</p>
+<p>In other words, medical clearance is not the same as musculoskeletal readiness. "Cleared" means "healing is on track, you can begin progressing" - not "your body is ready for HIIT."</p>
+<h3>Does clearance mean I can run or do HIIT?</h3>
+<p>Usually not yet. The widely used 2019 return-to-running guidelines recommend <strong>no running before about 12 weeks postpartum</strong>, and only then if you can pass functional readiness checks without symptoms. Think of the six-week visit as the beginning of your rehab, not the end of it.</p>
+
+<h2>Is the Timeline Different After a C-Section?</h2>
+<p>Yes. A C-section is major abdominal surgery - the incision passes through skin, fat, fascia, and the uterus, and the inside keeps healing long after the surface looks closed. Expect a slower ramp-up, more caution with lifting and direct core work in the early weeks, and individualized advice from your clinician. Gentle walking still starts early for comfort and circulation, but more demanding exercise and any impact work come later than they would after an uncomplicated vaginal birth. If this is you, our <a href="/blog/c-section-recovery-exercises-week-by-week">week-by-week C-section recovery guide</a> walks through each stage.</p>
+
+<h2>The Real Progression: What Order to Return In</h2>
+<h3>What is the safe order to return to exercise?</h3>
+<p>Think "inside-out" - rebuild control first, then add load, then add impact last:</p>
+<ol>
+<li><strong>Walking first</strong> - start short and easy, then build time and pace.</li>
+<li><strong>Core and pelvic floor re-training</strong> - coordination and full relaxation, not just hard Kegels.</li>
+<li><strong>Strength work</strong> - begin with bodyweight or light resistance, only if there is no pain, leaking, pressure, or increase in bleeding.</li>
+<li><strong>Impact last</strong> - running and jumping only once you tolerate higher load without symptoms.</li>
+</ol>
+<p>A simple real-world test: if a 20-minute walk leaves you with heaviness, dragging, leaking, or more bleeding later that day, that is your signal to scale back - not to push harder tomorrow.</p>
+
+<h2>Your First 4 Weeks: A Sample Progression</h2>
+<p>The through-line every week is the same: <em>can you control pressure?</em> - not <em>can you do more reps?</em> If a movement causes doming, leaking, or heaviness, you regress it rather than push through.</p>
+<table>
+<thead><tr><th>Week</th><th>Focus (about 10 minutes a day)</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Diaphragmatic breathing and gentle pelvic floor contract-and-relax. Short, flat walks (5-10 min). Goal: reconnect your brain to your deep core.</td></tr>
+<tr><td>2</td><td>Add heel slides and glute bridges if pain-free. Walk 10-15 min. Keep checking: no doming.</td></tr>
+<tr><td>3</td><td>Add standing marches and squats to a chair (focus on releasing the pelvic floor at the bottom). Walk 15-20 min.</td></tr>
+<tr><td>4</td><td>Add bird dogs and modified side planks. Walk 20-30 min. Still building endurance, not chasing intensity.</td></tr>
+</tbody>
+</table>
+<p>From week 5 on, progress one thing at a time - longer holds, then more reps, then harder positions. Our <a href="/workouts/core-restore-foundations">Core Restore Foundations program</a> sequences this exact rebuild week by week, with video coaching and built-in checkpoints, so you are never guessing what comes next.</p>
+
+<h2>Can I Run, Do HIIT, or Lift Yet?</h2>
+<h3>When can I start running again after having a baby?</h3>
+<p>For most people the realistic floor is <strong>around 12 weeks</strong> after an uncomplicated vaginal birth, and often longer after a C-section or if you have pelvic floor symptoms. Before you run, you should be able to do these without leaking, heaviness, or pain: walk briskly for 30 minutes, balance on one leg, do single-leg squats, and hop in place. Then start with walk-jog intervals (for example, jog 1 minute, walk 2 minutes) rather than heading straight out for a 5K.</p>
+<h3>When can I do HIIT postpartum?</h3>
+<p>High-intensity, high-impact work generally waits until you have rebuilt that foundation - commonly 12 weeks or more, and later after a C-section. Bridge the gap with low-impact versions first: step jacks instead of jumping jacks, bodyweight squats instead of jump squats. Exhale on the effort to support your pelvic floor, and if you notice doming, leaking, or heaviness, scale back.</p>
+<h3>When can I lift weights again?</h3>
+<p>Light resistance can often begin around weeks 4-6 if you are symptom-free; progressively heavier lifting usually comes later, once your core and pelvic floor are managing pressure well. The key habit: <strong>do not hold your breath</strong> - breathe out as you exert, since a hard breath-hold spikes pressure on the pelvic floor. If you have ab separation, start with our <a href="/blog/diastasis-recti-exercises">diastasis recti exercises</a> first.</p>
+
+<h2>Red Flags: When to Stop and Call Your Provider</h2>
+<h3>What symptoms mean I should stop exercising?</h3>
+<p>During or after a workout, stop and scale back if you notice pelvic heaviness, pressure, or a "dragging" or "something falling out" feeling; urine or stool leaking; bulging or coning down the midline of your belly; new pain; or an increase in bleeding. These mean the load is too much right now - even if you are past six weeks.</p>
+<h3>When should I call my provider urgently?</h3>
+<p>Seek prompt medical care for heavy bleeding (soaking a pad an hour or large clots), fever or foul-smelling discharge, a hot, swollen, painful leg, chest pain or trouble breathing, a severe headache or vision changes (especially if you had high blood pressure in pregnancy), or worsening pain, redness, or discharge at an incision. When in doubt, call - it is always worth it.</p>
+
+<h2>The Honest Part: The "Bounce Back" Myth</h2>
+<p>That mom at the top of this article was not failing. She was comparing herself to a story that was never true - the one that says a good mom is back in her old jeans by the six-week photo. Recovery timelines vary enormously based on whether you had a tear or a C-section, how you are sleeping, whether you are breastfeeding, and the support you have at home. None of that is a measure of your worth or your effort.</p>
+<p>Here is what we tell every mom in our community: the goal is not to return to your pre-pregnancy body. It is to <strong>build a strong postpartum body</strong> - one that can lift your baby, move without leaking, and feel like yours again - without trading your pelvic health for a number on a scale or a calendar. Going slow is not falling behind. It is the fastest route there is.</p>
+
+<h2>Postpartum Exercise FAQ</h2>
+<h3>How soon after birth can I start exercising?</h3>
+<p>After an uncomplicated vaginal birth, gentle walking and pelvic floor breathing can usually begin within the first days, if you feel up to it. After a C-section or a complicated birth, wait for your provider's individual guidance. Either way, "start" means gentle reconnection - not your old workout.</p>
+<h3>Why do I still look pregnant weeks after giving birth?</h3>
+<p>Mostly because your uterus is still shrinking, you are still carrying extra fluid, and your abdominal wall stretched to make room for baby. For many moms there is also some diastasis recti (ab separation), which is normal and trainable - you can check it with our <a href="/blog/how-to-check-diastasis-recti-at-home">60-second home test</a>. A rounded belly at six weeks is not a sign you did anything wrong.</p>
+<h3>Is it normal to leak urine when I exercise postpartum?</h3>
+<p>It is common - but common is not the same as something you must just live with. Leaking during exercise is usually a signal that your pelvic floor is not yet managing the load. Scale the movement back, prioritise pelvic floor re-training, and if it persists, a pelvic floor physical therapist can help enormously. You are not stuck with it.</p>
+<h3>I feel completely fine - can I skip the slow progression?</h3>
+<p>Feeling fine is wonderful, but pelvic floor and core issues are often silent early and show up months later as leaking, heaviness, or back pain. Passing the readiness checks (single-leg control, no doming, no leaking) protects the body you are going to want at six months and six years - not just six weeks.</p>
+<p>Want moms who actually get it? Come find your people in the <a href="/community">Catalyst Mom community</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
     title: '7-Day Breastfeeding Meal Plan for New Moms',
     slug: 'breastfeeding-meal-plan-7-day',
     tags: ['nutrition', 'postpartum'],
