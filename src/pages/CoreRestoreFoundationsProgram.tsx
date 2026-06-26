@@ -49,13 +49,13 @@ const WEEK_2_VIDEOS = [
 const WEEK_2_INTRO =
   "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%202/Week%202%20Diastis%20Recti%20Intro.mp4";
 const WEEK_3_VIDEOS = [
-  "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev/DR%20COURSE/WEEK%203/Day%2015.mp4",
-  "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev/DR%20COURSE/WEEK%203/Day%2016.mp4",
-  "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev/DR%20COURSE/WEEK%203/Day%2017.mp4",
-  "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev/DR%20COURSE/WEEK%203/Day%2018.mp4",
-  "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev/DR%20COURSE/WEEK%203/Day%2019.mp4",
-  "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev/DR%20COURSE/WEEK%203/Day%2020.mp4",
-  "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev/DR%20COURSE/WEEK%203/Day%2021.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2015.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2016.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2017.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2018.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2019.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2020.mp4",
+  "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2021.mp4",
 ];
 const DAY_PLACEHOLDER = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
 
