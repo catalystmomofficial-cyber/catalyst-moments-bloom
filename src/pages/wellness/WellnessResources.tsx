@@ -657,7 +657,7 @@ const WellnessResources = () => {
       (r: any) => r.product_slug as string,
     );
     setOwned(new Set(slugs));
-    setPoints(pointsRes.data?.total_points ?? 0);
+    setPoints(Math.max(0, pointsRes.data?.total_points ?? 0));
   }, [user]);
 
   useEffect(() => {
@@ -694,10 +694,11 @@ const WellnessResources = () => {
 
   const filteredProducts = useMemo(
     () =>
-      activeCategory === 'All Resources'
+      (activeCategory === 'All Resources'
         ? PRODUCTS
-        : PRODUCTS.filter((p) => p.category === activeCategory),
-    [activeCategory],
+        : PRODUCTS.filter((p) => p.category === activeCategory)
+      ).filter((p) => p.slug !== featured?.slug),
+    [activeCategory, featured],
   );
 
   const renderUnlockButton = (p: Product) => {
