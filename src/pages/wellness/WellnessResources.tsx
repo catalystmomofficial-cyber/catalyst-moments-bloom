@@ -33,8 +33,8 @@ import {
   PayPalScriptProvider,
   PayPalButtons,
 } from '@paypal/react-paypal-js';
-import momodoroCover from '@/assets/momodoro-planner-cover.jpg';
-import selfCareCover from '@/assets/busy-mom-self-care-cover.jpg';
+import momodoroCover from '@/assets/momodoro-planner-cover.png';
+import selfCareCover from '@/assets/busy-mom-self-care-cover.png';
 import sleepResetCover from '@/assets/sleep-reset-guide-cover.jpg';
 import emotionalLoadCover from '@/assets/emotional-load-workbook-cover.jpg';
 
