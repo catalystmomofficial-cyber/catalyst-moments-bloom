@@ -822,16 +822,16 @@ const WellnessResources = () => {
 
           {/* Product grid */}
           <section className="mb-8">
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {filteredProducts.map((p) => {
                 const isOwned = owned.has(p.slug);
 
                 return (
                   <Card
                     key={p.slug}
-                    className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-xl transition-all duration-500"
+                    className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-lg transition-all duration-300"
                   >
-                    <div className="relative w-full aspect-[3/4] overflow-hidden">
+                    <div className="relative h-44 overflow-hidden">
                       <CoverImage
                         src={p.cover}
                         alt={`${p.title} cover`}
@@ -840,38 +840,39 @@ const WellnessResources = () => {
                       />
                       <div className="absolute top-3 right-3">
                         {isOwned ? (
-                          <div className="bg-white/90 backdrop-blur-sm text-emerald-600 rounded-full p-1.5 shadow-sm">
-                            <CheckCircle2 className="w-4 h-4" />
+                          <div className="bg-white/90 backdrop-blur-sm text-emerald-600 rounded-full p-1 shadow-sm">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
                           </div>
                         ) : (
-                          <Badge className="bg-white/90 text-catalyst-copper border-0 backdrop-blur gap-1 shadow-sm">
-                            <Flame className="w-3 h-3" /> {p.demand}
+                          <Badge className="bg-white/90 text-catalyst-copper border-0 backdrop-blur text-[10px] gap-0.5 px-2 py-0.5 shadow-sm">
+                            <Flame className="w-2.5 h-2.5" /> {p.demand}
                           </Badge>
                         )}
                       </div>
                     </div>
 
-                    <CardContent className="p-5 space-y-3">
-                      <div className="flex justify-between items-start gap-3">
-                        <h4 className="font-semibold text-foreground group-hover:text-catalyst-copper transition-colors leading-snug">
+                    <CardContent className="p-4 space-y-2.5">
+                      <div className="flex justify-between items-start gap-2">
+                        <h4 className="font-semibold text-sm text-foreground group-hover:text-catalyst-copper transition-colors leading-snug">
                           {p.title}
                         </h4>
-                        <span className="text-lg font-bold text-catalyst-copper shrink-0">
+                        <span className="text-sm font-bold text-catalyst-copper shrink-0">
                           ${(p.priceCents / 100).toFixed(2)}
                         </span>
                       </div>
 
-                      <p className="text-sm text-muted-foreground line-clamp-2">
+                      <p className="text-xs text-muted-foreground line-clamp-2">
                         {p.description}
                       </p>
 
-                      <p className="text-xs text-catalyst-copper/80 font-medium">
+                      <p className="text-[11px] text-catalyst-copper/80 font-medium">
                         or {p.pointsCost.toLocaleString()} pts
                       </p>
 
                       {isOwned ? (
                         <Button
                           asChild
+                          size="sm"
                           className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90"
                         >
                           <a
@@ -885,6 +886,7 @@ const WellnessResources = () => {
                         </Button>
                       ) : (
                         <Button
+                          size="sm"
                           className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90"
                           onClick={() => setModalProduct(p)}
                         >
