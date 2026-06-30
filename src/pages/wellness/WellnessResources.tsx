@@ -552,7 +552,7 @@ const WellnessResources = () => {
               </h2>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {PRODUCTS.map((p) => {
                 const isOwned = owned.has(p.slug);
                 const hasEnoughPoints = points >= p.pointsCost;
@@ -592,67 +592,58 @@ const WellnessResources = () => {
                 return (
                   <Card
                     key={p.slug}
-                    className="group relative overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-2xl transition-all duration-500 aspect-[3/4]"
+                    className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-lg transition-all duration-300"
                   >
-                    {/* Full-card background */}
-                    <img
-                      src={p.cover}
-                      alt={`${p.title} cover`}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    {/* Dark gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
-
-                    {/* Top-right demand / owned chip */}
-                    <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
-                      {isOwned ? (
-                        <div className="bg-emerald-500 text-white rounded-full p-1.5 shadow-lg">
-                          <CheckCircle2 className="w-4 h-4" />
-                        </div>
-                      ) : (
-                        <Badge className="bg-orange-500/95 text-white border-0 backdrop-blur gap-1">
-                          <Flame className="w-3 h-3" /> Demand: {p.demand}
-                        </Badge>
-                      )}
+                    {/* Cover image — fixed height, not full-bleed */}
+                    <div className="relative h-44 overflow-hidden">
+                      <img
+                        src={p.cover}
+                        alt={`${p.title} cover`}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      {/* Demand / owned chip */}
+                      <div className="absolute top-3 right-3">
+                        {isOwned ? (
+                          <div className="bg-emerald-500 text-white rounded-full p-1 shadow">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          </div>
+                        ) : (
+                          <Badge className="bg-orange-500/95 text-white border-0 text-[10px] gap-0.5 px-2 py-0.5">
+                            <Flame className="w-2.5 h-2.5" /> {p.demand}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Bottom content */}
-                    <CardContent className="absolute inset-x-0 bottom-0 p-6 space-y-4">
-                      <div className="flex items-baseline gap-3">
-                        <span className="text-2xl font-bold text-white">
+                    {/* Text content */}
+                    <CardContent className="p-4 space-y-3">
+                      <div>
+                        <h3 className="font-semibold text-sm leading-snug">{p.title}</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">{p.tagline}</p>
+                      </div>
+
+                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                        {p.description}
+                      </p>
+
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-base font-bold">
                           ${(p.priceCents / 100).toFixed(2)}
                         </span>
-                        <span className="text-sm font-medium text-white/80">
+                        <span className="text-xs text-muted-foreground">
                           or {p.pointsCost.toLocaleString()} pts
                         </span>
                       </div>
 
-                      <p className="text-sm text-white/80 leading-relaxed line-clamp-2">
-                        {p.description}
-                      </p>
-
                       {isOwned ? (
-                        <Button
-                          asChild
-                          size="lg"
-                          className="w-full bg-white text-black hover:bg-white/90"
-                        >
-                          <a
-                            href={p.pdf}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            download
-                          >
+                        <Button asChild size="sm" className="w-full">
+                          <a href={p.pdf} target="_blank" rel="noopener noreferrer" download>
                             {buttonLabel}
                           </a>
                         </Button>
                       ) : (
-                        <Button
-                          size="lg"
-                          className="w-full bg-white text-black hover:bg-white/90"
-                          onClick={() => setModalProduct(p)}
-                        >
+                        <Button size="sm" className="w-full" onClick={() => setModalProduct(p)}>
                           {buttonLabel}
                         </Button>
                       )}
