@@ -1,5 +1,253 @@
 import { MotherhoodStage } from '@/contexts/AuthContext';
 
+// ---------------------------------------------------------------------------
+// App Navigation Knowledge Base
+// Maps topics/keywords the user might mention → the exact in-app route + a
+// friendly direction the coach can include in its response.
+// ---------------------------------------------------------------------------
+
+interface AppPage {
+  label: string;
+  route: string;
+  /** Short human-readable direction (e.g. "Tap Workouts in the menu") */
+  direction: string;
+  keywords: string[];
+  /** Which stages this page is most relevant for (empty = all) */
+  stages?: MotherhoodStage[];
+}
+
+export const APP_NAVIGATION_MAP: AppPage[] = [
+  // ── Workouts ──────────────────────────────────────────────────────────────
+  {
+    label: 'Workouts',
+    route: '/workouts',
+    direction: 'Go to the Workouts page from the main menu.',
+    keywords: ['workout', 'exercise', 'movement', 'training', 'fitness', 'active', 'gym', 'strength'],
+  },
+  {
+    label: 'Prenatal Workouts',
+    route: '/workouts?stage=pregnancy',
+    direction: 'Go to Workouts and select the Pregnancy filter.',
+    keywords: ['prenatal', 'pregnancy workout', 'pregnant exercise', 'safe pregnancy workout'],
+    stages: ['pregnant'],
+  },
+  {
+    label: 'Postpartum Workouts',
+    route: '/workouts?stage=postpartum',
+    direction: 'Go to Workouts and select the Postpartum filter.',
+    keywords: ['postpartum workout', 'after birth exercise', 'postnatal workout', 'return to exercise'],
+    stages: ['postpartum'],
+  },
+  {
+    label: 'Core Restore Foundations',
+    route: '/workouts/core-restore-foundations',
+    direction: 'Find the Core Restore program under Workouts.',
+    keywords: ['core restore', 'diastasis', 'ab separation', 'core healing', 'pelvic floor workout', 'core recovery'],
+    stages: ['postpartum'],
+  },
+  {
+    label: 'Glow and Go Prenatal Program',
+    route: '/programs/glow-and-go',
+    direction: 'Open the Glow and Go Prenatal Program under Programs.',
+    keywords: ['glow and go', 'prenatal program', 'pregnancy program'],
+    stages: ['pregnant'],
+  },
+
+  // ── Nutrition / Meal Plan ─────────────────────────────────────────────────
+  {
+    label: 'Meal Plans',
+    route: '/meal-plan',
+    direction: 'Tap Meal Plan in the menu to see your personalized plan.',
+    keywords: ['meal plan', 'meal', 'food plan', 'eat', 'nutrition plan', 'diet', 'recipes', 'what to eat'],
+  },
+  {
+    label: 'Pregnancy Meal Plan',
+    route: '/meal-plan?stage=pregnancy',
+    direction: 'Go to Meal Plan and select the Pregnancy stage.',
+    keywords: ['pregnancy meal', 'prenatal nutrition', 'what to eat pregnant', 'pregnancy diet'],
+    stages: ['pregnant'],
+  },
+  {
+    label: 'Postpartum Meal Plan',
+    route: '/meal-plan?stage=postpartum',
+    direction: 'Go to Meal Plan and select the Postpartum stage.',
+    keywords: ['postpartum meal', 'postnatal nutrition', 'breastfeeding diet', 'milk supply food', 'postpartum diet'],
+    stages: ['postpartum'],
+  },
+  {
+    label: 'TTC Meal Plan',
+    route: '/meal-plan?stage=ttc',
+    direction: 'Go to Meal Plan and select the TTC stage.',
+    keywords: ['ttc nutrition', 'fertility food', 'conception diet', 'fertility nutrition', 'trying to conceive food'],
+    stages: ['ttc'],
+  },
+
+  // ── Wellness / Self-care ──────────────────────────────────────────────────
+  {
+    label: 'Wellness Hub',
+    route: '/wellness',
+    direction: 'Open the Wellness page from the bottom navigation.',
+    keywords: ['wellness', 'wellbeing', 'self care', 'self-care', 'mental health', 'stress relief', 'calm', 'mindfulness'],
+  },
+  {
+    label: 'Self-Care Tools',
+    route: '/wellness/self-care',
+    direction: 'Go to Wellness → Self-Care for guided practices and tools.',
+    keywords: ['self care', 'self-care tools', 'stress', 'anxiety', 'overwhelm', 'relax', 'unwind', 'mindful'],
+  },
+  {
+    label: 'Wellness Resources (Guides & Planners)',
+    route: '/wellness/resources',
+    direction: 'Go to Wellness → Resources to browse guides, planners, and workbooks.',
+    keywords: ['resource', 'guide', 'planner', 'workbook', 'download', 'momodoro', 'self care system', 'sleep guide', 'emotional load', 'product', 'digital guide'],
+  },
+
+  // ── Birth Ball ────────────────────────────────────────────────────────────
+  {
+    label: 'Birth Ball Guide',
+    route: '/birth-ball-guide',
+    direction: 'Find the Birth Ball Guide under Wellness or the main menu.',
+    keywords: ['birth ball', 'birthing ball', 'peanut ball', 'labor ball', 'bounce ball'],
+  },
+  {
+    label: 'Birth Ball Program',
+    route: '/programs/birth-ball',
+    direction: 'Open the Birth Ball Program under Programs.',
+    keywords: ['birth ball program', 'birth ball exercises', 'birth ball workout'],
+    stages: ['pregnant'],
+  },
+
+  // ── Dashboard & Tools ─────────────────────────────────────────────────────
+  {
+    label: 'Dashboard',
+    route: '/dashboard',
+    direction: 'Your Dashboard is the first screen after logging in.',
+    keywords: ['dashboard', 'home screen', 'main page', 'overview', 'my stats'],
+  },
+  {
+    label: 'Kick Counter',
+    route: '/dashboard?tool=kick-counter',
+    direction: 'Open your Dashboard and tap the Kick Counter tool.',
+    keywords: ['kick counter', 'kick count', 'baby kicks', 'fetal movement', 'count kicks'],
+    stages: ['pregnant'],
+  },
+  {
+    label: 'Progress Tracker',
+    route: '/progress',
+    direction: 'Open the Progress page to log and track your wellness journey.',
+    keywords: ['progress', 'track', 'log', 'journal', 'history', 'check in', 'how am i doing'],
+  },
+
+  // ── Community ─────────────────────────────────────────────────────────────
+  {
+    label: 'Community',
+    route: '/community',
+    direction: 'Tap Community in the menu to connect with other moms.',
+    keywords: ['community', 'group', 'other moms', 'forum', 'chat', 'support group', 'connect'],
+  },
+
+  // ── Courses & Programs ────────────────────────────────────────────────────
+  {
+    label: 'Courses',
+    route: '/courses',
+    direction: 'Go to Courses in the menu to see all available programs.',
+    keywords: ['course', 'program', 'class', 'series', 'challenge', '30 day', 'glow up'],
+  },
+  {
+    label: 'Postpartum Recovery Program (30 Days Glow Up)',
+    route: '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9',
+    direction: 'Find the 30 Days Glow Up Challenge under Courses.',
+    keywords: ['30 days', 'glow up', 'postpartum recovery program', 'recovery challenge'],
+    stages: ['postpartum'],
+  },
+
+  // ── Profile & Subscription ────────────────────────────────────────────────
+  {
+    label: 'Profile & Subscription',
+    route: '/profile',
+    direction: 'Open Profile (tap your avatar or the Profile icon in the menu).',
+    keywords: ['profile', 'account', 'subscription', 'premium', 'upgrade', 'plan', 'billing', 'membership'],
+  },
+
+  // ── Blog & Research ───────────────────────────────────────────────────────
+  {
+    label: 'Blog',
+    route: '/blog',
+    direction: 'Tap Blog in the menu to read evidence-based articles.',
+    keywords: ['blog', 'article', 'post', 'read', 'learn', 'tips', 'advice'],
+  },
+  {
+    label: 'Research',
+    route: '/research',
+    direction: 'Visit the Research page for expert-backed studies and sources.',
+    keywords: ['research', 'study', 'evidence', 'science', 'clinical', 'data'],
+  },
+  {
+    label: 'Expert Hub',
+    route: '/experts',
+    direction: 'Go to the Experts page to learn about our medical advisory team.',
+    keywords: ['expert', 'doctor', 'midwife', 'specialist', 'team', 'provider', 'credentials'],
+  },
+
+  // ── Food Calorie Checker ──────────────────────────────────────────────────
+  {
+    label: 'Food & Calorie Checker',
+    route: '/food-calories',
+    direction: 'Use the Food & Calorie Checker to look up nutritional info.',
+    keywords: ['calorie', 'calorie checker', 'food checker', 'nutrition info', 'how many calories', 'food database'],
+  },
+
+  // ── Assessment ────────────────────────────────────────────────────────────
+  {
+    label: 'Wellness Assessment',
+    route: '/questionnaire',
+    direction: 'Complete the Wellness Assessment to personalize your experience.',
+    keywords: ['assessment', 'questionnaire', 'quiz', 'personalise', 'personalize', 'wellness score', 'setup'],
+  },
+];
+
+/**
+ * Given a user message and their stage, return the best matching app page
+ * (or null if nothing matches well enough).
+ */
+export const findAppPage = (
+  message: string,
+  stage: MotherhoodStage | null,
+): AppPage | null => {
+  const lower = message.toLowerCase();
+  let best: AppPage | null = null;
+  let bestScore = 0;
+
+  for (const page of APP_NAVIGATION_MAP) {
+    // Stage filter: skip pages that aren't relevant to this stage
+    if (page.stages && page.stages.length > 0 && stage && !page.stages.includes(stage)) {
+      continue;
+    }
+    let score = 0;
+    for (const kw of page.keywords) {
+      if (lower.includes(kw)) {
+        // Longer / more specific keywords score higher
+        score += kw.split(' ').length;
+      }
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      best = page;
+    }
+  }
+
+  return bestScore > 0 ? best : null;
+};
+
+/**
+ * True if the message is clearly asking where something IS / how to find it.
+ */
+export const isNavigationQuery = (message: string): boolean => {
+  return /where (is|can|do|are)|how (do|can) i (find|access|get to|open|go to)|take me to|show me|navigate|go to|open the|find the/.test(
+    message.toLowerCase(),
+  );
+};
+
 export interface WellnessIssue {
   keywords: string[];
   category: 'pain' | 'exercise' | 'nutrition' | 'mental_health' | 'sleep' | 'recovery';
@@ -240,50 +488,69 @@ const getStageSpecificQuestions = (stage: MotherhoodStage | null): string[] => {
 };
 
 export const generateWellnessResponse = (
-  message: string, 
+  message: string,
   stage: MotherhoodStage | null,
   userProfile: any
 ): string => {
   const analysis = analyzeUserMessage(message, stage);
-  
-  // If we have specific matches, provide targeted advice
+
+  // ── Navigation / "where is X" queries ──────────────────────────────────
+  // Check first so "where are the workouts" gets a direct link, not a clarifying
+  // question loop.
+  const navPage = findAppPage(message, stage);
+  const navQuery = isNavigationQuery(message);
+
+  if (navPage && (navQuery || analysis.isVague)) {
+    return (
+      `Here's where you can find that! 📍\n\n` +
+      `**${navPage.label}**\n${navPage.direction}\n\n` +
+      `You can also tap this link to go there directly: ${navPage.route}\n\n` +
+      `Is there anything else I can help you find?`
+    );
+  }
+
+  // ── Specific wellness issue match ─────────────────────────────────────
   if (analysis.matchingIssues.length > 0) {
     const issue = analysis.matchingIssues[0];
     let response = `${issue.responses.explanation}\n\n`;
-    
+
     response += "Here's what I recommend:\n";
     issue.responses.recommendations.forEach((rec, index) => {
       response += `${index + 1}. ${rec}\n`;
     });
-    
+
     if (issue.responses.programs) {
       response += `\nPrograms that might help you:\n`;
       issue.responses.programs.forEach(program => {
         response += `• ${program}\n`;
       });
     }
-    
+
     if (issue.responses.modifications) {
       response += `\nImportant modifications:\n`;
       issue.responses.modifications.forEach(mod => {
         response += `• ${mod}\n`;
       });
     }
-    
+
     if (issue.responses.warning) {
       response += `\n⚠️ Important: ${issue.responses.warning}`;
     }
-    
+
+    // If we also matched an app page, append a deep-link suggestion
+    if (navPage) {
+      response += `\n\n📍 **Find it in the app:** ${navPage.direction} → ${navPage.route}`;
+    }
+
     response += `\n\nIs there anything specific about this you'd like me to explain further?`;
     return response;
   }
-  
-  // If message is unclear or too vague, ask clarifying questions
-  if (analysis.isVague || (!Object.values(analysis.categories).some(Boolean))) {
+
+  // ── Vague / category-only → clarifying questions ──────────────────────
+  if (analysis.isVague || !Object.values(analysis.categories).some(Boolean)) {
     return askClarifyingQuestions(message, stage);
   }
-  
-  // Provide category-specific guidance with follow-up questions
+
   return askClarifyingQuestions(message, stage);
 };
 
