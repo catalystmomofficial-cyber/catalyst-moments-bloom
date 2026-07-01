@@ -1,4 +1,5 @@
 import { MotherhoodStage } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 // ---------------------------------------------------------------------------
 // App Navigation Knowledge Base
@@ -661,6 +662,57 @@ const stageDiscovery = (stageLabel: string, stage: MotherhoodStage | null): stri
 };
 
 // ---------------------------------------------------------------------------
+// Content Gap Logger
+// When the coach falls back (no nav page match, no knowledge-base match,
+// pure vague fallback) it logs the raw message + metadata to Supabase so
+// the admin can see what people are looking for that doesn't exist yet.
+//
+// Gap categories:
+//   product   – asking for a guide, planner, workbook, or resource we don't have
+//   course    – asking for a program or challenge we don't have
+//   content   – asking for an article, tip, or explanation we can't give
+//   feature   – asking for an app capability that doesn't exist
+//   community – asking for a group, connection, or event we don't have
+//   unknown   – can't classify, still worth capturing
+// ---------------------------------------------------------------------------
+
+const GAP_CATEGORY_PATTERNS: Array<{ pattern: RegExp; category: string }> = [
+  { pattern: /guide|planner|workbook|worksheet|checklist|pdf|download|resource|e-?book|template/, category: 'product' },
+  { pattern: /course|program|challenge|class|series|module|week.?by.?week|plan/, category: 'course' },
+  { pattern: /article|blog|read|explain|what is|how does|research|study|why/, category: 'content' },
+  { pattern: /track|remind|notify|alert|calendar|schedule|app (can|should|doesn'?t)|feature|add|wish/, category: 'feature' },
+  { pattern: /group|community|meet|event|connect|other moms|find someone/, category: 'community' },
+];
+
+const classifyGapCategory = (message: string): string => {
+  const m = message.toLowerCase();
+  for (const { pattern, category } of GAP_CATEGORY_PATTERNS) {
+    if (pattern.test(m)) return category;
+  }
+  return 'unknown';
+};
+
+export const logCoachGap = async (
+  message: string,
+  intent: CoachIntent,
+  stage: MotherhoodStage | null,
+  userId?: string,
+): Promise<void> => {
+  // Fire-and-forget — never block the UI thread
+  try {
+    await (supabase as any).from('coach_query_gaps').insert({
+      user_id: userId ?? null,
+      stage: stage ?? null,
+      intent,
+      message: message.trim().slice(0, 500),
+      gap_category: classifyGapCategory(message),
+    });
+  } catch {
+    // Silent — logging failure should never affect the user experience
+  }
+};
+
+// ---------------------------------------------------------------------------
 // Main response generator
 // Intent → Behavioral context → Stage filter → Leading response
 // ---------------------------------------------------------------------------
@@ -669,6 +721,7 @@ export const generateWellnessResponse = (
   message: string,
   stage: MotherhoodStage | null,
   userProfile: any,
+  userId?: string,
 ): string => {
   const { intent } = detectIntent(message);
   const ctx = buildBehavioralContext(stage, userProfile);
@@ -703,6 +756,7 @@ export const generateWellnessResponse = (
           `Anything else I can help you find?`
         );
       }
+      logCoachGap(message, intent, stage, userId);
       return (
         `I can point you right there! Could you give me a little more detail — ` +
         `are you looking for a workout, a meal plan, a guide, or something else? I'll send you the direct link.`
@@ -822,7 +876,8 @@ export const generateWellnessResponse = (
         return response;
       }
 
-      // No specific match → ask a focused clarifying question
+      // No specific match → log the gap and ask a focused clarifying question
+      logCoachGap(message, intent, stage, userId);
       const m = message.toLowerCase();
       if (/pain|hurt|ache|sore|discomfort/.test(m)) return `I want to help you with that. Can you tell me:\n• Where exactly are you feeling it?\n• Is it constant or does it come and go?\n• When did it start?\n\nThis will help me give you the right guidance for your ${ctx.stageLabel}.`;
       if (/workout|exercise|move|fitness/.test(m)) return `Great — movement is so important for your ${ctx.stageLabel}. Can you share:\n• What you're currently doing?\n• Any concerns or limitations?\n• How much time you have?\n\nI'll point you to exactly the right program.`;
@@ -830,6 +885,7 @@ export const generateWellnessResponse = (
       if (/feel|mood|sad|anxious|stress/.test(m)) return `Your mental wellness matters just as much as your physical health. Could you tell me a bit more?\n• How long have you been feeling this way?\n• Is there a specific trigger?\n\nYou're not alone in this.`;
       if (/sleep|tired|fatigue|rest/.test(m)) return `Sleep is so hard, especially during ${ctx.stageLabel}. A few questions:\n• What's making it hard to sleep?\n• How many hours are you getting?\n• Do you have a wind-down routine?\n\nLet's work on this together.`;
 
+      logCoachGap(message, intent, stage, userId);
       return (
         `I want to make sure I help you with exactly the right thing. Could you give me a bit more detail?\n\n` +
         `Here's what I can help you with for your ${ctx.stageLabel}:\n` +
