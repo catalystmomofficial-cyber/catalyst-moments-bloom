@@ -142,7 +142,7 @@ const BirthBallGuideCard = () => {
           </div>
 
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Physio-designed routine that relieves sciatica, pelvic pressure, and prepares your body for an easier birth.
+            Physio-designed routine that eases pelvic and lower-back pain, helps you sleep, and preps your body for birth with positions that help reduce tearing.
           </p>
 
           {/* Benefits */}

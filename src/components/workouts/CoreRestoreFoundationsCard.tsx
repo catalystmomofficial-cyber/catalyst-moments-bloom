@@ -194,7 +194,7 @@ export default function CoreRestoreFoundationsCard() {
               Core Restore Foundations
             </CardTitle>
             <CardDescription>
-              A structured 4-week clinical-grade program to safely close Diastasis Recti and restore deep core stability. Zero traditional crunches or planks—just targeted activation movements designed to rebuild your internal corset from the inside out.
+              A structured 4-week physio-designed program to safely heal Diastasis Recti and restore deep core stability. Zero traditional crunches or planks—just targeted activation movements designed to rebuild your internal corset from the inside out.
             </CardDescription>
           </div>
         </div>
@@ -234,7 +234,7 @@ export default function CoreRestoreFoundationsCard() {
             </div>
             <Progress value={progressPercentage} className="h-3" />
             <div className="text-xs text-muted-foreground">
-              {isCompleted ? 'Your core is restored — beautiful work, mama.' : `${currentDay} of ${totalDays} days completed`}
+              {isCompleted ? 'Your core is restored — beautiful work, mama. Next up: Energy & Strength for Moms.' : `${currentDay} of ${totalDays} days completed`}
             </div>
           </div>
         )}

@@ -591,15 +591,15 @@ export const educationalContent = {
     ]
   },
   reducesTearing: {
-    title: "Why These Moves Help Reduce Tearing",
-    content: "These birth ball movements aren't just about comfort—they support your body in reducing the risk of tearing during delivery by:",
+    title: "Can a Birth Ball Help Reduce Tearing?",
+    content: "It can help. Staying upright and mobile on the ball—instead of lying flat—keeps your pelvis open and your perineal muscles flexible, and upright positions are linked with a lower risk of tearing. Here's how these moves support your body:",
     benefits: [
-      "Strengthening the pelvic floor for more controlled pushing",
-      "Encouraging baby into optimal position for smoother labor",
+      "Strengthening your pelvic floor to support controlled pushing",
+      "Keeping you upright and mobile — positions linked with less tearing than lying on your back",
       "Increasing hip mobility and pelvic flexibility",
-      "Teaching breath control and relaxation to reduce tension during contractions"
+      "Teaching breath control and relaxation to help you cope with contractions"
     ],
-    note: "Practicing these consistently (especially in the 3rd trimester) helps your body stay strong and responsive when it matters most."
+    note: "Practice consistently from the 3rd trimester—and pair it with perineal massage from around 36 weeks, which research links to noticeably fewer tears—to help your body stay strong, mobile, and ready."
   },
   earlyLabor: {
     title: "How to Use the Ball in Early Labor",
