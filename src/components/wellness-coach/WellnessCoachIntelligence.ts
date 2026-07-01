@@ -204,7 +204,109 @@ export const APP_NAVIGATION_MAP: AppPage[] = [
     direction: 'Complete the Wellness Assessment to personalize your experience.',
     keywords: ['assessment', 'questionnaire', 'quiz', 'personalise', 'personalize', 'wellness score', 'setup'],
   },
+
+  // ── All Courses ───────────────────────────────────────────────────────────
+  {
+    label: 'All Courses & Programs',
+    route: '/courses',
+    direction: 'Go to the Courses page to see every program available to you.',
+    keywords: ['all courses', 'all programs', 'what courses', 'available courses', 'course list', 'what programs do you have'],
+  },
+  {
+    label: 'Glow & Go Prenatal Program',
+    route: '/programs/glow-and-go',
+    direction: 'Open Glow & Go Prenatal under Programs — trimester-safe video workouts you can do at home.',
+    keywords: ['glow and go', 'glow go', 'prenatal program', 'prenatal videos', 'pregnancy workout program', 'trimester workout', 'prenatal fitness program'],
+    stages: ['pregnant'],
+  },
+  {
+    label: 'Birth Ball Program',
+    route: '/programs/birth-ball',
+    direction: 'Open the Birth Ball Program under Programs for guided birth-ball exercises.',
+    keywords: ['birth ball program', 'birth ball workout program', 'labor prep program', 'birth ball exercises'],
+    stages: ['pregnant'],
+  },
+  {
+    label: '30 Days Glow Up — Postpartum Recovery Challenge',
+    route: '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9',
+    direction: 'Find the 30 Days Glow Up Challenge under Courses — a structured postpartum recovery program.',
+    keywords: ['30 day', '30 days', 'glow up', 'postpartum challenge', 'postpartum recovery program', 'postpartum course'],
+    stages: ['postpartum'],
+  },
+  {
+    label: 'Core Restore Foundations',
+    route: '/workouts/core-restore-foundations',
+    direction: 'Find Core Restore Foundations under Workouts — a guided program for healing your core after birth.',
+    keywords: ['core restore', 'core restore foundations', 'core healing', 'ab recovery', 'diastasis program', 'pelvic floor program'],
+    stages: ['postpartum'],
+  },
+
+  // ── Affiliate / Partner Program ───────────────────────────────────────────
+  {
+    label: 'Catalyst Mom Partner Program',
+    route: '/affiliate',
+    direction: 'Go to the Partner Program page to learn how to earn as a Catalyst Mom member.',
+    keywords: [
+      'affiliate', 'partner program', 'earn', 'referral', 'make money', 'share and earn',
+      'passive income', 'recommend', 'how do i earn', 'earn as a member', 'commission',
+      'bounty', 'refer a friend', 'how do i make money', 'paid to share',
+    ],
+  },
+  {
+    label: 'Partner Dashboard',
+    route: '/affiliate/dashboard',
+    direction: 'Open your Partner Dashboard to track your referrals and earnings.',
+    keywords: ['affiliate dashboard', 'partner dashboard', 'my referrals', 'my earnings', 'check my commissions'],
+  },
+
+  // ── Saved & Personal ──────────────────────────────────────────────────────
+  {
+    label: 'Saved Workout Plans',
+    route: '/saved-workout-plans',
+    direction: 'Open Saved Workout Plans to access plans you have bookmarked.',
+    keywords: ['saved workout', 'my workout plan', 'saved plan', 'bookmarked workout'],
+  },
+  {
+    label: 'Saved Birth Ball Exercises',
+    route: '/saved-birth-ball-exercises',
+    direction: 'Open Saved Birth Ball Exercises to revisit your favourite moves.',
+    keywords: ['saved birth ball', 'saved exercises', 'my saved exercises'],
+    stages: ['pregnant'],
+  },
 ];
+
+// ---------------------------------------------------------------------------
+// Affiliate / Partner Program — full context the coach can use to answer
+// questions naturally. Positioned as "earn as a member" — never as a side-hustle
+// pitch that could cheapen the brand.
+// ---------------------------------------------------------------------------
+
+export const AFFILIATE_CONTEXT = {
+  summary:
+    'Catalyst Mom has a Partner Program that lets active members earn $29 for every person they refer who becomes a paying member and stays for at least two months. There is no cap — refer more, earn more.',
+  keyFacts: [
+    'You must be an active subscriber yourself to participate.',
+    'You earn $29 per referral once the person you referred completes their 2nd month of membership.',
+    'There is no limit to how many people you can refer.',
+    'Earnings are paid via PayPal or direct bank transfer.',
+    'Approved partners receive a welcome kit with graphics, Reel ideas, and talking points.',
+    'If a referral cancels in their first month, no bounty is paid.',
+    'Applications are reviewed and you hear back within 48 hours.',
+  ],
+  whoItsFor: [
+    'Active Catalyst Mom members who genuinely love the community.',
+    'Moms who are already sharing their wellness journey online or with friends.',
+    'Anyone who wants to turn their authentic recommendations into a small income.',
+  ],
+  applyRoute: '/affiliate',
+  dashboardRoute: '/affiliate/dashboard',
+};
+
+/** True if the message is asking about the affiliate/partner/earn topic */
+export const isAffiliateQuery = (message: string): boolean =>
+  /affiliat|partner program|earn as a member|refer|referral|commission|bounty|make money|passive income|paid to share|how (do|can) i earn|share and earn/.test(
+    message.toLowerCase(),
+  );
 
 /**
  * Given a user message and their stage, return the best matching app page
@@ -493,6 +595,22 @@ export const generateWellnessResponse = (
   userProfile: any
 ): string => {
   const analysis = analyzeUserMessage(message, stage);
+
+  // ── Affiliate / Partner Program queries ──────────────────────────────────
+  if (isAffiliateQuery(message)) {
+    const af = AFFILIATE_CONTEXT;
+    return (
+      `As an active Catalyst Mom member, you can earn through our Partner Program — ` +
+      `it's one of the ways we let the community grow together.\n\n` +
+      `**Here's how it works:**\n` +
+      af.keyFacts.map(f => `• ${f}`).join('\n') +
+      `\n\n**Who is it for?**\n` +
+      af.whoItsFor.map(w => `• ${w}`).join('\n') +
+      `\n\n📍 **Apply here:** ${af.applyRoute}\n` +
+      `📍 **Track your earnings:** ${af.dashboardRoute}\n\n` +
+      `Would you like to know more about how to apply, or anything else about the program?`
+    );
+  }
 
   // ── Navigation / "where is X" queries ──────────────────────────────────
   // Check first so "where are the workouts" gets a direct link, not a clarifying
