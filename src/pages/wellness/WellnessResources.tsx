@@ -829,71 +829,76 @@ const WellnessResources = () => {
                 return (
                   <Card
                     key={p.slug}
-                    className="group overflow-hidden border-border/60 bg-card shadow-sm hover:shadow-lg transition-all duration-300"
+                    className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 rounded-xl"
                   >
-                    <div className="relative h-44 overflow-hidden">
-                      <CoverImage
-                        src={p.cover}
-                        alt={`${p.title} cover`}
-                        slug={p.slug}
-                        fallbackIcon={p.fallbackIcon}
-                      />
+                    <div className="relative h-60 overflow-hidden">
+                      <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+                        <CoverImage
+                          src={p.cover}
+                          alt={`${p.title} cover`}
+                          slug={p.slug}
+                          fallbackIcon={p.fallbackIcon}
+                        />
+                      </div>
+                      {/* dark gradient for legibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+
+                      {/* top-right badge */}
                       <div className="absolute top-3 right-3">
                         {isOwned ? (
-                          <div className="bg-white/90 backdrop-blur-sm text-emerald-600 rounded-full p-1 shadow-sm">
+                          <div className="bg-emerald-500 text-white rounded-full p-1 shadow">
                             <CheckCircle2 className="w-3.5 h-3.5" />
                           </div>
                         ) : (
-                          <Badge className="bg-white/90 text-catalyst-copper border-0 backdrop-blur text-[10px] gap-0.5 px-2 py-0.5 shadow-sm">
+                          <Badge className="bg-black/40 text-white border-0 backdrop-blur-sm text-[10px] gap-0.5 px-2 py-0.5">
                             <Flame className="w-2.5 h-2.5" /> {p.demand}
                           </Badge>
                         )}
                       </div>
-                    </div>
 
-                    <CardContent className="p-4 space-y-2.5">
-                      <div className="flex justify-between items-start gap-2">
-                        <h4 className="font-semibold text-sm text-foreground group-hover:text-catalyst-copper transition-colors leading-snug">
+                      {/* overlay content at bottom */}
+                      <div className="absolute bottom-0 inset-x-0 p-4 space-y-2">
+                        <h4 className="font-semibold text-sm text-white leading-snug drop-shadow">
                           {p.title}
                         </h4>
-                        <span className="text-sm font-bold text-catalyst-copper shrink-0">
-                          ${(p.priceCents / 100).toFixed(2)}
-                        </span>
-                      </div>
-
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {p.description}
-                      </p>
-
-                      <p className="text-[11px] text-catalyst-copper/80 font-medium">
-                        or {p.pointsCost.toLocaleString()} pts
-                      </p>
-
-                      {isOwned ? (
-                        <Button
-                          asChild
-                          size="sm"
-                          className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90"
-                        >
-                          <a
-                            href={p.pdf}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            download
+                        <p className="text-[11px] text-white/75 line-clamp-2 leading-relaxed">
+                          {p.description}
+                        </p>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-white font-bold text-sm drop-shadow">
+                            ${(p.priceCents / 100).toFixed(2)}
+                          </span>
+                          <span className="text-white/65 text-[11px]">
+                            or {p.pointsCost.toLocaleString()} pts
+                          </span>
+                        </div>
+                        {isOwned ? (
+                          <Button
+                            asChild
+                            size="sm"
+                            className="w-full bg-white text-foreground hover:bg-white/90 h-8 text-xs font-semibold"
+                          >
+                            <a
+                              href={p.pdf}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                            >
+                              <Download className="w-3.5 h-3.5 mr-1.5" />
+                              {p.cta}
+                            </a>
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            className="w-full bg-white text-foreground hover:bg-white/90 h-8 text-xs font-semibold"
+                            onClick={() => setModalProduct(p)}
                           >
                             {renderUnlockButton(p)}
-                          </a>
-                        </Button>
-                      ) : (
-                        <Button
-                          size="sm"
-                          className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90"
-                          onClick={() => setModalProduct(p)}
-                        >
-                          {renderUnlockButton(p)}
-                        </Button>
-                      )}
-                    </CardContent>
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   </Card>
                 );
               })}
