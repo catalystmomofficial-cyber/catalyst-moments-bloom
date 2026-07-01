@@ -1336,6 +1336,54 @@ export type Database = {
         }
         Relationships: []
       }
+      pregnancy_journal_entries: {
+        Row: {
+          baby_kicks: number | null
+          content: string | null
+          created_at: string | null
+          entry_date: string
+          id: string
+          milestone: string | null
+          mood: number | null
+          photo_urls: string[] | null
+          title: string
+          updated_at: string | null
+          user_id: string
+          week: number | null
+          weight: number | null
+        }
+        Insert: {
+          baby_kicks?: number | null
+          content?: string | null
+          created_at?: string | null
+          entry_date?: string
+          id?: string
+          milestone?: string | null
+          mood?: number | null
+          photo_urls?: string[] | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+          week?: number | null
+          weight?: number | null
+        }
+        Update: {
+          baby_kicks?: number | null
+          content?: string | null
+          created_at?: string | null
+          entry_date?: string
+          id?: string
+          milestone?: string | null
+          mood?: number | null
+          photo_urls?: string[] | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+          week?: number | null
+          weight?: number | null
+        }
+        Relationships: []
+      }
       premium_users: {
         Row: {
           created_at: string
@@ -1366,54 +1414,6 @@ export type Database = {
           subscription_type?: string | null
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      pregnancy_journal_entries: {
-        Row: {
-          baby_kicks: number | null
-          content: string | null
-          created_at: string
-          entry_date: string
-          id: string
-          milestone: string | null
-          mood: number | null
-          photo_urls: string[] | null
-          title: string
-          updated_at: string
-          user_id: string
-          week: number | null
-          weight: number | null
-        }
-        Insert: {
-          baby_kicks?: number | null
-          content?: string | null
-          created_at?: string
-          entry_date?: string
-          id?: string
-          milestone?: string | null
-          mood?: number | null
-          photo_urls?: string[] | null
-          title: string
-          updated_at?: string
-          user_id: string
-          week?: number | null
-          weight?: number | null
-        }
-        Update: {
-          baby_kicks?: number | null
-          content?: string | null
-          created_at?: string
-          entry_date?: string
-          id?: string
-          milestone?: string | null
-          mood?: number | null
-          photo_urls?: string[] | null
-          title?: string
-          updated_at?: string
-          user_id?: string
-          week?: number | null
-          weight?: number | null
         }
         Relationships: []
       }
@@ -1547,6 +1547,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      signal_events: {
+        Row: {
+          actioned_at: string | null
+          created_at: string
+          dismissed_at: string | null
+          id: string
+          instance_key: string
+          shown_at: string
+          signal_type: string
+          user_id: string
+        }
+        Insert: {
+          actioned_at?: string | null
+          created_at?: string
+          dismissed_at?: string | null
+          id?: string
+          instance_key: string
+          shown_at?: string
+          signal_type: string
+          user_id: string
+        }
+        Update: {
+          actioned_at?: string | null
+          created_at?: string
+          dismissed_at?: string | null
+          id?: string
+          instance_key?: string
+          shown_at?: string
+          signal_type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       stage_change_requests: {
         Row: {
