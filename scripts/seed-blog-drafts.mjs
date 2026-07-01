@@ -218,6 +218,78 @@ ${DISCLAIMER}`,
 ${DISCLAIMER}`,
   },
   {
+    title: 'Pelvic Girdle Pain in Pregnancy: Exercises & Relief',
+    slug: 'pelvic-girdle-pain-pregnancy',
+    tags: ['pregnancy', 'fitness'],
+    // TODO: set a real featured image in /admin before publishing (upload to the
+    // blog-images bucket — a pregnant woman holding her lower back/hip or doing a gentle
+    // hands-and-knees stretch, 1200x630, subject centered).
+    featured_image_url: '',
+    excerpt: 'That deep pain in your hips, pubic bone, or lower back has a name - pelvic girdle pain. Here are the safe exercises that ease it, what to avoid, and how to stay comfortable day and night.',
+    content: `
+<p>A mom at 38 weeks messaged us, worried: <em>"I think I have PGP - will exercises even be possible with that, or will they make it worse?"</em> It is one of the most common questions we get in late pregnancy, and here is the short answer: yes, the <em>right</em> movement usually helps pelvic girdle pain rather than harming it - but the <em>wrong</em> movements can flare it. This guide covers both, mama.</p>
+
+<h2>What is pelvic girdle pain (PGP)?</h2>
+<p>Pelvic girdle pain is discomfort caused by the joints of your pelvis becoming stiff or moving unevenly as pregnancy hormones loosen your ligaments. You might feel it over your pubic bone at the front (sometimes called symphysis pubis dysfunction, or SPD), across your lower back, or deep in your hips - often worse when walking, climbing stairs, turning in bed, or standing on one leg. It is <strong>very common, not your fault, and not harmful to your baby</strong> - but it is real, and it deserves proper care, not "just push through."</p>
+
+<h2>Is it safe to exercise with pelvic girdle pain?</h2>
+<p>Usually, yes - and gentle, targeted exercise is one of the main things physiotherapists recommend for PGP, because stronger, better-coordinated muscles support those loose pelvic joints. The rule is simple: <strong>movement should never increase your pain.</strong> Stay in a pain-free range, keep your movements small and symmetrical (both legs doing the same thing), and stop anything that sharpens the ache. A women's health physiotherapist can tailor this to you - more on why that is worth it below.</p>
+
+<h2>What exercises help pelvic girdle pain?</h2>
+<p>These are the gentle, physio-favored moves that tend to ease PGP:</p>
+<ul>
+<li><strong>Pelvic tilts.</strong> On hands and knees or sitting on a birth ball, gently rock your pelvis forward and back. Eases stiffness and wakes up your deep core.</li>
+<li><strong>Gentle birth ball hip circles.</strong> Sitting on a birth ball, make small, slow circles with your hips - keeping knees hip-width, never wide. See our <a href="/blog/birth-ball-exercises-pregnancy">birth ball exercises guide</a> for more.</li>
+<li><strong>Pelvic floor and deep core activation.</strong> Gentle pelvic floor lifts and a soft "hug baby" transverse abdominis draw-in build the internal support your pelvis needs.</li>
+<li><strong>Hands-and-knees rest position.</strong> Takes the weight off your pelvis and can settle a flare.</li>
+<li><strong>Water exercise.</strong> The water supports your weight - walk forward and back or do a flutter kick. (Skip breaststroke/frog kick - the wide leg motion aggravates PGP.)</li>
+</ul>
+
+<h2>What movements should I avoid with PGP?</h2>
+<p>This is the part most blogs skip, and it matters more than any exercise. Avoiding these often helps as much as the exercises do:</p>
+<ul>
+<li><strong>Standing on one leg</strong> - get dressed sitting down, and step into trousers one leg at a time while seated.</li>
+<li><strong>Wide or deep movements that part your legs</strong> - deep squats, wide leg stretches, breaststroke kick, and getting out of the car one leg at a time. Keep your <strong>knees together</strong> when turning in bed or getting in/out of a car.</li>
+<li><strong>Twisting your spine and pelvis</strong> at the same time.</li>
+<li><strong>High-impact exercise</strong> - running and jumping.</li>
+<li><strong>Pushing through pain.</strong> Pain is the signal to stop and modify - not to power through.</li>
+</ul>
+
+<h2>How can I get comfortable through the day and sleep with PGP?</h2>
+<p>Small daily tweaks add up to real relief:</p>
+<ul>
+<li><strong>Sleep on your side with a pillow between your knees</strong> (and one under your bump) to keep your pelvis aligned.</li>
+<li><strong>Roll, don't sit straight up.</strong> To get out of bed, keep knees together, roll to your side, and push up with your arms.</li>
+<li><strong>Take smaller steps</strong> and shorter walks; on stairs, go one step at a time or sideways.</li>
+<li><strong>Wear supportive shoes</strong> (skip unsupportive flip-flops).</li>
+<li><strong>Try a pelvic support belt</strong> during activity, worn for short periods - many moms find it steadying.</li>
+<li><strong>Ice over the pubic bone</strong> (frozen peas in a damp towel) for 10-20 minutes can calm a front-of-pelvis flare.</li>
+</ul>
+
+<h2>Will pelvic girdle pain affect my labor or birth?</h2>
+<p>Good news: PGP does <strong>not</strong> usually complicate labor, and most moms with it have a normal vaginal birth - a natural birth is still absolutely on the table. Two things help: <strong>tell your birth team you have PGP</strong> so they support your legs and help you change position, and consider a <strong>birthing pool</strong>, which takes the weight off your joints and lets you move more freely. Note your comfortable "knees apart" limit before labor so you can guide your team to positions that do not overstretch your pelvis.</p>
+
+<h2>Does pelvic girdle pain go away after birth?</h2>
+<p>For most moms, yes - it usually eases in the days and weeks after birth as your hormones and ligaments settle, with the majority resolving within 3-6 months. For some it lingers longer. If your pain is still limiting you at your postpartum check, or at any point it is interfering with daily life, that is your cue to see a pelvic health physiotherapist - persistent PGP responds well to treatment and is not something you have to just live with.</p>
+
+<h2>The Honest Part: When to Get Help</h2>
+<p>PGP is common, but "common" does not mean you should suffer through it. The single highest-value step - more than any exercise on this page - is seeing a <strong>women's health (pelvic) physiotherapist</strong>. They assess your exact pain pattern, show you which positions and movements to avoid for <em>your</em> body, and give you targeted exercises. Most moms improve significantly with the right guidance. If PGP is stopping you sleeping, walking, or getting through your day, ask your midwife or OB for a referral - early is better than late.</p>
+
+<h2>PGP FAQ</h2>
+<h3>Is pelvic girdle pain the same as SPD?</h3>
+<p>Essentially yes - SPD (symphysis pubis dysfunction) is the older term for pain specifically at the pubic joint at the front of your pelvis. "Pelvic girdle pain" is the current umbrella term that covers the front, back, and hips.</p>
+<h3>Can I still do a prenatal workout or use a birth ball with PGP?</h3>
+<p>Usually yes, as long as you keep movements gentle, symmetrical, and pain-free - a gentle, physio-designed prenatal routine and a birth ball are both good options. Skip wide-legged and high-impact moves, and stop anything that sharpens the pain. Our <a href="/blog/birth-ball-exercises-pregnancy">birth ball exercises guide</a> shows PGP-friendly moves.</p>
+<h3>Does a pelvic support belt actually help?</h3>
+<p>Many moms find one genuinely steadying during activity. Fit it correctly (snug over the pelvis, not the belly) and wear it for short stretches rather than all day, so your own muscles keep working too.</p>
+<h3>Is PGP harmful to my baby?</h3>
+<p>No. PGP is a joint and muscle issue for you - it does not harm your baby in any way. It is about your comfort and mobility, which absolutely still matter.</p>
+
+<h2>Gentle, Safe Movement That Respects Your Pelvis</h2>
+<p>Our physio-designed prenatal routines and <a href="/birth-ball-guide">Ultimate Birth Ball Guide</a> focus on exactly this kind of gentle, symmetrical, pelvis-friendly movement - and you can swap notes with moms going through the same thing in the <a href="/community">Catalyst Mom community</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
     title: 'Diastasis Recti Exercises: Rebuild Your Core After Baby',
     slug: 'diastasis-recti-exercises',
     tags: ['postpartum', 'fitness', 'core'],
