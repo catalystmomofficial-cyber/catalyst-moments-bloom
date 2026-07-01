@@ -492,219 +492,390 @@ export const WELLNESS_KNOWLEDGE_BASE: WellnessIssue[] = [
   }
 ];
 
-const analyzeUserMessage = (message: string, stage: MotherhoodStage | null) => {
-  const lowerMessage = message.toLowerCase();
-  
-  // Check for specific issues first
-  const matchingIssues = WELLNESS_KNOWLEDGE_BASE.filter(issue => 
-    issue.keywords.some(keyword => lowerMessage.includes(keyword)) &&
-    (!stage || issue.stages.includes(stage))
-  );
-  
-  // Detect question types
-  const isQuestionAboutPain = /pain|hurt|ache|sore|discomfort/.test(lowerMessage);
-  const isQuestionAboutExercise = /workout|exercise|move|activity|fitness/.test(lowerMessage);
-  const isQuestionAboutNutrition = /eat|food|diet|nutrition|meal|vitamin/.test(lowerMessage);
-  const isQuestionAboutMood = /feel|mood|sad|happy|anxious|depressed|stress/.test(lowerMessage);
-  const isQuestionAboutSleep = /sleep|tired|fatigue|rest|energy/.test(lowerMessage);
-  
+// ---------------------------------------------------------------------------
+// Intent Detection Engine
+// Classifies what the user actually wants → shapes a response that uses their
+// behavioral profile (stage, score, gaps) to feel personal and lead them forward.
+// ---------------------------------------------------------------------------
+
+export type CoachIntent =
+  | 'greeting'           // "hi", "hello", just opening the chat
+  | 'navigation'         // "where is X", "how do I find X"
+  | 'wellness_advice'    // specific health / symptom question
+  | 'emotional_support'  // overwhelmed, struggling, venting
+  | 'discovery'          // "what do you have for X", exploring options
+  | 'progress_check'     // "how am I doing", "what should I focus on"
+  | 'action_start'       // "I want to start X", "help me begin"
+  | 'affiliate';         // earn, refer, partner program
+
+interface IntentResult {
+  intent: CoachIntent;
+  confidence: 'high' | 'medium' | 'low';
+}
+
+export const detectIntent = (message: string): IntentResult => {
+  const m = message.toLowerCase().trim();
+
+  if (isAffiliateQuery(message))
+    return { intent: 'affiliate', confidence: 'high' };
+
+  if (isNavigationQuery(message))
+    return { intent: 'navigation', confidence: 'high' };
+
+  if (/overwhelm|can'?t cope|struggling|breaking down|crying|depressed|anxious|anxiety|scared|afraid|i feel lost|feel alone|nobody understand|hopeless|emotionally exhaust|burned? out|i can'?t do this/.test(m))
+    return { intent: 'emotional_support', confidence: 'high' };
+
+  if (/how am i doing|what should i focus|what'?s? next|where am i|my progress|am i on track|check.?in|how'?s? my (journey|progress|score)|weekly check/.test(m))
+    return { intent: 'progress_check', confidence: 'high' };
+
+  if (/i want to start|i'?m? ready|let'?s? start|help me start|how do i (begin|start|get started)|where do i start|get started/.test(m))
+    return { intent: 'action_start', confidence: 'high' };
+
+  if (/what (do you have|programs|courses|resources|options|can i do)|show me (all|what|your)|what'?s? available|what else (do you|is there)|what (other|more)/.test(m))
+    return { intent: 'discovery', confidence: 'high' };
+
+  if (/^(hi|hey|hello|good morning|good afternoon|good evening|howdy|yo|sup)[\s!?.]*$/.test(m) || m.length < 8)
+    return { intent: 'greeting', confidence: 'high' };
+
+  return { intent: 'wellness_advice', confidence: 'medium' };
+};
+
+// ---------------------------------------------------------------------------
+// Behavioral Context
+// Pulls from userProfile (stage, score, gaps, name) to personalize every
+// response — the coach always knows where the user IS and where to lead them.
+// ---------------------------------------------------------------------------
+
+interface BehavioralContext {
+  name: string;
+  stage: MotherhoodStage | null;
+  stageLabel: string;
+  primaryGap: string | null;
+  score: number | null;
+  stateDescription: string;
+  suggestedRoute: { label: string; route: string };
+}
+
+const toFirstName = (n: string) => n?.trim().split(/\s+/)[0] || 'mama';
+
+const STAGE_LABELS: Record<string, string> = {
+  pregnant: 'pregnancy',
+  postpartum: 'postpartum recovery',
+  ttc: 'TTC journey',
+};
+
+const buildBehavioralContext = (
+  stage: MotherhoodStage | null,
+  userProfile: any,
+): BehavioralContext => {
+  const name = toFirstName(userProfile?.display_name || userProfile?.name || 'mama');
+  const score: number | null = userProfile?.wellnessScore ?? userProfile?.score ?? null;
+  const gaps: string[] = userProfile?.gaps ?? [];
+  const primaryGap = gaps.length > 0 ? gaps[0] : null;
+
+  let stateDescription = 'on your wellness journey';
+  if (score !== null) {
+    if (score < 50) stateDescription = 'going through a tough stretch';
+    else if (score <= 75) stateDescription = 'building real momentum';
+    else stateDescription = 'in a strong rhythm';
+  }
+
+  // Best next step based on stage + primary gap
+  let suggestedRoute = { label: 'your Dashboard', route: '/dashboard' };
+  if (stage === 'pregnant') {
+    if (primaryGap === 'fitness') suggestedRoute = { label: 'Prenatal Workouts', route: '/workouts?stage=pregnancy' };
+    else if (primaryGap === 'nutrition') suggestedRoute = { label: 'Pregnancy Meal Plan', route: '/meal-plan?stage=pregnancy' };
+    else if (primaryGap === 'stress') suggestedRoute = { label: 'Self-Care Tools', route: '/wellness/self-care' };
+    else suggestedRoute = { label: 'Glow & Go Prenatal Program', route: '/programs/glow-and-go' };
+  } else if (stage === 'postpartum') {
+    if (primaryGap === 'recovery') suggestedRoute = { label: '30 Days Glow Up Challenge', route: '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9' };
+    else if (primaryGap === 'fitness') suggestedRoute = { label: 'Postpartum Workouts', route: '/workouts?stage=postpartum' };
+    else if (primaryGap === 'nutrition') suggestedRoute = { label: 'Postpartum Meal Plan', route: '/meal-plan?stage=postpartum' };
+    else if (primaryGap === 'stress') suggestedRoute = { label: 'Self-Care Tools', route: '/wellness/self-care' };
+    else suggestedRoute = { label: 'Core Restore Foundations', route: '/workouts/core-restore-foundations' };
+  } else if (stage === 'ttc') {
+    if (primaryGap === 'nutrition') suggestedRoute = { label: 'TTC Meal Plan', route: '/meal-plan?stage=ttc' };
+    else if (primaryGap === 'fitness') suggestedRoute = { label: 'TTC Workouts', route: '/workouts?stage=ttc' };
+    else if (primaryGap === 'stress') suggestedRoute = { label: 'Self-Care Tools', route: '/wellness/self-care' };
+    else suggestedRoute = { label: 'TTC Meal Plan', route: '/meal-plan?stage=ttc' };
+  }
+
   return {
-    matchingIssues,
-    categories: {
-      pain: isQuestionAboutPain,
-      exercise: isQuestionAboutExercise,
-      nutrition: isQuestionAboutNutrition,
-      mood: isQuestionAboutMood,
-      sleep: isQuestionAboutSleep
-    },
-    isVague: message.trim().length < 10 || 
-             /^(hi|hello|hey|help|what|how|can you)/.test(lowerMessage.trim())
+    name,
+    stage,
+    stageLabel: stage ? (STAGE_LABELS[stage] ?? stage) : 'wellness journey',
+    primaryGap,
+    score,
+    stateDescription,
+    suggestedRoute,
   };
 };
 
-const askClarifyingQuestions = (message: string, stage: MotherhoodStage | null) => {
-  const analysis = analyzeUserMessage(message, stage);
-  
-  if (analysis.isVague) {
-    const stageSpecificQuestions = getStageSpecificQuestions(stage);
-    return `I'd love to help you! To give you the best advice, could you tell me more about what you're experiencing? Here are some areas I can help with:\n\n${stageSpecificQuestions.join('\n')}\n\nWhat would you like to focus on today?`;
-  }
-  
-  if (analysis.categories.pain) {
-    return `I understand you're experiencing some discomfort. To help you better, could you tell me:\n\n• Where exactly are you feeling pain?\n• When did it start?\n• What makes it better or worse?\n• How would you rate the pain (1-10)?\n\nThis will help me give you more targeted advice.`;
-  }
-  
-  if (analysis.categories.exercise) {
-    return `Great question about exercise! To give you the best recommendations, could you share:\n\n• What type of activities are you currently doing?\n• Are you experiencing any limitations or concerns?\n• What are your fitness goals right now?\n• How much time do you have for workouts?\n\nThis will help me suggest the perfect program for you.`;
-  }
-  
-  if (analysis.categories.nutrition) {
-    return `Nutrition is so important! To provide the most helpful guidance, could you tell me:\n\n• Are you dealing with any specific symptoms (nausea, cravings, etc.)?\n• Do you have any dietary restrictions or preferences?\n• What's your biggest nutrition challenge right now?\n• Are you taking any supplements?\n\nThis will help me give you personalized nutrition advice.`;
-  }
-  
-  if (analysis.categories.mood) {
-    return `Thank you for sharing how you're feeling. Your mental wellness is just as important as your physical health. To better support you, could you tell me:\n\n• How long have you been feeling this way?\n• Are there specific triggers or times when you feel worse?\n• What usually helps you feel better?\n• Do you have support from family/friends?\n\nRemember, it's completely normal to have ups and downs during this journey.`;
-  }
-  
-  if (analysis.categories.sleep) {
-    return `Sleep challenges are so common! To help you get better rest, could you share:\n\n• What's making it hard to sleep?\n• How many hours are you currently getting?\n• Do you have a bedtime routine?\n• Are you comfortable physically when trying to sleep?\n\nLet's work together to improve your sleep quality.`;
-  }
-  
-  return `I want to make sure I understand your concern correctly. Could you tell me a bit more about what you're experiencing? The more details you can share, the better I can help you find the right solution.`;
+// ---------------------------------------------------------------------------
+// Wellness issue matching (used by wellness_advice intent)
+// ---------------------------------------------------------------------------
+
+const matchWellnessIssues = (message: string, stage: MotherhoodStage | null) =>
+  WELLNESS_KNOWLEDGE_BASE.filter(
+    issue =>
+      issue.keywords.some(kw => message.toLowerCase().includes(kw)) &&
+      (!stage || issue.stages.includes(stage)),
+  );
+
+// ---------------------------------------------------------------------------
+// Stage-aware discovery copy
+// ---------------------------------------------------------------------------
+
+const stageDiscovery = (stageLabel: string, stage: MotherhoodStage | null): string => {
+  if (stage === 'pregnant') return (
+    `• Glow & Go Prenatal Program (video workouts) → /programs/glow-and-go\n` +
+    `• Birth Ball Guide (labor prep) → /birth-ball-guide\n` +
+    `• Prenatal Workouts → /workouts?stage=pregnancy\n` +
+    `• Pregnancy Meal Plan → /meal-plan?stage=pregnancy\n` +
+    `• Self-Care Tools → /wellness/self-care\n` +
+    `• All Courses & Programs → /courses`
+  );
+  if (stage === 'postpartum') return (
+    `• 30 Days Glow Up Challenge (recovery) → /course/266ae389-409f-4847-9a10-e29a2f3eb3f9\n` +
+    `• Core Restore Foundations (core + pelvic floor) → /workouts/core-restore-foundations\n` +
+    `• Postpartum Workouts → /workouts?stage=postpartum\n` +
+    `• Postpartum Meal Plan → /meal-plan?stage=postpartum\n` +
+    `• Wellness Resources (guides & planners) → /wellness/resources\n` +
+    `• Self-Care Tools → /wellness/self-care\n` +
+    `• All Courses & Programs → /courses`
+  );
+  if (stage === 'ttc') return (
+    `• TTC Workouts → /workouts?stage=ttc\n` +
+    `• TTC Meal Plan → /meal-plan?stage=ttc\n` +
+    `• Self-Care Tools (stress & mindfulness) → /wellness/self-care\n` +
+    `• Wellness Resources (guides & planners) → /wellness/resources\n` +
+    `• All Courses & Programs → /courses`
+  );
+  return (
+    `• Workouts → /workouts\n` +
+    `• Meal Plans → /meal-plan\n` +
+    `• Courses & Programs → /courses\n` +
+    `• Wellness Resources → /wellness/resources\n` +
+    `• Self-Care Tools → /wellness/self-care`
+  );
 };
 
-const getStageSpecificQuestions = (stage: MotherhoodStage | null): string[] => {
-  if (stage === 'pregnant') {
-    return [
-      '• Physical discomfort or pain management',
-      '• Safe exercise and movement modifications', 
-      '• Pregnancy nutrition and supplements',
-      '• Managing pregnancy symptoms',
-      '• Preparing your body for birth'
-    ];
-  } else if (stage === 'postpartum') {
-    return [
-      '• Postpartum recovery and healing',
-      '• Core and pelvic floor rehabilitation',
-      '• Managing postpartum mood changes',
-      '• Returning to exercise safely',
-      '• Breastfeeding and nutrition support'
-    ];
-  } else if (stage === 'ttc') {
-    return [
-      '• Fertility-supporting nutrition',
-      '• Exercise recommendations while TTC',
-      '• Managing TTC stress and emotions',
-      '• Cycle tracking and optimization',
-      '• Preparing your body for pregnancy'
-    ];
-  }
-  
-  return [
-    '• Exercise and movement guidance',
-    '• Nutrition and meal planning',
-    '• Managing physical discomfort',
-    '• Sleep and energy optimization',
-    '• Mental wellness support'
-  ];
-};
+// ---------------------------------------------------------------------------
+// Main response generator
+// Intent → Behavioral context → Stage filter → Leading response
+// ---------------------------------------------------------------------------
 
 export const generateWellnessResponse = (
   message: string,
   stage: MotherhoodStage | null,
-  userProfile: any
+  userProfile: any,
 ): string => {
-  const analysis = analyzeUserMessage(message, stage);
+  const { intent } = detectIntent(message);
+  const ctx = buildBehavioralContext(stage, userProfile);
 
-  // ── Affiliate / Partner Program queries ──────────────────────────────────
-  if (isAffiliateQuery(message)) {
-    const af = AFFILIATE_CONTEXT;
-    return (
-      `As an active Catalyst Mom member, you can earn through our Partner Program — ` +
-      `it's one of the ways we let the community grow together.\n\n` +
-      `**Here's how it works:**\n` +
-      af.keyFacts.map(f => `• ${f}`).join('\n') +
-      `\n\n**Who is it for?**\n` +
-      af.whoItsFor.map(w => `• ${w}`).join('\n') +
-      `\n\n📍 **Apply here:** ${af.applyRoute}\n` +
-      `📍 **Track your earnings:** ${af.dashboardRoute}\n\n` +
-      `Would you like to know more about how to apply, or anything else about the program?`
-    );
-  }
+  switch (intent) {
 
-  // ── Navigation / "where is X" queries ──────────────────────────────────
-  // Check first so "where are the workouts" gets a direct link, not a clarifying
-  // question loop.
-  const navPage = findAppPage(message, stage);
-  const navQuery = isNavigationQuery(message);
-
-  if (navPage && (navQuery || analysis.isVague)) {
-    return (
-      `Here's where you can find that! 📍\n\n` +
-      `**${navPage.label}**\n${navPage.direction}\n\n` +
-      `You can also tap this link to go there directly: ${navPage.route}\n\n` +
-      `Is there anything else I can help you find?`
-    );
-  }
-
-  // ── Specific wellness issue match ─────────────────────────────────────
-  if (analysis.matchingIssues.length > 0) {
-    const issue = analysis.matchingIssues[0];
-    let response = `${issue.responses.explanation}\n\n`;
-
-    response += "Here's what I recommend:\n";
-    issue.responses.recommendations.forEach((rec, index) => {
-      response += `${index + 1}. ${rec}\n`;
-    });
-
-    if (issue.responses.programs) {
-      response += `\nPrograms that might help you:\n`;
-      issue.responses.programs.forEach(program => {
-        response += `• ${program}\n`;
-      });
+    // ── Partner / Affiliate ─────────────────────────────────────────────────
+    case 'affiliate': {
+      const af = AFFILIATE_CONTEXT;
+      return (
+        `${ctx.name}, as an active Catalyst Mom member you can also earn through our Partner Program — ` +
+        `it's how we let the community grow together.\n\n` +
+        `**Here's how it works:**\n` +
+        af.keyFacts.map(f => `• ${f}`).join('\n') +
+        `\n\n**Who is it for?**\n` +
+        af.whoItsFor.map(w => `• ${w}`).join('\n') +
+        `\n\n📍 Apply here → ${af.applyRoute}\n` +
+        `📍 Track your earnings → ${af.dashboardRoute}\n\n` +
+        `Would you like to know more, or is there something else on your mind?`
+      );
     }
 
-    if (issue.responses.modifications) {
-      response += `\nImportant modifications:\n`;
-      issue.responses.modifications.forEach(mod => {
-        response += `• ${mod}\n`;
-      });
+    // ── Navigation ──────────────────────────────────────────────────────────
+    case 'navigation': {
+      const navPage = findAppPage(message, stage);
+      if (navPage) {
+        return (
+          `Here's exactly where to find that, ${ctx.name}. 📍\n\n` +
+          `**${navPage.label}**\n${navPage.direction}\n` +
+          `→ ${navPage.route}\n\n` +
+          `Since you're ${ctx.stateDescription}, you might also want to check out **${ctx.suggestedRoute.label}** → ${ctx.suggestedRoute.route}\n\n` +
+          `Anything else I can help you find?`
+        );
+      }
+      return (
+        `I can point you right there! Could you give me a little more detail — ` +
+        `are you looking for a workout, a meal plan, a guide, or something else? I'll send you the direct link.`
+      );
     }
 
-    if (issue.responses.warning) {
-      response += `\n⚠️ Important: ${issue.responses.warning}`;
+    // ── Greeting ────────────────────────────────────────────────────────────
+    case 'greeting': {
+      const stageOpen: Record<string, string> = {
+        pregnant: `How is your pregnancy going? I'm here to support you through every step.`,
+        postpartum: `How are you feeling today? Recovery takes time — I'm here to help you pace it right.`,
+        ttc: `How's your TTC journey going this week? Let's keep you balanced and supported.`,
+      };
+      const open = stageOpen[stage ?? ''] ?? `How are you doing today? I'm here whenever you need support.`;
+      const gapLine = ctx.primaryGap
+        ? `Based on your profile, I'm keeping an eye on your **${ctx.primaryGap}** — that's where I think you'll get the most impact right now.`
+        : `I'm ready to help with whatever you need today.`;
+      return (
+        `Hi ${ctx.name}! ${open}\n\n${gapLine}\n\n` +
+        `Would you like a suggestion based on your profile, or is there something specific on your mind?`
+      );
     }
 
-    // If we also matched an app page, append a deep-link suggestion
-    if (navPage) {
-      response += `\n\n📍 **Find it in the app:** ${navPage.direction} → ${navPage.route}`;
+    // ── Emotional Support ───────────────────────────────────────────────────
+    case 'emotional_support': {
+      const stageSupport: Record<string, string> = {
+        pregnant: `Pregnancy can feel overwhelming — you are not failing, you are doing something incredibly hard.`,
+        postpartum: `The postpartum period is one of the most demanding seasons a woman goes through. What you're feeling is valid.`,
+        ttc: `The TTC journey carries so much emotional weight. It's okay to struggle with this.`,
+      };
+      const support = stageSupport[stage ?? ''] ?? `What you're feeling is valid. You don't have to push through everything alone.`;
+      return (
+        `${ctx.name}, I hear you. ${support}\n\n` +
+        `Please be gentle with yourself right now. A few things that can help:\n\n` +
+        `• Give yourself permission to rest — it's not laziness, it's recovery\n` +
+        `• Connect with other mamas who truly get it → /community\n` +
+        `• Our Self-Care tools can help you reset in just a few minutes → /wellness/self-care\n\n` +
+        `If you're feeling persistently overwhelmed or like you can't cope, please reach out to your healthcare provider — real support is available and asking for help is strength.\n\n` +
+        `I'm right here. What do you need most right now?`
+      );
     }
 
-    response += `\n\nIs there anything specific about this you'd like me to explain further?`;
-    return response;
+    // ── Progress Check ──────────────────────────────────────────────────────
+    case 'progress_check': {
+      const scoreMsg = ctx.score !== null
+        ? `Your wellness score is **${ctx.score}** — you're ${ctx.stateDescription}.`
+        : `Let's take a look at where you are.`;
+      const gapMsg = ctx.primaryGap
+        ? `Your biggest opportunity right now is **${ctx.primaryGap}** — a consistent small win here will have the most impact across your ${ctx.stageLabel}.`
+        : `You're covering your bases well.`;
+      return (
+        `${ctx.name}, here's your check-in. ${scoreMsg}\n\n` +
+        `${gapMsg}\n\n` +
+        `My recommendation for your ${ctx.stageLabel}: **${ctx.suggestedRoute.label}**\n` +
+        `→ ${ctx.suggestedRoute.route}\n\n` +
+        `You can also review your full history here → /progress\n\n` +
+        `What aspect of your journey would you like to dig into?`
+      );
+    }
+
+    // ── Action Start ────────────────────────────────────────────────────────
+    case 'action_start': {
+      const navPage = findAppPage(message, stage);
+      const target = navPage ?? ctx.suggestedRoute;
+      return (
+        `Let's go, ${ctx.name}! Love that energy.\n\n` +
+        `Based on your ${ctx.stageLabel}, the best place to start is:\n\n` +
+        `**${target.label}**\n→ ${target.route}\n\n` +
+        `To get the most out of it:\n` +
+        `• Set a consistent time — even 10–15 minutes daily builds real momentum\n` +
+        `• Notice how you feel after each session — those small wins compound\n` +
+        `• Track everything here → /progress\n\n` +
+        `Tap the link above and let's get started. I'm cheering you on.`
+      );
+    }
+
+    // ── Discovery ───────────────────────────────────────────────────────────
+    case 'discovery': {
+      return (
+        `Here's everything in Catalyst Mom for your ${ctx.stageLabel}, ${ctx.name}:\n\n` +
+        `${stageDiscovery(ctx.stageLabel, stage)}\n\n` +
+        `Based on your profile, I especially recommend starting with **${ctx.suggestedRoute.label}** → ${ctx.suggestedRoute.route}\n\n` +
+        `What sounds most useful to you right now?`
+      );
+    }
+
+    // ── Wellness Advice (default) ───────────────────────────────────────────
+    default:
+    case 'wellness_advice': {
+      const issues = matchWellnessIssues(message, stage);
+
+      if (issues.length > 0) {
+        const issue = issues[0];
+        let response = `${issue.responses.explanation}\n\n`;
+        response += `Here's what I recommend:\n`;
+        issue.responses.recommendations.forEach((rec, i) => { response += `${i + 1}. ${rec}\n`; });
+
+        if (issue.responses.programs?.length) {
+          response += `\nPrograms that can help:\n`;
+          issue.responses.programs.forEach(p => { response += `• ${p}\n`; });
+        }
+        if (issue.responses.modifications?.length) {
+          response += `\nKey modifications:\n`;
+          issue.responses.modifications.forEach(m => { response += `• ${m}\n`; });
+        }
+        if (issue.responses.warning) {
+          response += `\n⚠️ ${issue.responses.warning}`;
+        }
+
+        const navPage = findAppPage(message, stage);
+        if (navPage) {
+          response += `\n\n📍 **In the app:** ${navPage.direction} → ${navPage.route}`;
+        } else {
+          response += `\n\n📍 **Next step for your ${ctx.stageLabel}:** ${ctx.suggestedRoute.label} → ${ctx.suggestedRoute.route}`;
+        }
+        response += `\n\nAnything specific about this you'd like me to go deeper on?`;
+        return response;
+      }
+
+      // No specific match → ask a focused clarifying question
+      const m = message.toLowerCase();
+      if (/pain|hurt|ache|sore|discomfort/.test(m)) return `I want to help you with that. Can you tell me:\n• Where exactly are you feeling it?\n• Is it constant or does it come and go?\n• When did it start?\n\nThis will help me give you the right guidance for your ${ctx.stageLabel}.`;
+      if (/workout|exercise|move|fitness/.test(m)) return `Great — movement is so important for your ${ctx.stageLabel}. Can you share:\n• What you're currently doing?\n• Any concerns or limitations?\n• How much time you have?\n\nI'll point you to exactly the right program.`;
+      if (/eat|food|diet|nutrition|meal/.test(m)) return `Nutrition is a big lever in your ${ctx.stageLabel}. A couple of questions:\n• Any symptoms or restrictions I should know about?\n• What's your biggest nutrition challenge right now?\n\nI'll give you targeted advice.`;
+      if (/feel|mood|sad|anxious|stress/.test(m)) return `Your mental wellness matters just as much as your physical health. Could you tell me a bit more?\n• How long have you been feeling this way?\n• Is there a specific trigger?\n\nYou're not alone in this.`;
+      if (/sleep|tired|fatigue|rest/.test(m)) return `Sleep is so hard, especially during ${ctx.stageLabel}. A few questions:\n• What's making it hard to sleep?\n• How many hours are you getting?\n• Do you have a wind-down routine?\n\nLet's work on this together.`;
+
+      return (
+        `I want to make sure I help you with exactly the right thing. Could you give me a bit more detail?\n\n` +
+        `Here's what I can help you with for your ${ctx.stageLabel}:\n` +
+        `${stageDiscovery(ctx.stageLabel, stage)}\n\n` +
+        `What are you most focused on right now?`
+      );
+    }
   }
-
-  // ── Vague / category-only → clarifying questions ──────────────────────
-  if (analysis.isVague || !Object.values(analysis.categories).some(Boolean)) {
-    return askClarifyingQuestions(message, stage);
-  }
-
-  return askClarifyingQuestions(message, stage);
 };
 
 export const getQuickSuggestions = (stage: MotherhoodStage | null): string[] => {
-  const baseQuestions = [
-    "I'm feeling tired after workouts, what should I do?",
-    "Can you recommend some gentle stretches?",
-    "I have questions about nutrition",
-    "Help me with sleep strategies"
-  ];
-  
   if (stage === 'pregnant') {
     return [
+      "What programs do you have for pregnancy?",
       "I'm experiencing sciatica pain",
+      "Where's my meal plan?",
       "Safe exercises for my trimester?",
-      "Pregnancy nutrition guidance",
-      "Managing pregnancy fatigue",
-      ...baseQuestions.slice(0, 2)
-    ];
-  } else if (stage === 'postpartum') {
-    return [
-      "Core recovery after birth",
-      "Dealing with postpartum mood changes",
-      "When can I start exercising again?",
-      "Breastfeeding and exercise",
-      ...baseQuestions.slice(0, 2)
-    ];
-  } else if (stage === 'ttc') {
-    return [
-      "Fertility-supporting nutrition",
-      "Best exercises while TTC",
-      "Managing TTC stress",
-      "Cycle tracking and exercise",
-      ...baseQuestions.slice(0, 2)
+      "How am I doing on my wellness journey?",
+      "I'm feeling overwhelmed",
     ];
   }
-  
-  return baseQuestions;
+  if (stage === 'postpartum') {
+    return [
+      "What do you have for postpartum recovery?",
+      "How do I start the 30 Days Glow Up?",
+      "Where's my meal plan?",
+      "Core recovery after birth",
+      "I'm feeling overwhelmed",
+      "How am I doing?",
+    ];
+  }
+  if (stage === 'ttc') {
+    return [
+      "What do you have for TTC?",
+      "Fertility-supporting nutrition",
+      "Where's my meal plan?",
+      "I'm stressed about TTC",
+      "Best exercises while TTC",
+      "How am I doing?",
+    ];
+  }
+  return [
+    "What programs do you have?",
+    "How am I doing?",
+    "I want to get started",
+    "Where are my resources?",
+    "Help me with sleep",
+  ];
 };
