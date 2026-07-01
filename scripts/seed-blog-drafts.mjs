@@ -146,6 +146,78 @@ ${DISCLAIMER}`,
 ${DISCLAIMER}`,
   },
   {
+    title: 'Birth Ball Exercises for Pregnancy Pain & Birth Prep',
+    slug: 'birth-ball-exercises-pregnancy',
+    tags: ['pregnancy', 'birth ball', 'fitness'],
+    // TODO: set a real featured image in /admin before publishing (upload to the
+    // blog-images bucket — a pregnant mom sitting on a birth ball, 1200x630, subject centered).
+    featured_image_url: '',
+    excerpt: 'Sore hips, a tight back, and nervous about labor? Here is how a birth ball eases pregnancy pain now and helps prepare your body for birth - including with pelvic girdle pain.',
+    content: `
+<p>A first-time mom, 24 weeks along, messaged us: <em>"My hips and lower back are so sore, and I can't get comfortable sleeping on my sides. I want an all-natural birth without intervention, and honestly the whole pain part makes me nervous - I just want it to be as smooth as possible."</em> If that is you too, mama, a birth ball might be the most useful $30 you spend this pregnancy. Here is exactly how to use one - for the aches now, and for the birth ahead.</p>
+
+<h2>Is it safe to use a birth ball during pregnancy?</h2>
+<p>Yes, for most healthy pregnancies - and it is one of the few tools that helps in every trimester. Three safety basics: use an <strong>anti-burst</strong> ball (it will say so on the box), place it on carpet or a yoga mat (never a slick floor), and hold onto a wall, sofa, or partner the first few times until you feel steady. Get the right size so your hips sit level with or slightly above your knees. If you have any pregnancy complication, a history of preterm labor, or you are unsure, clear it with your midwife or OB first.</p>
+
+<h2>Can I use a birth ball if I have pelvic girdle pain (PGP)?</h2>
+<p>Often, yes - and gentle ball work is one of the go-to tools physiotherapists suggest for PGP, because it eases pressure on the pelvis and helps stabilise it. The key with PGP is <em>small, symmetrical, pain-free</em> movement: keep your knees no wider than hip-width, avoid anything that pulls your legs far apart, and stop any movement that sharpens the pain. Gentle seated pelvic circles and pelvic tilts are usually well tolerated. Because PGP varies so much person to person, a women's health physiotherapist is genuinely worth it - they can tailor this to your exact pain pattern.</p>
+
+<h2>What birth ball exercises ease hip and lower-back pain in pregnancy?</h2>
+<p>As your bump grows and your center of gravity shifts forward, your lower back and hips take the strain. A birth ball helps by keeping your pelvis mobile and your posture upright. Try these gently, a few minutes each:</p>
+<ul>
+<li><strong>Sit instead of slouch.</strong> Swapping your couch or desk chair for the ball for 20-30 minutes keeps your pelvis in a better position - often the single biggest relief for back ache.</li>
+<li><strong>Pelvic tilts.</strong> Sitting tall, gently tuck and release your pelvis (like a small forward/back rock). Eases lower-back tension.</li>
+<li><strong>Hip circles.</strong> Circle your hips slowly one way for a minute, then reverse. The classic move for loosening tight hips and pelvis.</li>
+<li><strong>Figure 8s.</strong> Trace a figure 8 with your hips - combines both directions and feels wonderful on a stiff lower back.</li>
+</ul>
+
+<h2>Can a birth ball help me sleep better in pregnancy?</h2>
+<p>Indirectly, yes - and a lot of moms notice it. A few minutes of gentle hip circles or pelvic tilts in the evening releases the pelvic and lower-back tension that makes side-sleeping so uncomfortable in the second and third trimesters. It will not replace a good pillow setup (a pillow between your knees and one supporting your bump still helps most), but easing that daytime stiffness often means less tossing at night.</p>
+
+<h2>How do I prepare for a natural birth with a birth ball?</h2>
+<p>If you are hoping to labor without an epidural, this is where the ball earns its keep. Wanting a natural birth and <em>preparing your body</em> for one are two different things - and the preparation is what gives you the best shot. Two evidence-backed reasons the ball helps:</p>
+<ul>
+<li><strong>Pain and coping.</strong> Randomized trials show using a birth ball in labor significantly <strong>reduces labor pain</strong> and eases anxiety, helping you feel more in control.</li>
+<li><strong>Staying upright and mobile.</strong> Cochrane research links staying upright and moving in early labor (which the ball makes easy) with a <strong>shorter first stage</strong> and a lower chance of needing an epidural or cesarean - for moms who have not already had an epidural.</li>
+</ul>
+<p>Practice the positions now so they feel automatic later: rocking and swaying through a contraction, leaning forward over the ball to rest between surges, and slow breathing to stay grounded.</p>
+
+<h2>Can a birth ball help reduce tearing?</h2>
+<p>It can help. Staying upright and mobile - instead of laboring flat on your back - keeps your pelvis open and your perineal muscles flexible, and upright positions are linked with a <strong>lower risk of perineal tearing</strong>. The birth ball is one of the easiest ways to stay in those positions. For the strongest protection, pair it with <strong>perineal massage from around 36 weeks</strong>, which research links to noticeably fewer tears - especially for first-time moms. No tool can promise a tear-free birth, but these two habits genuinely stack the odds in your favor.</p>
+
+<h2>When should I start using a birth ball, and for how long?</h2>
+<p>For comfort - sitting, pelvic tilts, hip circles - you can start <strong>any time</strong>; the sooner the better for back and hip relief. For active labor-encouraging movements (like firmer bouncing), wait until <strong>at least 37 weeks</strong> and clear it with your provider. Either way, short and frequent beats marathon sessions: 10-15 minutes a few times a day is plenty.</p>
+
+<h2>What size birth ball do I need?</h2>
+<p>Match the ball to your height so your hips sit level with or slightly above your knees when you sit:</p>
+<table>
+<thead><tr><th>Your height</th><th>Ball size</th></tr></thead>
+<tbody>
+<tr><td>Under 5'3"</td><td>55 cm</td></tr>
+<tr><td>5'4" - 5'9"</td><td>65 cm</td></tr>
+<tr><td>5'10" and taller</td><td>75 cm</td></tr>
+</tbody>
+</table>
+<p>More detail, plus anti-burst safety tips, in our <a href="/birth-ball-guide/buying-guide">birth ball buying guide</a>.</p>
+
+<h2>The Honest Part Most Blogs Skip</h2>
+<p>A birth ball is not magic, and we will never tell you it is. It will not guarantee a fast, painless, or tear-free birth - nothing can, and any brand promising that is selling you something. What it reliably <em>does</em> do is ease your aches now, keep you mobile, and give your body tools to cope and stay upright when labor comes. Those are real, research-backed benefits worth $30 - just hold the expectations honestly, and you will not be disappointed.</p>
+
+<h2>Birth Ball FAQ</h2>
+<h3>Is bouncing on a birth ball safe during pregnancy?</h3>
+<p>Gentle bouncing is safe for most healthy pregnancies once you are steady on the ball and using an anti-burst one on a non-slip surface. Keep it soft and rhythmic - think comfort, not intensity - and stop if you feel pain, dizziness, or notice reduced baby movement.</p>
+<h3>Does bouncing on a birth ball induce labor?</h3>
+<p>Not on its own - no movement starts labor before your body is ready. What ball work does is help create the conditions labor needs (an open pelvis, a well-positioned baby). We cover this fully in our guide to <a href="/blog/birth-ball-to-induce-labor">using a birth ball to help encourage labor</a>.</p>
+<h3>Can I use a regular yoga or exercise ball as a birth ball?</h3>
+<p>Yes - if it is anti-burst rated and the right size for your height, a quality exercise ball and a "birth ball" are the same product with different labels. Avoid cheap, thin-walled balls.</p>
+<h3>Should I get a birth ball or a peanut ball?</h3>
+<p>Most moms want the round birth ball - it works through pregnancy, labor, and postpartum. Peanut balls are a labor-only tool, mainly for resting positions with an epidural. Full comparison in our <a href="/blog/peanut-ball-vs-birth-ball">peanut ball vs birth ball guide</a>.</p>
+
+<h2>Ready to Start?</h2>
+<p>Our physio-designed <a href="/birth-ball-guide">Ultimate Birth Ball Guide</a> turns all of this into trimester-by-trimester routines with pictures and timers, an <a href="/birth-ball-guide/early-labor">early labor section</a>, and breathing practice - so you always know exactly what to do.</p>
+${DISCLAIMER}`,
+  },
+  {
     title: 'Diastasis Recti Exercises: Rebuild Your Core After Baby',
     slug: 'diastasis-recti-exercises',
     tags: ['postpartum', 'fitness', 'core'],
