@@ -190,7 +190,7 @@ const GlowAndGoPrenatalCard = () => {
         
         <div className="space-y-3 mb-6">
           {[
-            'Prepare your body for labor & birth',
+            'Prep your body for birth & help reduce tearing',
             'Strengthen pelvic floor safely', 
             'Trimester-specific guidance'
           ].map((benefit, index) => (
