@@ -340,7 +340,7 @@ export default function PostpartumGlowUpChallenge() {
             </div>
             <Progress value={progressPercentage} className="h-3" />
             <div className="text-xs text-muted-foreground">
-              {isCompleted ? 'Congratulations on completing the challenge!' : `${currentDay} of ${totalDays} days completed`}
+              {isCompleted ? 'Congratulations, mama — your strength base is back! Next up: Fit & Fierce Advanced Rebuild.' : `${currentDay} of ${totalDays} days completed`}
             </div>
           </div>
         )}

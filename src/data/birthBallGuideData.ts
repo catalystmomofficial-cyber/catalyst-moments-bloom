@@ -591,15 +591,15 @@ export const educationalContent = {
     ]
   },
   reducesTearing: {
-    title: "Why These Moves Help Reduce Tearing",
-    content: "These birth ball movements aren't just about comfort—they support your body in reducing the risk of tearing during delivery by:",
+    title: "Why These Moves Help You Prepare for Birth",
+    content: "These birth ball movements aren't just about comfort—they help prepare your body for labor by:",
     benefits: [
-      "Strengthening the pelvic floor for more controlled pushing",
-      "Encouraging baby into optimal position for smoother labor",
+      "Strengthening your pelvic floor to support pushing",
+      "Keeping you upright and mobile — the position your body labors best in",
       "Increasing hip mobility and pelvic flexibility",
-      "Teaching breath control and relaxation to reduce tension during contractions"
+      "Teaching breath control and relaxation to help you cope with contractions"
     ],
-    note: "Practicing these consistently (especially in the 3rd trimester) helps your body stay strong and responsive when it matters most."
+    note: "Practicing these consistently (especially in the 3rd trimester) helps your body stay strong, mobile, and responsive when it matters most."
   },
   earlyLabor: {
     title: "How to Use the Ball in Early Labor",

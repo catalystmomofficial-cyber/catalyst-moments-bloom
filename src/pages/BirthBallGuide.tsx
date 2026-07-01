@@ -94,7 +94,7 @@ const BirthBallGuide = () => {
     <PageLayout>
       <SEO 
         title="The Ultimate Birth Ball Guide - Safe Exercises for Every Trimester"
-        description="Complete birth ball guide with trimester-specific exercises, safety tips, and labor preparation techniques. Learn hip mobility, pelvic floor support, and reduce tearing risk."
+        description="Complete birth ball guide with trimester-specific exercises, safety tips, and labor preparation techniques. Learn hip mobility, pelvic floor support, and comfort positions for every trimester."
       />
 
       <div className="container px-4 mx-auto py-8">
