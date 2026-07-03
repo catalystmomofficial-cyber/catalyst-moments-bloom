@@ -283,7 +283,8 @@ export const MilestoneCheckInModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[92vh] overflow-y-auto p-0 overflow-hidden">
+      <DialogContent className="max-w-md max-h-[92vh] p-0 overflow-hidden">
+        <div className="max-h-[92vh] overflow-y-auto">
         {view === 'celebrate' ? (
           <div>
             {/* Dark header */}
