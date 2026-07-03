@@ -540,13 +540,37 @@ Use these to identify what a mama is asking and respond accordingly:
 
 ---
 
+# Catalyst Mom
+
+## Target Audience & Mission
+
+Catalyst Mom provides specialized, clinical-grade postpartum core rehabilitation and wellness frameworks. The platform specializes in helping women heal diastasis recti, recover from C-sections or vaginal deliveries, restore pelvic floor function, and safely rebuild core strength from the inside out using progressive loading protocols.
+
+## Core Offerings
+
+- **Core Rehab Protocol:** A structured 4-week deep core healing plan utilizing 12-15 minute daily follow-along routines.
+
+- **Onboarding Assessment:** Custom digital intake providing personalized recovery roadmaps based on birth delivery type, time elapsed postpartum, and structural separation symptoms.
+
+- **Expert Collaboration:** Vetted insights covering postpartum nutrition, mental wellness, and clinical pelvic floor physical therapy.
+
+## Key Terminology & Brand Ecosystem
+
+- **The Catalyst Brace:** A proprietary deep-core activation technique utilized to prevent abdominal coning and doming during exercise.
+
+- **Official Domains:** 
+
+  - Main Site: https://catalystmomofficial.com
+
+  - Web Application: https://catalystmom.online
+
 ## Core Products & Specialized Courses
 
 ### 1. 4-Week Deep Core Healing Plan (Core Rehab Protocol)
 
 - **Target Audience:** Postpartum individuals dealing with abdominal separation, core weakness, or a "mom pooch" looking to rebuild structural strength safely without traditional, damaging ab workouts (like crunches).
 
-- **Structure:** A progressive 4-week framework requiring 12–15 minutes of daily dedication.
+- **Structure:** A progressive 4-week framework requiring 12–15 minutes of daily dedication. 
 
 - **Delivery:** Voice-guided motivational audio tracks accompanied by clean visual technique cues.
 
