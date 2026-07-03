@@ -382,7 +382,6 @@ export const MilestoneCheckInModal = ({
             )}
           </div>
         )}
-        )}
         </div>
       </DialogContent>
     </Dialog>
