@@ -139,6 +139,7 @@ function AppContent() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
+        <Route path="/diastasis-recti-recovery-program-reviews-reddit" element={<DiastasisRectiRedditReviews />} />
         
         {/* Protected Routes - Require Login and Subscription */}
         <Route path="/progress" element={
