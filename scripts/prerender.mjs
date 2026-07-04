@@ -31,6 +31,7 @@ const ROUTES = [
   '/birth-ball-guide/safety',
   '/birth-ball-guide/faq',
   '/birth-ball-guide/education',
+  '/diastasis-recti-recovery-program-reviews-reddit',
 ];
 
 function waitForServer(url, timeoutMs = 30000) {

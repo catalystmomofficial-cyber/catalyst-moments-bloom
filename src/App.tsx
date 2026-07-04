@@ -76,6 +76,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import Unsubscribe from "./pages/Unsubscribe";
+import DiastasisRectiRedditReviews from "./pages/DiastasisRectiRedditReviews";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
 import SplashScreen from "./components/SplashScreen";
@@ -138,6 +139,7 @@ function AppContent() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
         <Route path="/unsubscribe" element={<Unsubscribe />} />
+        <Route path="/diastasis-recti-recovery-program-reviews-reddit" element={<DiastasisRectiRedditReviews />} />
         
         {/* Protected Routes - Require Login and Subscription */}
         <Route path="/progress" element={
