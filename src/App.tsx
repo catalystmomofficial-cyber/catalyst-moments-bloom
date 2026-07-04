@@ -76,6 +76,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import Unsubscribe from "./pages/Unsubscribe";
+import DiastasisRectiRedditReviews from "./pages/DiastasisRectiRedditReviews";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
 import SplashScreen from "./components/SplashScreen";
