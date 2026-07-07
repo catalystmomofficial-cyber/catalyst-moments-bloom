@@ -9,26 +9,20 @@ const corsHeaders = {
 
 const BASE_URL = 'https://catalystmomofficial.com';
 
+// Only publicly accessible pages (no login or subscription required)
 const STATIC_PAGES = [
-  { loc: '/',                             changefreq: 'daily',   priority: '1.0' },
-  { loc: '/blog',                         changefreq: 'daily',   priority: '0.9' },
-  { loc: '/about',                        changefreq: 'monthly', priority: '0.7' },
-  { loc: '/contact',                      changefreq: 'yearly',  priority: '0.4' },
-  { loc: '/medical-disclaimer',           changefreq: 'yearly',  priority: '0.3' },
-  { loc: '/experts',                      changefreq: 'monthly', priority: '0.7' },
-  { loc: '/research',                     changefreq: 'monthly', priority: '0.6' },
-  { loc: '/faq',                          changefreq: 'monthly', priority: '0.6' },
-  { loc: '/food-calories',               changefreq: 'weekly',  priority: '0.7' },
-  { loc: '/affiliate',                    changefreq: 'monthly', priority: '0.5' },
-  { loc: '/birth-ball-guide',            changefreq: 'monthly', priority: '0.7' },
-  { loc: '/birth-ball-guide/buying-guide',  changefreq: 'monthly', priority: '0.6' },
-  { loc: '/birth-ball-guide/education',  changefreq: 'monthly', priority: '0.6' },
-  { loc: '/birth-ball-guide/safety',     changefreq: 'monthly', priority: '0.6' },
-  { loc: '/birth-ball-guide/faq',        changefreq: 'monthly', priority: '0.6' },
-  { loc: '/birth-ball-guide/early-labor', changefreq: 'monthly', priority: '0.6' },
-  { loc: '/community',                   changefreq: 'daily',   priority: '0.7' },
-  { loc: '/terms',                       changefreq: 'yearly',  priority: '0.2' },
-  { loc: '/privacy',                     changefreq: 'yearly',  priority: '0.2' },
+  { loc: '/',                   changefreq: 'daily',   priority: '1.0' },
+  { loc: '/blog',               changefreq: 'daily',   priority: '0.9' },
+  { loc: '/about',              changefreq: 'monthly', priority: '0.7' },
+  { loc: '/contact',            changefreq: 'yearly',  priority: '0.4' },
+  { loc: '/medical-disclaimer', changefreq: 'yearly',  priority: '0.3' },
+  { loc: '/experts',            changefreq: 'monthly', priority: '0.7' },
+  { loc: '/research',           changefreq: 'monthly', priority: '0.6' },
+  { loc: '/faq',                changefreq: 'monthly', priority: '0.6' },
+  { loc: '/food-calories',      changefreq: 'weekly',  priority: '0.7' },
+  { loc: '/affiliate',          changefreq: 'monthly', priority: '0.5' },
+  { loc: '/terms',              changefreq: 'yearly',  priority: '0.2' },
+  { loc: '/privacy',            changefreq: 'yearly',  priority: '0.2' },
 ];
 
 serve(async (req) => {
@@ -52,16 +46,6 @@ serve(async (req) => {
 
     if (blogsError) throw blogsError;
 
-    // Fetch distinct community group slugs
-    const { data: groups, error: groupsError } = await supabase
-      .from('community_posts')
-      .select('group_slug')
-      .not('group_slug', 'is', null);
-
-    if (groupsError) throw groupsError;
-
-    const uniqueGroupSlugs = [...new Set((groups ?? []).map(g => g.group_slug).filter(Boolean))];
-
     const url = (loc: string, lastmod: string, changefreq: string, priority: string) =>
       `  <url>\n    <loc>${BASE_URL}${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
 
@@ -69,10 +53,6 @@ serve(async (req) => {
 
     const blogUrls = (blogs ?? []).map(b =>
       url(`/blog/${b.slug}`, b.updated_at || b.published_at, 'monthly', '0.7')
-    ).join('\n');
-
-    const groupUrls = uniqueGroupSlugs.map(slug =>
-      url(`/community/groups/${slug}`, currentDate, 'daily', '0.6')
     ).join('\n');
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -83,8 +63,6 @@ serve(async (req) => {
 ${staticUrls}
 
 ${blogUrls}
-
-${groupUrls}
 
 </urlset>`;
 

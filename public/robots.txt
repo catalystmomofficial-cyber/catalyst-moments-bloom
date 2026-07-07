@@ -6,6 +6,20 @@ Disallow: /dashboard
 Disallow: /profile
 Disallow: /reset-password
 Disallow: /forgot-password
+Disallow: /workouts
+Disallow: /wellness
+Disallow: /community
+Disallow: /meal-plan
+Disallow: /workout-plan
+Disallow: /questionnaire
+Disallow: /progress
+Disallow: /courses
+Disallow: /programs/
+Disallow: /birth-ball-guide/
+Disallow: /saved-
+Disallow: /affiliate/dashboard
+Disallow: /blog-preview
+Disallow: /assessment-results
 
 Sitemap: https://catalystmomofficial.com/sitemap.xml
 LLM-Context: /llms.txt
