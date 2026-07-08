@@ -156,6 +156,31 @@ export default {
 					to: {
 						transform: 'rotate(360deg)'
 					}
+				},
+				// The Breathing Signature — 10s cycle ≈ 6 breaths/min (4s inhale, 6s exhale),
+				// the calm-breathing pace taught in the Birth Ball breathing practice
+				'breathe': {
+					'0%, 100%': { transform: 'scale(1)' },
+					'40%': { transform: 'scale(1.055)' }
+				},
+				'breathe-glow': {
+					'0%': { boxShadow: '0 0 0 0 rgba(193, 127, 69, 0.38)' },
+					'40%': { boxShadow: '0 0 0 14px rgba(193, 127, 69, 0)' },
+					'100%': { boxShadow: '0 0 0 0 rgba(193, 127, 69, 0)' }
+				},
+				'breathe-loader': {
+					'0%, 100%': { transform: 'scale(0.72)' },
+					'40%': { transform: 'scale(1)' }
+				},
+				'breathe-label-in': {
+					'0%, 5%': { opacity: '0' },
+					'15%, 35%': { opacity: '1' },
+					'45%, 100%': { opacity: '0' }
+				},
+				'breathe-label-out': {
+					'0%, 45%': { opacity: '0' },
+					'55%, 85%': { opacity: '1' },
+					'95%, 100%': { opacity: '0' }
 				}
 			},
 			animation: {
@@ -166,7 +191,12 @@ export default {
 				'float': 'float 6s ease-in-out infinite',
 				'pulse-intense': 'pulse-intense 3s ease-in-out infinite',
 				'spin-slow': 'spin-slow 20s linear infinite',
-				'background-gradient': 'background-gradient var(--background-gradient-speed, 15s) cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite'
+				'background-gradient': 'background-gradient var(--background-gradient-speed, 15s) cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite',
+				'breathe': 'breathe 10s ease-in-out infinite',
+				'breathe-glow': 'breathe-glow 10s ease-in-out infinite',
+				'breathe-loader': 'breathe-loader 10s ease-in-out infinite',
+				'breathe-label-in': 'breathe-label-in 10s linear infinite',
+				'breathe-label-out': 'breathe-label-out 10s linear infinite'
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],

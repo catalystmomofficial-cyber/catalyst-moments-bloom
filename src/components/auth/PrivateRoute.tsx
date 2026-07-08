@@ -2,7 +2,7 @@
 import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2 } from "lucide-react";
+import BreathingLoader from "@/components/ui/breathing-loader";
 import { useDevBypass } from "@/hooks/useDevBypass";
 
 interface PrivateRouteProps {
@@ -21,7 +21,7 @@ const PrivateRoute = ({ children }: PrivateRouteProps) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <BreathingLoader />
       </div>
     );
   }
