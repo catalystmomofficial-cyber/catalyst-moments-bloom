@@ -470,6 +470,36 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_query_gaps: {
+        Row: {
+          created_at: string | null
+          gap_category: string | null
+          id: string
+          intent: string | null
+          message: string
+          stage: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          gap_category?: string | null
+          id?: string
+          intent?: string | null
+          message: string
+          stage?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          gap_category?: string | null
+          id?: string
+          intent?: string | null
+          message?: string
+          stage?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       community_post_comments: {
         Row: {
           content: string
