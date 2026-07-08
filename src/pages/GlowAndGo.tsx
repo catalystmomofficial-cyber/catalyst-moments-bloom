@@ -34,7 +34,7 @@ const GlowAndGo = () => {
     // Canonical tag
     const link = document.createElement("link");
     link.setAttribute("rel", "canonical");
-    link.setAttribute("href", window.location.href);
+    link.setAttribute("href", `${window.location.origin}${window.location.pathname}`);
     document.head.appendChild(link);
 
     // Meta description for SEO
