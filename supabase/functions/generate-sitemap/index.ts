@@ -21,6 +21,7 @@ const STATIC_PAGES = [
   { loc: '/faq',                changefreq: 'monthly', priority: '0.6' },
   { loc: '/food-calories',      changefreq: 'weekly',  priority: '0.7' },
   { loc: '/affiliate',          changefreq: 'monthly', priority: '0.5' },
+  { loc: '/diastasis-recti-recovery-program-reviews-reddit', changefreq: 'monthly', priority: '0.7' },
   { loc: '/terms',              changefreq: 'yearly',  priority: '0.2' },
   { loc: '/privacy',            changefreq: 'yearly',  priority: '0.2' },
 ];

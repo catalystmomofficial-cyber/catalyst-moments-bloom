@@ -95,11 +95,11 @@ function AppContent() {
         <Helmet>
           <title>Catalyst Mom | Wellness, Fitness & Nutrition</title>
           <meta name="description" content="Personalized wellness, fitness, and nutrition for moms. Join our community for workouts, meal plans, and support." />
-          <link rel="canonical" href={window.location.href} />
+          <link rel="canonical" href={`https://catalystmomofficial.com${window.location.pathname}`} />
           <meta property="og:type" content="website" />
           <meta property="og:title" content="Catalyst Mom | Wellness, Fitness & Nutrition" />
           <meta property="og:description" content="Personalized wellness, fitness, and nutrition for moms." />
-          <meta property="og:url" content={window.location.href} />
+          <meta property="og:url" content={`https://catalystmomofficial.com${window.location.pathname}`} />
           <script type="application/ld+json">{JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
