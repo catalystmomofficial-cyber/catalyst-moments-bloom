@@ -183,7 +183,7 @@ export default function CoreRestoreFoundationsCard() {
 
         <div className="absolute bottom-4 left-4 text-white">
           <h3 className="text-2xl font-bold">Core Restore Foundations</h3>
-          <p className="text-white/90">Safely close abdominal separation &amp; heal your floor</p>
+          <p className="text-white/90">Safely rebuild your deep core &amp; pelvic floor after birth</p>
         </div>
       </div>
 
@@ -241,7 +241,7 @@ export default function CoreRestoreFoundationsCard() {
 
         <div className="space-y-3 mb-6">
           {[
-            'Safe DR closure & deep core activation',
+            'DR-safe deep core reconnection & activation',
             'Pelvic-floor restoration techniques',
             'Zero crunches or planks — rehab progression',
           ].map((benefit, index) => (
