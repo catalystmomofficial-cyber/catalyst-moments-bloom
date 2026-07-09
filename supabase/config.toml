@@ -57,9 +57,6 @@ verify_jwt = true
 [functions.purchase-credits]
 verify_jwt = true
 
-[functions.add-credits]
-verify_jwt = false
-
 [functions.monthly-subscriber-credits]
 verify_jwt = false
 

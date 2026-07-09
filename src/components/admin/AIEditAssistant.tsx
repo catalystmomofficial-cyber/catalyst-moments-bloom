@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Sparkles, Loader2, Wand2, RotateCcw } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import DOMPurify from 'dompurify';
 
 interface AIEditAssistantProps {
   content: string;
@@ -150,7 +151,7 @@ export const AIEditAssistant: React.FC<AIEditAssistantProps> = ({ content, onApp
             <div className="max-h-48 overflow-y-auto rounded-md border bg-background p-3">
               <div 
                 className="prose prose-sm max-w-none dark:prose-invert"
-                dangerouslySetInnerHTML={{ __html: previewContent }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(previewContent, { ADD_ATTR: ['loading', 'decoding', 'id'] }) }}
               />
             </div>
           </div>

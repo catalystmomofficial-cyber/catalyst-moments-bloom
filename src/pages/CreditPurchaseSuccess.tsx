@@ -3,7 +3,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Coins, ArrowRight } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
 const CreditPurchaseSuccess = () => {
@@ -12,43 +11,26 @@ const CreditPurchaseSuccess = () => {
   const { toast } = useToast();
   const [processing, setProcessing] = useState(true);
   const [success, setSuccess] = useState(false);
-  
+
   const credits = searchParams.get('credits');
-  const userId = searchParams.get('user_id');
 
   useEffect(() => {
-    const addCredits = async () => {
-      if (!credits || !userId) {
-        setProcessing(false);
-        return;
-      }
+    // Credits are granted server-side by the signature-verified Stripe
+    // webhook (checkout.session.completed) reading the amount from Stripe's
+    // own metadata. The client no longer grants credits — the URL params are
+    // display-only and cannot be trusted to move balances.
+    if (!credits) {
+      setProcessing(false);
+      return;
+    }
 
-      try {
-        const { error } = await supabase.functions.invoke('add-credits', {
-          body: { user_id: userId, credits: parseInt(credits) }
-        });
-
-        if (error) throw error;
-
-        setSuccess(true);
-        toast({
-          title: "Credits Added!",
-          description: `${credits} credits have been added to your account.`,
-        });
-      } catch (error) {
-        console.error('Error adding credits:', error);
-        toast({
-          title: "Error",
-          description: "There was an issue adding your credits. Please contact support.",
-          variant: "destructive",
-        });
-      } finally {
-        setProcessing(false);
-      }
-    };
-
-    addCredits();
-  }, [credits, userId, toast]);
+    setSuccess(true);
+    setProcessing(false);
+    toast({
+      title: "Payment successful!",
+      description: `Your ${credits} credits will appear in your account momentarily.`,
+    });
+  }, [credits, toast]);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -77,8 +59,11 @@ const CreditPurchaseSuccess = () => {
                 <div className="flex items-center justify-center gap-2">
                   <Coins className="h-6 w-6 text-primary" />
                   <span className="text-2xl font-bold text-primary">{credits}</span>
-                  <span className="text-muted-foreground">credits added</span>
+                  <span className="text-muted-foreground">credits on the way</span>
                 </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Your credits are being added and will appear in your account within a moment.
+                </p>
               </div>
 
               <div className="space-y-3">

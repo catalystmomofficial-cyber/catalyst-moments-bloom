@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { isServiceOrAdmin, forbidden } from '../_shared/auth.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,6 +12,11 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Grants credits to every subscriber. Cron/service-role or admin only.
+    if (!(await isServiceOrAdmin(req))) {
+      return forbidden(corsHeaders, 403, 'Admin or service role required')
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseServiceKey)

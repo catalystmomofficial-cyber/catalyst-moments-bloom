@@ -156,6 +156,50 @@ serve(async (req) => {
     }
 
     const session = event.data.object as Stripe.Checkout.Session;
+
+    // One-time credit purchases: grant credits from the signature-verified
+    // Stripe metadata (set server-side in purchase-credits). The amount and
+    // user come from Stripe, never from client input. Idempotent against
+    // Stripe's webhook retries via the session id in the transaction record.
+    if (session.mode === "payment" && session.metadata?.credits && session.metadata?.user_id) {
+      const creditUserId = session.metadata.user_id;
+      const creditAmount = parseInt(session.metadata.credits, 10);
+      try {
+        if (!Number.isFinite(creditAmount) || creditAmount <= 0) {
+          log("Invalid credit amount in metadata", { sessionId: session.id, credits: session.metadata.credits });
+        } else if (session.payment_status !== "paid") {
+          log("Credit session not paid, skipping", { sessionId: session.id, payment_status: session.payment_status });
+        } else {
+          const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+          const { data: existing } = await admin
+            .from("points_transactions")
+            .select("id")
+            .eq("source", "stripe_purchase")
+            .ilike("description", `%${session.id}%`)
+            .maybeSingle();
+          if (existing) {
+            log("Credits already granted for session, skipping", { sessionId: session.id });
+          } else {
+            const { error: creditErr } = await admin.rpc("add_purchased_credits", {
+              p_user_id: creditUserId,
+              p_amount: creditAmount,
+              p_source: "stripe_purchase",
+              p_description: `Purchased ${creditAmount} wellness credits (session ${session.id})`,
+            });
+            if (creditErr) log("Credit grant failed", { sessionId: session.id, error: creditErr.message });
+            else log("Credits granted", { userId: creditUserId, creditAmount, sessionId: session.id });
+          }
+        }
+      } catch (e) {
+        log("Credit grant error", { err: String(e) });
+      }
+      // One-time credit purchase — not a subscription, so skip the welcome
+      // email / Omnisend sync below.
+      return new Response(JSON.stringify({ received: true, credits: true }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const email = session.customer_email || session.customer_details?.email;
     const fullName = session.customer_details?.name || "";
     const [firstName, ...rest] = fullName.split(" ");
