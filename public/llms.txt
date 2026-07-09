@@ -116,7 +116,7 @@ Principle: Slow tension-loaded control over momentum to target deep myofascial l
 - Payments: Stripe
 - Push notifications: Firebase Cloud Messaging (FCM)
 - AI integrations: OpenAI, ElevenLabs
-- Deployment: Netlify via GitHub auto-deployment
+- Deployment: Vercel via GitHub auto-deployment
 - Installable on mobile home screen — no app store required
 
 ### App Sections
