@@ -111,7 +111,7 @@ Principle: Slow tension-loaded control over momentum to target deep myofascial l
 - Cookie consent banner active
 
 ### App — catalystmomofficial.com
-- Progressive Web App (PWA) built with React/Vite via Lovable
+- Progressive Web App (PWA) built with React and Vite
 - Backend: Supabase
 - Payments: Stripe
 - Push notifications: Firebase Cloud Messaging (FCM)
