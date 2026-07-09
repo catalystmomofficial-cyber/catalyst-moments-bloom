@@ -29,7 +29,10 @@ import { QuickSelfCareIdeas } from '@/components/wellness/QuickSelfCareIdeas';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useContentFilter } from '@/hooks/useContentFilter';
 import { useAssessmentData } from '@/hooks/useAssessmentData';
+import { usePoints } from '@/hooks/usePoints';
+import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Plus } from 'lucide-react';
 
 const Wellness = () => {
   const [searchParams] = useSearchParams();
@@ -44,22 +47,49 @@ const Wellness = () => {
     const t = (searchParams.get('tab') || '').toLowerCase();
     if ((validTabs as readonly string[]).includes(t)) setActiveTab(t);
   }, [searchParams]);
-  const { wellnessEntries, wellnessScore, loading } = useWellnessData();
+  const {
+    wellnessEntries,
+    wellnessScore,
+    wellnessTrend,
+    loading,
+    addHydrationGlass,
+    hydrationGoal,
+  } = useWellnessData();
   const { currentJourney, currentStage } = useContentFilter();
   const { assessmentData, scoreNumber: assessmentScore, loading: assessmentLoading } = useAssessmentData();
-  
-  // Get latest wellness data for display
+  const { awardPoints } = usePoints();
+  const { toast } = useToast();
+
+  // Today's entry drives the daily summary cards; the latest entry (any day)
+  // is only used to decide whether the user has ever logged anything.
+  const isToday = (iso: string) => new Date(iso).toDateString() === new Date().toDateString();
+  const todayEntry = wellnessEntries.find((e) => isToday(e.created_at));
   const latestEntry = wellnessEntries[0];
-  // Use assessment score as baseline if user has no logged wellness data yet
-  const baselineFromAssessment = assessmentScore !== null && !latestEntry;
-  const moodDisplay = latestEntry
-    ? `${latestEntry.mood_score}/10`
+
+  // Use assessment score as a baseline only until the user logs a real mood today.
+  const baselineFromAssessment = assessmentScore !== null && todayEntry?.mood_score == null;
+  const moodDisplay = todayEntry?.mood_score != null
+    ? `${todayEntry.mood_score}/10`
     : baselineFromAssessment
       ? `${Math.round(assessmentScore!)}/100`
       : "Not tracked";
-  const sleepDisplay = latestEntry ? `${latestEntry.sleep_hours}h` : "Not tracked";
-  const selfCareDisplay = latestEntry ? (latestEntry.self_care_completed ? "✓ Done" : "Pending") : "Not tracked";
-  const hydrationDisplay = latestEntry ? `${latestEntry.hydration_glasses}/8` : "0/8";
+  const sleepDisplay = todayEntry?.sleep_hours != null ? `${todayEntry.sleep_hours}h` : "Not tracked";
+  const selfCareDisplay = todayEntry?.self_care_completed ? "✓ Done" : (todayEntry ? "Pending" : "Not tracked");
+  const hydrationGlasses = todayEntry?.hydration_glasses ?? 0;
+  const hydrationDisplay = `${hydrationGlasses}/${hydrationGoal}`;
+
+  const handleAddGlass = async () => {
+    const wasUnderGoal = hydrationGlasses < hydrationGoal;
+    const justHitGoal = hydrationGlasses + 1 === hydrationGoal;
+    await addHydrationGlass();
+    if (wasUnderGoal) await awardPoints(2, 'hydration', 'Logged a glass of water');
+    toast({
+      title: justHitGoal ? "Hydration goal reached! 💧" : "Glass logged 💧",
+      description: justHitGoal
+        ? `Nice work — ${hydrationGoal}/${hydrationGoal} glasses today.`
+        : `${hydrationGlasses + 1}/${hydrationGoal} glasses today.`,
+    });
+  };
   
   return (
     <PageLayout>
@@ -102,7 +132,7 @@ const Wellness = () => {
             title="Sleep"
             icon={<MoonStar className="h-5 w-5 text-primary" />}
             value={sleepDisplay}
-            trend={latestEntry ? "Last night's sleep" : "Log your sleep"}
+            trend={todayEntry?.sleep_hours != null ? "Last night's sleep" : "Log your sleep"}
             color="bg-blue-100 dark:bg-blue-950/40"
           />
           <WellnessQuickCard
@@ -118,6 +148,17 @@ const Wellness = () => {
             value={hydrationDisplay}
             trend="Glasses of water today"
             color="bg-blue-100 dark:bg-blue-950/40"
+            action={
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full mt-3"
+                onClick={handleAddGlass}
+                disabled={hydrationGlasses >= 20}
+              >
+                <Plus className="mr-1 h-4 w-4" /> Add a glass
+              </Button>
+            }
           />
         </div>
         
@@ -165,7 +206,13 @@ const Wellness = () => {
                           </div>
                         </div>
                         <div className="text-center text-sm text-muted-foreground">
-                          📈 Your wellness has improved 15% this week
+                          {wellnessTrend === 'up'
+                            ? '📈 Your wellness score is trending up — keep it going!'
+                            : wellnessTrend === 'down'
+                              ? '📉 A dip from last time — be gentle with yourself today.'
+                              : wellnessTrend === 'flat'
+                                ? '➡️ Holding steady — consistency is its own win.'
+                                : '✨ Keep logging daily to see your wellness trend.'}
                         </div>
                       </div>
                     ) : assessmentLoading ? (
@@ -342,10 +389,13 @@ const Wellness = () => {
                     <MoodCheckIn />
                   </div>
                   
-                  {wellnessEntries.length > 0 && (
+                  {wellnessEntries.some((e) => e.mood_score != null) && (
                     <div className="space-y-4">
                       <h3 className="font-semibold">Recent Mood Entries</h3>
-                      {wellnessEntries.slice(0, 3).map((entry) => (
+                      {wellnessEntries
+                        .filter((e) => e.mood_score != null)
+                        .slice(0, 3)
+                        .map((entry) => (
                         <div key={entry.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div>
                             <p className="font-medium">
@@ -421,9 +471,10 @@ interface WellnessQuickCardProps {
   value: React.ReactNode;
   trend: React.ReactNode;
   color: string;
+  action?: React.ReactNode;
 }
 
-const WellnessQuickCard = ({ title, icon, value, trend, color }: WellnessQuickCardProps) => (
+const WellnessQuickCard = ({ title, icon, value, trend, color, action }: WellnessQuickCardProps) => (
   <Card>
     <CardContent className="p-6">
       <div className="flex items-center justify-between mb-2">
@@ -434,6 +485,7 @@ const WellnessQuickCard = ({ title, icon, value, trend, color }: WellnessQuickCa
       </div>
       <h3 className="font-medium text-sm mb-1">{title}</h3>
       <p className="text-xs text-muted-foreground">{trend}</p>
+      {action}
     </CardContent>
   </Card>
 );
