@@ -180,9 +180,9 @@ const DiastasisRectiRedditReviews = () => {
           <p className="mb-6 leading-relaxed">
             At Catalyst Mom, we built our 4-Week Deep Core Healing Plan by
             directly engineering solutions to the exact limitations highlighted
-            in forum reviews. Unlike generic fitness apps, our clinical-grade
-            approach is designed for rapid, protective healing from the inside
-            out.
+            in forum reviews. Unlike generic fitness apps, our physio-designed,
+            evidence-based approach is designed to support safe core recovery
+            from the inside out.
           </p>
 
           <div className="overflow-x-auto rounded-lg border border-border">
