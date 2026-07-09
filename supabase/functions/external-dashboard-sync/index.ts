@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4';
 import { corsHeaders } from '../_shared/cors.ts';
+import { isServiceOrAdmin, forbidden } from '../_shared/auth.ts';
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL') ?? '',
@@ -40,6 +41,12 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Privileged: exposes platform-wide stats and can approve all affiliates.
+    // Only the service role (server-to-server sync) or an admin may call it.
+    if (!(await isServiceOrAdmin(req))) {
+      return forbidden(corsHeaders, 403, 'Admin or service role required');
+    }
+
     const body = await req.json().catch(() => ({}));
     const { action } = body;
 

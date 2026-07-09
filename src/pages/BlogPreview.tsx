@@ -484,7 +484,7 @@ export default function BlogPreview() {
                   prose-li:text-muted-foreground prose-li:mb-2
                   prose-strong:text-foreground prose-strong:font-semibold
                   prose-img:rounded-lg prose-img:shadow-md"
-                dangerouslySetInnerHTML={{ __html: blog.content }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content, { ADD_ATTR: ['loading', 'decoding', 'id'] }) }}
               />
             )}
           </CardContent>

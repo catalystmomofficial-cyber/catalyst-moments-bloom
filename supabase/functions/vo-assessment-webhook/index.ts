@@ -1,9 +1,10 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { checkSharedSecret, forbidden } from "../_shared/auth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-webhook-secret',
 };
 
 interface VoAssessmentData {
@@ -39,6 +40,14 @@ serve(async (req) => {
   try {
     console.log('Received assessment webhook request');
 
+    // If a shared secret is configured, require it. Set VO_WEBHOOK_SECRET in
+    // Supabase and have vo.app send it as the `x-webhook-secret` header to
+    // fully authenticate this webhook. (Returns null when unset — see below.)
+    const secretOk = checkSharedSecret(req, 'VO_WEBHOOK_SECRET');
+    if (secretOk === false) {
+      return forbidden(corsHeaders, 401, 'Invalid webhook secret');
+    }
+
     // Parse the incoming request
     const assessmentData: VoAssessmentData = await req.json();
     console.log('Assessment data received:', { 
@@ -66,17 +75,20 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if user exists by email
-    let userId = assessmentData.user_id;
-    
-    if (!userId) {
+    // Resolve the user strictly by the assessment email — never trust a
+    // client-supplied user_id. This webhook is unauthenticated by default, so
+    // accepting a body user_id would let anyone attach lead data to, and push
+    // notifications at, any account. The email lookup binds the record to the
+    // real owner of that address only.
+    let userId: string | undefined;
+    {
       const { data: existingUser, error: userError } = await supabase.auth.admin.getUserByEmail(
         assessmentData.email
       );
 
       if (!userError && existingUser?.user) {
         userId = existingUser.user.id;
-        console.log('Found existing user:', userId);
+        console.log('Found existing user for assessment email');
       } else {
         console.log('No existing user found, will create lead response without user_id');
       }

@@ -87,7 +87,7 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
   try {
-    const { title, body, image_url, url, user_ids, stages, requireAdmin } = await req.json();
+    const { title, body, image_url, url, user_ids, stages } = await req.json();
 
     if (!title || !body) {
       return new Response(JSON.stringify({ error: 'title and body required' }), {
@@ -96,34 +96,49 @@ serve(async (req) => {
       });
     }
 
-    // Optional admin check (for manual blasts)
-    if (requireAdmin) {
-      const authHeader = req.headers.get('Authorization');
-      if (!authHeader) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-          status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
+    const jsonResp = (status: number, payload: unknown) =>
+      new Response(JSON.stringify(payload), {
+        status,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+
+    // ---- Authorization (never trust the request to decide this) ----
+    // Legitimate callers:
+    //   1. Internal/cron functions using the service-role key -> full access
+    //   2. An authenticated admin -> full access (broadcasts, stage segments)
+    //   3. An authenticated user notifying ONLY themselves
+    //      (e.g. analyze-contractions forwards the user's own JWT)
+    const authHeader = req.headers.get('Authorization') || '';
+    const bearer = authHeader.replace(/^Bearer\s+/i, '');
+    const isServiceRole = bearer.length > 0 && bearer === SERVICE_ROLE;
+
+    let isAdmin = false;
+    let callerId: string | null = null;
+    if (!isServiceRole) {
+      if (!authHeader) return jsonResp(401, { error: 'Unauthorized' });
       const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
         headers: { apikey: ANON, Authorization: authHeader },
       });
-      if (!userRes.ok) {
-        return new Response(JSON.stringify({ error: 'Invalid token' }), {
-          status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
+      if (!userRes.ok) return jsonResp(401, { error: 'Invalid token' });
       const u = await userRes.json();
+      callerId = u.id;
       const adminRes = await sbFetch(
         `/rest/v1/admin_roles?user_id=eq.${u.id}&role=eq.admin&select=role`
       );
       const adminRows = await adminRes.json();
-      if (!Array.isArray(adminRows) || adminRows.length === 0) {
-        return new Response(JSON.stringify({ error: 'Admin only' }), {
-          status: 403,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+      isAdmin = Array.isArray(adminRows) && adminRows.length > 0;
+    }
+
+    // A non-admin, non-service caller may target only their own user id —
+    // no broadcasts, no stage segments, no other users.
+    if (!isServiceRole && !isAdmin) {
+      const onlySelf =
+        Array.isArray(user_ids) &&
+        user_ids.length > 0 &&
+        (!Array.isArray(stages) || stages.length === 0) &&
+        user_ids.every((id: string) => id === callerId);
+      if (!onlySelf) {
+        return jsonResp(403, { error: 'Not authorized to send to other users' });
       }
     }
 
