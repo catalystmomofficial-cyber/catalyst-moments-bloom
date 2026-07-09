@@ -166,6 +166,14 @@ export const TTCBloodworkModal = ({ open, onClose, onSave }: Props) => {
             <p className="text-xs text-muted-foreground text-center">
               Upload your lab results PDF and we'll fill in the fields for you
             </p>
+            <p className="text-[11px] leading-snug text-muted-foreground text-center">
+              Your PDF is processed securely to read your lab values and is used only to
+              fill in your results below — never sold or shared. Prefer not to upload? You
+              can enter every value by hand instead. See our{" "}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline">
+                Privacy Policy
+              </a>.
+            </p>
           </div>
 
           {/* Extraction banner */}
