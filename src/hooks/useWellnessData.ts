@@ -103,6 +103,56 @@ const upsertTodayLocal = (uid: string, patch: Partial<WellnessEntry>) => {
   broadcast();
 };
 
+// ─── One-time backfill: push pre-migration localStorage entries to Supabase ──
+const migratedKey = (uid: string) => `wellness_migrated_${uid}`;
+const backfilling = new Set<string>();
+
+const backfillLocalToServer = async (uid: string): Promise<boolean> => {
+  if (backfilling.has(uid)) return false;
+  if (localStorage.getItem(migratedKey(uid))) return false;
+
+  const local = readLocal(uid);
+  if (local.length === 0) {
+    localStorage.setItem(migratedKey(uid), '1');
+    return false;
+  }
+
+  backfilling.add(uid);
+  try {
+    // Which days already exist on the server? Never overwrite those.
+    const { data, error } = await wellnessTable().select('entry_date').eq('user_id', uid);
+    if (error) throw error;
+    const serverDates = new Set((data as { entry_date: string }[]).map((r) => r.entry_date));
+
+    const rows = local
+      .map((e) => ({
+        user_id: uid,
+        entry_date: localDateStr(new Date(e.created_at)),
+        mood_rating: e.mood_score,
+        energy_level: e.energy_level,
+        stress_level: e.stress_level,
+        sleep_hours: e.sleep_hours,
+        hydration_glasses: e.hydration_glasses ?? 0,
+        self_care_activities: e.self_care_completed ? ['completed'] : null,
+        notes: e.notes ?? null,
+      }))
+      .filter((r) => !serverDates.has(r.entry_date));
+
+    if (rows.length > 0) {
+      const { error: upErr } = await wellnessTable().upsert(rows, { onConflict: 'user_id,entry_date' });
+      if (upErr) throw upErr;
+    }
+
+    localStorage.setItem(migratedKey(uid), '1');
+    return rows.length > 0;
+  } catch {
+    // Server not ready (e.g. migration not applied yet) — retry on next load.
+    return false;
+  } finally {
+    backfilling.delete(uid);
+  }
+};
+
 export const useWellnessData = () => {
   const { user } = useAuth();
   const [wellnessEntries, setWellnessEntries] = useState<WellnessEntry[]>([]);
@@ -145,6 +195,9 @@ export const useWellnessData = () => {
     (async () => {
       await reload();
       if (!cancelled) setLoading(false);
+      // Move any pre-migration localStorage entries into Supabase (once).
+      const migrated = await backfillLocalToServer(user.id);
+      if (migrated && !cancelled) await reload();
     })();
 
     listeners.add(reload);
