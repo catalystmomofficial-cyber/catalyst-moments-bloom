@@ -27,7 +27,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               Whether you are trying to conceive, growing a baby, or healing postpartum Catalyst Mom gives you personalised fitness, nutrition, and a community that actually gets it.
             </p>
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
-              <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
+              <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90 animate-breathe-glow motion-reduce:animate-none">
                 <Link to="/dashboard">Get Started</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
@@ -39,7 +39,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="relative">
-              <div className="absolute -top-4 -left-4 w-64 h-64 bg-catalyst-copper/10 rounded-full animate-pulse-soft"></div>
+              <div className="absolute -top-4 -left-4 w-64 h-64 bg-catalyst-copper/10 rounded-full animate-breathe motion-reduce:animate-none"></div>
               <div className="absolute bottom-8 -right-8 w-40 h-40 bg-catalyst-copper/10 rounded-full animate-float"></div>
               <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
                 <AspectRatio ratio={4/5} className="bg-muted">
