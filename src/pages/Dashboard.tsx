@@ -360,7 +360,7 @@ const Dashboard = () => {
 
                     return (
                       <PlanCard
-                        title="30 Days Glow Up Challenge"
+                        title="Phase 2: Strength & Stamina"
                         category="Postpartum Recovery Program"
                         description={weekCopy[startWeek]}
                         completed={false}

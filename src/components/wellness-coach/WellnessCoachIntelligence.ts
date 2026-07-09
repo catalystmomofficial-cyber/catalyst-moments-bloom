@@ -155,10 +155,10 @@ export const APP_NAVIGATION_MAP: AppPage[] = [
     keywords: ['course', 'program', 'class', 'series', 'challenge', '30 day', 'glow up'],
   },
   {
-    label: 'Postpartum Recovery Program (30 Days Glow Up)',
+    label: 'Phase 2: Strength & Stamina (Postpartum)',
     route: '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9',
-    direction: 'Find the 30 Days Glow Up Challenge under Courses.',
-    keywords: ['30 days', 'glow up', 'postpartum recovery program', 'recovery challenge'],
+    direction: 'Find Phase 2: Strength & Stamina under Courses (the strength phase after Core Restore).',
+    keywords: ['30 days', 'glow up', 'phase 2', 'strength', 'stamina', 'postpartum recovery program', 'recovery challenge'],
     stages: ['postpartum'],
   },
 
@@ -228,10 +228,10 @@ export const APP_NAVIGATION_MAP: AppPage[] = [
     stages: ['pregnant'],
   },
   {
-    label: '30 Days Glow Up — Postpartum Recovery Challenge',
+    label: 'Phase 2: Strength & Stamina — Postpartum Recovery',
     route: '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9',
-    direction: 'Find the 30 Days Glow Up Challenge under Courses — a structured postpartum recovery program.',
-    keywords: ['30 day', '30 days', 'glow up', 'postpartum challenge', 'postpartum recovery program', 'postpartum course'],
+    direction: 'Find Phase 2: Strength & Stamina under Courses — the strength phase after Core Restore.',
+    keywords: ['30 day', '30 days', 'glow up', 'phase 2', 'strength', 'stamina', 'postpartum challenge', 'postpartum recovery program', 'postpartum course'],
     stages: ['postpartum'],
   },
   {
@@ -589,7 +589,7 @@ const buildBehavioralContext = (
     else if (primaryGap === 'stress') suggestedRoute = { label: 'Self-Care Tools', route: '/wellness/self-care' };
     else suggestedRoute = { label: 'Glow & Go Prenatal Program', route: '/programs/glow-and-go' };
   } else if (stage === 'postpartum') {
-    if (primaryGap === 'recovery') suggestedRoute = { label: '30 Days Glow Up Challenge', route: '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9' };
+    if (primaryGap === 'recovery') suggestedRoute = { label: 'Phase 2: Strength & Stamina', route: '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9' };
     else if (primaryGap === 'fitness') suggestedRoute = { label: 'Postpartum Workouts', route: '/workouts?stage=postpartum' };
     else if (primaryGap === 'nutrition') suggestedRoute = { label: 'Postpartum Meal Plan', route: '/meal-plan?stage=postpartum' };
     else if (primaryGap === 'stress') suggestedRoute = { label: 'Self-Care Tools', route: '/wellness/self-care' };
@@ -637,7 +637,7 @@ const stageDiscovery = (stageLabel: string, stage: MotherhoodStage | null): stri
     `• All Courses & Programs → /courses`
   );
   if (stage === 'postpartum') return (
-    `• 30 Days Glow Up Challenge (recovery) → /course/266ae389-409f-4847-9a10-e29a2f3eb3f9\n` +
+    `• Phase 2: Strength & Stamina (recovery) → /course/266ae389-409f-4847-9a10-e29a2f3eb3f9\n` +
     `• Core Restore Foundations (core + pelvic floor) → /workouts/core-restore-foundations\n` +
     `• Postpartum Workouts → /workouts?stage=postpartum\n` +
     `• Postpartum Meal Plan → /meal-plan?stage=postpartum\n` +
@@ -910,7 +910,7 @@ export const getQuickSuggestions = (stage: MotherhoodStage | null): string[] => 
   if (stage === 'postpartum') {
     return [
       "What do you have for postpartum recovery?",
-      "How do I start the 30 Days Glow Up?",
+      "How do I start Phase 2: Strength & Stamina?",
       "Where's my meal plan?",
       "Core recovery after birth",
       "I'm feeling overwhelmed",

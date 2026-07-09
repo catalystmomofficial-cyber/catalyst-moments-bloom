@@ -243,8 +243,7 @@ const Workouts = () => {
           
             <TabsContent value="quickWorkouts">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <PostpartumGlowUpChallenge />
-                {filteredWorkouts.filter(w => 
+                {filteredWorkouts.filter(w =>
                   w.category === 'Quick' || parseInt(w.duration) <= 15
                 ).map((workout) => (
                   <WorkoutCard 
@@ -285,6 +284,7 @@ const Workouts = () => {
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
               {isPostpartum && <CoreRestoreFoundationsCard />}
+              {isPostpartum && <PostpartumGlowUpChallenge />}
 
               {isToddler && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && null}
