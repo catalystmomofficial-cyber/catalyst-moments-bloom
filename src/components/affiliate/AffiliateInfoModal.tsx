@@ -18,15 +18,15 @@ const AffiliateInfoModal = ({ isOpen, onClose, onApply }: AffiliateInfoModalProp
           <DialogTitle className="text-2xl font-bold text-center">
             Join Catalyst Moms—Empower Moms,{" "}
             <span className="text-2xl font-bold" style={{ fontSize: "24px" }}>
-              Earn $29 Per Sale!
+              Earn $29 Per Referral!
             </span>
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 mt-6">
           <p className="text-center text-muted-foreground">
-            Why Join? Help moms glow up, share real stories, and earn a flat $35 every time someone signs up or
-            buys—subscription, course, or meal plan. Get templates, reels, and links to make it easy.
+            Why Join? Help moms on their journey, share real stories, and earn a flat $29 for every mama who
+            joins with your link and stays into her second month. Get templates, reels, and links to make it easy.
           </p>
 
           <div className="flex justify-center pt-4">
