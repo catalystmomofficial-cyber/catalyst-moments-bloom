@@ -121,7 +121,7 @@ export default function PostpartumGlowUpChallenge() {
     const completed = Math.max(0, (week - 1) * 7 + (day - 1));
     setLastActiveProgram({
       id: '30-days-glow-up-challenge',
-      name: '30 Days Glow Up Challenge',
+      name: 'Phase 2: Strength & Stamina',
       href: courseId ? `/course/${courseId}` : '/workouts',
       stage: 'postpartum',
       unit: 'days',
@@ -150,7 +150,7 @@ export default function PostpartumGlowUpChallenge() {
       const { data: courses, error: courseError } = await supabase
         .from('courses')
         .select('id')
-        .eq('title', '30 Days Glow Up Challenge')
+        .eq('id', '266ae389-409f-4847-9a10-e29a2f3eb3f9')
         .single();
 
       if (courseError) throw courseError;
@@ -189,7 +189,7 @@ export default function PostpartumGlowUpChallenge() {
       const { data: courses, error: courseError } = await supabase
         .from('courses')
         .select('id')
-        .eq('title', '30 Days Glow Up Challenge')
+        .eq('id', '266ae389-409f-4847-9a10-e29a2f3eb3f9')
         .single();
 
       if (courseError) throw courseError;
@@ -206,8 +206,8 @@ export default function PostpartumGlowUpChallenge() {
       if (error) throw error;
 
       toast({
-        title: "Welcome to the Challenge!",
-        description: "You've successfully joined the 30 Days Glow Up Challenge",
+        title: "Welcome to Phase 2!",
+        description: "You've successfully joined Phase 2: Strength & Stamina",
       });
 
       // Navigate to course detail page
@@ -273,13 +273,13 @@ export default function PostpartumGlowUpChallenge() {
       <div className="relative h-48 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400">
         <img 
           src={glowUpCover}
-          alt="30 Days Glow Up Challenge - Empowering postpartum fitness journey"
+          alt="Phase 2: Strength & Stamina - postpartum strength rebuild"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute top-4 left-4">
           <Badge className="bg-white/20 text-white border-white/30">
-            Featured Challenge
+            Phase 2 · Strength
           </Badge>
         </div>
         {isCompleted && (
@@ -288,8 +288,8 @@ export default function PostpartumGlowUpChallenge() {
           </div>
         )}
         <div className="absolute bottom-4 left-4 text-white">
-          <h3 className="text-2xl font-bold">30 Days Glow Up</h3>
-          <p className="text-white/90">Transform your postpartum journey</p>
+          <h3 className="text-2xl font-bold">Phase 2: Strength &amp; Stamina</h3>
+          <p className="text-white/90">Rebuild strength once your core is restored</p>
         </div>
       </div>
 
@@ -297,10 +297,10 @@ export default function PostpartumGlowUpChallenge() {
         <div className="flex items-start justify-between">
           <div>
             <CardTitle className="text-xl mb-2">
-              30 Days Glow Up Challenge
+              Phase 2: Strength &amp; Stamina
             </CardTitle>
             <CardDescription>
-              A structured 4-week program to safely rebuild strength after birth. Gentle, effective exercises designed specifically for your recovery journey.
+              The strength-building phase of your recovery. A structured 4-week program to safely rebuild strength and stamina after birth — best started once you've completed Phase 1 (Core Restore Foundations).
             </CardDescription>
           </div>
         </div>
@@ -397,7 +397,7 @@ export default function PostpartumGlowUpChallenge() {
           ) : (
             <>
               <ArrowRight className="h-4 w-4 mr-2" />
-              Start Your Glow Up
+              Start Phase 2
             </>
           )}
         </Button>

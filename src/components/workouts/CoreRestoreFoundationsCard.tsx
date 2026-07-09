@@ -177,7 +177,7 @@ export default function CoreRestoreFoundationsCard() {
         <div className="absolute top-4 left-4">
           <Badge className="bg-white/20 text-white border-white/30">
             <ShieldCheck className="h-3 w-3 mr-1" />
-            Featured Program
+            Phase 1 · Core Restore
           </Badge>
         </div>
 

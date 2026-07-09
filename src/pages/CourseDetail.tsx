@@ -201,10 +201,10 @@ export default function CourseDetail() {
       fetchCourseData();
 
       if (isLastDay) {
-        await awardPoints(50, 'course_complete', 'Completed the entire 30 Days Glow Up Challenge!');
+        await awardPoints(50, 'course_complete', 'Completed the entire Phase 2: Strength & Stamina program!');
         toast({
-          title: "🎉 Challenge Complete! +50 bonus points",
-          description: "Congratulations! You've completed the entire 30 Days Glow Up Challenge!",
+          title: "🎉 Phase 2 Complete! +50 bonus points",
+          description: "Congratulations! You've completed Phase 2: Strength & Stamina!",
         });
       }
     } catch (error) {
@@ -303,7 +303,7 @@ export default function CourseDetail() {
               <div className="h-64 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg overflow-hidden">
                 <img 
                   src={glowUpCover}
-                  alt="30 Days Glow Up Challenge - Transform your postpartum journey"
+                  alt="Phase 2: Strength & Stamina - postpartum strength rebuild"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/20"></div>
@@ -386,12 +386,12 @@ export default function CourseDetail() {
                       <div>
                         <h4 className="font-medium mb-3">What's Included</h4>
                         <ul className="space-y-2 text-sm text-muted-foreground">
-                          {course.title === "30 Days Glow Up Challenge" ? (
+                          {course.id === "266ae389-409f-4847-9a10-e29a2f3eb3f9" ? (
                             <>
                               <li>• Week 1: Foundation & gentle movement</li>
                               <li>• Week 2: Strength training & core recovery</li>
                               <li>• Week 3: Energy boosting & metabolism</li>
-                              <li>• Week 4: Full body glow up transformation</li>
+                              <li>• Week 4: Full-body strength & stamina</li>
                             </>
                           ) : (
                             <>

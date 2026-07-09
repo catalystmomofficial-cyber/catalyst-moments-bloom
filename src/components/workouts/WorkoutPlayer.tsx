@@ -272,7 +272,7 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
               <div>
                 <h3 className="text-xl font-bold text-green-800 dark:text-green-300">Workout Complete!</h3>
                 <p className="text-green-700 dark:text-green-300">
-                  Great job finishing Week {week}, Day {day}! You're one step closer to your glow up.
+                  Great job finishing Week {week}, Day {day}! You're one step closer to your goal.
                 </p>
               </div>
               <Button onClick={completeWorkout} className="bg-green-600 hover:bg-green-700">
