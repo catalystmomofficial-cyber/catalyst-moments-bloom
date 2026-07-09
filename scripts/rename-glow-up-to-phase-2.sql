@@ -7,13 +7,16 @@
 -- page header would otherwise show the old name. All app lookups were changed
 -- to key off the course id (not the title), so this rename is safe.
 --
--- Keyed by id, so it only touches this one course.
+-- Plain ASCII only (no special dashes/quotes) so it pastes cleanly.
 
 update public.courses
-set
-  title = 'Phase 2: Strength & Stamina',
-  description = 'The strength-building phase of your postpartum recovery. A structured 4-week program to safely rebuild strength and stamina after birth — best started once you have completed Phase 1 (Core Restore Foundations).'
+set title = 'Phase 2: Strength & Stamina',
+    description = 'The strength-building phase of your postpartum recovery. A structured 4-week program to safely rebuild strength and stamina after birth - best started once you have completed Phase 1 (Core Restore Foundations).'
 where id = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
 
--- Verify:
+-- Verify it worked (should return one row with the new title):
 -- select id, title from public.courses where id = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
+
+-- If the UPDATE reports "0 rows", the id is different in your database.
+-- Find the right id with this, then rerun the UPDATE with it:
+-- select id, title from public.courses where title ilike '%glow up%';
