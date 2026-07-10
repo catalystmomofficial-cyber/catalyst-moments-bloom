@@ -377,18 +377,7 @@ function drawOrb(){
   sg.addColorStop(.82,'rgba(130,16,0,.97)'); sg.addColorStop(1,'rgba(38,3,0,.9)');
   ot.beginPath(); ot.arc(cx,cy,R,0,Math.PI*2); ot.fillStyle=sg; ot.fill();
 
-  ot.save(); ot.globalCompositeOperation='multiply';
-  const sc=orbActive?8:4;
-  for(let i=0;i<sc;i++){
-    const sa=orbPhase*.65+i*Math.PI*2/sc+Math.sin(orbPhase+i)*.5;
-    const sr=R*(.3+Math.sin(orbPhase*2.5+i*1.7)*.27);
-    const ss=R*(.08+Math.abs(Math.sin(orbPhase*3+i))*.11);
-    const sdg=ot.createRadialGradient(cx+Math.cos(sa)*sr,cy+Math.sin(sa)*sr,0,cx+Math.cos(sa)*sr,cy+Math.sin(sa)*sr,ss);
-    sdg.addColorStop(0,'rgba(65,7,0,.72)'); sdg.addColorStop(1,'transparent');
-    ot.beginPath(); ot.arc(cx+Math.cos(sa)*sr,cy+Math.sin(sa)*sr,ss,0,Math.PI*2);
-    ot.fillStyle=sdg; ot.fill();
-  }
-  ot.restore();
+  // clean sphere — no turbulence smears
 
   if(orbActive){
     for(let i=0;i<8;i++){
@@ -591,6 +580,51 @@ function startVoice(){
 }
 micSt.addEventListener('click',()=>{ voiceLive=true; try{ recognition?recognition.start():startVoice(); }catch(_){ startVoice(); } });
 setTimeout(startVoice,3100);
+
+// ── Clap / sound-spike detection ──────────────────────
+let clapReady=false, lastClap=0;
+
+async function initClapDetection(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    const actx=new AudioContext();
+    const src=actx.createMediaStreamSource(stream);
+    const analyser=actx.createAnalyser();
+    analyser.fftSize=512;
+    src.connect(analyser);
+    const data=new Uint8Array(analyser.frequencyBinCount);
+    let prev=0;
+    clapReady=true;
+
+    function tick(){
+      analyser.getByteFrequencyData(data);
+      // Average energy across all frequency bins
+      const vol=data.reduce((a,b)=>a+b,0)/data.length;
+      // A clap = energy jumps from near-silence to loud in one frame
+      if(vol>55 && prev<18){
+        const now=Date.now();
+        if(now-lastClap>700){ // debounce 700ms
+          lastClap=now;
+          onWake();
+        }
+      }
+      prev=vol;
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }catch(_){ /* mic denied — clap detection unavailable */ }
+}
+
+function onWake(){
+  orbActive=true; orbSpeed=3.5;
+  setStatus('listening');
+  if(!voiceLive){ voiceLive=true; startVoice(); }
+  // flash the orb
+  setTimeout(()=>{ if(!voiceLive&&!orbActive){ orbActive=false; orbSpeed=1; } },3000);
+}
+
+// Start clap detection alongside voice (shares the same mic permission)
+setTimeout(initClapDetection,3400);
 
 // ── Sidebar nav ───────────────────────────────────────
 document.querySelectorAll('.nav-item').forEach(item=>{
