@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>JARVIS · Agent OS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#020407;--sidebar:rgba(3,5,10,0.97);--border:rgba(255,140,30,0.10);
+  --accent:#FF9030;--text:#EAD8B8;--muted:#4A3C2E;--dim:#1E1810;
+  --teal:#3ECFC4;--lavender:#B8A0FF;
+}
+html,body{width:100%;height:100vh;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;overflow:hidden;}
+
+/* Welcome */
+#welcome{position:fixed;inset:0;z-index:300;background:#020407;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  animation:w-exit .9s ease-in 2.6s forwards;}
+.w-orb{width:72px;height:72px;border-radius:50%;
+  background:radial-gradient(circle at 38% 36%,#FFD070,#FF5800 45%,#C01800 80%,#140600);
+  box-shadow:0 0 55px #FF480099,0 0 110px #FF300044;
+  opacity:0;animation:fadein .6s ease-out .2s forwards,wbreathe 2.2s ease-in-out .9s infinite;}
+.w-label{font-size:10px;font-weight:700;letter-spacing:.45em;text-transform:uppercase;color:var(--accent);opacity:0;animation:fadein .5s ease-out .65s forwards;}
+.w-name{font-size:32px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text);opacity:0;animation:fadein .5s ease-out .9s forwards;}
+.w-boot{font-size:8px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;opacity:0;animation:fadein .5s ease-out 1.4s forwards;}
+@keyframes fadein{to{opacity:1;}}
+@keyframes wbreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+@keyframes w-exit{to{opacity:0;pointer-events:none;}}
+
+/* Shell */
+#app{display:grid;grid-template-columns:176px 1fr;height:100vh;width:100vw;}
+
+/* Sidebar */
+#sidebar{display:flex;flex-direction:column;background:var(--sidebar);
+  border-right:1px solid var(--border);padding:20px 0;z-index:20;backdrop-filter:blur(24px);}
+.logo-wrap{display:flex;align-items:center;gap:10px;padding:0 16px 20px;border-bottom:1px solid var(--border);}
+.logo-orb{width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:radial-gradient(circle at 38% 36%,#FFD060,#FF4800 55%,#880000);
+  box-shadow:0 0 12px #FF580088;animation:lpulse 2.8s ease-in-out infinite;}
+@keyframes lpulse{0%,100%{box-shadow:0 0 12px #FF580088;}50%{box-shadow:0 0 22px #FF5800cc;}}
+.logo-text{font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--text);}
+.logo-sub{font-size:7px;letter-spacing:.12em;color:var(--muted);margin-top:2px;text-transform:uppercase;}
+.nav{flex:1;padding:12px 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;
+  font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);border-left:2px solid transparent;transition:all .16s;}
+.nav-item:hover{color:rgba(234,216,184,.55);}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(255,144,48,.06);}
+.nav-icon{font-size:13px;width:17px;text-align:center;flex-shrink:0;}
+.nav-sep{height:1px;background:var(--border);margin:10px 0;}
+.proj-section{padding:8px 0;}
+.proj-sec-label{font-size:7px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--dim);padding:0 16px 6px;}
+.proj-item{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;
+  font-size:10px;font-weight:600;letter-spacing:.05em;color:var(--muted);transition:all .16s;}
+.proj-item:hover{color:rgba(234,216,184,.55);}
+.proj-item.active{color:var(--accent);}
+.proj-pip{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.conn-badge{margin:0 12px 0;padding:10px 12px;background:rgba(255,144,48,.04);
+  border:1px solid var(--border);border-radius:8px;}
+.conn-top{display:flex;align-items:center;gap:6px;margin-bottom:2px;}
+.conn-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);
+  box-shadow:0 0 5px var(--teal);animation:blink 2.2s ease-in-out infinite;}
+.conn-dot.offline{background:var(--muted);box-shadow:none;animation:none;}
+.conn-label{font-size:7px;font-weight:700;letter-spacing:.16em;color:var(--teal);text-transform:uppercase;}
+.conn-label.offline{color:var(--muted);}
+.conn-sub{font-size:7px;letter-spacing:.08em;color:var(--dim);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+
+/* Stage */
+#stage{position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;overflow:hidden;}
+#starfield{position:absolute;inset:0;z-index:0;}
+#topbar-r{position:absolute;top:0;right:0;padding:16px 22px;text-align:right;z-index:20;}
+#time-display{font-size:22px;font-weight:200;letter-spacing:.04em;color:var(--text);}
+#date-display{font-size:8px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+#greeting{position:absolute;top:32px;left:0;right:0;text-align:center;z-index:10;pointer-events:none;}
+#greeting-main{font-size:20px;font-weight:300;letter-spacing:.05em;color:var(--text);}
+#greeting-sub{font-size:8px;font-weight:600;letter-spacing:.38em;color:var(--muted);text-transform:uppercase;margin-top:5px;}
+
+/* Status line */
+#status-line{position:absolute;top:88px;left:0;right:0;text-align:center;z-index:20;pointer-events:none;}
+#status-text{display:inline-flex;align-items:center;gap:7px;
+  font-size:10px;font-weight:700;letter-spacing:.40em;text-transform:uppercase;
+  color:var(--muted);transition:color .3s;}
+#status-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:background .3s,box-shadow .3s;}
+#status-text.listening{color:var(--teal);}
+#status-text.listening #status-dot{background:var(--teal);box-shadow:0 0 8px var(--teal);animation:blink 1.1s ease-in-out infinite;}
+#status-text.speaking{color:var(--accent);}
+#status-text.speaking #status-dot{background:var(--accent);box-shadow:0 0 8px var(--accent);animation:blink .8s ease-in-out infinite;}
+#status-text.thinking{color:var(--lavender);}
+#status-text.thinking #status-dot{background:var(--lavender);box-shadow:0 0 8px var(--lavender);animation:blink .5s ease-in-out infinite;}
+
+/* Orb */
+#orb{position:relative;z-index:5;display:block;}
+
+/* Response text */
+#response-area{position:absolute;bottom:100px;left:0;right:0;text-align:center;z-index:10;pointer-events:none;padding:0 90px;}
+#resp{font-size:13px;font-weight:300;letter-spacing:.04em;color:rgba(234,216,184,.28);
+  min-height:20px;font-style:italic;transition:color .4s;max-height:80px;overflow:hidden;}
+#resp.lit{color:rgba(234,216,184,.82);}
+
+/* CLI bar */
+#cli{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:20;
+  width:400px;max-width:74%;background:rgba(8,5,2,.78);
+  border:1px solid rgba(255,140,30,.14);border-radius:30px;
+  display:flex;align-items:center;gap:10px;padding:0 18px;height:42px;
+  backdrop-filter:blur(18px);transition:border-color .2s,box-shadow .2s;}
+#cli:focus-within{border-color:rgba(255,140,30,.38);box-shadow:0 0 20px rgba(255,140,30,.09);}
+.cli-p{font-size:13px;color:var(--accent);font-family:monospace;flex-shrink:0;}
+#cli-in{flex:1;background:none;border:none;outline:none;font-size:12px;color:var(--text);
+  caret-color:var(--accent);letter-spacing:.03em;}
+#cli-in::placeholder{color:var(--dim);}
+
+/* Mic status */
+#mic-st{position:absolute;bottom:32px;left:24px;z-index:10;
+  font-size:7px;letter-spacing:.20em;text-transform:uppercase;
+  color:var(--dim);cursor:pointer;user-select:none;transition:color .25s;}
+#mic-st:hover{color:var(--muted);}
+#mic-st.on{color:var(--teal);}
+
+/* Stats widget */
+#stats-widget{position:absolute;top:50%;right:-360px;transform:translateY(-50%);
+  z-index:50;width:295px;
+  background:rgba(3,5,10,0.97);border:1px solid rgba(255,140,30,0.16);
+  border-radius:14px;padding:18px;backdrop-filter:blur(28px);
+  transition:right .42s cubic-bezier(.22,.8,.32,1);}
+#stats-widget.open{right:18px;}
+.sw-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sw-title{font-size:8px;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);}
+.sw-close{font-size:14px;color:var(--muted);cursor:pointer;padding:2px 4px;transition:color .15s;}
+.sw-close:hover{color:var(--text);}
+.sw-tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.sw-tile{background:rgba(255,140,30,.05);border:1px solid rgba(255,140,30,.10);border-radius:8px;padding:10px 12px;}
+.sw-val{font-size:18px;font-weight:700;color:var(--text);line-height:1;}
+.sw-lbl{font-size:7px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.sw-delta{font-size:8px;margin-top:4px;color:var(--teal);}
+.sw-delta.neg{color:#FF7B72;}
+.sw-sec-head{font-size:7px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.sw-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.sw-bar-label{font-size:8px;color:var(--muted);width:80px;flex-shrink:0;}
+.sw-bar-track{flex:1;height:3px;background:rgba(255,140,30,.10);border-radius:2px;overflow:hidden;}
+.sw-bar-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 1s ease-out .3s;}
+.sw-bar-fill.green{background:var(--teal);}
+.sw-bar-fill.red{background:#FF7B72;}
+.sw-recs{margin-top:10px;}
+.sw-rec{display:flex;gap:7px;align-items:flex-start;margin-bottom:7px;}
+.sw-rec-num{font-size:8px;font-weight:700;color:var(--accent);min-width:12px;margin-top:1px;}
+.sw-rec-text{font-size:8px;color:rgba(234,216,184,.65);line-height:1.5;}
+.sw-stream{font-size:9px;color:rgba(234,216,184,.55);line-height:1.7;
+  max-height:200px;overflow-y:auto;padding-top:6px;white-space:pre-wrap;word-break:break-word;}
+.sw-syncing{text-align:center;padding:24px 0;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.sw-sync-dot{display:inline-block;width:4px;height:4px;border-radius:50%;
+  background:var(--accent);margin:0 2px;animation:sw-bounce .9s ease-in-out infinite;}
+.sw-sync-dot:nth-child(2){animation-delay:.15s;}.sw-sync-dot:nth-child(3){animation-delay:.30s;}
+@keyframes sw-bounce{0%,100%{transform:translateY(0);opacity:.4;}50%{transform:translateY(-4px);opacity:1;}}
+</style>
+</head>
+<body>
+
+<!-- Welcome -->
+<div id="welcome">
+  <div class="w-orb"></div>
+  <div class="w-label">Agent OS</div>
+  <div class="w-name">JARVIS</div>
+  <div class="w-boot">Systems online · Claude Code connected</div>
+</div>
+
+<div id="app">
+  <nav id="sidebar">
+    <div class="logo-wrap">
+      <div class="logo-orb"></div>
+      <div><div class="logo-text">JARVIS</div><div class="logo-sub">Agent OS</div></div>
+    </div>
+    <div class="nav">
+      <div class="nav-item active"><span class="nav-icon">⌂</span>Home</div>
+      <div class="nav-item"><span class="nav-icon">☑</span>Tasks</div>
+      <div class="nav-item"><span class="nav-icon">◎</span>Weather</div>
+      <div class="nav-item"><span class="nav-icon">⚙</span>Settings</div>
+      <div class="nav-sep"></div>
+      <div class="proj-section">
+        <div class="proj-sec-label">Projects</div>
+        <div class="proj-item active" data-id="catalyst">
+          <span class="proj-pip" style="background:#FFA040;box-shadow:0 0 4px #FFA040;"></span>Catalyst Mom
+        </div>
+        <div class="proj-item" data-id="cortex">
+          <span class="proj-pip" style="background:#8B6FFF;"></span>Cortex
+        </div>
+        <div class="proj-item" data-id="meridian">
+          <span class="proj-pip" style="background:#3ECFC4;"></span>Meridian
+        </div>
+      </div>
+    </div>
+    <div class="conn-badge">
+      <div class="conn-top">
+        <div class="conn-dot" id="conn-dot"></div>
+        <div class="conn-label" id="conn-label">Connecting…</div>
+      </div>
+      <div class="conn-sub" id="conn-sub">Claude Code bridge</div>
+    </div>
+  </nav>
+
+  <main id="stage">
+    <canvas id="starfield"></canvas>
+    <div id="topbar-r">
+      <div id="time-display"></div>
+      <div id="date-display"></div>
+    </div>
+    <div id="greeting">
+      <div id="greeting-main">Good afternoon.</div>
+      <div id="greeting-sub">How can I assist you today?</div>
+    </div>
+    <div id="status-line">
+      <span id="status-text">
+        <span id="status-dot"></span>
+        <span id="status-word">STANDBY</span>
+      </span>
+    </div>
+
+    <canvas id="orb" width="400" height="400"></canvas>
+
+    <div id="response-area"><div id="resp"></div></div>
+    <div id="mic-st">MIC OFF</div>
+    <div id="cli">
+      <span class="cli-p">›</span>
+      <input id="cli-in" type="text" placeholder="Speak or type a command…" autocomplete="off"/>
+    </div>
+
+    <!-- Stats widget -->
+    <div id="stats-widget">
+      <div class="sw-head">
+        <span class="sw-title">Social Intelligence</span>
+        <span class="sw-close" id="sw-close">✕</span>
+      </div>
+      <div id="sw-body">
+        <div class="sw-syncing">
+          <span class="sw-sync-dot"></span><span class="sw-sync-dot"></span><span class="sw-sync-dot"></span>
+          <div style="margin-top:10px;">Pulling live data…</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────
+const BRIDGE = 'http://localhost:3000';
+let bridgeOnline = false;
+
+// ── Bridge health check ───────────────────────────────
+function checkBridge(){
+  fetch(BRIDGE + '/command', { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ cmd: 'echo JARVIS_PING' }),
+    signal: AbortSignal.timeout(2500)
+  }).then(r => {
+    bridgeOnline = r.ok || r.status === 200;
+    setBridgeStatus(true);
+  }).catch(() => {
+    bridgeOnline = false;
+    setBridgeStatus(false);
+  });
+}
+
+function setBridgeStatus(online){
+  const dot = document.getElementById('conn-dot');
+  const lbl = document.getElementById('conn-label');
+  const sub = document.getElementById('conn-sub');
+  if(online){
+    dot.className='conn-dot'; lbl.className='conn-label';
+    lbl.textContent='Connected'; sub.textContent='Claude Code · Active';
+  } else {
+    dot.className='conn-dot offline'; lbl.className='conn-label offline';
+    lbl.textContent='Offline'; sub.textContent='Start bridge.js locally';
+  }
+}
+
+// Check every 10 seconds
+checkBridge();
+setInterval(checkBridge, 10000);
+
+// ── Projects ──────────────────────────────────────────
+const PROJECTS = { catalyst:{name:'Catalyst Mom'}, cortex:{name:'Cortex'}, meridian:{name:'Meridian Leisure'} };
+let activeProj = 'catalyst';
+
+// ── Clock ─────────────────────────────────────────────
+function updateClock(){
+  const n=new Date(), h=n.getHours(), m=n.getMinutes();
+  document.getElementById('time-display').textContent=`${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`;
+  const D=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const Mo=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('date-display').textContent=`${D[n.getDay()]}, ${Mo[n.getMonth()]} ${n.getDate()}`;
+  document.getElementById('greeting-main').textContent=h<12?'Good morning.':h<17?'Good afternoon.':'Good evening.';
+}
+setInterval(updateClock,1000); updateClock();
+
+// ── Stars ─────────────────────────────────────────────
+(function(){
+  const c=document.getElementById('starfield'), g=c.getContext('2d');
+  function draw(){
+    c.width=c.parentElement.clientWidth; c.height=c.parentElement.clientHeight;
+    for(let i=0;i<180;i++){
+      const x=Math.random()*c.width, y=Math.random()*c.height;
+      g.beginPath(); g.arc(x,y,Math.random()*.8+.1,0,Math.PI*2);
+      g.fillStyle=`rgba(255,210,155,${Math.random()*.28+.04})`; g.fill();
+    }
+  }
+  draw(); window.addEventListener('resize',draw);
+})();
+
+// ── Status indicator ──────────────────────────────────
+const statusEl=document.getElementById('status-text');
+const statusWord=document.getElementById('status-word');
+function setStatus(mode){
+  statusEl.className='';
+  statusWord.textContent=mode.toUpperCase();
+  if(mode!=='standby') statusEl.classList.add(mode);
+}
+
+// ── TTS ───────────────────────────────────────────────
+let ttsVoices=[];
+if(window.speechSynthesis){
+  const loadV=()=>{ ttsVoices=speechSynthesis.getVoices(); };
+  speechSynthesis.addEventListener('voiceschanged',loadV); loadV();
+}
+function speak(text, onEnd){
+  if(!window.speechSynthesis||!text) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.86; u.pitch=0.80; u.volume=1;
+  const v=ttsVoices.find(x=>x.lang==='en-US'&&/Samantha|Alex|Google US|Karen|Moira/.test(x.name))
+          ||ttsVoices.find(x=>x.lang.startsWith('en'))||ttsVoices[0];
+  if(v) u.voice=v;
+  u.onstart=()=>{ orbActive=true; orbSpeed=4; setStatus('speaking'); };
+  u.onend=()=>{ orbActive=false; orbSpeed=1; setStatus(voiceLive?'listening':'standby'); onEnd&&onEnd(); };
+  speechSynthesis.speak(u);
+}
+
+// ── Orb ───────────────────────────────────────────────
+let orbActive=false, orbSpeed=1, orbPhase=0;
+const oc=document.getElementById('orb'), ot=oc.getContext('2d');
+const CW=400, CH=400, CR=108;
+
+function drawOrb(){
+  ot.clearRect(0,0,CW,CH);
+  const cx=CW/2, cy=CH/2;
+  orbPhase+=.018*orbSpeed;
+  const b=Math.sin(orbPhase*(orbActive?4:1.2))*(orbActive?7:3);
+
+  const og=ot.createRadialGradient(cx,cy,CR*.85,cx,cy,CR*2.7+b);
+  og.addColorStop(0,'rgba(255,80,0,.16)'); og.addColorStop(.3,'rgba(255,50,0,.06)');
+  og.addColorStop(.7,'rgba(160,25,0,.025)'); og.addColorStop(1,'transparent');
+  ot.beginPath(); ot.arc(cx,cy,CR*2.7+b,0,Math.PI*2); ot.fillStyle=og; ot.fill();
+
+  const mg=ot.createRadialGradient(cx,cy,CR,cx,cy,CR*1.55+b);
+  mg.addColorStop(0,'rgba(255,120,0,.26)'); mg.addColorStop(.5,'rgba(255,55,0,.10)'); mg.addColorStop(1,'transparent');
+  ot.beginPath(); ot.arc(cx,cy,CR*1.55+b,0,Math.PI*2); ot.fillStyle=mg; ot.fill();
+
+  const fc=orbActive?6:3;
+  for(let i=0;i<fc;i++){
+    const fa=orbPhase*(1.4+i*.25)+i*Math.PI*2/fc;
+    const fr=CR*.72+Math.sin(orbPhase*4+i*1.1)*CR*.17;
+    const fs=CR*(orbActive?.27:.17)+Math.sin(orbPhase*6+i)*CR*.09;
+    const px=cx+Math.cos(fa)*fr, py=cy+Math.sin(fa)*fr;
+    const fg=ot.createRadialGradient(px,py,0,px,py,fs);
+    fg.addColorStop(0,`rgba(255,240,100,${orbActive?.58:.38})`);
+    fg.addColorStop(.4,`rgba(255,160,0,${orbActive?.26:.14})`);
+    fg.addColorStop(1,'transparent');
+    ot.beginPath(); ot.arc(px,py,fs,0,Math.PI*2); ot.fillStyle=fg; ot.fill();
+  }
+
+  const R=CR+b;
+  const sg=ot.createRadialGradient(cx-R*.22,cy-R*.22,R*.05,cx,cy,R);
+  sg.addColorStop(0,'rgba(255,248,150,1)'); sg.addColorStop(.12,'rgba(255,215,55,1)');
+  sg.addColorStop(.32,'rgba(255,120,0,1)'); sg.addColorStop(.58,'rgba(218,42,0,1)');
+  sg.addColorStop(.82,'rgba(130,16,0,.97)'); sg.addColorStop(1,'rgba(38,3,0,.9)');
+  ot.beginPath(); ot.arc(cx,cy,R,0,Math.PI*2); ot.fillStyle=sg; ot.fill();
+
+  ot.save(); ot.globalCompositeOperation='multiply';
+  const sc=orbActive?8:4;
+  for(let i=0;i<sc;i++){
+    const sa=orbPhase*.65+i*Math.PI*2/sc+Math.sin(orbPhase+i)*.5;
+    const sr=R*(.3+Math.sin(orbPhase*2.5+i*1.7)*.27);
+    const ss=R*(.08+Math.abs(Math.sin(orbPhase*3+i))*.11);
+    const sdg=ot.createRadialGradient(cx+Math.cos(sa)*sr,cy+Math.sin(sa)*sr,0,cx+Math.cos(sa)*sr,cy+Math.sin(sa)*sr,ss);
+    sdg.addColorStop(0,'rgba(65,7,0,.72)'); sdg.addColorStop(1,'transparent');
+    ot.beginPath(); ot.arc(cx+Math.cos(sa)*sr,cy+Math.sin(sa)*sr,ss,0,Math.PI*2);
+    ot.fillStyle=sdg; ot.fill();
+  }
+  ot.restore();
+
+  if(orbActive){
+    for(let i=0;i<8;i++){
+      const sa=orbPhase*2+i*Math.PI*2/8;
+      ot.beginPath();
+      ot.moveTo(cx+Math.cos(sa)*R*.15,cy+Math.sin(sa)*R*.15);
+      ot.lineTo(cx+Math.cos(sa)*R*(.52+Math.random()*.33),cy+Math.sin(sa)*R*(.52+Math.random()*.33));
+      ot.strokeStyle=`rgba(255,235,80,${.06+Math.random()*.12})`; ot.lineWidth=1.4; ot.stroke();
+    }
+  }
+
+  const rg=ot.createRadialGradient(cx,cy,R*.68,cx,cy,R);
+  rg.addColorStop(0,'transparent'); rg.addColorStop(.85,'rgba(0,0,0,0)'); rg.addColorStop(1,'rgba(0,0,0,.55)');
+  ot.beginPath(); ot.arc(cx,cy,R,0,Math.PI*2); ot.fillStyle=rg; ot.fill();
+
+  const hg=ot.createRadialGradient(cx-R*.32,cy-R*.35,0,cx-R*.2,cy-R*.25,R*.52);
+  hg.addColorStop(0,'rgba(255,255,220,.34)'); hg.addColorStop(.5,'rgba(255,240,150,.06)'); hg.addColorStop(1,'transparent');
+  ot.beginPath(); ot.arc(cx,cy,R,0,Math.PI*2); ot.fillStyle=hg; ot.fill();
+
+  requestAnimationFrame(drawOrb);
+}
+drawOrb();
+
+// ── Helpers ───────────────────────────────────────────
+const respEl=document.getElementById('resp');
+function setResp(t){ respEl.textContent=t; respEl.classList.toggle('lit',!!t); }
+function appendResp(t){ respEl.textContent+=t; respEl.classList.add('lit'); }
+
+// ── Send command to bridge (real Claude Code) ─────────
+function sendToBridge(cmd, onChunk, onDone){
+  setStatus('thinking'); orbActive=true; orbSpeed=4;
+  fetch(BRIDGE+'/command',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({cmd})
+  }).then(res=>{
+    if(!res.ok){ onDone('Bridge error '+res.status); return; }
+    const reader=res.body.getReader(), dec=new TextDecoder();
+    let buf='';
+    function pump(){
+      reader.read().then(({done,value})=>{
+        if(done){ onDone(); return; }
+        buf+=dec.decode(value,{stream:true});
+        const lines=buf.split('\n'); buf=lines.pop();
+        for(const line of lines){
+          if(!line.startsWith('data:')) continue;
+          try{
+            const d=JSON.parse(line.slice(5).trim());
+            if(d.text) onChunk(d.text);
+            if(d.done) onDone();
+          }catch(_){}
+        }
+        pump();
+      });
+    }
+    pump();
+  }).catch(()=>{ onDone('Could not reach bridge. Is bridge.js running?'); });
+}
+
+// ── Execute a command ─────────────────────────────────
+function execute(cmd){
+  orbActive=true; orbSpeed=5; setStatus('thinking');
+  const isWidget = /scrape|stats|social|check social|what.s working|how are we doing/i.test(cmd);
+
+  if(isWidget){
+    openWidgetLoading();
+  } else {
+    setResp('');
+  }
+
+  if(!bridgeOnline){
+    // Fallback simulation when bridge isn't running
+    setTimeout(()=>{
+      if(isWidget){
+        populateWidget();
+        const msg='Stats are in. Pinterest 12.4 million views. Postpartum content is dominating at 88%.';
+        setResp(msg); speak(msg);
+      } else {
+        const msg=`Command received. Bridge offline — start bridge.js to run commands live through Claude Code.`;
+        setResp(msg); speak(msg);
+      }
+    },1200);
+    return;
+  }
+
+  let full='';
+  sendToBridge(cmd, chunk=>{
+    full+=chunk;
+    if(isWidget) swStreamEl&&(swStreamEl.textContent=full);
+    else { setResp(full.slice(-200)); }
+  }, err=>{
+    orbActive=false; orbSpeed=1;
+    if(isWidget){
+      populateWidget(full);
+      if(!full) full='Done.';
+    }
+    // Speak a summary (first 2 sentences)
+    const summary=(full||err||'').split(/[.!?]/).slice(0,2).join('. ').trim();
+    if(summary) speak(summary);
+    else setStatus(voiceLive?'listening':'standby');
+  });
+}
+
+// ── Stats widget ──────────────────────────────────────
+const widget=document.getElementById('stats-widget');
+const swBody=document.getElementById('sw-body');
+let widgetTimer=null, swStreamEl=null;
+
+document.getElementById('sw-close').addEventListener('click',()=>{
+  widget.classList.remove('open');
+  clearTimeout(widgetTimer);
+});
+
+function openWidgetLoading(){
+  swStreamEl=null;
+  swBody.innerHTML=`<div class="sw-syncing">
+    <span class="sw-sync-dot"></span><span class="sw-sync-dot"></span><span class="sw-sync-dot"></span>
+    <div style="margin-top:10px;">Pulling live data…</div>
+  </div>`;
+  widget.classList.add('open');
+}
+
+function populateWidget(streamText){
+  swBody.innerHTML=`
+    <div class="sw-tiles">
+      <div class="sw-tile"><div class="sw-val">12.4M</div><div class="sw-lbl">Pinterest views</div><div class="sw-delta">▲ 2.1%</div></div>
+      <div class="sw-tile"><div class="sw-val">24.5K</div><div class="sw-lbl">IG followers</div><div class="sw-delta">▲ 1.4%</div></div>
+      <div class="sw-tile"><div class="sw-val">47</div><div class="sw-lbl">Blog posts</div><div class="sw-delta">+3 this wk</div></div>
+      <div class="sw-tile"><div class="sw-val">3.2%</div><div class="sw-lbl">Avg engagement</div><div class="sw-delta">▲ 0.4%</div></div>
+    </div>
+    <div style="margin-bottom:14px;">
+      <div class="sw-sec-head">What's Working</div>
+      <div class="sw-bar-row"><span class="sw-bar-label">Postpartum tips</span><div class="sw-bar-track"><div class="sw-bar-fill green" style="width:88%"></div></div></div>
+      <div class="sw-bar-row"><span class="sw-bar-label">Nutrition reels</span><div class="sw-bar-track"><div class="sw-bar-fill green" style="width:74%"></div></div></div>
+      <div class="sw-bar-row"><span class="sw-bar-label">TTC guides</span><div class="sw-bar-track"><div class="sw-bar-fill green" style="width:61%"></div></div></div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div class="sw-sec-head">Needs Attention</div>
+      <div class="sw-bar-row"><span class="sw-bar-label">Fitness pins</span><div class="sw-bar-track"><div class="sw-bar-fill red" style="width:28%"></div></div></div>
+      <div class="sw-bar-row"><span class="sw-bar-label">Long-form video</span><div class="sw-bar-track"><div class="sw-bar-fill red" style="width:19%"></div></div></div>
+    </div>
+    ${streamText?`<div class="sw-sec-head">Claude's Analysis</div><div class="sw-stream">${streamText}</div>`:''}
+    <div class="sw-recs" style="margin-top:10px;">
+      <div class="sw-sec-head">Top Recommendations</div>
+      <div class="sw-rec"><span class="sw-rec-num">1</span><span class="sw-rec-text">Double postpartum content — 88% of top pins are in this pillar</span></div>
+      <div class="sw-rec"><span class="sw-rec-num">2</span><span class="sw-rec-text">Convert top IG posts to Pinterest — engagement 3× higher</span></div>
+      <div class="sw-rec"><span class="sw-rec-num">3</span><span class="sw-rec-text">Batch 4 nutrition reels this week while format is peaking</span></div>
+    </div>`;
+  clearTimeout(widgetTimer);
+  widgetTimer=setTimeout(()=>widget.classList.remove('open'),60000);
+}
+
+// ── CLI bar ───────────────────────────────────────────
+document.getElementById('cli-in').addEventListener('keydown',e=>{
+  if(e.key!=='Enter') return;
+  const cmd=e.target.value.trim(); if(!cmd) return;
+  e.target.value=''; setResp(`› ${cmd}`);
+  execute(cmd);
+});
+
+// ── Voice ─────────────────────────────────────────────
+const micSt=document.getElementById('mic-st');
+let recognition=null, voiceLive=false, replyTimer=null;
+
+function startVoice(){
+  try{
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){ micSt.textContent='NO VOICE API'; return; }
+    if(!recognition){
+      recognition=new SR();
+      recognition.continuous=true; recognition.interimResults=true; recognition.lang='en-US';
+      recognition.onstart=()=>{ voiceLive=true; micSt.textContent='MIC ACTIVE'; micSt.classList.add('on'); setStatus('listening'); };
+      recognition.onerror=ev=>{
+        if(ev.error==='not-allowed'){ voiceLive=false; micSt.textContent='TAP TO ENABLE'; micSt.classList.remove('on'); setStatus('standby'); }
+        else if(ev.error!=='aborted') micSt.textContent='MIC ERROR';
+      };
+      recognition.onend=()=>{
+        micSt.textContent='MIC OFF'; micSt.classList.remove('on');
+        if(voiceLive) setTimeout(()=>{ try{ recognition.start(); }catch(_){} },400);
+        else setStatus('standby');
+      };
+      recognition.onresult=ev=>{
+        let interim='',final='';
+        for(let i=ev.resultIndex;i<ev.results.length;i++){
+          if(ev.results[i].isFinal) final+=ev.results[i][0].transcript;
+          else interim+=ev.results[i][0].transcript;
+        }
+        const display=(final||interim).trim();
+        if(display){ setResp('› '+display); document.getElementById('cli-in').value=display; orbActive=true; orbSpeed=5; }
+        if(final.trim()){
+          clearTimeout(replyTimer);
+          const cmd=final.trim();
+          setStatus('thinking');
+          replyTimer=setTimeout(()=>execute(cmd),400);
+        }
+      };
+    }
+    recognition.start();
+  }catch(_){ micSt.textContent='TAP TO ENABLE'; }
+}
+micSt.addEventListener('click',()=>{ voiceLive=true; try{ recognition?recognition.start():startVoice(); }catch(_){ startVoice(); } });
+setTimeout(startVoice,3100);
+
+// ── Sidebar nav ───────────────────────────────────────
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+document.querySelectorAll('.proj-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    const id=item.dataset.id; if(!id||id===activeProj) return;
+    activeProj=id;
+    document.querySelectorAll('.proj-item').forEach(el=>el.classList.toggle('active',el.dataset.id===id));
+    const msg=`${PROJECTS[id].name} project active.`;
+    setResp(msg); speak(msg); orbActive=true; orbSpeed=3.5;
+    setTimeout(()=>{ orbActive=false; orbSpeed=1; },1800);
+  });
+});
+
+// ── Greeting ──────────────────────────────────────────
+setTimeout(()=>{
+  const h=new Date().getHours();
+  const g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  const msg=`${g}. Command Center is online. How can I assist you today?`;
+  setResp(msg);
+  const doSpeak=()=>{ setStatus('speaking'); speak(msg,()=>setStatus(voiceLive?'listening':'standby')); };
+  ttsVoices.length?doSpeak():speechSynthesis.addEventListener('voiceschanged',doSpeak,{once:true});
+},3400);
+</script>
+</body>
+</html>
