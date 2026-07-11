@@ -304,6 +304,8 @@ export default function PostpartumGlowUpChallenge() {
           className={`absolute inset-0 w-full h-full object-cover ${locked ? 'grayscale' : ''}`}
         />
         <div className={`absolute inset-0 ${locked ? 'bg-black/55' : 'bg-black/20'}`}></div>
+        {/* Direction A signature — vertical phase label, dark theme only */}
+        <span className="hidden dark:flex absolute left-1.5 top-4 items-center [writing-mode:vertical-rl] rotate-180 font-mono text-[10px] tracking-[0.2em] uppercase text-white/85 z-10">Phase 02</span>
         <div className="absolute top-4 left-4">
           <Badge className="bg-white/20 text-white border-white/30">
             {locked ? <><Lock className="h-3 w-3 mr-1" />Phase 2 · Locked</> : 'Phase 2 · Strength'}
