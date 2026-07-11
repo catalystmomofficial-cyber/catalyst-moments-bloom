@@ -6,12 +6,14 @@ import { Link } from "react-router-dom";
 import { Play } from "lucide-react";
 
 import AffiliateButton from "@/components/affiliate/AffiliateButton";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CTASectionProps {
   onWatchDemo: (url: string, title: string) => void;
 }
 
 const CTASection = ({ onWatchDemo }: CTASectionProps) => {
+  const { isAuthenticated } = useAuth();
   return (
     <section aria-label="Call to Action" className="py-20 bg-gradient-to-br from-catalyst-copper/10 to-white dark:from-catalyst-copper/15 dark:to-background">
       <div className="container container-padding mx-auto text-center">
@@ -39,6 +41,13 @@ const CTASection = ({ onWatchDemo }: CTASectionProps) => {
         </div>
         <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
           <AffiliateButton variant="outline" size="lg" className="border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10" />
+          {!isAuthenticated && (
+            <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
+              <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
+                Free Assessment
+              </a>
+            </Button>
+          )}
         </div>
       </div>
     </section>

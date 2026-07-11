@@ -6,14 +6,12 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link } from "react-router-dom";
 import { ArrowRight, Play } from "lucide-react";
 import HomeWellnessCoachButton from "@/components/wellness-coach/HomeWellnessCoachButton";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface HeroSectionProps {
   onWatchVideo: (url: string, title: string) => void;
 }
 
 const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
-  const { isAuthenticated } = useAuth();
 
   return (
     <header className="hero-gradient pt-24 md:pt-32 pb-16 md:pb-24 overflow-hidden">
@@ -38,13 +36,6 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
                   About Our Mission <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              {!isAuthenticated && (
-                <Button asChild variant="ghost" size="lg" className="rounded-full text-muted-foreground hover:text-catalyst-copper hover:bg-catalyst-copper/5 dark:hover:text-catalyst-gold dark:hover:bg-catalyst-copper/10 border border-transparent hover:border-catalyst-copper/20">
-                  <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
-                    Free Assessment
-                  </a>
-                </Button>
-              )}
             </div>
           </div>
           <div className="md:w-1/2 flex justify-center">
