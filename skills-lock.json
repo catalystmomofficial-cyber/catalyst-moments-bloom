@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "app-store-review": {
+      "source": "safaiyeh/app-store-review-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "6a0906d0ed6b0c43fef5e0f1da87d36dd33ef730c8b1eac7f42cdc33854be3fa"
+    },
     "distribb": {
       "source": "Bomx/distribb-skill",
       "sourceType": "github",
