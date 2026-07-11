@@ -284,7 +284,13 @@ const Workouts = () => {
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
               {isPostpartum && <CoreRestoreFoundationsCard />}
-              {isPostpartum && <PostpartumGlowUpChallenge />}
+              {/* Direction A arrangement: in dark mode the locked Phase 2 sits
+                  lower/offset (the "next step" that isn't open yet). */}
+              {isPostpartum && (
+                <div className="dark:md:mt-10 dark:lg:mt-16">
+                  <PostpartumGlowUpChallenge />
+                </div>
+              )}
 
               {isToddler && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && null}
