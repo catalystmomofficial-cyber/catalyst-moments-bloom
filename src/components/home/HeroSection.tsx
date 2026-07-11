@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link } from "react-router-dom";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Play, ClipboardCheck } from "lucide-react";
 import HomeWellnessCoachButton from "@/components/wellness-coach/HomeWellnessCoachButton";
 
 interface HeroSectionProps {
@@ -26,8 +26,20 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
             <p className="text-lg mb-8 text-muted-foreground max-w-lg leading-relaxed">
               Whether you are trying to conceive, growing a baby, or healing postpartum Catalyst Mom gives you personalised fitness, nutrition, and a community that actually gets it.
             </p>
+            {/* Assessment CTA — primary entry point from Pinterest/social traffic */}
+            <a
+              href="https://catalystmom.online"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 mb-5 px-5 py-3 rounded-full bg-catalyst-copper text-white font-semibold text-sm shadow-lg hover:bg-catalyst-copper/90 hover:shadow-catalyst-copper/30 hover:shadow-xl transition-all duration-200 animate-breathe-glow motion-reduce:animate-none"
+            >
+              <ClipboardCheck className="h-4 w-4 shrink-0" />
+              Take Your Free 60-Second Assessment
+              <ArrowRight className="h-4 w-4 shrink-0" />
+            </a>
+
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
-              <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90 animate-breathe-glow motion-reduce:animate-none">
+              <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper/15 text-catalyst-copper border border-catalyst-copper/30 hover:bg-catalyst-copper/25 dark:bg-catalyst-copper/20 dark:text-catalyst-gold dark:border-catalyst-gold/40">
                 <Link to="/dashboard">Get Started</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">

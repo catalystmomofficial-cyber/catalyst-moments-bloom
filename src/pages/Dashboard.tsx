@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle, Settings, ClipboardList } from 'lucide-react';
+import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle, Settings, ClipboardList, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
@@ -169,6 +169,23 @@ const Dashboard = () => {
           <>
             {/* Intent Signal Banner — highest priority eligible signal, if any */}
             <IntentSignalBanner />
+
+            {/* Assessment CTA — visible to all users, especially PWA users who skip the homepage */}
+            <a
+              href="https://catalystmom.online"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 mb-4 p-3.5 rounded-xl bg-gradient-to-r from-catalyst-copper/10 to-catalyst-gold/10 border border-catalyst-copper/25 hover:from-catalyst-copper/15 hover:to-catalyst-gold/15 transition-colors group"
+            >
+              <div className="flex-shrink-0 w-9 h-9 rounded-full bg-catalyst-copper/15 flex items-center justify-center">
+                <ClipboardList className="h-4 w-4 text-catalyst-copper" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground leading-tight">Take Your Free 60-Second Assessment</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Get a personalized wellness plan for your stage</p>
+              </div>
+              <ArrowRight className="h-4 w-4 text-catalyst-copper shrink-0 group-hover:translate-x-0.5 transition-transform" />
+            </a>
 
             {/* Push Notification Prompt */}
             <div className="mb-4">

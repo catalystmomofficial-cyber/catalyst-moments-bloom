@@ -59,7 +59,7 @@ const Navbar = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-muted">
+    <nav className="fixed top-0 left-0 w-full bg-white/80 dark:bg-neutral-950/90 backdrop-blur-md z-50 border-b border-muted dark:border-neutral-800">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-16">
           {/* Logo */}
