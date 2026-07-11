@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Calendar, Clock, Star, Play, ArrowRight } from "lucide-react";
+import { Calendar, Clock, Star, Play, ArrowRight, Lock } from "lucide-react";
 import { useState, useEffect } from "react";
 import glowUpCover from "@/assets/30-days-glow-up-professional-cover.jpg";
 import { supabase } from "@/integrations/supabase/client";
@@ -106,6 +106,9 @@ export default function PostpartumGlowUpChallenge() {
   const [enrolledCount, setEnrolledCount] = useState(245);
   const [hasStartedProgram, setHasStartedProgram] = useState(false);
   const [courseId, setCourseId] = useState<string | null>(null);
+  // Phase 2 is a hard-locked progression: it only unlocks once Phase 1
+  // (Core Restore Foundations) has been completed.
+  const [phase1Complete, setPhase1Complete] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -114,6 +117,21 @@ export default function PostpartumGlowUpChallenge() {
       setLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    const checkPhase1 = () => {
+      try {
+        const stored = localStorage.getItem('core-restore-foundations-progress');
+        setPhase1Complete(stored ? !!JSON.parse(stored).completed_at : false);
+      } catch {
+        setPhase1Complete(false);
+      }
+    };
+    checkPhase1();
+    // Re-check when the user returns to this tab (e.g. after finishing Phase 1).
+    window.addEventListener('focus', checkPhase1);
+    return () => window.removeEventListener('focus', checkPhase1);
+  }, []);
 
   useEffect(() => {
     const week = userProgress?.current_week ?? 1;
@@ -227,6 +245,13 @@ export default function PostpartumGlowUpChallenge() {
   };
 
   const handleStartProgram = () => {
+    if (locked) {
+      toast({
+        title: "Complete Phase 1 first 💛",
+        description: "Finish Core Restore Foundations to unlock Phase 2: Strength & Stamina.",
+      });
+      return;
+    }
     if (isEnrolled && courseId) {
       // Navigate to course detail page to continue
       window.location.href = `/course/${courseId}`;
@@ -236,6 +261,8 @@ export default function PostpartumGlowUpChallenge() {
   };
 
   const isEnrolled = !!userProgress;
+  // Locked until Phase 1 is complete — but never lock out someone already enrolled.
+  const locked = !phase1Complete && !isEnrolled;
   const isCompleted = userProgress?.completed_at;
   const totalDays = 28; // 4 weeks * 7 days
   const currentDay = userProgress ? (userProgress.current_week - 1) * 7 + userProgress.current_day : 0;
@@ -269,22 +296,31 @@ export default function PostpartumGlowUpChallenge() {
   }
 
   return (
-    <Card className="overflow-hidden border-primary/20 shadow-lg">
+    <Card className={`overflow-hidden border-primary/20 shadow-lg ${locked ? 'opacity-95' : ''}`}>
       <div className="relative h-48 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400">
-        <img 
+        <img
           src={glowUpCover}
           alt="Phase 2: Strength & Stamina - postpartum strength rebuild"
-          className="absolute inset-0 w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full object-cover ${locked ? 'grayscale' : ''}`}
         />
-        <div className="absolute inset-0 bg-black/20"></div>
+        <div className={`absolute inset-0 ${locked ? 'bg-black/55' : 'bg-black/20'}`}></div>
         <div className="absolute top-4 left-4">
           <Badge className="bg-white/20 text-white border-white/30">
-            Phase 2 · Strength
+            {locked ? <><Lock className="h-3 w-3 mr-1" />Phase 2 · Locked</> : 'Phase 2 · Strength'}
           </Badge>
         </div>
         {isCompleted && (
           <div className="absolute top-4 right-4">
             <Star className="h-6 w-6 text-yellow-300 fill-current" />
+          </div>
+        )}
+        {locked && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+            <div className="w-12 h-12 rounded-full bg-white/15 border border-white/30 flex items-center justify-center mb-2">
+              <Lock className="h-5 w-5 text-white" />
+            </div>
+            <p className="text-white text-sm font-medium">Unlocks after you complete Phase 1</p>
+            <p className="text-white/80 text-xs">Core Restore Foundations</p>
           </div>
         )}
         <div className="absolute bottom-4 left-4 text-white">
@@ -379,12 +415,19 @@ export default function PostpartumGlowUpChallenge() {
           </div>
         </div>
 
-        <Button 
+        <Button
           onClick={handleStartProgram}
           className="w-full"
           size="lg"
+          variant={locked ? "outline" : "default"}
+          disabled={locked}
         >
-          {isCompleted ? (
+          {locked ? (
+            <>
+              <Lock className="h-4 w-4 mr-2" />
+              Complete Phase 1 to unlock
+            </>
+          ) : isCompleted ? (
             <>
               <Star className="h-4 w-4 mr-2" />
               Review Challenge

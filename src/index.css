@@ -39,14 +39,14 @@
   }
 
   .dark {
-    /* Brand dark palette */
-    --background: 26 55% 6%;          /* #1A1008 Dark Brown */
+    /* Brand dark palette — black ground, warm cocoa cards + copper accents */
+    --background: 24 12% 4%;          /* #0B0A08 near-black */
     --foreground: 30 78% 96%;         /* #FDF6EE Cream */
 
-    --card: 26 30% 13%;               /* #2C2218 Charcoal */
+    --card: 26 30% 11%;               /* #241D15 warm cocoa card, pops on black */
     --card-foreground: 30 78% 96%;
 
-    --popover: 26 30% 13%;
+    --popover: 26 30% 11%;
     --popover-foreground: 30 78% 96%;
 
     --primary: 28 72% 41%;            /* #B5651D Copper */
@@ -126,7 +126,7 @@
   }
 
   .dark .hero-gradient {
-    background-color: #1A1008;
+    background-color: #0B0A08;
     background-image: radial-gradient(circle at center, hsla(28, 72%, 41%, 0.20) 0%, transparent 60%);
   }
   
