@@ -40,34 +40,34 @@
   }
 
   .dark {
-    /* Equinox — deep charcoal + warm ember accent */
-    --background: 0 0% 10%;           /* #1a1a1a */
+    /* Pure black + copper brand accent */
+    --background: 0 0% 0%;            /* #000000 */
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 18%;                 /* #2d2d2d */
+    --card: 0 0% 6%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 18%;
+    --popover: 0 0% 6%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 12 79% 57%;            /* #e85d3a ember */
+    --primary: 25 50% 45%;            /* Copper brand */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 22%;
+    --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 18%;
+    --muted: 0 0% 10%;
     --muted-foreground: 0 0% 68%;
 
-    --accent: 12 79% 57%;             /* Ember */
+    --accent: 25 50% 45%;             /* Copper brand */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 40%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 29%;               /* #4a4a4a */
-    --input: 0 0% 29%;
-    --ring: 12 79% 57%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 25 50% 45%;
   }
 }
 
