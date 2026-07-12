@@ -36,6 +36,11 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
                   About Our Mission <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
+              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
+                <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
+                  Free Assessment
+                </a>
+              </Button>
             </div>
           </div>
           <div className="md:w-1/2 flex justify-center">
