@@ -205,111 +205,18 @@ const Workouts = () => {
               </Button>
             </CardContent>
           </Card>
-        ) : (
-          <Tabs defaultValue={defaultTab} className="mb-8">
-            <TabsList>
-              <TabsTrigger value="recommended">Recommended</TabsTrigger>
-              <TabsTrigger value="specialized">
-                {isTTC ? "Fertility Focus" : isPregnant ? "Prenatal Safe" : isPostpartum ? "Recovery" : "Quick Workouts"}
-              </TabsTrigger>
-              <TabsTrigger value="quickWorkouts">Quick Workouts</TabsTrigger>
-              <TabsTrigger value="favorites">Favorites</TabsTrigger>
-            </TabsList>
-          
-            <TabsContent value="recommended" className="mt-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                {sortedWorkouts.slice(0, 5).map((workout, idx) => (
-                  <WorkoutCard 
-                    key={workout.id}
-                    title={workout.title}
-                    description={workout.description}
-                    duration={workout.duration}
-                    level={workout.level}
-                    image={workout.image}
-                    category={workout.category}
-                    tags={workout.tags}
-                    featured={workout.featured}
-                    locked={idx > progressIndex}
-                    onComplete={() => handleComplete(idx)}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-          
-            <TabsContent value="specialized">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredWorkouts.filter(w => 
-                  (isTTC && w.category === 'TTC') ||
-                  (isPregnant && w.category === 'Prenatal') ||
-                  (isPostpartum && w.category === 'Postpartum') ||
-                  (isToddler && (w.category === 'Quick' || w.category === 'Outdoor'))
-                ).map((workout) => (
-                  <WorkoutCard 
-                    key={workout.id}
-                    title={workout.title}
-                    description={workout.description}
-                    duration={workout.duration}
-                    level={workout.level}
-                    image={workout.image}
-                    category={workout.category}
-                    tags={workout.tags}
-                    featured={workout.featured}
-                  />
-                ))}
-              </div>
-            </TabsContent>
-          
-            <TabsContent value="quickWorkouts">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredWorkouts.filter(w =>
-                  w.category === 'Quick' || parseInt(w.duration) <= 15
-                ).map((workout) => (
-                  <WorkoutCard 
-                    key={workout.id}
-                    title={workout.title}
-                    description={workout.description}
-                    duration={workout.duration}
-                    level={workout.level}
-                    image={workout.image}
-                    category={workout.category}
-                    tags={workout.tags}
-                    featured={workout.featured}
-                  />
-                ))}
-              </div>
-            </TabsContent>
+        ) : null}
 
-          
-            <TabsContent value="favorites">
-              <div className="text-center py-8 border rounded-lg bg-muted/30">
-                <Heart className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                <h3 className="font-medium mb-1">Your Favorites</h3>
-                <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                  Save your favorite workouts for easy access. They'll appear here.
-                </p>
-                <Button asChild>
-                  <Link to="/workouts">Browse Workouts</Link>
-                </Button>
-              </div>
-            </TabsContent>
-          </Tabs>
-        )}
-        
         {hasJourney && (
           <div className="mb-8 scroll-mt-24" id="featured-programs">
-            <h2 className="text-2xl font-bold mb-6">Featured Programs</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <h2 className="text-3xl font-display font-semibold mb-6">Your Programs</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
+              {/* Postpartum pathway: Phase 1 then the Phase 2 card (locked until
+                  Phase 1 is complete — the card handles its own locked state). */}
               {isPostpartum && <CoreRestoreFoundationsCard />}
-              {/* Phase 2 full card only appears once Phase 1 (Core Restore) is complete.
-                  Until then a compact locked teaser sits inside the Phase 1 card. */}
-              {isPostpartum && isPhase1Complete && (
-                <div className="md:mt-10 lg:mt-16">
-                  <PostpartumGlowUpChallenge />
-                </div>
-              )}
+              {isPostpartum && <PostpartumGlowUpChallenge />}
 
               {isToddler && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && null}
