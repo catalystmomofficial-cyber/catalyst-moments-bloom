@@ -79,7 +79,7 @@ const Index = () => {
   return (
     <PageLayout withPadding={false}>
       <SEO
-        title="Pregnancy & Postpartum Wellness App | Catalyst Mom"
+        title="TTC, Pregnancy & Postpartum Wellness | Catalyst Mom"
         description="Personalized prenatal & postpartum workouts, meal plans, and community support for TTC, pregnancy, and postpartum moms. Try 7 days free."
         structuredData={homeStructuredData}
       />
