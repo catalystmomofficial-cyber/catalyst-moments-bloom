@@ -5,68 +5,69 @@
 
 @layer base {
   :root {
-    --background: 30 30% 99%;
-    --foreground: 20 30% 20%;
+    /* Light theme — black & white with copper accent */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 8%;
 
     --card: 0 0% 100%;
-    --card-foreground: 20 30% 20%;
+    --card-foreground: 0 0% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 20 30% 20%;
+    --popover-foreground: 0 0% 8%;
 
-    --primary: 25 50% 45%;
+    --primary: 25 50% 45%;            /* Copper accent */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 25 70% 65%;
-    --secondary-foreground: 25 30% 20%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 12%;
 
-    --muted: 30 10% 96%;
-    --muted-foreground: 30 8% 38%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 25 100% 94%;
-    --accent-foreground: 25 47.4% 35%;
+    --accent: 25 50% 45%;             /* Copper */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 20 10% 90%;
-    --input: 20 10% 90%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
     --ring: 25 50% 45%;
-    
+
     --warning: 38 92% 50%;
 
     --radius: 1rem;
   }
 
   .dark {
-    /* Brand dark palette — black ground, warm cocoa cards + copper accents */
-    --background: 24 12% 4%;          /* #0B0A08 near-black */
-    --foreground: 30 78% 96%;         /* #FDF6EE Cream */
+    /* Equinox — deep charcoal + warm ember accent */
+    --background: 0 0% 10%;           /* #1a1a1a */
+    --foreground: 0 0% 98%;
 
-    --card: 26 30% 11%;               /* #241D15 warm cocoa card, pops on black */
-    --card-foreground: 30 78% 96%;
+    --card: 0 0% 18%;                 /* #2d2d2d */
+    --card-foreground: 0 0% 98%;
 
-    --popover: 26 30% 11%;
-    --popover-foreground: 30 78% 96%;
+    --popover: 0 0% 18%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 28 72% 41%;            /* #B5651D Copper */
-    --primary-foreground: 30 78% 96%;
+    --primary: 12 79% 57%;            /* #e85d3a ember */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 26 30% 18%;
-    --secondary-foreground: 30 78% 96%;
+    --secondary: 0 0% 22%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 26 30% 16%;
-    --muted-foreground: 26 78% 79%;   /* #F4C5A0 Peach */
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 68%;
 
-    --accent: 28 72% 41%;
-    --accent-foreground: 30 78% 96%;
+    --accent: 12 79% 57%;             /* Ember */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 40%;
-    --destructive-foreground: 30 78% 96%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 26 30% 20%;
-    --input: 26 30% 20%;
-    --ring: 28 72% 41%;
+    --border: 0 0% 29%;               /* #4a4a4a */
+    --input: 0 0% 29%;
+    --ring: 12 79% 57%;
   }
 }
 
