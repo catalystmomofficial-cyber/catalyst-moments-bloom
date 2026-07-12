@@ -126,6 +126,25 @@ const Workouts = () => {
   const isPregnant = stageInfo?.journey === 'pregnant' || currentJourney === 'pregnant' || !!(currentStage?.includes('pregnan') || currentStage?.includes('trimester'));
   const isPostpartum = stageInfo?.journey === 'postpartum' || currentJourney === 'postpartum';
   const isToddler = stageInfo?.journey === 'toddler' || currentJourney === 'toddler';
+
+  // Phase 2 (Strength & Stamina) stays hidden as its own card until Phase 1
+  // (Core Restore Foundations) is complete. Read the same localStorage key
+  // Phase 1 writes to.
+  const [isPhase1Complete, setIsPhase1Complete] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      try {
+        const stored = localStorage.getItem('core-restore-foundations-progress');
+        setIsPhase1Complete(stored ? !!JSON.parse(stored).completed_at : false);
+      } catch {
+        setIsPhase1Complete(false);
+      }
+    };
+    check();
+    window.addEventListener('focus', check);
+    return () => window.removeEventListener('focus', check);
+  }, []);
+  
   
   return (
     <PageLayout>
@@ -284,9 +303,9 @@ const Workouts = () => {
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
               {isPostpartum && <CoreRestoreFoundationsCard />}
-              {/* Direction A arrangement: in dark mode the locked Phase 2 sits
-                  lower/offset (the "next step" that isn't open yet). */}
-              {isPostpartum && (
+              {/* Phase 2 full card only appears once Phase 1 (Core Restore) is complete.
+                  Until then a compact locked teaser sits inside the Phase 1 card. */}
+              {isPostpartum && isPhase1Complete && (
                 <div className="md:mt-10 lg:mt-16">
                   <PostpartumGlowUpChallenge />
                 </div>

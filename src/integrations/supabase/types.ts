@@ -2211,6 +2211,51 @@ export type Database = {
         }
         Relationships: []
       }
+      wellness_entries: {
+        Row: {
+          created_at: string | null
+          energy_level: number | null
+          entry_date: string
+          hydration_glasses: number | null
+          id: string
+          mood_rating: number | null
+          notes: string | null
+          self_care_activities: string[] | null
+          sleep_hours: number | null
+          stress_level: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          energy_level?: number | null
+          entry_date?: string
+          hydration_glasses?: number | null
+          id?: string
+          mood_rating?: number | null
+          notes?: string | null
+          self_care_activities?: string[] | null
+          sleep_hours?: number | null
+          stress_level?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          energy_level?: number | null
+          entry_date?: string
+          hydration_glasses?: number | null
+          id?: string
+          mood_rating?: number | null
+          notes?: string | null
+          self_care_activities?: string[] | null
+          sleep_hours?: number | null
+          stress_level?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

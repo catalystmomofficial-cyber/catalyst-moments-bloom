@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 import coreRestoreCover from "@/assets/core-restore-foundations-cover.jpg";
+import glowUpCover from "@/assets/30-days-glow-up-professional-cover.jpg";
 
 
 const AVATARS = [
@@ -283,6 +284,31 @@ export default function CoreRestoreFoundationsCard() {
           <Play className="h-4 w-4 mr-2" />
           {isEnrolled ? "Continue Program" : "Start Program"}
         </Button>
+
+        {/* Phase 2 progression teaser — visible only while Phase 1 is not yet complete */}
+        {!isCompleted && (
+          <div className="mt-2 rounded-lg border border-border/60 bg-muted/40 p-3 flex items-center gap-3">
+            <div className="relative h-16 w-16 shrink-0 rounded-md overflow-hidden">
+              <img
+                src={glowUpCover}
+                alt="Phase 2: Strength & Stamina"
+                className="absolute inset-0 h-full w-full object-cover grayscale"
+              />
+              <div className="absolute inset-0 bg-black/45 flex items-center justify-center">
+                <Lock className="h-4 w-4 text-white" />
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold leading-tight">Phase 2: Strength &amp; Stamina</p>
+              <p className="text-xs text-muted-foreground leading-snug">
+                <span className="text-primary font-medium">Strength</span> · Progressive · 15–20 min/day
+              </p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Unlocks after you complete Phase 1
+              </p>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
