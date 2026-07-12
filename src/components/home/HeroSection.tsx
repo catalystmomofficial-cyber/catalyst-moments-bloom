@@ -22,7 +22,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               Made for Every Stage of Motherhood
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
-              Your Wellness <span className="text-catalyst-copper dark:text-catalyst-gold">Journey</span> Through Motherhood
+              Prenatal, Postpartum & <span className="text-catalyst-copper dark:text-catalyst-gold">TTC</span> Fitness for Every Stage of Motherhood
             </h1>
             <p className="text-lg mb-8 text-muted-foreground max-w-lg leading-relaxed">
               Whether you are trying to conceive, growing a baby, or healing postpartum Catalyst Mom gives you personalised fitness, nutrition, and a community that actually gets it.
@@ -35,11 +35,6 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
                 <Link to="/about" className="flex items-center">
                   About Our Mission <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
-                <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
-                  Free Assessment
-                </a>
               </Button>
             </div>
           </div>
