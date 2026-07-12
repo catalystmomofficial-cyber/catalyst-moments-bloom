@@ -24,9 +24,7 @@ const CTASection = ({ onWatchDemo }: CTASectionProps) => {
         </p>
         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
           <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
-            <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
-              Free Assessment
-            </a>
+            <Link to="/dashboard">Get Started Now</Link>
           </Button>
           <Button
             variant="outline"
@@ -41,7 +39,9 @@ const CTASection = ({ onWatchDemo }: CTASectionProps) => {
         <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
           <AffiliateButton variant="outline" size="lg" className="border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10" />
           <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
-            <Link to="/dashboard">Get Started</Link>
+            <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
+              Free Assessment
+            </a>
           </Button>
         </div>
       </div>
