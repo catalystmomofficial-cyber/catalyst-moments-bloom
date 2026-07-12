@@ -284,9 +284,9 @@ const Workouts = () => {
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
               {isPostpartum && <CoreRestoreFoundationsCard />}
-              {/* Direction A arrangement: in dark mode the locked Phase 2 sits
-                  lower/offset (the "next step" that isn't open yet). */}
-              {isPostpartum && (
+              {/* Phase 2 full card only appears once Phase 1 (Core Restore) is complete.
+                  Until then a compact locked teaser sits inside the Phase 1 card. */}
+              {isPostpartum && isPhase1Complete && (
                 <div className="md:mt-10 lg:mt-16">
                   <PostpartumGlowUpChallenge />
                 </div>
