@@ -16,9 +16,9 @@
     <meta name="google-site-verification" content="1QQeJZxG91ijhZoDJU8BJ0Em4PBZ6pcAZiJK4ozpAss" />
 
     <!-- Primary Meta Tags -->
-    <title>Catalyst Mom – Wellness for Every Stage of Motherhood</title>
-    <meta name="title" content="Catalyst Mom – Wellness for Every Stage of Motherhood" />
-    <meta name="description" content="Personalized workouts, meal plans, birth ball guides, and community support for TTC, pregnancy, and postpartum — your full motherhood journey." />
+    <title>Pregnancy & Postpartum Wellness App | Catalyst Mom</title>
+    <meta name="title" content="Pregnancy & Postpartum Wellness App | Catalyst Mom" />
+    <meta name="description" content="Personalized prenatal & postpartum workouts, meal plans, and community support for TTC, pregnancy, and postpartum moms. Try 7 days free." />
     <meta name="author" content="Catalyst Mom" />
     <meta name="keywords" content="TTC, pregnancy, postpartum recovery, maternal fitness, birth ball, mom community, motherhood wellness" />
     <meta name="google-adsense-account" content="ca-pub-9152099803253677" />
@@ -27,8 +27,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://catalystmomofficial.com" />
-    <meta property="og:title" content="Catalyst Mom – Wellness for Every Stage of Motherhood" />
-    <meta property="og:description" content="Personalized workouts, meal plans, birth ball guides, and community support for TTC, pregnancy, and postpartum — your full motherhood journey." />
+    <meta property="og:title" content="Pregnancy & Postpartum Wellness App | Catalyst Mom" />
+    <meta property="og:description" content="Personalized prenatal & postpartum workouts, meal plans, and community support for TTC, pregnancy, and postpartum moms. Try 7 days free." />
     <meta property="og:image" content="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -37,8 +37,9 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://catalystmomofficial.com" />
-    <meta name="twitter:title" content="Catalyst Mom – Wellness for Every Stage of Motherhood" />
-    <meta name="twitter:description" content="Personalized workouts, meal plans, birth ball guides, and community support for TTC, pregnancy, and postpartum — your full motherhood journey." />
+    <meta name="twitter:title" content="Pregnancy & Postpartum Wellness App | Catalyst Mom" />
+    <meta name="twitter:description" content="Personalized prenatal & postpartum workouts, meal plans, and community support for TTC, pregnancy, and postpartum moms. Try 7 days free." />
+    <meta name="twitter:creator" content="@catalystmom" />
     <meta name="twitter:image" content="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" />
     <meta name="twitter:site" content="@catalystmom" />
     
@@ -47,6 +48,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Preconnect to image CDN for faster LCP -->
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+    <!-- Preload hero image to improve LCP -->
+    <link rel="preload" as="image"
+      href="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80"
+      imagesrcset="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80 800w"
+      imagesizes="(max-width: 768px) 100vw, 50vw"
+    />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
     
@@ -82,6 +89,7 @@
       "applicationCategory": "HealthApplication",
       "operatingSystem": "Web",
       "description": "Maternal wellness app with TTC cycle tracking, ovulation tracking, fertility tracking, pregnancy support, postpartum recovery programs, personalized nutrition guidance, and bi-weekly human coaching.",
+      "operatingSystem": "Web, iOS (PWA), Android (PWA)",
       "featureList": [
         "Cycle Tracking",
         "Ovulation Tracking",
@@ -91,7 +99,14 @@
         "Personalized Fitness Plans",
         "Nutrition Guidance",
         "Bi-Weekly Human Coaching"
-      ]
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "description": "7-day free trial, then monthly subscription"
+      }
     }
     </script>
 

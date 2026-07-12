@@ -27,7 +27,7 @@ const homeStructuredData = [
     "@type": "WebSite",
     "name": "Catalyst Mom",
     "url": "https://catalystmomofficial.com",
-    "dateModified": new Date().toISOString().split('T')[0],
+    "dateModified": "2026-07-12",
   },
   homeFaqSchema,
 ];
@@ -79,8 +79,8 @@ const Index = () => {
   return (
     <PageLayout withPadding={false}>
       <SEO
-        title="Catalyst Mom – Wellness for Every Stage of Motherhood"
-        description="Personalized workouts, meal plans, birth ball guides, and community support for TTC, pregnancy, and postpartum — your full motherhood journey."
+        title="Pregnancy & Postpartum Wellness App | Catalyst Mom"
+        description="Personalized prenatal & postpartum workouts, meal plans, and community support for TTC, pregnancy, and postpartum moms. Try 7 days free."
         structuredData={homeStructuredData}
       />
       {/* Hero Section */}
