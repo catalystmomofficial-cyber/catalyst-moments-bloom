@@ -126,6 +126,25 @@ const Workouts = () => {
   const isPregnant = stageInfo?.journey === 'pregnant' || currentJourney === 'pregnant' || !!(currentStage?.includes('pregnan') || currentStage?.includes('trimester'));
   const isPostpartum = stageInfo?.journey === 'postpartum' || currentJourney === 'postpartum';
   const isToddler = stageInfo?.journey === 'toddler' || currentJourney === 'toddler';
+
+  // Phase 2 (Strength & Stamina) stays hidden as its own card until Phase 1
+  // (Core Restore Foundations) is complete. Read the same localStorage key
+  // Phase 1 writes to.
+  const [isPhase1Complete, setIsPhase1Complete] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      try {
+        const stored = localStorage.getItem('core-restore-foundations-progress');
+        setIsPhase1Complete(stored ? !!JSON.parse(stored).completed_at : false);
+      } catch {
+        setIsPhase1Complete(false);
+      }
+    };
+    check();
+    window.addEventListener('focus', check);
+    return () => window.removeEventListener('focus', check);
+  }, []);
+  
   
   return (
     <PageLayout>
