@@ -25,29 +25,28 @@ const CTASection = ({ onWatchDemo }: CTASectionProps) => {
           Join thousands of moms who are prioritizing their well-being and finding balance in motherhood.
         </p>
         <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
-          <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
-            <Link to="/dashboard">Get Started Now</Link>
-          </Button>
-          <Button 
-            variant="outline" 
-            size="lg" 
+          {!isAuthenticated && (
+            <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
+              <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
+                Free Assessment
+              </a>
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            size="lg"
             className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10"
             onClick={() => onWatchDemo("https://www.youtube.com/embed/MxFf4_degjk?rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1", "Catalyst Mom Demo")}
           >
             <Play className="mr-2 h-4 w-4" />
             Watch Demo
           </Button>
-
         </div>
         <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
           <AffiliateButton variant="outline" size="lg" className="border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10" />
-          {!isAuthenticated && (
-            <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
-              <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
-                Free Assessment
-              </a>
-            </Button>
-          )}
+          <Button asChild variant="outline" size="lg" className="rounded-full border-transparent text-muted-foreground hover:text-foreground hover:bg-muted">
+            <Link to="/dashboard">Get Started</Link>
+          </Button>
         </div>
       </div>
     </section>
