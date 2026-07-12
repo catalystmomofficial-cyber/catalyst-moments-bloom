@@ -10,6 +10,11 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
+  "overrides": {
+    "@tiptap/core": "3.10.4"
+  },
+  "resolutions": {
+    "@tiptap/core": "3.10.4"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
