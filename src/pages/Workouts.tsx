@@ -206,17 +206,21 @@ const Workouts = () => {
             </CardContent>
           </Card>
         ) : null}
-
+        
         {hasJourney && (
           <div className="mb-8 scroll-mt-24" id="featured-programs">
             <h2 className="text-2xl font-bold mb-6">Featured Programs</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
-              {/* Postpartum pathway: Phase 1 then the Phase 2 card (locked until
-                  Phase 1 is complete — the card handles its own locked state). */}
               {isPostpartum && <CoreRestoreFoundationsCard />}
-              {isPostpartum && <PostpartumGlowUpChallenge />}
+              {/* Phase 2 full card only appears once Phase 1 (Core Restore) is complete.
+                  Until then a compact locked teaser sits inside the Phase 1 card. */}
+              {isPostpartum && isPhase1Complete && (
+                <div className="md:mt-10 lg:mt-16">
+                  <PostpartumGlowUpChallenge />
+                </div>
+              )}
 
               {isToddler && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && null}
