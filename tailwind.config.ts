@@ -200,7 +200,6 @@ export default {
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],
-				display: ['Fraunces', 'Georgia', 'serif'],
 			}
 		}
 	},

@@ -209,7 +209,7 @@ const Workouts = () => {
 
         {hasJourney && (
           <div className="mb-8 scroll-mt-24" id="featured-programs">
-            <h2 className="text-3xl font-display font-semibold mb-6">Your Programs</h2>
+            <h2 className="text-2xl font-bold mb-6">Featured Programs</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
