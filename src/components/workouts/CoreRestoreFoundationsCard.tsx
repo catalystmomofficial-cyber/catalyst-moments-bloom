@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 import coreRestoreCover from "@/assets/core-restore-foundations-cover.jpg";
+import glowUpCover from "@/assets/30-days-glow-up-professional-cover.jpg";
 
 
 const AVATARS = [
