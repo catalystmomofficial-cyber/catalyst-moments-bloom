@@ -2,10 +2,10 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Link } from "react-router-dom";
 import { ArrowRight, Play } from "lucide-react";
 import HomeWellnessCoachButton from "@/components/wellness-coach/HomeWellnessCoachButton";
-import HeroImageCarousel from "@/components/home/HeroImageCarousel";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface HeroSectionProps {
@@ -53,9 +53,23 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               <div className="absolute -top-4 -left-4 w-64 h-64 bg-catalyst-copper/10 rounded-full animate-breathe motion-reduce:animate-none"></div>
               <div className="absolute bottom-8 -right-8 w-40 h-40 bg-catalyst-copper/10 rounded-full animate-float"></div>
               <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
-                <HeroImageCarousel />
+                <AspectRatio ratio={4/5} className="bg-muted">
+                  <img
+                    src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80"
+                    srcSet="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=80 1200w"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    alt="Mom with baby using laptop"
+                    className="object-cover h-full w-full"
+                    fetchPriority="high"
+                    width={800}
+                    height={1000}
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder.svg";
+                    }}
+                  />
+                </AspectRatio>
 
-                <div className="absolute top-4 left-4 flex items-center space-x-2">
+                <div className="absolute bottom-4 left-4 flex items-center space-x-2">
                   <Button
                     size="icon"
                     className="rounded-full bg-white/90 hover:bg-white text-catalyst-copper"
