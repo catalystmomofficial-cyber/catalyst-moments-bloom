@@ -154,13 +154,13 @@ ${DISCLAIMER}`,
     featured_image_url: '',
     excerpt: 'Sore hips, a tight back, and nervous about labor? Here is how a birth ball eases pregnancy pain now and helps prepare your body for birth - including with pelvic girdle pain.',
     content: `
-<p>A first-time mom, 24 weeks along, messaged us: <em>"My hips and lower back are so sore, and I can't get comfortable sleeping on my sides. I want an all-natural birth without intervention, and honestly the whole pain part makes me nervous - I just want it to be as smooth as possible."</em> If that is you too, mama, a birth ball might be the most useful $30 you spend this pregnancy. Here is exactly how to use one - for the aches now, and for the birth ahead.</p>
+<p>A first-time mom, 24 weeks along, messaged us: <em>"My hips and lower back are so sore, and I can't get comfortable sleeping on my sides. I want an all-natural birth without intervention, and honestly the whole pain part makes me nervous - I just want it to be as smooth as possible."</em> If that is you too, mama, a birth ball might be the most useful $30 you spend this pregnancy. Here is exactly how to use one, for the aches now and the birth ahead.</p>
 
 <h2>Is it safe to use a birth ball during pregnancy?</h2>
-<p>Yes, for most healthy pregnancies - and it is one of the few tools that helps in every trimester. Three safety basics: use an <strong>anti-burst</strong> ball (it will say so on the box), place it on carpet or a yoga mat (never a slick floor), and hold onto a wall, sofa, or partner the first few times until you feel steady. Get the right size so your hips sit level with or slightly above your knees. If you have any pregnancy complication, a history of preterm labor, or you are unsure, clear it with your midwife or OB first.</p>
+<p>Yes, for most healthy pregnancies, and it is one of the few tools that helps in every trimester. Three safety basics: use an <strong>anti-burst</strong> ball (it will say so on the box), place it on carpet or a yoga mat (never a slick floor), and hold onto a wall, sofa, or partner the first few times until you feel steady. Get the right size so your hips sit level with or slightly above your knees. If you have any pregnancy complication, a history of preterm labor, or you are unsure, clear it with your midwife or OB first.</p>
 
 <h2>Can I use a birth ball if I have pelvic girdle pain (PGP)?</h2>
-<p>Often, yes - and gentle ball work is one of the go-to tools physiotherapists suggest for PGP, because it eases pressure on the pelvis and helps stabilise it. The key with PGP is <em>small, symmetrical, pain-free</em> movement: keep your knees no wider than hip-width, avoid anything that pulls your legs far apart, and stop any movement that sharpens the pain. Gentle seated pelvic circles and pelvic tilts are usually well tolerated. Because PGP varies so much person to person, a women's health physiotherapist is genuinely worth it - they can tailor this to your exact pain pattern.</p>
+<p>Often, yes. Gentle ball work is one of the go-to tools physiotherapists suggest for PGP, because it eases pressure on the pelvis and helps stabilise it. The key with PGP is <em>small, symmetrical, pain-free</em> movement: keep your knees no wider than hip-width, avoid anything that pulls your legs far apart, and stop any movement that sharpens the pain. Gentle seated pelvic circles and pelvic tilts are usually well tolerated. Because PGP varies so much person to person, a women's health physiotherapist is worth it. They can tailor this to your exact pain pattern.</p>
 
 <h2>What birth ball exercises ease hip and lower-back pain in pregnancy?</h2>
 <p>As your bump grows and your center of gravity shifts forward, your lower back and hips take the strain. A birth ball helps by keeping your pelvis mobile and your posture upright. Try these gently, a few minutes each:</p>
@@ -177,13 +177,13 @@ ${DISCLAIMER}`,
 <h2>How do I prepare for a natural birth with a birth ball?</h2>
 <p>If you are hoping to labor without an epidural, this is where the ball earns its keep. Wanting a natural birth and <em>preparing your body</em> for one are two different things - and the preparation is what gives you the best shot. Two evidence-backed reasons the ball helps:</p>
 <ul>
-<li><strong>Pain and coping.</strong> Randomized trials show using a birth ball in labor significantly <strong>reduces labor pain</strong> and eases anxiety, helping you feel more in control.</li>
+<li><strong>Pain and coping.</strong> Randomized trials show using a birth ball in labor <strong>reduces labor pain</strong> and eases anxiety, helping you feel more in control.</li>
 <li><strong>Staying upright and mobile.</strong> Cochrane research links staying upright and moving in early labor (which the ball makes easy) with a <strong>shorter first stage</strong> and a lower chance of needing an epidural or cesarean - for moms who have not already had an epidural.</li>
 </ul>
 <p>Practice the positions now so they feel automatic later: rocking and swaying through a contraction, leaning forward over the ball to rest between surges, and slow breathing to stay grounded.</p>
 
 <h2>Can a birth ball help reduce tearing?</h2>
-<p>It can help. Staying upright and mobile - instead of laboring flat on your back - keeps your pelvis open and your perineal muscles flexible, and upright positions are linked with a <strong>lower risk of perineal tearing</strong>. The birth ball is one of the easiest ways to stay in those positions. For the strongest protection, pair it with <strong>perineal massage from around 36 weeks</strong>, which research links to noticeably fewer tears - especially for first-time moms. No tool can promise a tear-free birth, but these two habits genuinely stack the odds in your favor.</p>
+<p>It can help. Staying upright and mobile - instead of laboring flat on your back - keeps your pelvis open and your perineal muscles flexible, and upright positions are linked with a <strong>lower risk of perineal tearing</strong>. The birth ball is one of the easiest ways to stay in those positions. For the strongest protection, pair it with <strong>perineal massage from around 36 weeks</strong>, which research links to fewer tears, especially for first-time moms. No tool can promise a tear-free birth, but these two habits genuinely stack the odds in your favor.</p>
 
 <h2>When should I start using a birth ball, and for how long?</h2>
 <p>For comfort - sitting, pelvic tilts, hip circles - you can start <strong>any time</strong>; the sooner the better for back and hip relief. For active labor-encouraging movements (like firmer bouncing), wait until <strong>at least 37 weeks</strong> and clear it with your provider. Either way, short and frequent beats marathon sessions: 10-15 minutes a few times a day is plenty.</p>
@@ -201,7 +201,7 @@ ${DISCLAIMER}`,
 <p>More detail, plus anti-burst safety tips, in our <a href="/birth-ball-guide/buying-guide">birth ball buying guide</a>.</p>
 
 <h2>The Honest Part Most Blogs Skip</h2>
-<p>A birth ball is not magic, and we will never tell you it is. It will not guarantee a fast, painless, or tear-free birth - nothing can, and any brand promising that is selling you something. What it reliably <em>does</em> do is ease your aches now, keep you mobile, and give your body tools to cope and stay upright when labor comes. Those are real, research-backed benefits worth $30 - just hold the expectations honestly, and you will not be disappointed.</p>
+<p>A birth ball is not magic, and we will never tell you it is. It will not guarantee a fast, painless, or tear-free birth. Nothing can, and any brand promising that is selling you something. What it <em>does</em> do is ease your aches now, keep you mobile, and give your body tools to cope and stay upright when labor comes. Those are real, research-backed benefits worth $30 - just hold the expectations honestly, and you will not be disappointed.</p>
 
 <h2>Birth Ball FAQ</h2>
 <h3>Is bouncing on a birth ball safe during pregnancy?</h3>
@@ -793,7 +793,7 @@ ${DISCLAIMER}`,
 <li>Three slow, deep breaths in the car before walking into the house.</li>
 <li>Step outside and feel the air for one full minute. That is it. That counts.</li>
 <li>Drink a glass of water slowly, doing nothing else.</li>
-<li>A 4-7-8 breath cycle: inhale 4, hold 7, exhale 8 — repeat four times.</li>
+<li>A 4-7-8 breath cycle: inhale 4, hold 7, exhale 8, then repeat four times.</li>
 <li>Put one hand on your heart, close your eyes, and name three things you did right today.</li>
 </ol>
 
@@ -836,7 +836,7 @@ ${DISCLAIMER}`,
 <h2>Make It Stick</h2>
 <p>Anchor each practice to something you already do — feed the baby, then drink the water; start the dishwasher, then stretch. Explore more guided practices in our <a href="/wellness/self-care">self-care hub</a> and track how you feel in your <a href="/dashboard">wellness dashboard</a>.</p>
 <h2>Why "Sleep When the Baby Sleeps" Keeps Failing You</h2>
-<p>The most-given advice in motherhood fails for a structural reason: baby's nap is the only block of time when nobody is touching you, and your brain knows it. Spending every nap asleep means the laundry, the texts, and — crucially — <em>you</em> never get a turn, so you lie there wired instead. The fix is a split: the first nap of the day is yours (rest or genuine downtime, not chores), and later naps go to whatever reduces tomorrow's stress. Permission to be strategic beats pressure to be asleep.</p>
+<p>The most-given advice in motherhood fails for a structural reason: baby's nap is the only block of time when nobody is touching you, and your brain knows it. Spending every nap asleep means the laundry, the texts, and <em>you</em> never get a turn, so you lie there wired instead. The fix is a split: the first nap of the day is yours (rest or genuine downtime, not chores), and later naps go to whatever reduces tomorrow's stress. Permission to be strategic beats pressure to be asleep.</p>
 
 <h2>The Burnout Check-In: 5 Questions</h2>
 <p>Run this monthly. Two or more "yes" answers means your self-care needs to be scheduled, not squeezed in:</p>

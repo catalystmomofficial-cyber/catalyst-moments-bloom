@@ -234,8 +234,8 @@ const BlogDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 mb-8">
             <Card>
               <CardContent className="pt-6">
-              <div 
-                className="prose prose-lg max-w-none dark:prose-invert
+              <div
+                className="prose prose-lg max-w-[72ch] dark:prose-invert
                   prose-headings:font-bold prose-headings:text-foreground
                   prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4
                   prose-h3:text-2xl prose-h3:mt-6 prose-h3:mb-3
