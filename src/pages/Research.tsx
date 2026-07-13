@@ -6,8 +6,8 @@ const Research = () => {
   return (
     <PageLayout>
       <SEO
-        title="Pregnancy & Postpartum Research | Catalyst Mom"
-        description="Evidence-based research on pregnancy wellness, postpartum recovery, nutrition, and fitness. Science-backed insights for moms at every stage."
+        title="Evidence-Based Mom Resources | Catalyst Mom"
+        description="ACOG- and NASM-aligned protocols for TTC, pregnancy, and postpartum recovery. Science-backed wellness resources built with real mamas — not guesswork."
       />
       <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap"
@@ -76,10 +76,10 @@ const Research = () => {
         <section className="cs-section">
           <div className="cs-container">
             <div className="cs-header">
-              <div className="cs-eyebrow">Our Approach</div>
+              <div className="cs-eyebrow">Evidence-Based Mom Resources</div>
               <h1 className="cs-title">The Catalyst <em>Standard</em></h1>
               <p className="cs-subtitle">
-                Built on science. Shaped by real mamas. Every protocol we create is grounded in
+                Built on science. Shaped by real mamas. Every resource we create is grounded in
                 clinical guidelines and refined through the lived experience of the women who use it.
               </p>
             </div>
