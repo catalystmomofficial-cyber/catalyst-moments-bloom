@@ -1,0 +1,5 @@
+# Redirect www to non-www (canonical domain)
+https://www.catalystmomofficial.com/* https://catalystmomofficial.com/:splat 301!
+
+# SPA fallback — keep React Router working
+/*    /index.html   200
