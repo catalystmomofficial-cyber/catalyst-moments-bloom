@@ -18,8 +18,6 @@ import { TTCDailyCheckIn } from '@/components/ttc/TTCDailyCheckIn';
 import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
 import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
 import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
-import { PostpartumPrepGuide } from '@/components/pregnancy/PostpartumPrepGuide';
-import { PregnancyCommunity } from '@/components/pregnancy/PregnancyCommunity';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter } from '@/hooks/useContentFilter';
 import JourneySelector from '@/components/onboarding/JourneySelector';
@@ -306,10 +304,7 @@ const Dashboard = () => {
               <div className="lg:col-span-2 space-y-6">
                 {/* Recommended Activity */}
                 {isPregnant ? (
-                  <div className="grid grid-cols-1 gap-4">
-                    <PregnancyJournal />
-                    <PostpartumPrepGuide />
-                  </div>
+                  <PregnancyJournal />
                 ) : isTTC ? (
                   <div id="ttc-tracker">
                     <TTCTracker />
@@ -392,10 +387,7 @@ const Dashboard = () => {
                 {!isTTC && <DailyChecklistCard />}
 
                 {/* Quick Links */}
-                {!isTTC && (
-                  isPregnant ? <PregnancyCommunity /> :
-                  <NutritionSection />
-                )}
+                {!isTTC && !isPregnant && <NutritionSection />}
 
               </div>
             </div>
