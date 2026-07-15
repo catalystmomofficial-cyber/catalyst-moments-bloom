@@ -139,6 +139,11 @@ const Dashboard = () => {
     return t?.sleep_hours ?? null;
   })();
   const hasWorkouts = workoutSessions.length > 0;
+
+  // Stage-aware quick links for the uniform bottom row (all three stages).
+  const journey = stageInfo?.journey ?? '';
+  const mealStageParam = journey === 'pregnant' ? 'pregnancy' : journey;
+  const communityLink = journey ? `/community?filter=${journey}` : '/community';
   
   // Refresh wellness data when the tab regains focus. The in-tab pub/sub in
   // useWellnessData already updates the moment anything is logged, so a noisy
@@ -423,19 +428,18 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {isTTC ? (
-              <div className="mt-6 flex gap-3">
-                <Button asChild variant="outline" size="sm" className="flex-1">
-                  <Link to="/meal-plan?stage=ttc">Meal Plan</Link>
-                </Button>
-                <Button asChild variant="outline" size="sm" className="flex-1">
-                  <Link to="/community?filter=ttc">Community</Link>
-                </Button>
-                <Button asChild variant="outline" size="sm" className="flex-1">
-                  <Link to="/wellness/resources">Resources</Link>
-                </Button>
-              </div>
-            ) : null}
+            {/* Uniform quick-access row — same on every stage (TTC, pregnancy, postpartum) */}
+            <div className="mt-6 grid grid-cols-3 gap-3">
+              <Button asChild variant="outline" size="sm" className="w-full min-w-0">
+                <Link to={`/meal-plan?stage=${mealStageParam}`} className="truncate">Meal Plan</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="w-full min-w-0">
+                <Link to={communityLink} className="truncate">Community</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="w-full min-w-0">
+                <Link to="/wellness/resources" className="truncate">Resources</Link>
+              </Button>
+            </div>
 
             {/* Free-plan invitation — calm, at the bottom, never above her care */}
             {!subscribed && (

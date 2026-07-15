@@ -62,10 +62,10 @@ export const BloomRing = ({ cycleDay, cycleLength, phase, subnote }: BloomRingPr
             : 'Cycle not set yet'
         }
       >
-        {/* Pulsing glow */}
+        {/* Soft breathing glow — calm, not a pulsing monitor (TTC is an anxious wait) */}
         <div
-          className="absolute inset-0 rounded-full animate-pulse-intense motion-reduce:animate-none"
-          style={{ background: color, opacity: 0.4 }}
+          className="absolute inset-0 rounded-full animate-breathe motion-reduce:animate-none"
+          style={{ background: color, opacity: 0.22 }}
           aria-hidden
         />
         {/* Rotating dashed orbit */}
@@ -88,7 +88,7 @@ export const BloomRing = ({ cycleDay, cycleLength, phase, subnote }: BloomRingPr
             cy={SIZE / 2}
             r={RADIUS}
             fill="none"
-            stroke="#E8E4E1"
+            stroke="hsl(var(--border))"
             strokeWidth={STROKE}
           />
           <circle

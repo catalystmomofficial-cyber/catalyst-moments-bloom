@@ -211,16 +211,6 @@ export const TTCTracker = () => {
   const todayLog = logByDate[today] ?? null;
   const todayTemperature = todayLog?.basal_body_temp ?? null;
 
-  const getPhaseColor = (phase: string) => {
-    switch (phase) {
-      case 'menstrual': return 'bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300';
-      case 'follicular': return 'bg-blue-100 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300';
-      case 'fertile': return 'bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300';
-      case 'luteal': return 'bg-yellow-100 dark:bg-yellow-950/40 text-yellow-800 dark:text-yellow-300';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   return (
     <>
       <ImportCycleDataModal open={importOpen} onClose={() => setImportOpen(false)} />
@@ -322,7 +312,7 @@ export const TTCTracker = () => {
                         style={{
                           height: `${isToday ? Math.min(heightPct + 15, 100) : heightPct}%`,
                           background: MAP_PHASE_COLOR[p],
-                          boxShadow: isToday ? '0 0 0 2px #2C2218, 0 0 8px rgba(181,101,29,0.5)' : undefined,
+                          boxShadow: isToday ? '0 0 0 2px hsl(var(--foreground)), 0 0 8px rgba(181,101,29,0.5)' : undefined,
                         }}
                       />
                     );
