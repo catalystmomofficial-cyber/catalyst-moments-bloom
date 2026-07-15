@@ -86,7 +86,7 @@ const Navbar = () => {
               <Link to="/profile" aria-label="Manage subscription">
                 <Badge
                   variant="secondary"
-                  className="bg-gradient-to-r from-catalyst-gold/20 to-catalyst-copper/20 text-catalyst-brown border border-catalyst-gold/40 hover:from-catalyst-gold/30 hover:to-catalyst-copper/30 transition-colors gap-1 px-2.5 py-1"
+                  className="bg-gradient-to-r from-catalyst-gold/20 to-catalyst-copper/20 text-catalyst-brown dark:text-catalyst-gold border border-catalyst-gold/40 hover:from-catalyst-gold/30 hover:to-catalyst-copper/30 transition-colors gap-1 px-2.5 py-1"
                 >
                   <Crown className="h-3.5 w-3.5" />
                   {subscriptionTier || 'Premium'} Member
@@ -123,7 +123,7 @@ const Navbar = () => {
                     {subscribed && (
                       <Badge
                         variant="secondary"
-                        className="w-full justify-center bg-gradient-to-r from-catalyst-gold/20 to-catalyst-copper/20 text-catalyst-brown border border-catalyst-gold/40 gap-1 py-1.5"
+                        className="w-full justify-center bg-gradient-to-r from-catalyst-gold/20 to-catalyst-copper/20 text-catalyst-brown dark:text-catalyst-gold border border-catalyst-gold/40 gap-1 py-1.5"
                       >
                         <Crown className="h-3.5 w-3.5" />
                         {subscriptionTier || 'Premium'} Member — Active
