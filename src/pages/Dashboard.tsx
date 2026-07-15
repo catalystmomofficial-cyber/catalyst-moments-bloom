@@ -17,6 +17,7 @@ import { TTCEducationalResources } from '@/components/ttc/TTCEducationalResource
 import { TTCDailyCheckIn } from '@/components/ttc/TTCDailyCheckIn';
 import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
 import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
+import { PrenatalPlanCard } from '@/components/pregnancy/PrenatalPlanCard';
 import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter } from '@/hooks/useContentFilter';
@@ -304,7 +305,12 @@ const Dashboard = () => {
               <div className="lg:col-span-2 space-y-6">
                 {/* Recommended Activity */}
                 {isPregnant ? (
-                  <PregnancyJournal />
+                  <>
+                    {/* Hero: her week/trimester tracker, then her prenatal plan, then journal */}
+                    <PregnancyTracker />
+                    <PrenatalPlanCard />
+                    <PregnancyJournal />
+                  </>
                 ) : isTTC ? (
                   <div id="ttc-tracker">
                     <TTCTracker />
