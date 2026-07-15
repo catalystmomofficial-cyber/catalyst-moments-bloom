@@ -118,7 +118,7 @@ export const CycleCalendar = () => {
                     className={`rounded-lg p-2 text-center transition-all hover:shadow-md ${
                       selectedISO === day.dateISO ? 'ring-2 ring-primary' : ''
                     }`}
-                    style={{ boxShadow: day.isToday ? '0 0 0 2px #2C2218' : undefined }}
+                    style={{ boxShadow: day.isToday ? '0 0 0 2px hsl(var(--foreground))' : undefined }}
                   >
                     <div
                       className="w-7 h-7 mx-auto rounded-full text-white text-xs flex items-center justify-center"
