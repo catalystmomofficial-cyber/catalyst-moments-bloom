@@ -373,8 +373,8 @@ const Dashboard = () => {
                   })()
                 )}
 
-                {/* Monthly Challenge */}
-                <MonthlyChallenge />
+                {/* Monthly Challenge (not shown on the pregnancy dashboard — it's a workout-count challenge) */}
+                {!isPregnant && <MonthlyChallenge />}
               </div>
               
               {/* Right Column - Quick Access */}
@@ -383,8 +383,8 @@ const Dashboard = () => {
                 {/* Personalized Wellness Coach */}
                 <PersonalizedCoachCard />
 
-                {/* Daily Check-in Checklist */}
-                {!isTTC && <DailyChecklistCard />}
+                {/* Daily Check-in Checklist (generic — hidden for pregnancy to declutter) */}
+                {!isTTC && !isPregnant && <DailyChecklistCard />}
 
                 {/* Quick Links */}
                 {!isTTC && !isPregnant && <NutritionSection />}
