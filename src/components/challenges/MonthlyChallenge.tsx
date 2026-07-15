@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Crown, Users, Target, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -98,11 +99,15 @@ export const MonthlyChallenge = () => {
     }
   };
 
-  if (loading || !challenge) {
+  // Reserve the slot while loading so the dashboard doesn't jump when this
+  // card resolves from Supabase (prevents cumulative layout shift on load).
+  if (loading) {
+    return <Skeleton className="h-[280px] w-full rounded-lg" />;
+  }
+  if (!challenge) {
     return null;
   }
 
-  const spotsRemaining = challenge.max_winners - challenge.current_winners;
   const progressPercentage = ((progress?.current_count || 0) / challenge.target_count) * 100;
   const isCompleted = progress?.completed || false;
   const isAwarded = progress?.awarded || false;
@@ -156,8 +161,8 @@ export const MonthlyChallenge = () => {
           <div className="flex items-center gap-2 p-3 rounded-lg bg-background/50">
             <Users className="w-4 h-4 text-primary" />
             <div>
-              <p className="text-xs text-muted-foreground">Spots Left</p>
-              <p className="font-bold text-lg">{spotsRemaining}/{challenge.max_winners}</p>
+              <p className="text-xs text-muted-foreground">Mamas in</p>
+              <p className="font-bold text-lg">{challenge.current_winners} joined</p>
             </div>
           </div>
           <div className="flex items-center gap-2 p-3 rounded-lg bg-background/50">
@@ -169,22 +174,10 @@ export const MonthlyChallenge = () => {
           </div>
         </div>
 
-        {/* Warning */}
-        {spotsRemaining <= 10 && spotsRemaining > 0 && (
-          <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
-            <p className="text-xs text-amber-800 dark:text-amber-200 font-medium">
-              🔥 Only {spotsRemaining} spots remaining! Complete your workouts to secure your crown.
-            </p>
-          </div>
-        )}
-
-        {spotsRemaining === 0 && !isAwarded && (
-          <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800">
-            <p className="text-xs text-red-800 dark:text-red-200 font-medium">
-              All spots have been claimed. Check back next month for a new challenge!
-            </p>
-          </div>
-        )}
+        {/* Gentle, no-pressure note — join whenever you're ready */}
+        <p className="text-xs text-muted-foreground">
+          Optional and go at your own pace — there's no clock, mama. Every day you show up counts.
+        </p>
       </CardContent>
     </Card>
   );
