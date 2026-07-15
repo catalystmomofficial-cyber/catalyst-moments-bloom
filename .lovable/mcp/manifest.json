@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "sdk_version": "0.22.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "catalyst-mom-mcp",
+      "version": "0.1.0",
+      "title": "Catalyst Mom"
+    },
+    "tools": [
+      {
+        "name": "search_blog_posts",
+        "title": "Search blog posts",
+        "description": "Search Catalyst Mom's published blog posts by keyword and optional tag. Returns slug, title, excerpt, tags, author, and published_at for the top matches.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "default": "",
+              "description": "Keyword to match in title, excerpt, or content. Empty returns most recent posts.",
+              "type": "string"
+            },
+            "tag": {
+              "description": "Optional category tag filter.",
+              "type": "string",
+              "enum": [
+                "pregnancy",
+                "postpartum",
+                "ttc",
+                "wellness",
+                "nutrition",
+                "fitness"
+              ]
+            },
+            "limit": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 25
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_blog_post",
+        "title": "Get blog post",
+        "description": "Fetch a single published Catalyst Mom blog post by slug, including the full HTML content, tags, author, and published date.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Blog post slug (from search_blog_posts)."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_blog_tags",
+        "title": "List blog tags",
+        "description": "List the category tags available for Catalyst Mom blog posts. Use these with search_blog_posts.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
