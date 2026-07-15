@@ -77,9 +77,9 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
   }, [output.coachMessage, user?.id]);
 
   const urgencyTone = {
-    low: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
-    medium: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
-    high: 'bg-rose-500/10 text-rose-700 border-rose-500/20',
+    low: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20',
+    medium: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20',
+    high: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/20',
   }[output.urgencyLevel];
 
   return (
@@ -107,8 +107,8 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
 
         <Button
           onClick={() => navigate(output.suggestedAction.to)}
-          className="w-full justify-between"
-          variant="default"
+          className="w-full justify-between border-catalyst-copper/30 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40"
+          variant="outline"
         >
           <span className="flex items-center gap-2">
             {output.suggestedAction.locked && !output.meta.isSubscribed && (

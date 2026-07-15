@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle, Settings, ClipboardList } from 'lucide-react';
+import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, Moon, CreditCard, Crown, Info, Settings, ClipboardList } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
@@ -57,11 +57,11 @@ interface StatsCardProps {
 }
 
 const DAILY_CHECKLIST_ITEMS = [
-  'Complete your daily challenge',
-  'Do your weekly workout',
+  'Do today\'s gentle workout',
   'Follow the meal plan',
   'Drink 8+ glasses of water',
-  'Share your progress @Catalyst_Mom',
+  'Take 5 minutes just for you',
+  'Note how you\'re feeling',
 ];
 
 const DailyChecklistCard = () => {
@@ -120,7 +120,7 @@ const DailyChecklistCard = () => {
 const Dashboard = () => {
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
-  const { wellnessScore, previousWellnessScore, wellnessTrend, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
+  const { wellnessScore, previousWellnessScore, wellnessTrend, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, wellnessEntries, refreshData } = useWellnessData();
   const { user, profile, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
   const { stageInfo, hasJourney } = useContentFilter();
   const lastActive = useLastActiveProgram();
@@ -130,11 +130,26 @@ const Dashboard = () => {
   const isPregnant = stageInfo?.journey === 'pregnant';
   const isPostpartum = stageInfo?.journey === 'postpartum';
   const isToddler = stageInfo?.journey === 'toddler';
+
+  // Today's logged rest (postpartum-relevant metric — replaces the old
+  // "workout minutes" tile that just duplicated the weekly-workouts count).
+  const todayRest = (() => {
+    const today = new Date().toDateString();
+    const t = wellnessEntries.find((e) => new Date(e.created_at).toDateString() === today);
+    return t?.sleep_hours ?? null;
+  })();
+  const hasWorkouts = workoutSessions.length > 0;
   
-  // Auto-refresh data every 30 seconds for real-time updates
+  // Refresh wellness data when the tab regains focus. The in-tab pub/sub in
+  // useWellnessData already updates the moment anything is logged, so a noisy
+  // 30-second polling interval (full refetch + re-render, silent value swaps)
+  // isn't needed — this is a wellness hub, not a live feed.
   useEffect(() => {
-    const interval = setInterval(refreshData, 30000);
-    return () => clearInterval(interval);
+    const onFocus = () => {
+      if (document.visibilityState === 'visible') refreshData();
+    };
+    document.addEventListener('visibilitychange', onFocus);
+    return () => document.removeEventListener('visibilitychange', onFocus);
   }, [refreshData]);
 
   const handleManageSubscription = async () => {
@@ -206,16 +221,15 @@ const Dashboard = () => {
               </div>
             </div>
         
-            {/* Subscription Status + Points Balance + Affiliate */}
+            {/* Subscription status (active only) + Affiliate.
+                The Free-plan upsell was moved to the bottom of the dashboard and
+                de-alarmed so a mom's recovery program leads, not monetization. */}
             <div className="mb-8 space-y-3">
-              {subscribed ? (
-                <div
-                  className="flex items-center justify-between gap-3 rounded-full px-4 py-2"
-                  style={{ background: 'rgba(244,197,160,0.25)' }}
-                >
+              {subscribed && (
+                <div className="flex items-center justify-between gap-3 rounded-full px-4 py-2 bg-primary/10 border border-primary/20">
                   <div className="flex items-center gap-2 min-w-0">
-                    <CheckCircle className="h-4 w-4 shrink-0" style={{ color: '#8B4513' }} />
-                    <span className="text-sm font-medium truncate" style={{ color: '#8B4513' }}>
+                    <CheckCircle className="h-4 w-4 shrink-0 text-primary" />
+                    <span className="text-sm font-medium truncate text-foreground">
                       Catalyst Mom Active
                     </span>
                     {subscriptionEnd && (
@@ -228,26 +242,10 @@ const Dashboard = () => {
                     type="button"
                     onClick={handleManageSubscription}
                     disabled={isManagingSubscription}
-                    className="text-xs font-medium shrink-0 hover:underline disabled:opacity-50"
-                    style={{ color: '#8B4513' }}
+                    className="text-xs font-medium shrink-0 text-primary hover:underline disabled:opacity-50"
                   >
                     Manage
                   </button>
-                </div>
-              ) : (
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-lg border border-amber-200 dark:border-amber-900/30 bg-gradient-to-r from-amber-50 to-transparent dark:from-amber-950/20">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg shrink-0">
-                      <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-500" />
-                    </div>
-                    <div className="min-w-0">
-                      <span className="font-semibold">Free Plan</span>
-                      <p className="text-xs text-muted-foreground">Limited access to features</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
-                    <SubscriptionButton />
-                  </div>
                 </div>
               )}
 
@@ -264,8 +262,8 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                   <StatsCard
                     title="Weekly Workouts"
-                    value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
-                    description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
+                    value={hasWorkouts ? `${workoutSessions.length}/${weeklyWorkoutGoal}` : '—'}
+                    description={hasWorkouts ? `${weeklyWorkoutProgress.toFixed(0)}% complete` : 'Start this week'}
                     icon={<Activity className="h-5 w-5" />}
                     color="bg-primary/10"
                   />
@@ -287,10 +285,10 @@ const Dashboard = () => {
                     color="bg-primary/10"
                   />
                   <StatsCard
-                    title="This Week"
-                    value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
-                    description="Workout minutes"
-                    icon={<TrendingUp className="h-5 w-5" />}
+                    title="Rest"
+                    value={todayRest != null ? `${todayRest}h` : '—'}
+                    description={todayRest != null ? 'Slept last night' : 'Log tonight’s rest'}
+                    icon={<Moon className="h-5 w-5" />}
                     color="bg-primary/10"
                   />
                 </div>
@@ -438,6 +436,24 @@ const Dashboard = () => {
                 </Button>
               </div>
             ) : null}
+
+            {/* Free-plan invitation — calm, at the bottom, never above her care */}
+            {!subscribed && (
+              <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-lg border border-dashed border-border bg-muted/30">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="bg-muted p-2 rounded-lg shrink-0">
+                    <Info className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="font-semibold">You're on the Free plan</span>
+                    <p className="text-xs text-muted-foreground">See everything a membership unlocks — programs for every stage, meal plans, and your coach.</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-full sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">
+                  <SubscriptionButton />
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

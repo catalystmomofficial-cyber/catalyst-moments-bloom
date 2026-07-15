@@ -34,16 +34,10 @@ export const PointsBalance = () => {
 
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full font-medium whitespace-nowrap"
-      style={{
-        background: 'rgba(244,197,160,0.3)',
-        color: '#8B4513',
-        padding: '7px 14px',
-        fontSize: '13px',
-      }}
+      className="inline-flex items-center gap-1.5 rounded-full font-medium whitespace-nowrap px-3.5 py-[7px] text-[13px] bg-primary/10 text-foreground border border-primary/20"
       title="Points balance"
     >
-      <Sparkles className="h-3.5 w-3.5" />
+      <Sparkles className="h-3.5 w-3.5 text-primary" />
       {points ?? '—'} pts
     </span>
   );
