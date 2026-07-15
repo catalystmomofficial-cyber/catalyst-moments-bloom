@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Activity, Baby, CheckCircle, Heart, Timer, User, Users, Moon, CreditCard, Crown, Info, Settings, ClipboardList } from 'lucide-react';
+import { Activity, Baby, CheckCircle, Heart, Timer, Moon, CreditCard, Crown, Info, Settings, ClipboardList } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
@@ -396,34 +396,6 @@ const Dashboard = () => {
                   isPregnant ? <PregnancyCommunity /> :
                   <NutritionSection />
                 )}
-                
-                {/* Community Preview */}
-                {!isTTC && !isPregnant ? (
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center text-base">
-                        <Users className="mr-2 h-4 w-4" />
-                        Community
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex items-start space-x-3">
-                        <div className="rounded-full bg-primary/20 h-8 w-8 flex items-center justify-center flex-shrink-0">
-                          <User className="h-4 w-4 text-primary" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm truncate"><span className="font-medium">Jessica</span> completed the 30-day Challenge</p>
-                          <p className="text-xs text-muted-foreground">2 hours ago</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="pt-3">
-                      <Button variant="outline" size="sm" className="w-full" asChild>
-                        <Link to="/community">Join Community</Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ) : null}
 
               </div>
             </div>
