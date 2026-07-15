@@ -30,15 +30,15 @@ interface MealPlan extends ContentItem {
 }
 
 export const recipes: Recipe[] = [
-  // TTC RECIPES - 30 hormone-balancing, fertility-boosting recipes
+  // TTC RECIPES - nutrient-dense preconception recipes
   {
     id: 'ttc-day1-hormone-smoothie',
-    title: 'Hormone-Balancing Berry Smoothie',
-    description: 'Antioxidant-rich smoothie with maca root to balance hormones and support egg quality',
+    title: 'Antioxidant Berry & Maca Smoothie',
+    description: 'Antioxidant-rich smoothie with maca, spinach, and berries',
     prepTime: '5 min',
     image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
     category: 'Breakfast',
-    tags: ['Hormone Balance', 'Antioxidants', 'Maca', 'Quick'],
+    tags: ['Folate-Rich', 'Antioxidants', 'Maca', 'Quick'],
     journey: ['ttc'],
     stage: ['ttc-1-3', 'ttc-4-6', 'ttc-6-12', 'ttc-12+'],
     servings: 1,
@@ -73,8 +73,8 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day2-quinoa-power-bowl',
-    title: 'Fertility Quinoa Power Bowl',
-    description: 'Complete protein bowl with zinc-rich pumpkin seeds and fertility-boosting vegetables',
+    title: 'Zinc-Rich Quinoa Power Bowl',
+    description: 'Complete protein bowl with zinc-rich pumpkin seeds and colorful vegetables',
     prepTime: '25 min',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
     category: 'Lunch',
@@ -117,7 +117,7 @@ export const recipes: Recipe[] = [
   {
     id: 'ttc-day3-wild-salmon',
     title: 'Wild Salmon with Asparagus',
-    description: 'Omega-3 rich salmon supporting reproductive health with hormone-balancing asparagus',
+    description: 'Omega-3 rich salmon with folate-rich asparagus',
     prepTime: '20 min',
     image: 'https://images.unsplash.com/photo-1476127390620-9731f2a46f44',
     category: 'Dinner',
@@ -194,7 +194,7 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day5-fertility-soup',
-    title: 'Warming Fertility Bone Broth',
+    title: 'Warming Mineral Bone Broth',
     description: 'Deeply nourishing bone broth with warming spices to support circulation and vitality',
     prepTime: '30 min',
     image: 'https://images.unsplash.com/photo-1547592180-85f173990554',
@@ -236,8 +236,8 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day6-avocado-toast',
-    title: 'Fertility Avocado Toast',
-    description: 'Nutrient-dense avocado toast with sprouted grain bread and fertility-boosting toppings',
+    title: 'Nutrient-Dense Avocado Toast',
+    description: 'Nutrient-dense avocado toast on sprouted grain bread',
     prepTime: '10 min',
     image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b',
     category: 'Breakfast',
@@ -278,7 +278,7 @@ export const recipes: Recipe[] = [
   {
     id: 'ttc-day7-lentil-curry',
     title: 'Warming Lentil Curry',
-    description: 'Protein-rich red lentil curry with warming spices to boost circulation and nourish blood',
+    description: 'Protein-rich red lentil curry with warming spices and iron-rich lentils',
     prepTime: '25 min',
     image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b',
     category: 'Dinner',
@@ -322,7 +322,7 @@ export const recipes: Recipe[] = [
   {
     id: 'ttc-day8-brazil-nut-smoothie',
     title: 'Selenium Brazil Nut Smoothie',
-    description: 'Selenium-rich smoothie with Brazil nuts to support thyroid function and egg quality',
+    description: 'Selenium-rich smoothie with Brazil nuts to support thyroid function',
     prepTime: '5 min',
     image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
     category: 'Breakfast',
@@ -400,7 +400,7 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day10-chia-pudding',
-    title: 'Hormone-Balancing Chia Pudding',
+    title: 'Omega-3 Chia Pudding',
     description: 'Omega-3 rich chia pudding with adaptogens to support stress and hormone balance',
     prepTime: '5 min',
     image: 'https://images.unsplash.com/photo-1563379091339-03246963d96c',
@@ -479,8 +479,8 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day12-fertility-salad',
-    title: 'Rainbow Fertility Salad',
-    description: 'Colorful salad packed with fertility-boosting nutrients and antioxidants',
+    title: 'Rainbow Antioxidant Salad',
+    description: 'Colorful salad packed with folate, iron, and antioxidants',
     prepTime: '15 min',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
     category: 'Lunch',
@@ -640,7 +640,7 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day16-fertility-trail-mix',
-    title: 'Fertility Power Trail Mix',
+    title: 'Zinc & Selenium Trail Mix',
     description: 'Nutrient-dense mix of nuts, seeds, and antioxidant-rich additions',
     prepTime: '5 min',
     image: 'https://images.unsplash.com/photo-1517677208171-0bc6725a3e60',
@@ -683,7 +683,7 @@ export const recipes: Recipe[] = [
     prepTime: '5 min',
     image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
     category: 'Breakfast',
-    tags: ['Adaptogens', 'Stress Support', 'Hormone Balance'],
+    tags: ['Adaptogens', 'Stress Support', 'Antioxidants'],
     journey: ['ttc'],
     stage: ['ttc-1-3', 'ttc-4-6', 'ttc-6-12', 'ttc-12+'],
     servings: 1,
@@ -839,7 +839,7 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day21-matcha-latte',
-    title: 'Fertility Matcha Latte',
+    title: 'Antioxidant Matcha Latte',
     description: 'Antioxidant-rich matcha latte with collagen and adaptogens',
     prepTime: '5 min',
     image: 'https://images.unsplash.com/photo-1559825481-12a05cc00344',
@@ -877,12 +877,12 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day22-liver-detox-salad',
-    title: 'Liver-Supporting Detox Salad',
-    description: 'Bitter greens and liver-supporting foods to optimize hormone metabolism',
+    title: 'Iron-Rich Liver & Greens Salad',
+    description: 'Bitter greens and iron-rich liver for a nutrient-dense preconception meal',
     prepTime: '10 min',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
     category: 'Lunch',
-    tags: ['Liver Support', 'Detox', 'Bitter Greens'],
+    tags: ['Iron-Rich', 'Bitter Greens', 'Folate-Rich'],
     journey: ['ttc'],
     stage: ['ttc-1-3', 'ttc-4-6', 'ttc-6-12', 'ttc-12+'],
     servings: 2,
@@ -905,7 +905,7 @@ export const recipes: Recipe[] = [
       'Sprinkle with walnuts and hemp hearts',
       'Whisk olive oil, lemon juice, and mustard',
       'Toss with dressing just before serving',
-      'The bitter greens support natural detox pathways'
+      'The bitter greens add folate, fiber, and vitamin K'
     ],
     nutrition: {
       calories: 285,
@@ -956,7 +956,7 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day24-fertility-fat-bombs',
-    title: 'Hormone-Balancing Fat Bombs',
+    title: 'Healthy-Fat Energy Bombs',
     description: 'Nutrient-dense fat bombs with maca and cacao for hormone support',
     prepTime: '10 min',
     image: 'https://images.unsplash.com/photo-1563379091339-03246963d96c',
@@ -996,7 +996,7 @@ export const recipes: Recipe[] = [
   {
     id: 'ttc-day25-sardines-toast',
     title: 'Sardines on Sourdough Toast',
-    description: 'Omega-3 rich sardines on fermented sourdough with fertility-boosting toppings',
+    description: 'Omega-3 rich sardines on fermented sourdough',
     prepTime: '10 min',
     image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b',
     category: 'Lunch',
@@ -1154,7 +1154,7 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'ttc-day29-collagen-gummies',
-    title: 'Fertility Collagen Gummies',
+    title: 'Collagen & Vitamin-C Gummies',
     description: 'Gut-healing collagen gummies with berry flavor and probiotics',
     prepTime: '15 min',
     image: 'https://images.unsplash.com/photo-1563379091339-03246963d96c',
@@ -2277,7 +2277,7 @@ export const recipes: Recipe[] = [
   {
     id: 'postpartum-day3-lactation-cookies',
     title: 'Power Lactation Cookies',
-    description: 'Nutrient-dense cookies with brewers yeast, oats, and flax to boost milk supply',
+    description: 'Nutrient-dense oat, brewers yeast, and flax cookies for nursing moms',
     prepTime: '25 min',
     image: 'https://images.unsplash.com/photo-1606913947356-89296d414c0b',
     category: 'Snacks',
@@ -2653,7 +2653,7 @@ export const recipes: Recipe[] = [
   },
   {
     id: 'postpartum-day12-chia-seed-pudding',
-    title: 'Lactation-Boosting Chia Pudding',
+    title: 'Nursing-Support Chia Pudding',
     description: 'Omega-3 rich chia pudding with coconut milk and lactation-supporting seeds',
     prepTime: '5 min',
     image: 'https://images.unsplash.com/photo-1563379091339-03246963d96c',
@@ -3359,14 +3359,14 @@ export const mealPlans: MealPlan[] = [
   // TTC MEAL PLANS - Complete 30-day program
   {
     id: 'ttc-complete-30-day-fertility-plan',
-    title: 'Complete 30-Day Fertility Transformation',
-    description: 'Comprehensive month-long meal plan with hormone-balancing, fertility-boosting recipes designed to optimize conception naturally',
+    title: 'Complete 30-Day Preconception Meal Plan',
+    description: 'Comprehensive month-long preconception meal plan built around nutrient-dense whole foods',
     duration: '30 Day Complete Plan',
     recipeCount: 30,
     avgPrepTime: '15-30 min/meal',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
     category: 'Fertility',
-    tags: ['Complete Program', 'Hormone Balance', 'Fertility Optimization', 'Conception Support'],
+    tags: ['Complete Program', 'Nutrient-Dense', 'Preconception', 'Whole Foods'],
     journey: ['ttc'],
     stage: ['ttc-1-3', 'ttc-4-6', 'ttc-6-12', 'ttc-12+'],
     recipes: [
