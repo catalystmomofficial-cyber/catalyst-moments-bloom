@@ -89,6 +89,16 @@ const BirthBallProgram = () => {
           </div>
         </section>
 
+        {/* Safety note */}
+        <section className="mb-8 max-w-4xl">
+          <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground flex items-start gap-3">
+            <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+            <p>
+              <span className="font-medium text-foreground">Before you begin:</span> This program is general education, not medical advice. Check with your provider before starting, and stop and contact them if you feel sharp pain, dizziness, shortness of breath, bleeding, fluid leakage, or contractions before full term.
+            </p>
+          </div>
+        </section>
+
         {/* Progress */}
         <section className="mb-8 max-w-4xl">
           <div className="bg-card rounded-lg p-6 border">

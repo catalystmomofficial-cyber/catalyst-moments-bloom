@@ -609,7 +609,7 @@ export const educationalContent = {
       "Use slow breathing to stay grounded and present",
       "Try hip circles to help baby rotate and descend"
     ],
-    note: "These positions are mom-approved and doula-loved for staying relaxed and supported in early labor."
+    note: "These are common positions for staying relaxed and supported in early labor."
   },
   buyingGuide: {
     title: "Birth Ball Buying Guide",
@@ -733,24 +733,24 @@ export const educationalContent = {
   },
   expertTips: [
     {
-      quote: "Start small and stay consistent. Even 5 minutes a day can ease back pain and help your baby get into a good position.",
-      author: "Dr. Nina Lopez, OB-GYN"
+      quote: "Start small and stay consistent. Even 5 minutes a day can ease back pain and help you stay comfortable.",
+      author: "Getting started"
     },
     {
-      quote: "Your pelvic floor is working overtime during pregnancy. Using the ball correctly helps prevent strain and supports easier labor.",
-      author: "Michelle Green, Pelvic Floor Physiotherapist"
+      quote: "Your pelvic floor is working overtime during pregnancy. Using the ball gently helps you avoid strain.",
+      author: "Pelvic floor"
     },
     {
       quote: "If you're ever unsure about a move, keep it simple: sit upright on the ball and just breathe deeply. That alone can calm your system.",
-      author: "Amy J., Certified Doula"
+      author: "When in doubt"
     },
     {
-      quote: "Avoid bouncing aggressively in the third trimester. Use the ball to rock and sway—this opens the pelvis and reduces tension safely.",
-      author: "Dr. Jade Mensah, Prenatal Chiropractor"
+      quote: "Avoid bouncing aggressively in the third trimester. Use the ball to rock and sway to ease tension.",
+      author: "Third trimester"
     },
     {
-      quote: "Hydration is key. Birth ball exercises are low impact, but they still count as movement. Always drink water before and after.",
-      author: "Sara Mendez, Pregnancy Fitness Coach"
+      quote: "Birth ball exercises are low impact, but they still count as movement. Drink water before and after.",
+      author: "Stay hydrated"
     }
   ]
 };

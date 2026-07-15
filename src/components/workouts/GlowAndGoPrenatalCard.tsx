@@ -11,89 +11,7 @@ import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 
 const GLOW_VIDEO_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/glow%20and%20go/Intro.mp4";
 
-// Real-looking diverse avatar URLs from randomuser.me with seed for consistency
-const AVATARS = [
-  'https://randomuser.me/api/portraits/women/1.jpg',
-  'https://randomuser.me/api/portraits/women/44.jpg',
-  'https://randomuser.me/api/portraits/women/68.jpg',
-  'https://randomuser.me/api/portraits/women/89.jpg',
-  'https://randomuser.me/api/portraits/women/12.jpg',
-];
-
-interface AnimatedCounterProps {
-  target: number;
-  duration?: number;
-}
-
-const AnimatedCounter = ({ target, duration = 2000 }: AnimatedCounterProps) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTime: number | null = null;
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      
-      // Easing function for smooth animation
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      const currentCount = Math.floor(easeOutQuart * target);
-      
-      setCount(currentCount);
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    
-    requestAnimationFrame(animate);
-  }, [target, duration]);
-
-  return <span>{count}</span>;
-};
-
-const UserAvatars = ({ enrolledCount }: { enrolledCount: number }) => {
-  const displayedAvatars = AVATARS.slice(0, 4);
-  const remainingCount = enrolledCount - displayedAvatars.length;
-
-  return (
-    <div className="flex items-center space-x-3">
-      <div className="flex -space-x-2">
-        {displayedAvatars.map((avatar, index) => (
-          <div
-            key={avatar}
-            className="relative group"
-            style={{ 
-              animationDelay: `${index * 200}ms`,
-              animation: 'fade-in 0.6s ease-out both'
-            }}
-          >
-            <img
-              src={avatar}
-              alt={`Enrolled mom ${index + 1}`}
-              className="w-8 h-8 rounded-full border-2 border-background object-cover 
-                       transition-transform duration-300 hover:scale-110 hover:z-10
-                       shadow-sm group-hover:shadow-md"
-            />
-            <div className="absolute inset-0 rounded-full bg-primary/10 opacity-0 
-                          group-hover:opacity-100 transition-opacity duration-300 
-                          animate-pulse" />
-          </div>
-        ))}
-        {remainingCount > 0 && (
-          <div className="w-8 h-8 rounded-full bg-primary/20 border-2 border-background 
-                        flex items-center justify-center text-xs font-medium text-primary
-                        transition-all duration-300 hover:bg-primary/30 hover:scale-110">
-            +{remainingCount > 999 ? '999+' : remainingCount}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
 const GlowAndGoPrenatalCard = () => {
-  // Simulate dynamic enrollment count (could be fetched from backend)
-  const [enrolledCount, setEnrolledCount] = useState(247);
   const [isHovered, setIsHovered] = useState(false);
   const [watched, setWatched] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
@@ -110,18 +28,6 @@ const GlowAndGoPrenatalCard = () => {
       const saved = localStorage.getItem("glowAndGoWatched");
       if (saved) setWatched(JSON.parse(saved));
     } catch {}
-  }, []);
-
-  // Simulate gradual enrollment increase
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Small random increase every 30 seconds (for demo purposes)
-      if (Math.random() > 0.7) {
-        setEnrolledCount(prev => prev + Math.floor(Math.random() * 3) + 1);
-      }
-    }, 30000);
-
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -184,14 +90,14 @@ const GlowAndGoPrenatalCard = () => {
           </div>
           <div className="flex items-center group">
             <Clock className="h-4 w-4 mr-1 text-muted-foreground group-hover:text-primary transition-colors" />
-            <span className="text-sm text-muted-foreground">20-30 min/day</span>
+            <span className="text-sm text-muted-foreground">10-20 min/day</span>
           </div>
         </div>
         
         <div className="space-y-3 mb-6">
           {[
-            'Prep your body for birth & help reduce tearing',
-            'Strengthen pelvic floor safely', 
+            'Prep your body for birth with safe, mobile movement',
+            'Pelvic-floor–friendly strengthening',
             'Trimester-specific guidance'
           ].map((benefit, index) => (
             <div 
@@ -221,14 +127,9 @@ const GlowAndGoPrenatalCard = () => {
           <Progress value={progressPercent} className="h-2" />
         </div>
         
-        <div className="flex items-center justify-between">
-          <UserAvatars enrolledCount={enrolledCount} />
-          <div className="text-right">
-            <div className="text-lg font-semibold text-primary">
-              <AnimatedCounter target={enrolledCount} />
-            </div>
-            <span className="text-xs text-muted-foreground">expecting moms enrolled</span>
-          </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Baby className="h-4 w-4 text-primary shrink-0" />
+          <span>Trimester-safe sessions · included with your membership</span>
         </div>
       </CardContent>
       
