@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Check, TrendingUp, Users, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { GlowingShadow } from '@/components/ui/glowing-shadow';
 import { usePlanPopularity } from '@/hooks/usePlanPopularity';
 
 interface PricingToggleProps {
