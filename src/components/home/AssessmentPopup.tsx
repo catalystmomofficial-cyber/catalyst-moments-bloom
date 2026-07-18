@@ -82,7 +82,7 @@ const AssessmentPopup = () => {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300 motion-reduce:animate-none"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300 motion-reduce:animate-none"
       onClick={dismiss}
       role="presentation"
     >
