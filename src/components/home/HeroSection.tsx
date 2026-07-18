@@ -1,10 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
+
+const ASSESSMENT_URL = "https://catalystmom.online?utm_source=app-site&utm_medium=hero&utm_campaign=assessment-invite";
 
 interface HeroSectionProps {
   onWatchVideo: (url: string, title: string) => void;
@@ -22,6 +24,7 @@ const FALLBACK_SRC = "https://images.unsplash.com/photo-1516627145497-ae6968895b
 
 const HeroSection = ({ onWatchVideo: _onWatchVideo }: HeroSectionProps) => {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [slide, setSlide] = useState(0);
   const [failed, setFailed] = useState<Set<number>>(new Set());
 
@@ -87,21 +90,34 @@ const HeroSection = ({ onWatchVideo: _onWatchVideo }: HeroSectionProps) => {
             Whether you are trying to conceive, growing a baby, or healing postpartum Catalyst Mom gives you personalised fitness, nutrition, and a community that actually gets it.
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-6">
-            <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90 animate-breathe-glow motion-reduce:animate-none">
-              <Link to="/dashboard">Get Started</Link>
-            </Button>
+            <ShimmerButton
+              onClick={() => navigate("/dashboard")}
+              background="linear-gradient(135deg, #A15C2F, #C27B48)"
+              shimmerColor="#FBEAD3"
+              className="px-8 py-3.5 text-base font-semibold !text-white shadow-lg"
+            >
+              Get Started
+            </ShimmerButton>
             {isAuthenticated ? (
-              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 bg-background/60 backdrop-blur-sm dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
-                <Link to="/about" className="flex items-center">
+              <ShimmerButton
+                onClick={() => navigate("/about")}
+                background="rgba(255,255,255,0.6)"
+                shimmerColor="#C27B48"
+                className="px-8 py-3.5 text-base font-semibold !text-catalyst-copper border border-catalyst-copper/25 backdrop-blur-sm shadow-sm"
+              >
+                <span className="flex items-center">
                   About Our Mission <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+                </span>
+              </ShimmerButton>
             ) : (
-              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 bg-background/60 backdrop-blur-sm dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
-                <a href="https://catalystmom.online?utm_source=app-site&utm_medium=hero&utm_campaign=assessment-invite" target="_blank" rel="noopener noreferrer">
-                  Free Assessment
-                </a>
-              </Button>
+              <ShimmerButton
+                onClick={() => { window.location.href = ASSESSMENT_URL; }}
+                background="rgba(255,255,255,0.6)"
+                shimmerColor="#C27B48"
+                className="px-8 py-3.5 text-base font-semibold !text-catalyst-copper border border-catalyst-copper/25 backdrop-blur-sm shadow-sm"
+              >
+                Free Assessment
+              </ShimmerButton>
             )}
           </div>
         </div>
