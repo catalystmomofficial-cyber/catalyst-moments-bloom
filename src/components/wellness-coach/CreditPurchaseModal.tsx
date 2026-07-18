@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Coins, X, Sparkles, Zap, Crown } from 'lucide-react';
+import { GlowingShadow } from '@/components/ui/glowing-shadow';
 import { useCredits, CREDIT_PACKS } from '@/hooks/useCredits';
 
 interface CreditPurchaseModalProps {
