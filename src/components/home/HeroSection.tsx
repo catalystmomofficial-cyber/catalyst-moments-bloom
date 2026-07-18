@@ -16,7 +16,7 @@ interface HeroSectionProps {
 // Falls back to the previous stock photo until files are uploaded to public/images/home/.
 const heroSlides = [
   { src: "/images/home/hero-app.jpg", alt: "Mom checking her wellness progress in the Catalyst Mom app" },
-  { src: "/images/home/pregnancy-1.jpg", alt: "Pregnant mom taking a quiet moment in a sunlit nursery" },
+  { src: "/images/home/screen.png", alt: "Pregnant mom taking a quiet moment in a sunlit nursery" },
   { src: "/images/home/postpartum.jpg", alt: "Mom holding her newborn at home" },
   { src: "/images/home/pregnancy-2.jpg", alt: "Mom breathing calmly on her mat" },
 ];
@@ -74,7 +74,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               <div className="absolute -top-4 -left-4 w-64 h-64 bg-catalyst-copper/10 rounded-full animate-breathe motion-reduce:animate-none"></div>
               <div className="absolute bottom-8 -right-8 w-40 h-40 bg-catalyst-copper/10 rounded-full animate-float"></div>
               <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
-                <AspectRatio ratio={4/5} className="bg-muted">
+                <AspectRatio ratio={3/2} className="bg-muted">
                   {liveSlides.length === 0 ? (
                     <img
                       src={FALLBACK_SRC}
