@@ -85,6 +85,8 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
           </Button>
         </CardContent>
       </Card>
+      </GlowingShadow>
+
 
       {/* Yearly Plan - Only show if price ID exists */}
       {showYearly && (
