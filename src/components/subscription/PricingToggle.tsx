@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Check, TrendingUp, Users, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { GlowingShadow } from '@/components/ui/glowing-shadow';
 import { usePlanPopularity } from '@/hooks/usePlanPopularity';
 
 interface PricingToggleProps {
@@ -26,7 +27,9 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
     <div className="w-full max-w-4xl mx-auto">
       <div className={`grid ${showYearly ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-6 mb-12`}>
         {/* Monthly Plan */}
+        <GlowingShadow radius="0.75rem">
         <Card className="relative border-2 border-primary shadow-lg">
+
           <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-primary/80 border-0 gap-1 z-10">
             <TrendingUp className="h-3 w-3" />
             Founding Rate
@@ -82,6 +85,8 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
           </Button>
         </CardContent>
       </Card>
+      </GlowingShadow>
+
 
       {/* Yearly Plan - Only show if price ID exists */}
       {showYearly && (

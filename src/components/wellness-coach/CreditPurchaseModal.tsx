@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Coins, X, Sparkles, Zap, Crown } from 'lucide-react';
+import { GlowingShadow } from '@/components/ui/glowing-shadow';
 import { useCredits, CREDIT_PACKS } from '@/hooks/useCredits';
 
 interface CreditPurchaseModalProps {
@@ -11,6 +12,9 @@ interface CreditPurchaseModalProps {
   currentCredits: number;
   requiredCredits: number;
 }
+
+const ConditionalGlow = ({ popular, children }: { popular: boolean; children: React.ReactNode }) =>
+  popular ? <GlowingShadow radius="0.5rem">{children}</GlowingShadow> : <>{children}</>;
 
 const CreditPurchaseModal = ({ isOpen, onClose, currentCredits, requiredCredits }: CreditPurchaseModalProps) => {
   const { purchaseCredits } = useCredits();
@@ -61,17 +65,18 @@ const CreditPurchaseModal = ({ isOpen, onClose, currentCredits, requiredCredits 
               const pricePerCredit = (pack.price / pack.credits).toFixed(3);
               
               return (
+                <ConditionalGlow popular={!!pack.popular} key={id}>
                 <div
-                  key={id}
                   className={`relative border rounded-lg p-4 transition-all hover:border-primary ${
                     pack.popular ? 'border-primary bg-primary/5' : ''
                   }`}
                 >
                   {pack.popular && (
-                    <Badge className="absolute -top-2 left-4 bg-primary text-primary-foreground">
+                    <Badge className="absolute -top-2 left-4 bg-primary text-primary-foreground z-10">
                       Most Popular
                     </Badge>
                   )}
+                  
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -107,6 +112,7 @@ const CreditPurchaseModal = ({ isOpen, onClose, currentCredits, requiredCredits 
                     </Button>
                   </div>
                 </div>
+                </ConditionalGlow>
               );
             })}
           </div>
