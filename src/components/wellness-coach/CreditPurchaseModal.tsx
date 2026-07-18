@@ -109,6 +109,7 @@ const CreditPurchaseModal = ({ isOpen, onClose, currentCredits, requiredCredits 
                     </Button>
                   </div>
                 </div>
+                </ConditionalGlow>
               );
             })}
           </div>
