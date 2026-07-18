@@ -102,15 +102,11 @@ const AssessmentPopup = () => {
           <X className="h-4 w-4" />
         </button>
 
-        <p className="text-xs font-semibold tracking-wide uppercase text-catalyst-copper dark:text-catalyst-gold mb-2">
-          Free · 2 minutes · No sign-up to start
-        </p>
         <h2 id="assessment-popup-title" className="text-2xl font-bold mb-2 text-foreground">
-          Where are you on your motherhood journey?
+          Take the free 2-minute assessment
         </h2>
-        <p className="text-sm text-muted-foreground mb-5 leading-relaxed">
-          Answer a few questions and get your personal Maternal Wellness Score — plus a roadmap
-          built around exactly where you are.
+        <p className="text-sm text-muted-foreground mb-5">
+          Get your Maternal Wellness Score. Where are you right now?
         </p>
 
         <div className="space-y-3">
