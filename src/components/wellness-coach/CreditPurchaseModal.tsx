@@ -13,6 +13,9 @@ interface CreditPurchaseModalProps {
   requiredCredits: number;
 }
 
+const ConditionalGlow = ({ popular, children }: { popular: boolean; children: React.ReactNode }) =>
+  popular ? <GlowingShadow radius="0.5rem">{children}</GlowingShadow> : <>{children}</>;
+
 const CreditPurchaseModal = ({ isOpen, onClose, currentCredits, requiredCredits }: CreditPurchaseModalProps) => {
   const { purchaseCredits } = useCredits();
   const [loading, setLoading] = React.useState<string | null>(null);
