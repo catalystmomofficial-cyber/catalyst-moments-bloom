@@ -10,6 +10,7 @@ import { UserPlus, Loader2, MailCheck } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { Separator } from "@/components/ui/separator";
+import { BorderRotate } from "@/components/ui/border-rotate";
 import { PersonalizedOnboarding } from "@/components/onboarding/PersonalizedOnboarding";
 
 const Register = () => {
@@ -187,7 +188,14 @@ const Register = () => {
     <PageLayout>
       <PersonalizedOnboarding />
       <div className="flex items-center justify-center py-10">
-        <Card className="w-full max-w-md shadow-lg">
+        <BorderRotate
+          animationSpeed={9}
+          borderWidth={2}
+          borderRadius={18}
+          backgroundColor="hsl(var(--card))"
+          className="w-full max-w-md shadow-lg"
+        >
+        <Card className="w-full border-0 shadow-none bg-transparent rounded-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold">
               {signupSuccess ? "Check Your Email" : "Create Account"}
@@ -380,6 +388,7 @@ const Register = () => {
             </p>
           </CardFooter>
         </Card>
+        </BorderRotate>
       </div>
     </PageLayout>
   );

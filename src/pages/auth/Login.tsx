@@ -9,6 +9,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import { LogIn, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Separator } from "@/components/ui/separator";
+import { BorderRotate } from "@/components/ui/border-rotate";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -52,7 +53,14 @@ const Login = () => {
   return (
     <PageLayout>
       <div className="flex items-center justify-center min-h-[80vh]">
-        <Card className="w-full max-w-md shadow-lg">
+        <BorderRotate
+          animationSpeed={9}
+          borderWidth={2}
+          borderRadius={18}
+          backgroundColor="hsl(var(--card))"
+          className="w-full max-w-md shadow-lg"
+        >
+        <Card className="w-full border-0 shadow-none bg-transparent rounded-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
             <CardDescription>Login to your Catalyst Mom account</CardDescription>
@@ -153,6 +161,7 @@ const Login = () => {
             </p>
           </CardFooter>
         </Card>
+        </BorderRotate>
       </div>
     </PageLayout>
   );
