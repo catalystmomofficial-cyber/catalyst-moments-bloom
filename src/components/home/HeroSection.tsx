@@ -70,10 +70,10 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
             </div>
           </div>
           <div className="md:w-1/2 flex justify-center">
-            <div className="relative">
+            <div className="relative w-full max-w-sm md:max-w-md">
               <div className="absolute -top-4 -left-4 w-64 h-64 bg-catalyst-copper/10 rounded-full animate-breathe motion-reduce:animate-none"></div>
               <div className="absolute bottom-8 -right-8 w-40 h-40 bg-catalyst-copper/10 rounded-full animate-float"></div>
-              <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
+              <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden w-full mx-auto">
                 <div className="relative w-full bg-muted" style={{ aspectRatio: "3 / 2" }}>
                   {liveSlides.length === 0 ? (
                     <img
