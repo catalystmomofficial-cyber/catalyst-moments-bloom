@@ -29,12 +29,13 @@ export function GlowingShadow({ children, className = "", radius = "1rem" }: Glo
         .glow-shadow-wrap {
           position: relative;
           isolation: isolate;
+          overflow: visible;
         }
         .glow-shadow-wrap::before,
         .glow-shadow-wrap::after {
           content: "";
           position: absolute;
-          inset: -2px;
+          inset: -4px;
           border-radius: inherit;
           background: conic-gradient(
             from var(--glow-angle),
@@ -48,7 +49,7 @@ export function GlowingShadow({ children, className = "", radius = "1rem" }: Glo
           pointer-events: none;
         }
         .glow-shadow-wrap::before {
-          padding: 2px;
+          padding: 3px;
           -webkit-mask:
             linear-gradient(#000 0 0) content-box,
             linear-gradient(#000 0 0);
@@ -57,12 +58,12 @@ export function GlowingShadow({ children, className = "", radius = "1rem" }: Glo
           z-index: 1;
         }
         .glow-shadow-wrap::after {
-          inset: -6px;
-          filter: blur(18px);
-          opacity: 0.55;
+          inset: -12px;
+          filter: blur(24px);
+          opacity: 0.75;
           z-index: 0;
         }
-        .glow-shadow-wrap > * {
+        .glow-shadow-wrap > *:not(style) {
           position: relative;
           z-index: 2;
           border-radius: inherit;

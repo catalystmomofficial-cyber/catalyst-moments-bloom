@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { GlowingShadow } from "@/components/ui/glowing-shadow";
 
 // Native assessment invite popup — no third-party service, no external branding.
 // Shows once per visitor (7-day snooze on dismiss), only for logged-out users,
@@ -85,6 +86,7 @@ const AssessmentPopup = () => {
       onClick={dismiss}
       role="presentation"
     >
+      <GlowingShadow radius="1rem" className="w-full max-w-md">
       <div
         ref={dialogRef}
         role="dialog"
@@ -92,7 +94,7 @@ const AssessmentPopup = () => {
         aria-labelledby="assessment-popup-title"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md rounded-2xl bg-background border border-catalyst-copper/20 shadow-2xl p-6 sm:p-8 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300 motion-reduce:animate-none"
+        className="relative w-full rounded-2xl bg-background border border-catalyst-copper/20 shadow-2xl p-6 sm:p-8 animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300 motion-reduce:animate-none"
       >
         <button
           onClick={dismiss}
@@ -127,6 +129,7 @@ const AssessmentPopup = () => {
           Get your score instantly • No credit card
         </p>
       </div>
+      </GlowingShadow>
     </div>
   );
 };
