@@ -30,21 +30,28 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               Whether you are trying to conceive, growing a baby, or healing postpartum Catalyst Mom gives you personalised fitness, nutrition, and a community that actually gets it.
             </p>
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-6">
-              <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90 animate-breathe-glow motion-reduce:animate-none">
-                <Link to="/dashboard">Get Started</Link>
-              </Button>
               {isAuthenticated ? (
-                <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
-                  <Link to="/about" className="flex items-center">
-                    About Our Mission <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                <>
+                  <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90 animate-breathe-glow motion-reduce:animate-none">
+                    <Link to="/dashboard">Get Started</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
+                    <Link to="/about" className="flex items-center">
+                      About Our Mission <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </>
               ) : (
-                <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
-                  <a href="https://catalystmom.online" target="_blank" rel="noopener noreferrer">
-                    Free Assessment
-                  </a>
-                </Button>
+                <>
+                  <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90 animate-breathe-glow motion-reduce:animate-none">
+                    <a href="https://catalystmom.online?utm_source=app-site&utm_medium=hero&utm_campaign=assessment-invite">
+                      Take the Free 2-Minute Assessment
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5 dark:text-catalyst-gold dark:border-catalyst-gold/40 dark:hover:bg-catalyst-copper/10">
+                    <Link to="/login">Log In</Link>
+                  </Button>
+                </>
               )}
             </div>
           </div>
@@ -55,16 +62,18 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
                 <AspectRatio ratio={4/5} className="bg-muted">
                   <img
-                    src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80"
-                    srcSet="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=400&q=80 400w, https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80 800w, https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=80 1200w"
+                    src="/images/home/hero-app.jpg"
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    alt="Mom with baby using laptop"
-                    className="object-cover h-full w-full"
+                    alt="Mom checking her wellness progress in the Catalyst Mom app"
+                    className="object-cover h-full w-full animate-[breathe_12s_ease-in-out_infinite] motion-reduce:animate-none"
                     fetchPriority="high"
                     width={800}
                     height={1000}
                     onError={(e) => {
-                      e.currentTarget.src = "/placeholder.svg";
+                      // Fallback until brand images are uploaded to public/images/home/
+                      e.currentTarget.src =
+                        "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80";
+                      e.currentTarget.onerror = null;
                     }}
                   />
                 </AspectRatio>

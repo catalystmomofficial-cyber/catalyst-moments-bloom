@@ -102,7 +102,20 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
             </div>
           ) : !selectedPriceId ? (
             <>
-              <PricingToggle 
+              {/* Charter Founder framing — matches the assessment funnel offer */}
+              <div className="p-4 rounded-lg border border-catalyst-copper/30 bg-catalyst-copper/5">
+                <p className="font-semibold text-foreground mb-1">
+                  🔒 Charter Founder Membership — only 100 seats
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Founding members lock in the full app, community, <strong>and 2 private 1:1
+                  Progression Syncs each month with a dedicated coach</strong> at $29/month —
+                  for life. Once the first 100 seats fill, the 1:1 coaching moves to the
+                  $129/month tier. The app stays; this founding rate on coaching does not.
+                </p>
+              </div>
+
+              <PricingToggle
                 onSelectPlan={handleSelectPlan}
                 yearlyPriceId="price_1S54B1CNwyQa1NiQGKx1Ps0r"
               />

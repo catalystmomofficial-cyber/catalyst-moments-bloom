@@ -29,18 +29,24 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
         <Card className="relative border-2 border-primary shadow-lg">
           <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-primary/80 border-0 gap-1 z-10">
             <TrendingUp className="h-3 w-3" />
-            Most Popular
+            Founding Rate
           </Badge>
         <CardContent className="p-6 mt-2">
           <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold mb-2">Monthly</h3>
-            <div className="flex items-baseline justify-center gap-1">
+            <h3 className="text-2xl font-bold mb-2">Charter Founding Member</h3>
+            <div className="flex items-baseline justify-center gap-2">
+              <span className="text-lg text-muted-foreground line-through">$129</span>
               <span className="text-4xl font-bold">$29</span>
               <span className="text-muted-foreground">/month</span>
             </div>
+            <p className="text-xs text-muted-foreground mt-1">Locked for life • First 100 seats only</p>
           </div>
-          
+
           <ul className="space-y-3 mb-6">
+            <li className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <span className="text-sm font-semibold">2 private 1:1 Progression Syncs/month with your dedicated coach ($400/mo value)</span>
+            </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <span className="text-sm">Stage-specific protocols (TTC, pregnancy, postpartum)</span>
@@ -63,20 +69,16 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
             </li>
             <li className="flex items-start gap-2">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-              <span className="text-sm">1-on-1 Human Check-ins — Bi-weekly expert progress reviews.</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <span className="text-sm">24/7 Catalyst AI Expert — Instant answers to any wellness question.</span>
             </li>
           </ul>
-          
-          <Button 
-            className="w-full" 
+
+          <Button
+            className="w-full"
             onClick={() => handleSelectPlan('price_1S546jCNwyQa1NiQYpl3OjEe', 'monthly')}
             disabled={isLoading}
           >
-            Select Monthly
+            Claim My Founding Seat
           </Button>
         </CardContent>
       </Card>
