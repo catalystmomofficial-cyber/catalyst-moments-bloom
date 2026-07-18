@@ -1,10 +1,10 @@
-# Brand images (Google Stitch)
+# Home hero images (Google Stitch)
 
-Upload the four generated images here with these exact names:
+Active hero crossfade (landscape 3:2), in rotation order:
+- screen2.png — woman with the app on her phone (leads: message-match)
+- screen1.png — pregnant, nursery meditation
+- screen3.png — postpartum, holding newborn
+- screen4.png — pregnant, canopy nursery
 
-- `hero-app.jpg`      — woman at kitchen counter looking at the app on her phone (HERO image)
-- `pregnancy-1.jpg`   — pregnant woman meditating in nursery (wide)
-- `pregnancy-2.jpg`   — pregnant woman meditating in nursery (close)
-- `postpartum.jpg`    — mom holding newborn on couch (olive text-space on left)
-
-The hero falls back to the old stock photo until `hero-app.jpg` exists.
+To swap or add: keep landscape ~16:9 or 3:2, and update the heroSlides array
+in src/components/home/HeroSection.tsx to match filenames.

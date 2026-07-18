@@ -15,10 +15,10 @@ interface HeroSectionProps {
 // Brand images (Google Stitch) — slow auto-crossfade, no controls.
 // Falls back to the previous stock photo until files are uploaded to public/images/home/.
 const heroSlides = [
-  { src: "/images/home/hero-app.jpg", alt: "Mom checking her wellness progress in the Catalyst Mom app" },
-  { src: "/images/home/screen.png", alt: "Pregnant mom taking a quiet moment in a sunlit nursery" },
-  { src: "/images/home/postpartum.jpg", alt: "Mom holding her newborn at home" },
-  { src: "/images/home/pregnancy-2.jpg", alt: "Mom breathing calmly on her mat" },
+  { src: "/images/home/screen2.png", alt: "Mom checking her wellness score in the Catalyst Mom app" },
+  { src: "/images/home/screen1.png", alt: "Pregnant mom taking a quiet moment in a sunlit nursery" },
+  { src: "/images/home/screen3.png", alt: "Mom holding her newborn at home" },
+  { src: "/images/home/screen4.png", alt: "Pregnant mom breathing calmly in the nursery" },
 ];
 const FALLBACK_SRC = "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80";
 
