@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { GlowingShadow } from "@/components/ui/glowing-shadow";
 
 // Native assessment invite popup — no third-party service, no external branding.
 // Shows once per visitor (7-day snooze on dismiss), only for logged-out users,
