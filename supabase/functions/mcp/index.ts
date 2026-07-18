@@ -3,11 +3,11 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { defineMcp } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { defineMcp } from "npm:@lovable.dev/mcp-js@0.22.0";
 
 // src/lib/mcp/tools/search-blog-posts.ts
 import { createClient } from "npm:@supabase/supabase-js@^2.110.0";
-import { defineTool } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { defineTool } from "npm:@lovable.dev/mcp-js@0.22.0";
 import { z } from "npm:zod@^4.4.3";
 function anonClient() {
   return createClient(
@@ -47,7 +47,7 @@ var search_blog_posts_default = defineTool({
 
 // src/lib/mcp/tools/get-blog-post.ts
 import { createClient as createClient2 } from "npm:@supabase/supabase-js@^2.110.0";
-import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.22.0";
 import { z as z2 } from "npm:zod@^4.4.3";
 function anonClient2() {
   return createClient2(
@@ -77,7 +77,7 @@ var get_blog_post_default = defineTool2({
 });
 
 // src/lib/mcp/tools/list-blog-tags.ts
-import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.22.0";
 var TAGS = [
   { tag: "pregnancy", description: "Prenatal fitness, symptoms, birth prep." },
   { tag: "postpartum", description: "Recovery, healing, core restoration, newborn life." },
@@ -108,5 +108,5 @@ var mcp_default = defineMcp({
 });
 
 // lovable-mcp-supabase-entry.ts
-import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.22.2/stacks/supabase";
+import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.22.0/stacks/supabase";
 Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));
