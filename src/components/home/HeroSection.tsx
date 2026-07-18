@@ -74,47 +74,46 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               <div className="absolute -top-4 -left-4 w-64 h-64 bg-catalyst-copper/10 rounded-full animate-breathe motion-reduce:animate-none"></div>
               <div className="absolute bottom-8 -right-8 w-40 h-40 bg-catalyst-copper/10 rounded-full animate-float"></div>
               <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
-                <AspectRatio ratio={3/2} className="bg-muted">
+                <div className="relative w-full bg-muted" style={{ aspectRatio: "3 / 2" }}>
                   {liveSlides.length === 0 ? (
                     <img
                       src={FALLBACK_SRC}
                       sizes="(max-width: 768px) 100vw, 50vw"
                       alt="Mom with baby using laptop"
-                      className="object-cover h-full w-full"
+                      className="absolute inset-0 object-cover h-full w-full"
                       fetchPriority="high"
                       width={800}
                       height={1000}
                     />
                   ) : (
-                    <div className="relative h-full w-full">
-                      {heroSlides.map((s, i) => {
-                        if (failed.has(i)) return null;
-                        const liveIndex = liveSlides.findIndex((ls) => ls.src === s.src);
-                        const active = liveIndex === slide % liveSlides.length;
-                        return (
-                          <img
-                            key={s.src}
-                            src={s.src}
-                            alt={active ? s.alt : ""}
-                            aria-hidden={!active}
-                            className={`absolute inset-0 object-cover h-full w-full transition-opacity duration-[1500ms] ease-in-out motion-reduce:transition-none ${active ? "opacity-100" : "opacity-0"}`}
-                            fetchPriority={i === 0 ? "high" : undefined}
-                            loading={i === 0 ? undefined : "lazy"}
-                            width={800}
-                            height={1000}
-                            onError={() =>
-                              setFailed((prev) => {
-                                const next = new Set(prev);
-                                next.add(i);
-                                return next;
-                              })
-                            }
-                          />
-                        );
-                      })}
-                    </div>
+                    heroSlides.map((s, i) => {
+                      if (failed.has(i)) return null;
+                      const liveIndex = liveSlides.findIndex((ls) => ls.src === s.src);
+                      const active = liveIndex === slide % liveSlides.length;
+                      return (
+                        <img
+                          key={s.src}
+                          src={s.src}
+                          alt={active ? s.alt : ""}
+                          aria-hidden={!active}
+                          className={`absolute inset-0 object-cover h-full w-full transition-opacity duration-[1500ms] ease-in-out motion-reduce:transition-none ${active ? "opacity-100" : "opacity-0"}`}
+                          fetchPriority={i === 0 ? "high" : undefined}
+                          loading={i === 0 ? undefined : "lazy"}
+                          width={800}
+                          height={1000}
+                          onError={() =>
+                            setFailed((prev) => {
+                              const next = new Set(prev);
+                              next.add(i);
+                              return next;
+                            })
+                          }
+                        />
+                      );
+                    })
                   )}
-                </AspectRatio>
+                </div>
+
 
                 <div className="absolute bottom-4 left-4 flex items-center space-x-2">
                   <Button
