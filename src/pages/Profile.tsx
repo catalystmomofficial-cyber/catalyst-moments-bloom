@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ProfilePushToggle from "@/components/profile/ProfilePushToggle";
+import { BorderBeamButton } from "@/components/ui/border-beam-button";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -215,9 +216,12 @@ const Profile = () => {
                 className="hidden"
                 onChange={handleAvatarUpload}
               />
-              <Button
+              <BorderBeamButton
                 type="button"
                 variant="outline"
+                colorVariant="mono"
+                beamSize="sm"
+                staticColors
                 className="w-full"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingAvatar}
@@ -227,7 +231,7 @@ const Profile = () => {
                 ) : (
                   <><Upload className="mr-2 h-4 w-4" /> {avatarUrl ? 'Change Photo' : 'Upload Photo'}</>
                 )}
-              </Button>
+              </BorderBeamButton>
             </CardContent>
           </Card>
 
@@ -337,8 +341,11 @@ const Profile = () => {
                       Logout
                     </Button>
                     
-                    <Button 
-                      type="submit" 
+                    <BorderBeamButton
+                      type="submit"
+                      colorVariant="sunset"
+                      beamSize="md"
+                      active={!isSubmitting}
                       className="bg-catalyst-copper hover:bg-catalyst-copper/90"
                       disabled={isSubmitting}
                     >
@@ -353,7 +360,7 @@ const Profile = () => {
                           Save Changes
                         </>
                       )}
-                    </Button>
+                    </BorderBeamButton>
                   </div>
                 </div>
               </form>
