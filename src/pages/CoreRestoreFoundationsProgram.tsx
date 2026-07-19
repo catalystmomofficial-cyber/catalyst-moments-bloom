@@ -17,6 +17,7 @@ import {
   Star,
   Cast,
 } from "lucide-react";
+import confetti from "canvas-confetti";
 import { useToast } from "@/hooks/use-toast";
 import { usePoints } from "@/hooks/usePoints";
 import PageLayout from "@/components/layout/PageLayout";
@@ -203,6 +204,24 @@ export default function CoreRestoreFoundationsProgram() {
     ? WEEK_3_VIDEOS[selDayInWeek - 1]
     : WEEK_4_VIDEOS[selDayInWeek - 1];
 
+  const fireConfetti = () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const duration = 2500;
+    const end = Date.now() + duration;
+    const colors = ["#D6A63F", "#C77F45", "#F0D06A", "#FDE1D3"];
+    (function frame() {
+      confetti({ particleCount: 4, angle: 60, spread: 70, origin: { x: 0 }, colors });
+      confetti({ particleCount: 4, angle: 120, spread: 70, origin: { x: 1 }, colors });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+    confetti({ particleCount: 160, spread: 100, origin: { y: 0.6 }, colors });
+  };
+
+  const goToPhase2 = () => {
+    setCelebration(null);
+    navigate("/workouts#phase-2");
+  };
+
   const markDayComplete = async () => {
     if (!isViewingActiveDay) return;
     const completedDay = unlockedDay;
@@ -260,6 +279,7 @@ export default function CoreRestoreFoundationsProgram() {
         "core_restore_complete",
         "Completed Core Restore Foundations"
       );
+      fireConfetti();
     }
 
     setCelebration({
@@ -269,6 +289,27 @@ export default function CoreRestoreFoundationsProgram() {
       isProgramComplete: isFinal,
       pointsEarned,
       streak,
+    });
+  };
+
+  // Surface load failures instead of a silent black box — tells us whether the
+  // source 404s / has the wrong content-type / is unreachable, per device.
+  const handleVideoError = () => {
+    const el = videoRef.current;
+    const code = el?.error?.code;
+    const reason =
+      code === 4
+        ? "the file couldn't be found or isn't a playable MP4 (check the URL path/case and that it's served as video/mp4)"
+        : code === 2
+        ? "a network error reaching the video host"
+        : code === 3
+        ? "the video is corrupted or in an unsupported format"
+        : "the video couldn't load";
+    console.error("[CoreRestore] video load error", { code, src: videoSrc });
+    toast({
+      title: "This video couldn't load",
+      description: `${reason}.`,
+      variant: "destructive",
     });
   };
 
@@ -368,6 +409,7 @@ export default function CoreRestoreFoundationsProgram() {
                     disableRemotePlayback: false,
                   }}
                   onEnded={handleVideoEnded}
+                  onError={handleVideoError}
                   width="100%"
                   style={{ borderRadius: "12px", backgroundColor: "#000" }}
                   preload="metadata"
@@ -527,7 +569,7 @@ export default function CoreRestoreFoundationsProgram() {
                   <AwardBadge
                     title={
                       celebration.isProgramComplete
-                        ? "Program Complete!"
+                        ? "Foundation Restored"
                         : celebration.isWeekEnd
                         ? `Week ${celebration.week} Complete!`
                         : `Day ${celebration.day} Done`
@@ -556,7 +598,7 @@ export default function CoreRestoreFoundationsProgram() {
                   className="text-sm text-muted-foreground mb-4"
                 >
                   {celebration.isProgramComplete
-                    ? "You restored your core. This is the work, mama. 💛"
+                    ? "You rebuilt your core from the ground up over 28 days — that's the hard part, done. 💛 Your body's ready for what's next: Phase 2, Strength & Stamina."
                     : celebration.isWeekEnd
                     ? `${WEEKS[celebration.week - 1].title} week locked in. The next phase is unlocked.`
                     : "One more day stronger. Tomorrow's session is unlocked."}
@@ -572,9 +614,25 @@ export default function CoreRestoreFoundationsProgram() {
                   {celebration.streak}-day streak
                 </motion.div>
 
-                <Button onClick={() => setCelebration(null)} className="w-full">
-                  Keep going
-                </Button>
+                {celebration.isProgramComplete ? (
+                  <div className="space-y-2">
+                    <Button onClick={goToPhase2} className="w-full" size="lg">
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Unlock Phase 2 →
+                    </Button>
+                    <Button
+                      onClick={() => setCelebration(null)}
+                      variant="ghost"
+                      className="w-full text-muted-foreground"
+                    >
+                      I&apos;ll explore later
+                    </Button>
+                  </div>
+                ) : (
+                  <Button onClick={() => setCelebration(null)} className="w-full">
+                    Keep going
+                  </Button>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

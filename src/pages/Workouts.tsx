@@ -17,6 +17,7 @@ import BirthBallGuideCard from '@/components/workouts/BirthBallGuideCard';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter, ContentItem } from '@/hooks/useContentFilter';
+import { useScrollToHash } from '@/hooks/useScrollToHash';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import JourneySelector from '@/components/onboarding/JourneySelector';
 import { useEffect, useMemo, useState } from 'react';
@@ -131,6 +132,9 @@ const Workouts = () => {
   // (Core Restore Foundations) is complete. Read the same localStorage key
   // Phase 1 writes to.
   const [isPhase1Complete, setIsPhase1Complete] = useState(false);
+  // Smooth-scroll to the Phase 2 card when arriving from the Phase 1
+  // completion handoff (/workouts#phase-2).
+  useScrollToHash();
   useEffect(() => {
     const check = () => {
       try {
@@ -217,7 +221,7 @@ const Workouts = () => {
               {/* Phase 2 full card only appears once Phase 1 (Core Restore) is complete.
                   Until then a compact locked teaser sits inside the Phase 1 card. */}
               {isPostpartum && isPhase1Complete && (
-                <div className="md:mt-10 lg:mt-16">
+                <div id="phase-2" className="scroll-mt-24 md:mt-10 lg:mt-16">
                   <PostpartumGlowUpChallenge />
                 </div>
               )}
