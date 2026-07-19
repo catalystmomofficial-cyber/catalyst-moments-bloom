@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, Clock, Star, Play, ArrowRight, ShieldCheck, Lock } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
@@ -93,6 +94,7 @@ const STORAGE_KEY = 'core-restore-foundations-progress';
 
 export default function CoreRestoreFoundationsCard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { openVideo } = useVideoPlayer();
   const [userProgress, setUserProgress] = useState<LocalProgress | null>(null);
@@ -277,7 +279,7 @@ export default function CoreRestoreFoundationsCard() {
         </div>
 
         <Button
-          onClick={() => (window.location.href = "/workouts/core-restore-foundations")}
+          onClick={() => navigate("/workouts/core-restore-foundations")}
           className="w-full"
           size="lg"
         >

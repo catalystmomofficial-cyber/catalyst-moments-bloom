@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 
@@ -85,7 +86,7 @@ const MedicalDisclaimer = () => {
           <h2>Questions</h2>
           <p>
             If you have questions about this disclaimer, please reach us through
-            our <a href="/contact">contact page</a>.
+            our <Link to="/contact">contact page</Link>.
           </p>
         </article>
       </div>

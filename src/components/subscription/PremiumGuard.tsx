@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +14,7 @@ interface PremiumGuardProps {
 
 const PremiumGuard = ({ children, fallback }: PremiumGuardProps) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [isPremium, setIsPremium] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -94,7 +96,7 @@ const PremiumGuard = ({ children, fallback }: PremiumGuardProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
-          <Button onClick={() => window.location.href = '/login'}>
+          <Button onClick={() => navigate('/login')}>
             Sign In
           </Button>
         </CardContent>

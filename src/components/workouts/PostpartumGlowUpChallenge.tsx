@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Calendar, Clock, Star, Play, ArrowRight, Lock } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import glowUpCover from "@/assets/30-days-glow-up-professional-cover.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -99,6 +100,7 @@ interface UserProgress {
 
 export default function PostpartumGlowUpChallenge() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { openVideo } = useVideoPlayer();
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
@@ -230,7 +232,7 @@ export default function PostpartumGlowUpChallenge() {
 
       // Navigate to course detail page
       setTimeout(() => {
-        window.location.href = `/course/${courses.id}`;
+        navigate(`/course/${courses.id}`);
       }, 1000);
       
       fetchUserProgress();
@@ -254,7 +256,7 @@ export default function PostpartumGlowUpChallenge() {
     }
     if (isEnrolled && courseId) {
       // Navigate to course detail page to continue
-      window.location.href = `/course/${courseId}`;
+      navigate(`/course/${courseId}`);
     } else {
       enrollInChallenge();
     }

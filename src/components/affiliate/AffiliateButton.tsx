@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { DollarSign } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AffiliateInfoModal from './AffiliateInfoModal';
 import AffiliateSignupModal from './AffiliateSignupModal';
 
@@ -19,6 +19,7 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
   const [affiliateStatus, setAffiliateStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
   const [isLoading, setIsLoading] = useState(true);
   const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -56,9 +57,9 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
 
   const handleClick = () => {
     if (affiliateStatus === 'approved') {
-      window.location.href = '/affiliate/dashboard';
+      navigate('/affiliate/dashboard');
     } else {
-      window.location.href = '/affiliate';
+      navigate('/affiliate');
     }
   };
 

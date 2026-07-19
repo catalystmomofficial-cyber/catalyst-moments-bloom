@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -330,13 +331,13 @@ const EventRegistrationModal = ({
               <p className="text-xs text-muted-foreground flex items-center gap-1">
                 <Zap className="h-3 w-3 text-primary shrink-0" />
                 Members pay ${(memberPrice / 100).toFixed(2)} —{' '}
-                <a href="/pricing" className="underline text-primary">Join to unlock</a>
+                <Link to="/pricing" className="underline text-primary">Join to unlock</Link>
               </p>
             )}
 
             {!user && (
               <p className="text-xs text-center text-muted-foreground">
-                <a href="/auth" className="underline text-primary">Sign in or create an account</a> to register for this event
+                <Link to="/auth" className="underline text-primary">Sign in or create an account</Link> to register for this event
               </p>
             )}
 

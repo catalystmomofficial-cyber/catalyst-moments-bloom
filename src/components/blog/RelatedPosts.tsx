@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { Calendar } from 'lucide-react';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 interface BlogPost {
   id: string;
@@ -24,6 +26,7 @@ interface RelatedPostsProps {
 export const RelatedPosts = ({ currentPostId, currentTags = [] }: RelatedPostsProps) => {
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRelatedPosts = async () => {
@@ -74,41 +77,43 @@ export const RelatedPosts = ({ currentPostId, currentTags = [] }: RelatedPostsPr
       <h2 className="text-2xl font-bold mb-6">Related Articles</h2>
       <div className="grid gap-6 md:grid-cols-3">
         {relatedPosts.map((post) => (
-          <Card 
-            key={post.id}
-            className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => window.location.href = `/blog/${post.slug || post.id}`}
-          >
-            {post.featured_image_url && (
-              <div className="w-full h-40 overflow-hidden">
-                <img
-                  src={supabaseImgSrc(post.featured_image_url, 600)}
-                  srcSet={supabaseImgSrcSet(post.featured_image_url, [300, 600])}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 300px"
-                  alt={post.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            )}
-            <CardHeader>
-              <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="h-3 w-3" />
-                <span>{format(new Date(post.published_at), 'MMM d, yyyy')}</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>
-              {post.tags && post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {post.tags.slice(0, 2).map((tag, idx) => (
-                    <Badge key={idx} variant="secondary" className="text-xs">{tag}</Badge>
-                  ))}
+          <div key={post.id} className="relative h-full rounded-lg">
+            <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+            <Card
+              className="relative cursor-pointer hover:shadow-lg transition-shadow h-full"
+              onClick={() => navigate(`/blog/${post.slug || post.id}`)}
+            >
+              {post.featured_image_url && (
+                <div className="w-full h-40 overflow-hidden rounded-t-lg">
+                  <img
+                    src={supabaseImgSrc(post.featured_image_url, 600)}
+                    srcSet={supabaseImgSrcSet(post.featured_image_url, [300, 600])}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 300px"
+                    alt={post.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
               )}
-            </CardContent>
-          </Card>
+              <CardHeader>
+                <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="h-3 w-3" />
+                  <span>{format(new Date(post.published_at), 'MMM d, yyyy')}</span>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-3">
+                    {post.tags.slice(0, 2).map((tag, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs">{tag}</Badge>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         ))}
       </div>
     </div>

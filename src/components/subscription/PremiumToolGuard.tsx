@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Lock, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -28,6 +29,7 @@ export const PremiumToolGuard = ({
   preview = false,
 }: PremiumToolGuardProps) => {
   const { subscribed, isCheckingSubscription, user } = useAuth();
+  const navigate = useNavigate();
   const bypass = useDevBypass();
   const { isAdmin } = useAdminAuth();
 
@@ -43,7 +45,7 @@ export const PremiumToolGuard = ({
 
   const handleRenew = async () => {
     if (!user) {
-      window.location.href = '/login';
+      navigate('/login');
       return;
     }
     try {

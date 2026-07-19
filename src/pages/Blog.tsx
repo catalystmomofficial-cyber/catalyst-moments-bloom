@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
 import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +25,7 @@ interface BlogPost {
 }
 
 const Blog = () => {
+  const navigate = useNavigate();
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [filteredBlogs, setFilteredBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -153,7 +154,7 @@ const Blog = () => {
                   className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => {
                     trackBlogView(blog.id);
-                    window.location.href = `/blog/${blog.slug || blog.id}`;
+                    navigate(`/blog/${blog.slug || blog.id}`);
                   }}
                 >
                   {blog.featured_image_url && (

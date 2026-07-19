@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -456,9 +457,9 @@ const PurchaseModal = ({
 
             {!user && (
               <p className="text-xs text-center text-muted-foreground">
-                <a href="/auth" className="underline text-primary">
+                <Link to="/auth" className="underline text-primary">
                   Sign in
-                </a>{' '}
+                </Link>{' '}
                 to unlock this guide
               </p>
             )}

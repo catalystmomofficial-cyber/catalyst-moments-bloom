@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { CourseCard } from "@/components/courses/CourseCard";
@@ -30,6 +31,7 @@ interface UserProgress {
 
 export default function Courses() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [courses, setCourses] = useState<Course[]>([]);
   const [userProgress, setUserProgress] = useState<UserProgress[]>([]);
@@ -121,7 +123,7 @@ export default function Courses() {
 
   const continueCourse = (courseId: string) => {
     // Navigate to course detail page
-    window.location.href = `/course/${courseId}`;
+    navigate(`/course/${courseId}`);
   };
 
   const enrolledCourses = courses.filter(course => 

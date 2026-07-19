@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useContentFilter, ContentItem } from '@/hooks/useContentFilter';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -86,7 +87,7 @@ const JourneySpecificMealPlans = ({ mealPlans, overrideJourney, overrideStage }:
             No meal plans available for your current journey stage.
           </p>
           <Button className="mt-4" asChild>
-            <a href="/meal-plan">Create Custom Meal Plan</a>
+            <Link to="/meal-plan">Create Custom Meal Plan</Link>
           </Button>
         </div>
       )}
