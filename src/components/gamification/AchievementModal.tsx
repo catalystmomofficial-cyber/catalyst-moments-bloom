@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Trophy, Award, Flame, Star, Crown, Target, Calendar, Heart, Users, Zap } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AwardBadge, type AwardRarity } from './AwardBadge';
 
 interface Achievement {
   id: string;
@@ -36,6 +37,8 @@ interface AchievementModalProps {
 export const AchievementModal = ({ achievement, open, onOpenChange }: AchievementModalProps) => {
   if (!achievement) return null;
   const Icon = iconMap[achievement.icon] || Trophy;
+  const rarity: AwardRarity =
+    achievement.level >= 4 ? 'legendary' : achievement.level === 3 ? 'epic' : achievement.level === 2 ? 'rare' : 'common';
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -49,31 +52,14 @@ export const AchievementModal = ({ achievement, open, onOpenChange }: Achievemen
               transition={{ type: 'spring', damping: 15, stiffness: 300 }}
               className="p-8"
             >
-              {/* Glow ring */}
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.15, type: 'spring', damping: 12 }}
-                className="mx-auto mb-6 w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 flex items-center justify-center relative"
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.15, type: 'spring', damping: 14 }}
+                className="mb-4"
               >
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                  className="absolute inset-0 rounded-full border-2 border-dashed border-primary/30"
-                />
-                <div className="p-4 rounded-full bg-primary/10">
-                  <Icon className="w-10 h-10 text-primary" />
-                </div>
+                <AwardBadge title={achievement.title} rarity={rarity} icon={<Icon className="w-7 h-7" />} />
               </motion.div>
-
-              <motion.h2
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.25 }}
-                className="text-xl font-bold mb-1"
-              >
-                {achievement.title}
-              </motion.h2>
 
               {achievement.level > 1 && (
                 <Badge variant="secondary" className="mb-3">

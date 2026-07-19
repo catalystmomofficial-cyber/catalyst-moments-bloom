@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { usePoints } from "@/hooks/usePoints";
 import PageLayout from "@/components/layout/PageLayout";
 import { setLastActiveProgram } from "@/lib/lastActiveProgram";
+import { AwardBadge } from "@/components/gamification/AwardBadge";
 
 const STORAGE_KEY = "core-restore-foundations-progress";
 const TOTAL_DAYS = 28;
@@ -509,39 +510,31 @@ export default function CoreRestoreFoundationsProgram() {
                 className="p-8"
               >
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.15, type: "spring", damping: 12 }}
-                  className="mx-auto mb-6 w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 flex items-center justify-center relative"
+                  initial={{ scale: 0.85, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.15, type: "spring", damping: 14 }}
+                  className="mb-4"
                 >
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-0 rounded-full border-2 border-dashed border-primary/30"
+                  <AwardBadge
+                    title={
+                      celebration.isProgramComplete
+                        ? "Program Complete!"
+                        : celebration.isWeekEnd
+                        ? `Week ${celebration.week} Complete!`
+                        : `Day ${celebration.day} Done`
+                    }
+                    rarity={celebration.isProgramComplete ? "legendary" : celebration.isWeekEnd ? "epic" : "common"}
+                    icon={
+                      celebration.isProgramComplete ? (
+                        <Trophy className="w-7 h-7" />
+                      ) : celebration.isWeekEnd ? (
+                        <Star className="w-7 h-7" />
+                      ) : (
+                        <Sparkles className="w-7 h-7" />
+                      )
+                    }
                   />
-                  <div className="p-4 rounded-full bg-primary/10">
-                    {celebration.isProgramComplete ? (
-                      <Trophy className="w-10 h-10 text-primary" />
-                    ) : celebration.isWeekEnd ? (
-                      <Star className="w-10 h-10 text-primary" />
-                    ) : (
-                      <Sparkles className="w-10 h-10 text-primary" />
-                    )}
-                  </div>
                 </motion.div>
-
-                <motion.h2
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.25 }}
-                  className="text-xl font-bold mb-1"
-                >
-                  {celebration.isProgramComplete
-                    ? "Program Complete!"
-                    : celebration.isWeekEnd
-                    ? `Week ${celebration.week} Complete!`
-                    : `Day ${celebration.day} Done`}
-                </motion.h2>
 
                 <Badge variant="secondary" className="mb-3">
                   +{celebration.pointsEarned} points
