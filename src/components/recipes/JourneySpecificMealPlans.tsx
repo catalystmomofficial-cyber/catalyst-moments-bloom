@@ -5,7 +5,6 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import defaultCover from '@/assets/meal-plan-cover.jpg';
 
 interface MealPlan extends ContentItem {
