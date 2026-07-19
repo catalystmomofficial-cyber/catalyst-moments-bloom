@@ -4,12 +4,15 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Star, Target, Flame, Award, Zap } from 'lucide-react';
 import { usePoints } from '@/hooks/usePoints';
+import { AchievementIconBadge } from './AchievementIconBadge';
+import type { AwardRarity } from './AwardBadge';
 
 interface Achievement {
   id: string;
   title: string;
   description: string;
   icon: React.ReactNode;
+  rarity: AwardRarity;
   progress: number;
   maxProgress: number;
   completed: boolean;
@@ -66,6 +69,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'First Steps',
       description: 'Complete your first workout',
       icon: <Zap className="w-4 h-4" />,
+      rarity: 'common',
       progress: 0,
       maxProgress: 1,
       completed: false,
@@ -76,6 +80,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Consistency Champion',
       description: 'Complete 7 days in a row',
       icon: <Flame className="w-4 h-4" />,
+      rarity: 'rare',
       progress: 0,
       maxProgress: 7,
       completed: false,
@@ -86,6 +91,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Community Helper',
       description: 'Help 5 other moms with advice',
       icon: <Star className="w-4 h-4" />,
+      rarity: 'common',
       progress: 0,
       maxProgress: 5,
       completed: false,
@@ -96,6 +102,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Nutrition Guru',
       description: 'Log meals for 14 days',
       icon: <Target className="w-4 h-4" />,
+      rarity: 'epic',
       progress: 0,
       maxProgress: 14,
       completed: false,
@@ -106,6 +113,7 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Wellness Warrior',
       description: 'Complete 30 wellness activities',
       icon: <Award className="w-4 h-4" />,
+      rarity: 'legendary',
       progress: 0,
       maxProgress: 30,
       completed: false,
@@ -260,13 +268,11 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-full ${
-                    achievement.completed 
-                      ? 'bg-primary text-primary-foreground' 
-                      : 'bg-muted text-muted-foreground'
-                  }`}>
-                    {achievement.icon}
-                  </div>
+                  <AchievementIconBadge
+                    icon={achievement.icon}
+                    rarity={achievement.rarity}
+                    locked={!achievement.completed}
+                  />
                   <div>
                     <h4 className="font-medium">{achievement.title}</h4>
                     <p className="text-sm text-muted-foreground">{achievement.description}</p>

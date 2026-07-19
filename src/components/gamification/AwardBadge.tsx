@@ -25,7 +25,7 @@ const minScale = 0.97;
 // rotating mix-blend-mode glow, just re-tuned to the brand palette.
 const sheenHues = ['#D4A76A', '#C17F45', '#FDE1D3', '#FFF8F0', '#E8B96B', '#5D2906'];
 
-const ratingPlate: Record<AwardRarity, string> = {
+export const ratingPlate: Record<AwardRarity, string> = {
   legendary: 'linear-gradient(150deg, #F3E3AC 0%, #D4A76A 100%)',
   epic: 'linear-gradient(150deg, #FDE1D3 0%, #C17F45 100%)',
   rare: 'linear-gradient(150deg, #F9F0E6 0%, #E5D3B3 100%)',
