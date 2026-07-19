@@ -52,7 +52,7 @@ const Login = () => {
 
   return (
     <PageLayout>
-      <div className="flex items-center justify-center min-h-[80vh]">
+      <div className="flex items-center justify-center min-h-[80vh] px-4">
         <BorderRotate
           animationSpeed={9}
           borderWidth={2}

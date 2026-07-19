@@ -187,7 +187,7 @@ const Register = () => {
   return (
     <PageLayout>
       <PersonalizedOnboarding />
-      <div className="flex items-center justify-center py-10">
+      <div className="flex items-center justify-center py-10 px-4">
         <BorderRotate
           animationSpeed={9}
           borderWidth={2}

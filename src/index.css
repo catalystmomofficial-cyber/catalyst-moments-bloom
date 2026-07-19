@@ -76,6 +76,14 @@
     @apply border-border;
   }
 
+  html, body {
+    /* Safety net: decorative absolutely-positioned elements (glows, blobs,
+       rotating borders) shouldn't be able to push the page into horizontal
+       scroll / sideways shift on any viewport. */
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
