@@ -107,30 +107,37 @@ export const CycleCalendar = () => {
             </div>
 
             {/* Cycle-day grid (each cell is a real date) */}
-            <div className="grid grid-cols-7 gap-2">
-              {days.map((day) => {
-                const hasLog = !!logByDate[day.dateISO];
-                return (
-                  <button
-                    key={day.dateISO}
-                    type="button"
-                    onClick={() => setSelectedISO(day.dateISO)}
-                    className={`rounded-lg p-2 text-center transition-all hover:shadow-md ${
-                      selectedISO === day.dateISO ? 'ring-2 ring-primary' : ''
-                    }`}
-                    style={{ boxShadow: day.isToday ? '0 0 0 2px hsl(var(--foreground))' : undefined }}
-                  >
-                    <div
-                      className="w-7 h-7 mx-auto rounded-full text-white text-xs flex items-center justify-center"
-                      style={{ background: MAP_PHASE_COLOR[day.phase] }}
-                    >
-                      {day.cycleDay}
-                    </div>
-                    <div className="text-[10px] text-muted-foreground mt-1">{shortDate(day.dateISO)}</div>
-                    {hasLog && <div className="w-1 h-1 mx-auto mt-1 rounded-full bg-primary" />}
-                  </button>
-                );
-              })}
+            <div className="rounded-[24px] border border-border p-2">
+              <div
+                className="rounded-2xl border-2 border-border/10 p-3"
+                style={{ boxShadow: "0px 2px 1.5px 0px hsl(var(--border) / 0.4) inset" }}
+              >
+                <div className="grid grid-cols-7 gap-2">
+                  {days.map((day) => {
+                    const hasLog = !!logByDate[day.dateISO];
+                    return (
+                      <button
+                        key={day.dateISO}
+                        type="button"
+                        onClick={() => setSelectedISO(day.dateISO)}
+                        className={`rounded-xl p-2 text-center transition-all hover:shadow-md hover:bg-muted/50 ${
+                          selectedISO === day.dateISO ? 'ring-2 ring-primary' : ''
+                        }`}
+                        style={{ boxShadow: day.isToday ? '0 0 0 2px hsl(var(--foreground))' : undefined }}
+                      >
+                        <div
+                          className="w-7 h-7 mx-auto rounded-xl text-white text-xs flex items-center justify-center"
+                          style={{ background: MAP_PHASE_COLOR[day.phase] }}
+                        >
+                          {day.cycleDay}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground mt-1">{shortDate(day.dateISO)}</div>
+                        {hasLog && <div className="w-1 h-1 mx-auto mt-1 rounded-full bg-primary" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
             {/* Day details */}

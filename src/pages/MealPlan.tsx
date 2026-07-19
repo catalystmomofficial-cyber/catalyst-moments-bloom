@@ -296,7 +296,7 @@ function CheckInCalendar() {
           mode="multiple"
           selected={checkedDates}
           onSelect={handleSelect as any}
-          className="rounded-md border border-border"
+          className="rounded-2xl border border-border/60 shadow-sm"
         />
       </div>
       <p className="text-xs text-muted-foreground mt-3 text-center">

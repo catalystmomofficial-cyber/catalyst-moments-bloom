@@ -49,32 +49,39 @@ export const WeeklyStreakCalendar = ({ practiceDays, currentStreak, longestStrea
             <div className="text-sm font-semibold mb-2 text-center">
               {format(today, 'MMMM yyyy')}
             </div>
-            <div className="grid grid-cols-7 gap-1">
-              {weekDays.map(day => (
-                <div key={day} className="text-xs text-center font-medium text-muted-foreground p-1">
-                  {day}
-                </div>
-              ))}
-              {daysInCalendar.map((day, index) => {
-                const isCurrentMonth = day.getMonth() === today.getMonth();
-                const isPracticed = isPracticeDay(day);
-                const isToday = isSameDay(day, today);
+            <div className="rounded-[24px] border border-border p-2">
+              <div
+                className="rounded-2xl border-2 border-border/10 p-3"
+                style={{ boxShadow: "0px 2px 1.5px 0px hsl(var(--border) / 0.4) inset" }}
+              >
+                <div className="grid grid-cols-7 gap-1">
+                  {weekDays.map(day => (
+                    <div key={day} className="text-[0.7rem] uppercase tracking-wide text-center font-medium text-muted-foreground p-1">
+                      {day.slice(0, 3)}
+                    </div>
+                  ))}
+                  {daysInCalendar.map((day, index) => {
+                    const isCurrentMonth = day.getMonth() === today.getMonth();
+                    const isPracticed = isPracticeDay(day);
+                    const isToday = isSameDay(day, today);
 
-                return (
-                  <div
-                    key={index}
-                    className={`
-                      aspect-square flex items-center justify-center text-xs rounded-md
-                      ${!isCurrentMonth && 'text-muted-foreground/30'}
-                      ${isPracticed && 'bg-primary text-primary-foreground font-semibold'}
-                      ${!isPracticed && isCurrentMonth && 'bg-muted/50'}
-                      ${isToday && !isPracticed && 'ring-2 ring-primary'}
-                    `}
-                  >
-                    {format(day, 'd')}
-                  </div>
-                );
-              })}
+                    return (
+                      <div
+                        key={index}
+                        className={`
+                          aspect-square flex items-center justify-center text-xs rounded-xl
+                          ${!isCurrentMonth && 'text-muted-foreground/30'}
+                          ${isPracticed && 'bg-primary text-primary-foreground font-semibold'}
+                          ${!isPracticed && isCurrentMonth && 'bg-muted/50'}
+                          ${isToday && !isPracticed && 'ring-2 ring-primary'}
+                        `}
+                      >
+                        {format(day, 'd')}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -453,7 +453,7 @@ const Wellness = () => {
                   mode="single"
                   selected={date}
                   onSelect={setDate}
-                  className="rounded-md border pointer-events-auto"
+                  className="rounded-2xl border border-border/60 shadow-sm pointer-events-auto"
                 />
               </CardContent>
             </Card>
