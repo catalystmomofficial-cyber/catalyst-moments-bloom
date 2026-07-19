@@ -1,6 +1,7 @@
 import React from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 const testimonials = [
   {
@@ -39,25 +40,31 @@ const TestimonialsSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {testimonials.map((t, i) => (
-            <Card
-              key={i}
-              className="border-0 shadow-soft rounded-2xl bg-catalyst-cream/40 dark:bg-card dark:border dark:border-catalyst-copper/20 hover:shadow-md transition-shadow"
-            >
-              <CardContent className="p-7">
-                <div className="text-catalyst-copper dark:text-catalyst-gold text-4xl leading-none font-playfair mb-3">"</div>
-                <p className="text-foreground/90 dark:text-foreground italic leading-relaxed mb-5">
-                  {t.quote}
-                </p>
-                <div className="pt-4 border-t border-catalyst-copper/15 dark:border-catalyst-copper/30">
-                  <p className="text-sm font-semibold text-catalyst-copper dark:text-catalyst-gold">
-                    — {t.author}
+            <div key={i} className="relative h-full rounded-2xl">
+              <GlowingEffect
+                disabled={false}
+                proximity={80}
+                spread={30}
+                borderWidth={2}
+                inactiveZone={0.4}
+              />
+              <Card className="relative border-0 shadow-soft rounded-2xl bg-catalyst-cream/40 dark:bg-card dark:border dark:border-catalyst-copper/20 hover:shadow-md transition-shadow h-full">
+                <CardContent className="p-7">
+                  <div className="text-catalyst-copper dark:text-catalyst-gold text-4xl leading-none font-playfair mb-3">"</div>
+                  <p className="text-foreground/90 dark:text-foreground italic leading-relaxed mb-5">
+                    {t.quote}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Catalyst Mom Community
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="pt-4 border-t border-catalyst-copper/15 dark:border-catalyst-copper/30">
+                    <p className="text-sm font-semibold text-catalyst-copper dark:text-catalyst-gold">
+                      — {t.author}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Catalyst Mom Community
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           ))}
         </div>
       </div>

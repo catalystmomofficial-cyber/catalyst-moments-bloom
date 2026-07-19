@@ -28,6 +28,7 @@ import { PersonalizedRecommendations } from '@/components/wellness/PersonalizedR
 import { QuickSelfCareIdeas } from '@/components/wellness/QuickSelfCareIdeas';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { useAssessmentData } from '@/hooks/useAssessmentData';
 import { usePoints } from '@/hooks/usePoints';
 import { useToast } from '@/hooks/use-toast';
@@ -475,19 +476,22 @@ interface WellnessQuickCardProps {
 }
 
 const WellnessQuickCard = ({ title, icon, value, trend, color, action }: WellnessQuickCardProps) => (
-  <Card>
-    <CardContent className="p-6">
-      <div className="flex items-center justify-between mb-2">
-        <div className={`${color} p-2 rounded-md`}>
-          {icon}
+  <div className="relative h-full rounded-lg">
+    <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+    <Card className="relative h-full">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-2">
+          <div className={`${color} p-2 rounded-md`}>
+            {icon}
+          </div>
+          <span className="text-xl font-bold">{value}</span>
         </div>
-        <span className="text-xl font-bold">{value}</span>
-      </div>
-      <h3 className="font-medium text-sm mb-1">{title}</h3>
-      <p className="text-xs text-muted-foreground">{trend}</p>
-      {action}
-    </CardContent>
-  </Card>
+        <h3 className="font-medium text-sm mb-1">{title}</h3>
+        <p className="text-xs text-muted-foreground">{trend}</p>
+        {action}
+      </CardContent>
+    </Card>
+  </div>
 );
 
 interface WellnessResourceCardProps {

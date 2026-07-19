@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { Baby, Heart, Sparkles, Users } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -122,25 +123,33 @@ export const JourneySelector = ({ onComplete, isOnboarding = false }: JourneySel
       {!selectedJourney ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {journeyOptions.map((journey) => (
-            <Card
-              key={journey.id}
-              className="cursor-pointer hover:shadow-lg transition-all border-2 hover:border-primary/50"
-              onClick={() => setSelectedJourney(journey.id)}
-            >
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-3">
-                    <div className={`p-3 rounded-lg ${journey.color}`}>
-                      {journey.icon}
-                    </div>
-                    {journey.title}
-                  </CardTitle>
-                </div>
-                <CardDescription className="text-base">
-                  {journey.description}
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <div key={journey.id} className="relative h-full rounded-lg">
+              <GlowingEffect
+                disabled={false}
+                proximity={80}
+                spread={30}
+                borderWidth={2}
+                inactiveZone={0.4}
+              />
+              <Card
+                className="relative cursor-pointer hover:shadow-lg transition-all border-2 hover:border-primary/50 h-full"
+                onClick={() => setSelectedJourney(journey.id)}
+              >
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-3">
+                      <div className={`p-3 rounded-lg ${journey.color}`}>
+                        {journey.icon}
+                      </div>
+                      {journey.title}
+                    </CardTitle>
+                  </div>
+                  <CardDescription className="text-base">
+                    {journey.description}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
           ))}
         </div>
       ) : (

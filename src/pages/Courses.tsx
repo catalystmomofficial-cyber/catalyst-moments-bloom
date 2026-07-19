@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { BookOpen, Target, Users } from "lucide-react";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 interface Course {
   id: string;
@@ -166,41 +167,50 @@ export default function Courses() {
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardContent className="flex items-center space-x-4 p-6">
-            <div className="p-3 bg-primary/10 rounded-full">
-              <BookOpen className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">{courses.length}</p>
-              <p className="text-sm text-muted-foreground">Available Courses</p>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="flex items-center space-x-4 p-6">
-            <div className="p-3 bg-green-500/10 rounded-full">
-              <Target className="h-6 w-6 text-green-600 dark:text-green-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">{enrolledCourses.length}</p>
-              <p className="text-sm text-muted-foreground">Enrolled Courses</p>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="flex items-center space-x-4 p-6">
-            <div className="p-3 bg-purple-500/10 rounded-full">
-              <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">500+</p>
-              <p className="text-sm text-muted-foreground">Community Members</p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="relative h-full rounded-lg">
+          <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+          <Card className="relative h-full">
+            <CardContent className="flex items-center space-x-4 p-6">
+              <div className="p-3 bg-primary/10 rounded-full">
+                <BookOpen className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{courses.length}</p>
+                <p className="text-sm text-muted-foreground">Available Courses</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="relative h-full rounded-lg">
+          <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+          <Card className="relative h-full">
+            <CardContent className="flex items-center space-x-4 p-6">
+              <div className="p-3 bg-green-500/10 rounded-full">
+                <Target className="h-6 w-6 text-green-600 dark:text-green-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{enrolledCourses.length}</p>
+                <p className="text-sm text-muted-foreground">Enrolled Courses</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="relative h-full rounded-lg">
+          <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+          <Card className="relative h-full">
+            <CardContent className="flex items-center space-x-4 p-6">
+              <div className="p-3 bg-purple-500/10 rounded-full">
+                <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">500+</p>
+                <p className="text-sm text-muted-foreground">Community Members</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Courses Tabs */}

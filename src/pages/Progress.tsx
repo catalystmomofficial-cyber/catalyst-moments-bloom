@@ -35,6 +35,7 @@ import { ProfileCompletionWidget } from '@/components/profile/ProfileCompletionW
 import { AchievementBadges } from '@/components/profile/AchievementBadges';
 import { MilestoneCheckInModal, type MilestoneStage } from '@/components/progress/MilestoneCheckInModal';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 
 interface CheckIn {
@@ -462,53 +463,65 @@ const Progress = () => {
           <>
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-                <CardHeader className="pb-3">
-                  <CardDescription className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    Check-ins Completed
-                  </CardDescription>
-                  <CardTitle className="text-3xl font-bold text-primary">
-                    {stats.totalCheckIns}
-                  </CardTitle>
-                </CardHeader>
-              </Card>
+              <div className="relative h-full rounded-lg">
+                <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+                <Card className="relative h-full border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      Check-ins Completed
+                    </CardDescription>
+                    <CardTitle className="text-3xl font-bold text-primary">
+                      {stats.totalCheckIns}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </div>
 
-              <Card className="border-secondary/20 bg-gradient-to-br from-secondary/5 to-transparent">
-                <CardHeader className="pb-3">
-                  <CardDescription className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4" />
-                    Days Active
-                  </CardDescription>
-                  <CardTitle className="text-3xl font-bold text-secondary">
-                    {stats.daysActive}
-                  </CardTitle>
-                </CardHeader>
-              </Card>
+              <div className="relative h-full rounded-lg">
+                <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+                <Card className="relative h-full border-secondary/20 bg-gradient-to-br from-secondary/5 to-transparent">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4" />
+                      Days Active
+                    </CardDescription>
+                    <CardTitle className="text-3xl font-bold text-secondary">
+                      {stats.daysActive}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </div>
 
-              <Card className="border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
-                <CardHeader className="pb-3">
-                  <CardDescription className="flex items-center gap-2">
-                    <Award className="h-4 w-4" />
-                    Weight Change
-                  </CardDescription>
-                  <CardTitle className="text-3xl font-bold">
-                    {stats.weightChange > 0 ? '+' : ''}{stats.weightChange.toFixed(1)} lbs
-                  </CardTitle>
-                </CardHeader>
-              </Card>
+              <div className="relative h-full rounded-lg">
+                <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+                <Card className="relative h-full border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="flex items-center gap-2">
+                      <Award className="h-4 w-4" />
+                      Weight Change
+                    </CardDescription>
+                    <CardTitle className="text-3xl font-bold">
+                      {stats.weightChange > 0 ? '+' : ''}{stats.weightChange.toFixed(1)} lbs
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </div>
 
-              <Card className="border-primary/20 bg-gradient-to-br from-primary/10 to-transparent">
-                <CardHeader className="pb-3">
-                  <CardDescription className="flex items-center gap-2">
-                    <Crown className="h-4 w-4" />
-                    Current Streak
-                  </CardDescription>
-                  <CardTitle className="text-3xl font-bold">
-                    {Math.floor(stats.daysActive / 7)} weeks
-                  </CardTitle>
-                </CardHeader>
-              </Card>
+              <div className="relative h-full rounded-lg">
+                <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+                <Card className="relative h-full border-primary/20 bg-gradient-to-br from-primary/10 to-transparent">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="flex items-center gap-2">
+                      <Crown className="h-4 w-4" />
+                      Current Streak
+                    </CardDescription>
+                    <CardTitle className="text-3xl font-bold">
+                      {Math.floor(stats.daysActive / 7)} weeks
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </div>
             </div>
 
             {/* Share Progress CTA */}

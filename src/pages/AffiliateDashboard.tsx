@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Share2, Users, Clock, CheckCircle2, DollarSign, Loader2, Sparkles } from "lucide-react";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 interface Stats {
   total_referrals: number;
@@ -171,12 +172,15 @@ export default function AffiliateDashboard() {
 
 function StatCard({ icon, label, value, highlight }: { icon: React.ReactNode; label: string; value: any; highlight?: boolean }) {
   return (
-    <Card className={highlight ? "border-catalyst-copper/40 bg-catalyst-copper/5" : ""}>
-      <CardContent className="p-4">
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">{icon}<span>{label}</span></div>
-        <div className={`text-2xl font-bold ${highlight ? "text-catalyst-copper" : "text-catalyst-brown"}`}>{value}</div>
-      </CardContent>
-    </Card>
+    <div className="relative h-full rounded-lg">
+      <GlowingEffect disabled={false} proximity={40} spread={20} borderWidth={2} inactiveZone={0.4} />
+      <Card className={`relative h-full ${highlight ? "border-catalyst-copper/40 bg-catalyst-copper/5" : ""}`}>
+        <CardContent className="p-4">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">{icon}<span>{label}</span></div>
+          <div className={`text-2xl font-bold ${highlight ? "text-catalyst-copper" : "text-catalyst-brown"}`}>{value}</div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 

@@ -32,6 +32,7 @@ import { PersonalizedCoachCard } from '@/components/wellness-coach/PersonalizedC
 import { PushNotificationPrompt } from '@/components/notifications/PushNotificationPrompt';
 import { IntentSignalBanner } from '@/components/dashboard/IntentSignalBanner';
 import { useScrollToHash } from '@/hooks/useScrollToHash';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -436,20 +437,23 @@ const Dashboard = () => {
 };
 
 const StatsCard = ({ title, value, description, icon, color }: StatsCardProps) => (
-  <Card>
-    <CardContent className="pt-6">
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1 flex-1 min-w-0">
-          <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
-          <p className="text-2xl sm:text-3xl font-bold break-words">{value}</p>
-          <p className="text-xs text-muted-foreground truncate">{description}</p>
+  <div className="relative h-full rounded-lg">
+    <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+    <Card className="relative h-full">
+      <CardContent className="pt-6">
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1 flex-1 min-w-0">
+            <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+            <p className="text-2xl sm:text-3xl font-bold break-words">{value}</p>
+            <p className="text-xs text-muted-foreground truncate">{description}</p>
+          </div>
+          <div className={`${color} rounded-full p-3 shrink-0`}>
+            {icon}
+          </div>
         </div>
-        <div className={`${color} rounded-full p-3 shrink-0`}>
-          {icon}
-        </div>
-      </div>
-    </CardContent>
-  </Card>
+      </CardContent>
+    </Card>
+  </div>
 );
 
 interface PlanCardProps {
