@@ -58,7 +58,16 @@ const WEEK_3_VIDEOS = [
   "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2020.mp4",
   "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2021.mp4",
 ];
-const DAY_PLACEHOLDER = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
+const BASE_R2 = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
+const WEEK_4_VIDEOS = [
+  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2022.mp4`,
+  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2023.mp4`,
+  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2024.mp4`,
+  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2025.mp4`,
+  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2026.mp4`,
+  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2027.mp4`,
+  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2028.mp4`,
+];
 
 const WEEKS = [
   {
@@ -192,7 +201,7 @@ export default function CoreRestoreFoundationsProgram() {
     ? WEEK_2_VIDEOS[selDayInWeek - 1]
     : selWeek === 3
     ? WEEK_3_VIDEOS[selDayInWeek - 1]
-    : DAY_PLACEHOLDER;
+    : WEEK_4_VIDEOS[selDayInWeek - 1];
 
   const markDayComplete = async () => {
     if (!isViewingActiveDay) return;
