@@ -15,6 +15,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { AchievementModal } from '@/components/gamification/AchievementModal';
+import { AchievementIconBadge } from '@/components/gamification/AchievementIconBadge';
 
 type AchievementIcon = 'trophy' | 'crown' | 'users' | 'calendar' | 'flame' | 'star' | 'heart' | 'zap';
 
@@ -208,6 +209,12 @@ export const AchievementBadges = () => {
 
   const earnedAchievements = useMemo(() => achievements.filter((achievement) => achievement.earned), [achievements]);
   const lockedCount = achievements.length - earnedAchievements.length;
+  // Earned first, then locked — every badge is shown as a medallion, so the
+  // locked ones read as "not yet struck" rather than being hidden behind a count.
+  const orderedAchievements = useMemo(
+    () => [...achievements].sort((a, b) => Number(b.earned) - Number(a.earned)),
+    [achievements],
+  );
 
   const getModalLevel = (rarity: Achievement['rarity']) => {
     switch (rarity) {
@@ -240,14 +247,14 @@ export const AchievementBadges = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {earnedAchievements.length === 0 ? (
+          {achievements.length === 0 ? (
             <div className="py-8 text-center text-muted-foreground">
               <Trophy className="mx-auto mb-3 h-10 w-10 opacity-50" />
               <p className="text-sm">Complete check-ins and milestones to unlock your first badge.</p>
             </div>
           ) : (
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
-              {earnedAchievements.map((achievement) => {
+              {orderedAchievements.map((achievement) => {
                 const Icon = iconMap[achievement.icon] || Trophy;
 
                 return (
@@ -255,12 +262,20 @@ export const AchievementBadges = () => {
                     key={achievement.id}
                     type="button"
                     onClick={() => setSelectedAchievement(achievement)}
-                    className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3 text-center transition-all duration-200 hover:bg-accent/50 hover:shadow-sm active:scale-95"
+                    className={`flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-3 text-center transition-all duration-200 hover:bg-accent/50 hover:shadow-sm active:scale-95 ${
+                      achievement.earned ? '' : 'opacity-95'
+                    }`}
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className="line-clamp-2 text-[11px] font-medium leading-tight">
+                    <AchievementIconBadge
+                      icon={<Icon />}
+                      rarity={achievement.rarity}
+                      locked={!achievement.earned}
+                    />
+                    <span
+                      className={`line-clamp-2 text-[11px] font-medium leading-tight ${
+                        achievement.earned ? '' : 'text-muted-foreground'
+                      }`}
+                    >
                       {achievement.title}
                     </span>
                     {achievement.rarity !== 'common' && (
@@ -276,7 +291,7 @@ export const AchievementBadges = () => {
 
           {lockedCount > 0 && (
             <p className="text-xs text-muted-foreground">
-              {lockedCount} more badge{lockedCount === 1 ? '' : 's'} still locked.
+              {lockedCount} badge{lockedCount === 1 ? '' : 's'} still to unlock — tap any to see how.
             </p>
           )}
         </CardContent>
@@ -292,6 +307,7 @@ export const AchievementBadges = () => {
             icon: selectedAchievement.icon,
             level: getModalLevel(selectedAchievement.rarity),
             earned_at: selectedAchievement.earnedDate || new Date().toISOString(),
+            earned: selectedAchievement.earned,
           }}
           open={!!selectedAchievement}
           onOpenChange={(open) => {

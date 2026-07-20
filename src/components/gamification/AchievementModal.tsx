@@ -13,6 +13,7 @@ interface Achievement {
   icon: string;
   level: number;
   earned_at: string;
+  earned?: boolean;
 }
 
 const iconMap: Record<string, typeof Trophy> = {
@@ -82,7 +83,9 @@ export const AchievementModal = ({ achievement, open, onOpenChange }: Achievemen
                 transition={{ delay: 0.45 }}
                 className="text-xs text-muted-foreground"
               >
-                🏆 Earned {format(new Date(achievement.earned_at), 'MMMM d, yyyy')}
+                {achievement.earned === false
+                  ? '🔒 Not yet unlocked — keep going to earn this one'
+                  : `🏆 Earned ${format(new Date(achievement.earned_at), 'MMMM d, yyyy')}`}
               </motion.p>
             </motion.div>
           )}

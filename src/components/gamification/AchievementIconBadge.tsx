@@ -46,16 +46,30 @@ if (typeof document !== 'undefined' && !document.getElementById(STYLE_ID)) {
 }
 
 // Small metallic gold/copper medallion for achievement icons — same lucide
-// icon per achievement, just struck in the AwardBadge rarity metal instead of
-// a flat single-color circle. Locked achievements stay muted so earned ones pop.
+// icon per achievement, struck in the AwardBadge rarity metal instead of a
+// flat single-color circle. Locked achievements get a tarnished-pewter strike
+// (still a real medallion, just unlit and cool) so the grid stays rich while
+// earned ones clearly glow.
 export function AchievementIconBadge({ icon, rarity = 'common', locked = false, className = '' }: AchievementIconBadgeProps) {
   if (locked) {
     return (
       <div
-        className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${className}`}
-        style={{ background: 'hsl(var(--muted))', border: '1px solid hsl(var(--border))' }}
+        className={`relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full ${className}`}
+        style={{
+          background: 'radial-gradient(circle at 32% 26%, #E8E4DD 0%, #C9C3B8 34%, #A39C8E 66%, #736C5E 100%)',
+          border: '1.5px solid #575043',
+          boxShadow: '0 3px 6px -2px rgba(60,54,44,0.4), inset 0 2px 2px rgba(255,255,255,0.5), inset 0 -3px 4px rgba(60,54,44,0.32)',
+        }}
       >
-        <div className="[&_svg]:h-5 [&_svg]:w-5" style={{ color: 'hsl(var(--muted-foreground))' }}>
+        <div
+          className="pointer-events-none absolute -left-1 -top-1 h-6 w-6 rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.45) 0%, transparent 70%)' }}
+          aria-hidden="true"
+        />
+        <div
+          className="relative [&_svg]:h-5 [&_svg]:w-5 [&_svg]:[stroke-width:2.4px]"
+          style={{ color: '#514A3E', filter: 'drop-shadow(0 1px 0.5px rgba(255,255,255,0.4))' }}
+        >
           {icon}
         </div>
       </div>

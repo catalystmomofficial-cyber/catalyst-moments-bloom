@@ -59,15 +59,15 @@ const WEEK_3_VIDEOS = [
   "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2020.mp4",
   "https://media.catalystmomofficial.com/DR%20COURSE/WEEK%203/Day%2021.mp4",
 ];
-const BASE_R2 = "https://pub-e55a11498b7e47449512d71ec24e8493.r2.dev";
+const WEEK_4_BASE = "https://media.catalystmomofficial.com";
 const WEEK_4_VIDEOS = [
-  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2022.mp4`,
-  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2023.mp4`,
-  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2024.mp4`,
-  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2025.mp4`,
-  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2026.mp4`,
-  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2027.mp4`,
-  `${BASE_R2}/DR%20COURSE/WEEK%204/Day%2028.mp4`,
+  `${WEEK_4_BASE}/DR%20COURSE/WEEK%204/Day%2022.mp4`,
+  `${WEEK_4_BASE}/DR%20COURSE/WEEK%204/Day%2023.mp4`,
+  `${WEEK_4_BASE}/DR%20COURSE/WEEK%204/Day%2024.mp4`,
+  `${WEEK_4_BASE}/DR%20COURSE/WEEK%204/Day%2025.mp4`,
+  `${WEEK_4_BASE}/DR%20COURSE/WEEK%204/Day%2026.mp4`,
+  `${WEEK_4_BASE}/DR%20COURSE/WEEK%204/Day%2027.mp4`,
+  `${WEEK_4_BASE}/DR%20COURSE/WEEK%204/Day%2028.mp4`,
 ];
 
 const WEEKS = [
@@ -121,6 +121,32 @@ interface LocalProgress {
 
 const todayKey = () => new Date().toISOString().slice(0, 10);
 
+// Week 4 videos were unreachable for a period, so some progress got marked
+// "complete" (and Phase 2 unlocked) without the sessions actually being
+// watched. This one-time repair rolls any such progress back to the start of
+// Week 4 (Day 22) — Weeks 1–3 stay intact, Phase 2 re-locks until Day 28 is
+// genuinely finished. Runs once per browser, then never touches progress again.
+const WEEK4_REPAIR_KEY = "core-restore-week4-repair-done";
+const FIRST_WEEK4_DAY = 22;
+
+const repairWeek4Progress = (p: LocalProgress): LocalProgress => {
+  if (localStorage.getItem(WEEK4_REPAIR_KEY)) return p;
+  localStorage.setItem(WEEK4_REPAIR_KEY, "1");
+
+  const advancedPastStart = (Number(p.unlocked_day) || 1) > FIRST_WEEK4_DAY;
+  if (!p.completed_at && !advancedPastStart) return p;
+
+  const repaired: LocalProgress = {
+    ...p,
+    unlocked_day: FIRST_WEEK4_DAY,
+    current_week: 4,
+    current_day: 1,
+    completed_at: undefined,
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(repaired));
+  return repaired;
+};
+
 const loadProgress = (): LocalProgress => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -128,7 +154,7 @@ const loadProgress = (): LocalProgress => {
       const p = JSON.parse(raw);
       if (typeof p.unlocked_day !== "number") p.unlocked_day = 1;
       if (typeof p.streak !== "number") p.streak = 0;
-      return p;
+      return repairWeek4Progress(p);
     }
   } catch {}
   const fresh: LocalProgress = {
