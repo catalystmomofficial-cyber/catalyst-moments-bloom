@@ -82,6 +82,7 @@ import { useState, useEffect } from "react";
 import SplashScreen from "./components/SplashScreen";
 import PresenceTracker from "./components/presence/PresenceTracker";
 import AdminGiftListener from "./components/notifications/AdminGiftListener";
+import PWAInstallBanner from "./components/pwa/PWAInstallBanner";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -412,6 +413,7 @@ function AppContent() {
       <GlobalVideoPlayer />
       <RemoteControllerOverlay />
       <CookieConsentBanner />
+      <PWAInstallBanner />
     </BrowserRouter>
     </ErrorBoundary>
   );

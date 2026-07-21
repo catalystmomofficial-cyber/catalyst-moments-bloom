@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Download, X, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLocation } from 'react-router-dom';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -14,36 +16,55 @@ const isStandalone = () =>
 const isIOS = () =>
   /iphone|ipad|ipod/i.test(navigator.userAgent) && !(window as any).MSStream;
 
+// Only invite full members to install once they're actually working out —
+// never a first-time visitor browsing the landing page.
+const isWorkoutRoute = (path: string) =>
+  path.startsWith('/workouts') || path.startsWith('/programs');
+
 const PWAInstallBanner = () => {
+  const { subscribed } = useAuth();
+  const location = useLocation();
+
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showBanner, setShowBanner] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(
+    () => typeof localStorage !== 'undefined' && localStorage.getItem('pwa-banner-dismissed') === 'true'
+  );
   const [visible, setVisible] = useState(false);
 
+  // A subscribed member is on a workout page and hasn't already installed/dismissed.
+  const eligible =
+    !!subscribed &&
+    isWorkoutRoute(location.pathname) &&
+    !dismissed &&
+    !isStandalone();
+
+  // Capture the browser's install event whenever it fires (often early, on any
+  // page). We hold onto it so we can offer the prompt later, once she's a
+  // member in a workout — instead of showing it too soon.
   useEffect(() => {
-    if (isStandalone()) return;
-    if (localStorage.getItem('pwa-banner-dismissed') === 'true') return;
-
-    const reveal = () => {
-      setShowBanner(true);
-      setTimeout(() => setVisible(true), 2000);
-    };
-
-    if (isIOS()) {
-      reveal();
-      return;
-    }
-
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      reveal();
     };
-
     window.addEventListener('beforeinstallprompt', handler);
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
+
+  // Reveal the banner only when a subscribed member reaches a workout page.
+  useEffect(() => {
+    if (!eligible) {
+      setShowBanner(false);
+      setVisible(false);
+      return;
+    }
+    // Android/Chrome needs the captured prompt; iOS uses the manual Share guide.
+    if (!isIOS() && !deferredPrompt) return;
+    setShowBanner(true);
+    const t = setTimeout(() => setVisible(true), 2000);
+    return () => clearTimeout(t);
+  }, [eligible, deferredPrompt]);
 
   const handleInstall = async () => {
     if (isIOS()) {

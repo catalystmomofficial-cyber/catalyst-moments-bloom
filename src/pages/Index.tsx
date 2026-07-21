@@ -12,7 +12,6 @@ import HomeFAQSection, { homeFaqSchema } from '@/components/home/HomeFAQSection'
 import CTASection from '@/components/home/CTASection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
-import PWAInstallBanner from '@/components/pwa/PWAInstallBanner';
 import AssessmentPopup from '@/components/home/AssessmentPopup';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -107,9 +106,6 @@ const Index = () => {
 
       {/* Assessment invite popup — native, shows once per visitor */}
       <AssessmentPopup />
-
-      {/* PWA Install Banner */}
-      <PWAInstallBanner />
 
       {/* Video Modal */}
       <VideoModal 
