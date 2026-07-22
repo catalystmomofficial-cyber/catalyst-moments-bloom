@@ -61,6 +61,27 @@ const guides = [
     href: "/honest-pregnancy-truths",
   },
   {
+    stage: "Mental load",
+    title: "Postpartum Freezer Meal Prep + Grocery List",
+    blurb:
+      "One afternoon of batch cooking = weeks of dinners already decided. Six freeze-and-reheat meals with a one-trip grocery list.",
+    href: "/postpartum-freezer-meal-prep",
+  },
+  {
+    stage: "Community",
+    title: "How to Actually Build Your Village",
+    blurb:
+      "Matching apps get you to a first chat but rarely a friend. The first-three-meetups method + reciprocal-help swaps, with copy-paste openers.",
+    href: "/build-your-village",
+  },
+  {
+    stage: "Baby",
+    title: "Baby Allergen & First Foods Tracker (Printable)",
+    blurb:
+      "The simple checklist parents keep wishing existed — track what your baby has tried and how they responded, to bring to your pediatrician.",
+    href: "/baby-allergen-tracker",
+  },
+  {
     stage: "Postpartum",
     title: "Healing Diastasis Recti & the \"Mom Pooch\" (the Reddit consensus)",
     blurb:

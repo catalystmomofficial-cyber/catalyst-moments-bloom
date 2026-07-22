@@ -84,6 +84,9 @@ import ExhaustedMomSleepGuide from "./pages/ExhaustedMomSleepGuide";
 import Guides from "./pages/Guides";
 import BabyTrackingAnxiety from "./pages/BabyTrackingAnxiety";
 import HonestPregnancyTruths from "./pages/HonestPregnancyTruths";
+import PostpartumFreezerMeals from "./pages/PostpartumFreezerMeals";
+import BuildYourVillage from "./pages/BuildYourVillage";
+import BabyAllergenTracker from "./pages/BabyAllergenTracker";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
 import SplashScreen from "./components/SplashScreen";
@@ -155,6 +158,9 @@ function AppContent() {
         <Route path="/guides" element={<Guides />} />
         <Route path="/baby-tracking-anxiety" element={<BabyTrackingAnxiety />} />
         <Route path="/honest-pregnancy-truths" element={<HonestPregnancyTruths />} />
+        <Route path="/postpartum-freezer-meal-prep" element={<PostpartumFreezerMeals />} />
+        <Route path="/build-your-village" element={<BuildYourVillage />} />
+        <Route path="/baby-allergen-tracker" element={<BabyAllergenTracker />} />
         
         {/* Protected Routes - Require Login and Subscription */}
         <Route path="/progress" element={
