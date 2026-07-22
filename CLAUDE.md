@@ -15,6 +15,15 @@ context), and give the user a short list of questions only they can answer
 to add first-hand experience. Never fabricate first-hand stories or fake
 data — real experience must come from the user.
 
+**Experience-led SEO (standing rule):** For blog posts, YouTube scripts, and
+long-form content, also follow `docs/seo/experience-led-seo.md`. In 2026 a
+real first-hand story is a Google ranking factor (E-E-A-T "Experience" + the
+Helpful Content system; AI-spam is being demoted). For every piece: (1) reject
+any generic title a competitor could also use, (2) re-anchor it on an
+experience only Catalyst Mom has, (3) anchor it in a real number or story the
+brand can stand behind, (4) flag anything needing first-hand input instead of
+fabricating it.
+
 ## Blog pipeline
 
 - Posts live in the Supabase `blogs` table (RLS: admin-only writes; anon
