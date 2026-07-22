@@ -11,6 +11,7 @@ import TestimonialsSection from '@/components/home/TestimonialsSection';
 import HomeFAQSection, { homeFaqSchema } from '@/components/home/HomeFAQSection';
 import CTASection from '@/components/home/CTASection';
 import FreeGuidesSection from '@/components/home/FreeGuidesSection';
+import WhyDifferentSection from '@/components/home/WhyDifferentSection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
 import AssessmentPopup from '@/components/home/AssessmentPopup';
@@ -81,7 +82,7 @@ const Index = () => {
     <PageLayout withPadding={false}>
       <SEO
         title="TTC, Pregnancy & Postpartum Wellness | Catalyst Mom"
-        description="Personalized prenatal & postpartum workouts, meal plans, and community support for TTC, pregnancy, and postpartum moms. Try 7 days free."
+        description="Core & pelvic floor recovery, workouts, meal plans & cycle tracking for TTC, pregnancy & postpartum — all in one app. Rebuild your body, don't just track it."
         structuredData={homeStructuredData}
       />
       {/* Hero Section */}
@@ -95,6 +96,9 @@ const Index = () => {
 
       {/* About Section */}
       <AboutSection />
+
+      {/* Why we're different — additive positioning band */}
+      <WhyDifferentSection />
 
       {/* Testimonial Section */}
       <TestimonialsSection />
