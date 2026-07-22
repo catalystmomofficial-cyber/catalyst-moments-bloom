@@ -165,6 +165,18 @@ const PostpartumBodyChangesGuide = () => {
             <em>"Why did nobody tell me this would happen?"</em>
           </p>
           <p className="mb-4 leading-relaxed">
+            We notice, because Catalyst Mom didn't start as an app — it started
+            as a handful of digital guides, which meant we were in the messages
+            with moms one at a time, for a long time. Across the 2,000+ moms
+            we've supported since, the thing we hear most often isn't a question
+            about the baby. It's a quieter version of the same worry:{" "}
+            <em>
+              "I don't recognize my own body — and I can't get anyone to tell me
+              whether that's normal."
+            </em>{" "}
+            So here's the honest answer we wish someone had given us.
+          </p>
+          <p className="mb-4 leading-relaxed">
             The pregnancy apps track your bump. The baby apps track your baby.
             But the changes that happen to <strong>you</strong> — the leaking,
             the belly that still looks pregnant, the hair in the drain, the feet
@@ -223,6 +235,14 @@ const PostpartumBodyChangesGuide = () => {
               no crunches, no planks, no guessing. It's the difference between
               hoping these fade and actually training them back.
             </p>
+            <blockquote className="mt-4 border-l-4 border-catalyst-copper/50 pl-4 italic text-muted-foreground">
+              "I couldn't sneeze without leaking and my belly still looked five
+              months pregnant. Three weeks into the program my core finally feels
+              like mine again."
+              <span className="mt-1 block not-italic text-sm font-medium text-catalyst-brown">
+                — Postpartum mama, Catalyst Mom community
+              </span>
+            </blockquote>
             <div className="mt-4 flex flex-col sm:flex-row gap-3">
               <Button asChild size="lg" className="bg-catalyst-copper hover:bg-catalyst-copper/90">
                 <Link to="/register">Start rebuilding with Core Restore</Link>
