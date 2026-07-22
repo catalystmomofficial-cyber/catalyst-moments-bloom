@@ -81,6 +81,7 @@ import PostpartumBodyChangesGuide from "./pages/PostpartumBodyChangesGuide";
 import CSectionPrepChecklist from "./pages/CSectionPrepChecklist";
 import BreastfeedingWithoutGuilt from "./pages/BreastfeedingWithoutGuilt";
 import ExhaustedMomSleepGuide from "./pages/ExhaustedMomSleepGuide";
+import Guides from "./pages/Guides";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
 import SplashScreen from "./components/SplashScreen";
@@ -149,6 +150,7 @@ function AppContent() {
         <Route path="/c-section-prep-checklist" element={<CSectionPrepChecklist />} />
         <Route path="/stop-breastfeeding-without-guilt" element={<BreastfeedingWithoutGuilt />} />
         <Route path="/exhausted-mom-sleep-troubleshooting" element={<ExhaustedMomSleepGuide />} />
+        <Route path="/guides" element={<Guides />} />
         
         {/* Protected Routes - Require Login and Subscription */}
         <Route path="/progress" element={
