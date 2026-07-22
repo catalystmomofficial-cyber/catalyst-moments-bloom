@@ -10,6 +10,7 @@ import AboutSection from '@/components/home/AboutSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import HomeFAQSection, { homeFaqSchema } from '@/components/home/HomeFAQSection';
 import CTASection from '@/components/home/CTASection';
+import FreeGuidesSection from '@/components/home/FreeGuidesSection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
 import AssessmentPopup from '@/components/home/AssessmentPopup';
@@ -97,6 +98,9 @@ const Index = () => {
 
       {/* Testimonial Section */}
       <TestimonialsSection />
+
+      {/* Free Guides discovery band */}
+      <FreeGuidesSection />
 
       {/* FAQ Section */}
       <HomeFAQSection />

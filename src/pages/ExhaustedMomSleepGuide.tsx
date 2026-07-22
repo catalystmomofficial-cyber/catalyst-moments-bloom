@@ -104,7 +104,7 @@ const ExhaustedMomSleepGuide = () => {
       <article className="container mx-auto max-w-4xl px-4 py-10 md:py-16">
         <Breadcrumb
           items={[
-            { label: "Blog", href: "/blog" },
+            { label: "Free Guides", href: "/guides" },
             {
               label: "Exhausted Mom Sleep Troubleshooting",
               href: "/exhausted-mom-sleep-troubleshooting",

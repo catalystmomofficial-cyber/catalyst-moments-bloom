@@ -134,7 +134,7 @@ const BreastfeedingWithoutGuilt = () => {
       <article className="container mx-auto max-w-4xl px-4 py-10 md:py-16">
         <Breadcrumb
           items={[
-            { label: "Blog", href: "/blog" },
+            { label: "Free Guides", href: "/guides" },
             {
               label: "Breastfeeding Without the Guilt",
               href: "/stop-breastfeeding-without-guilt",
