@@ -13,9 +13,9 @@ const FeaturesSection = () => {
           <Badge variant="outline" className="mb-4 px-3 py-1 border-primary/30 text-primary dark:text-catalyst-gold dark:border-catalyst-gold/40">
             Features
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Everything You Need in One Place</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Everything in One App — Deep Where It Counts</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Everything built specifically for TTC, Pregnancy, and Postpartum — personalised to where you actually are right now.
+            Cycle tracking, personalised workouts, meal plans, and real core &amp; pelvic floor recovery — built for TTC, pregnancy, and postpartum, and personalised to where you actually are. One app instead of five.
           </p>
         </div>
         
