@@ -78,6 +78,7 @@ import MedicalDisclaimer from "./pages/MedicalDisclaimer";
 import Unsubscribe from "./pages/Unsubscribe";
 import DiastasisRectiRedditReviews from "./pages/DiastasisRectiRedditReviews";
 import PostpartumBodyChangesGuide from "./pages/PostpartumBodyChangesGuide";
+import CSectionPrepChecklist from "./pages/CSectionPrepChecklist";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
 import SplashScreen from "./components/SplashScreen";
@@ -143,6 +144,7 @@ function AppContent() {
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/diastasis-recti-recovery-program-reviews-reddit" element={<DiastasisRectiRedditReviews />} />
         <Route path="/postpartum-body-changes-what-nobody-tells-you" element={<PostpartumBodyChangesGuide />} />
+        <Route path="/c-section-prep-checklist" element={<CSectionPrepChecklist />} />
         
         {/* Protected Routes - Require Login and Subscription */}
         <Route path="/progress" element={
