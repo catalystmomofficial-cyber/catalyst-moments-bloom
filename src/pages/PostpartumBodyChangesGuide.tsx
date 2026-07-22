@@ -129,8 +129,8 @@ const PostpartumBodyChangesGuide = () => {
   return (
     <PageLayout>
       <SEO
-        title="What Nobody Tells You About Your Postpartum Body (And What Actually Helps)"
-        description="A judgment-free guide to the postpartum changes moms say no one warned them about — pelvic floor, the mom pooch, hair loss, foot size, brain fog, mood — what's normal, what helps, when to call your provider, and what you can rebuild."
+        title="Postpartum Body Changes Nobody Warns You About"
+        description="The postpartum changes no one warns you about — pelvic floor, the mom pooch, hair loss, brain fog, mood. What's normal, what helps, and what you can rebuild."
         canonical="https://catalystmomofficial.com/postpartum-body-changes-what-nobody-tells-you"
         type="article"
         structuredData={structuredData}
