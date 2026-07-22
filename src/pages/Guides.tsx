@@ -48,6 +48,20 @@ const guides = [
   },
   {
     stage: "Postpartum",
+    title: "You're Allowed to Stop Logging Everything",
+    blurb:
+      "When feed and wake-window tracking turns into anxiety: when it's worth keeping, when it's not, and a gentle step-down plan to trust yourself again.",
+    href: "/baby-tracking-anxiety",
+  },
+  {
+    stage: "Pregnancy",
+    title: "Honest Pregnancy Advice the Apps Won't Give You",
+    blurb:
+      "The no-toxic-positivity version — countering the shaming, contradictory app notifications, while still taking real warning signs seriously.",
+    href: "/honest-pregnancy-truths",
+  },
+  {
+    stage: "Postpartum",
     title: "Healing Diastasis Recti & the \"Mom Pooch\" (the Reddit consensus)",
     blurb:
       "Why crunches and planks make the gap worse, what the forums actually agree on, and the safe way to close it.",

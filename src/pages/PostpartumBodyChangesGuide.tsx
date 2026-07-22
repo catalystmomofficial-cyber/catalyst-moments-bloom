@@ -81,6 +81,10 @@ const rebuildable = [
     change: "Feeling weak, unstable, or \"disconnected\" from your middle",
     real: "The deep core muscles go quiet during pregnancy and need to be re-recruited deliberately. This is trainable at any stage postpartum, including years later.",
   },
+  {
+    change: "Heaviness, pressure, or a bulge \"down there\"",
+    real: "Common after birth and often tied to a pelvic floor that's still recovering. It frequently improves with targeted pelvic floor work — and it's worth having your provider or a pelvic floor PT take a look so you know exactly what you're working with.",
+  },
 ];
 
 // Common, usually-normal changes that mostly resolve or are managed at home.
@@ -108,6 +112,14 @@ const hormonalAndCommon = [
   {
     change: "Painful sex once you're cleared",
     real: "Common — often from hormonal dryness (especially while breastfeeding) and pelvic floor tension. Lubricant, patience, and pelvic floor work help. Bring persistent pain to your provider or a pelvic floor PT.",
+  },
+  {
+    change: "Wrist, thumb, and hand pain (\"mommy wrist\")",
+    real: "Very common from the constant lifting and holding of a newborn, sometimes with hormonal joint laxity on top. It usually eases as you adjust how you lift and as hormones settle; a brace and changing your carry can help. Flag it to your provider if it lingers or is severe.",
+  },
+  {
+    change: "Evening dread (\"the sunset scaries\") and grief that it's going so fast",
+    real: "Both are more common than anyone admits — a wave of anxiety as night falls, and a strange grief for a stage that's already ending. You can feel these and still be doing beautifully. If the anxiety hits most evenings or the heaviness won't lift, that's worth support (see below), not something to power through.",
   },
 ];
 
