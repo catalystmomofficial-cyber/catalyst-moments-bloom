@@ -5,8 +5,37 @@
 // Supabase at build time so every published article is prerendered for Google.
 import { spawn } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import puppeteer from 'puppeteer';
+
+// Vite only loads .env for the browser bundle (import.meta.env.*); this is a
+// plain Node script run as a postbuild step, so it never sees those values
+// unless the host platform happens to export .env into the shell first. That
+// silent gap meant fetchBlogSlugs() below could return an empty list on a
+// platform that doesn't do that, so every blog post would fall back to
+// serving the homepage's static file. Load .env directly so this never
+// depends on the platform's behavior.
+function loadDotEnv() {
+  try {
+    const content = readFileSync(path.resolve(process.cwd(), '.env'), 'utf-8');
+    for (const line of content.split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const eq = trimmed.indexOf('=');
+      if (eq === -1) continue;
+      const key = trimmed.slice(0, eq).trim();
+      let value = trimmed.slice(eq + 1).trim();
+      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+        value = value.slice(1, -1);
+      }
+      if (!(key in process.env)) process.env[key] = value;
+    }
+  } catch {
+    // No .env file present — rely on whatever the platform already set.
+  }
+}
+loadDotEnv();
 
 const PORT = 4173;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
