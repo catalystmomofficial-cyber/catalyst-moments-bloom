@@ -54,7 +54,7 @@ const faqs = [
   },
   {
     q: "Is there a money-back guarantee?",
-    a: "Yes, we stand behind our method. We offer a risk-free 7-day money-back guarantee. If you join and feel like the workouts, community, or protocols aren't the right fit for your motherhood stage, simply contact our support team within your first week for a full, hassle-free refund.",
+    a: "Yes, we stand behind our method with a 30-day fair-try guarantee. Give it a genuine try for 30 days, and if the workouts, community, and protocols honestly aren't the right fit for your motherhood stage, contact our support team within those 30 days and we'll refund your payment. We only ask that you gave it a fair shot first.",
     meta: "Guarantee",
   },
   {

@@ -23,7 +23,7 @@ export const homeFaqs = [
   },
   {
     q: "Is there a free trial or money-back guarantee?",
-    a: "Yes. Catalyst Mom offers a risk-free 7-day money-back guarantee, so you can try the workouts, community, and protocols and get a full refund if it isn't the right fit.",
+    a: "Yes. Catalyst Mom comes with a 30-day fair-try guarantee. Give the workouts, community, and protocols a genuine try for 30 days, and if it honestly isn't the right fit, email us and we'll refund your payment. We just ask that you gave it a fair shot first.",
   },
 ];
 

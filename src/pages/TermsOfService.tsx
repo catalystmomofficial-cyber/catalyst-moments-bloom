@@ -98,7 +98,7 @@ const HTML = `
       <h3 class="sub-heading">4.3 Cancellation</h3>
       <p>You may cancel your subscription at any time through your account settings or by contacting us at admin@catalystmom.online. Cancellation takes effect at the end of your current billing period. You will retain access to the platform until that date.</p>
       <h3 class="sub-heading">4.4 Refunds</h3>
-      <p>We offer a 30-day money-back guarantee on all new subscriptions. If you are not satisfied within the first 30 days, contact us at admin@catalystmom.online and we will issue a full refund — no questions asked. After 30 days, payments are non-refundable except where required by law.</p>
+      <p>We stand behind Catalyst Mom with a 30-day money-back guarantee. Give the program a genuine try during your first 30 days. If you have engaged with it and it is honestly not right for you, email us at admin@catalystmom.online within those 30 days and we will refund your most recent subscription payment in full. We only ask that you gave it a fair try first. We reserve the right to decline refund requests that show the guarantee is being used in bad faith, including repeated sign-up-and-refund activity or requests where the member has not meaningfully used the program. After 30 days, payments are non-refundable except where required by law.</p>
       <h3 class="sub-heading">4.5 Price Changes</h3>
       <p>We reserve the right to change subscription pricing with reasonable notice. We will notify you at least 30 days before any price change takes effect on your account.</p>
     </section>
