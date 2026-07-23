@@ -3,6 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 // SEO landing / resource page: "What Nobody Tells You About Your Postpartum
 // Body." Targets the single largest pain point surfaced across r/BabyBumps,
@@ -270,9 +271,12 @@ const PostpartumBodyChangesGuide = () => {
           </p>
           <div className="space-y-4">
             {hormonalAndCommon.map((row) => (
-              <div key={row.change} className="rounded-lg border border-border bg-card p-4">
-                <p className="font-semibold text-catalyst-brown">{row.change}</p>
-                <p className="text-muted-foreground mt-1">{row.real}</p>
+              <div key={row.change} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-4">
+                  <p className="font-semibold text-catalyst-brown">{row.change}</p>
+                  <p className="text-muted-foreground mt-1">{row.real}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -288,9 +292,12 @@ const PostpartumBodyChangesGuide = () => {
           </p>
           <div className="space-y-4">
             {askYourProvider.map((row) => (
-              <div key={row.signal} className="rounded-lg border border-border bg-card p-4">
-                <p className="font-semibold text-catalyst-brown">{row.signal}</p>
-                <p className="text-muted-foreground mt-1">{row.detail}</p>
+              <div key={row.signal} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-4">
+                  <p className="font-semibold text-catalyst-brown">{row.signal}</p>
+                  <p className="text-muted-foreground mt-1">{row.detail}</p>
+                </div>
               </div>
             ))}
           </div>

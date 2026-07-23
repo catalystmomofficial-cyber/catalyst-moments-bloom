@@ -3,6 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 // SEO resource page: "How to Build Your Village as a New Mom." Targets the
 // loneliness / failed-friend-making theme across the Peanut-app threads and the
@@ -128,14 +129,17 @@ const BuildYourVillage = () => {
           </h2>
           <ol className="space-y-4">
             {meetups.map((m, i) => (
-              <li key={m.title} className="rounded-lg border border-border bg-card p-5">
-                <div className="flex items-start gap-3">
-                  <span className="shrink-0 rounded-full bg-catalyst-copper/15 text-catalyst-brown font-bold w-8 h-8 flex items-center justify-center">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <p className="font-semibold text-catalyst-brown">{m.title}</p>
-                    <p className="text-muted-foreground mt-1">{m.detail}</p>
+              <li key={m.title} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-5">
+                  <div className="flex items-start gap-3">
+                    <span className="shrink-0 rounded-full bg-catalyst-copper/15 text-catalyst-brown font-bold w-8 h-8 flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-catalyst-brown">{m.title}</p>
+                      <p className="text-muted-foreground mt-1">{m.detail}</p>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -149,8 +153,11 @@ const BuildYourVillage = () => {
           </h2>
           <div className="space-y-3">
             {openers.map((o) => (
-              <div key={o} className="rounded-lg border border-border bg-card p-4 text-muted-foreground italic">
-                {o}
+              <div key={o} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-4 text-muted-foreground italic">
+                  {o}
+                </div>
               </div>
             ))}
           </div>

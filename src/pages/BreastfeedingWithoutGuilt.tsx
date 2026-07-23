@@ -3,6 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 // SEO resource page: "Stop Breastfeeding Without Guilt, Decision & Scripts."
 // Targets a charged, unaddressed pain point across r/beyondthebump and
@@ -193,9 +194,12 @@ const BreastfeedingWithoutGuilt = () => {
           </h2>
           <div className="space-y-4">
             {partnerScripts.map((row) => (
-              <div key={row.situation} className="rounded-lg border border-border bg-card p-4">
-                <p className="font-semibold text-catalyst-brown mb-1">{row.situation}</p>
-                <p className="text-muted-foreground">{row.script}</p>
+              <div key={row.situation} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-4">
+                  <p className="font-semibold text-catalyst-brown mb-1">{row.situation}</p>
+                  <p className="text-muted-foreground">{row.script}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -207,9 +211,12 @@ const BreastfeedingWithoutGuilt = () => {
           </h2>
           <div className="space-y-4">
             {boundaryScripts.map((row) => (
-              <div key={row.situation} className="rounded-lg border border-border bg-card p-4">
-                <p className="font-semibold text-catalyst-brown mb-1">{row.situation}</p>
-                <p className="text-muted-foreground">{row.script}</p>
+              <div key={row.situation} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-4">
+                  <p className="font-semibold text-catalyst-brown mb-1">{row.situation}</p>
+                  <p className="text-muted-foreground">{row.script}</p>
+                </div>
               </div>
             ))}
           </div>

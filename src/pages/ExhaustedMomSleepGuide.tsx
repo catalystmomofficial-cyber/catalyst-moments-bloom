@@ -3,6 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 // SEO resource page: "Exhausted New Mom, Sleep Troubleshooting Guide." Targets
 // the sleep-deprivation + decision-fatigue pain point across r/NewParents and
@@ -145,23 +146,26 @@ const ExhaustedMomSleepGuide = () => {
           </p>
           <div className="space-y-5">
             {branches.map((b, i) => (
-              <div key={b.tag} className="rounded-lg border border-border bg-card p-5">
-                <div className="flex items-start gap-3">
-                  <span className="shrink-0 rounded-full bg-catalyst-copper/15 text-catalyst-brown font-bold w-8 h-8 flex items-center justify-center">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <p className="font-semibold text-catalyst-brown">"{b.tag}"</p>
-                    <p className="text-sm text-muted-foreground italic mt-0.5">{b.when}</p>
-                    <p className="mt-3 leading-relaxed">{b.fix}</p>
-                    {b.link && (
-                      <Link
-                        to={b.link.href}
-                        className="mt-3 inline-block text-catalyst-copper font-medium underline underline-offset-4"
-                      >
-                        {b.link.label} →
-                      </Link>
-                    )}
+              <div key={b.tag} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-5">
+                  <div className="flex items-start gap-3">
+                    <span className="shrink-0 rounded-full bg-catalyst-copper/15 text-catalyst-brown font-bold w-8 h-8 flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-catalyst-brown">"{b.tag}"</p>
+                      <p className="text-sm text-muted-foreground italic mt-0.5">{b.when}</p>
+                      <p className="mt-3 leading-relaxed">{b.fix}</p>
+                      {b.link && (
+                        <Link
+                          to={b.link.href}
+                          className="mt-3 inline-block text-catalyst-copper font-medium underline underline-offset-4"
+                        >
+                          {b.link.label} →
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

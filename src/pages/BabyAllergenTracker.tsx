@@ -3,6 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 // SEO resource page: "Baby Allergen & First Foods Tracker (printable)." Targets
 // the "oddly specific gap nobody filled", parents wanting a simple checklist to
@@ -130,9 +131,12 @@ const BabyAllergenTracker = () => {
           </h2>
           <div className="grid gap-2 sm:grid-cols-2">
             {firstFoods.map((f) => (
-              <div key={f} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
-                <span className="h-5 w-5 rounded border-2 border-catalyst-copper/50 shrink-0" />
-                <span className="text-muted-foreground">{f}</span>
+              <div key={f} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={60} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative flex items-center gap-3 rounded-lg border border-border bg-card p-3">
+                  <span className="h-5 w-5 rounded border-2 border-catalyst-copper/50 shrink-0" />
+                  <span className="text-muted-foreground">{f}</span>
+                </div>
               </div>
             ))}
           </div>

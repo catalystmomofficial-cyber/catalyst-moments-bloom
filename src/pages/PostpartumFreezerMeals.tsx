@@ -3,6 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 // SEO resource page: "Postpartum Freezer Meal Prep + Grocery List." Targets the
 // single most concretely validated seller in the research, mental-load threads
@@ -109,9 +110,12 @@ const PostpartumFreezerMeals = () => {
           </h2>
           <div className="space-y-3">
             {meals.map((m) => (
-              <div key={m.name} className="rounded-lg border border-border bg-card p-4">
-                <p className="font-semibold text-catalyst-brown">{m.name}</p>
-                <p className="text-muted-foreground mt-1">{m.note}</p>
+              <div key={m.name} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-4">
+                  <p className="font-semibold text-catalyst-brown">{m.name}</p>
+                  <p className="text-muted-foreground mt-1">{m.note}</p>
+                </div>
               </div>
             ))}
           </div>

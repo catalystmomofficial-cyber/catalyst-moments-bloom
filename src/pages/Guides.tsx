@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 // Public hub for the free SEO resource cluster. Gives the standalone guide
 // pages a discoverable home + internal links (so they aren't orphaned) and a
@@ -115,22 +116,30 @@ const Guides = () => {
 
         <div className="grid gap-5 sm:grid-cols-2">
           {guides.map((g) => (
-            <Link
-              key={g.href}
-              to={g.href}
-              className="group rounded-xl border border-border bg-card p-6 transition-colors hover:border-catalyst-copper/50"
-            >
-              <span className="text-xs font-semibold uppercase tracking-wide text-catalyst-copper">
-                {g.stage}
-              </span>
-              <h2 className="mt-2 text-xl font-semibold text-catalyst-brown group-hover:underline underline-offset-4">
-                {g.title}
-              </h2>
-              <p className="mt-2 text-muted-foreground">{g.blurb}</p>
-              <span className="mt-3 inline-block text-sm font-medium text-catalyst-copper">
-                Read the guide →
-              </span>
-            </Link>
+            <div key={g.href} className="relative h-full rounded-xl">
+              <GlowingEffect
+                disabled={false}
+                proximity={80}
+                spread={30}
+                borderWidth={2}
+                inactiveZone={0.4}
+              />
+              <Link
+                to={g.href}
+                className="group relative block h-full rounded-xl border border-border bg-card p-6 transition-colors hover:border-catalyst-copper/50"
+              >
+                <span className="text-xs font-semibold uppercase tracking-wide text-catalyst-copper">
+                  {g.stage}
+                </span>
+                <h2 className="mt-2 text-xl font-semibold text-catalyst-brown group-hover:underline underline-offset-4">
+                  {g.title}
+                </h2>
+                <p className="mt-2 text-muted-foreground">{g.blurb}</p>
+                <span className="mt-3 inline-block text-sm font-medium text-catalyst-copper">
+                  Read the guide →
+                </span>
+              </Link>
+            </div>
           ))}
         </div>
       </div>

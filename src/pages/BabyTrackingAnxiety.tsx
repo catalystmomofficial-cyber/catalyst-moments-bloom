@@ -3,6 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 // SEO resource page: "Baby Tracking Anxiety, How to Log Less, Gently."
 // Targets the tracking-app-anxiety pain point validated across r/NewParents,
@@ -154,31 +155,37 @@ const BabyTrackingAnxiety = () => {
 
         <section className="mb-12">
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-lg border border-border bg-card p-5">
-              <h2 className="text-xl font-semibold text-catalyst-brown mb-3">
-                Worth keeping (for now)
-              </h2>
-              <ul className="space-y-3">
-                {keepTracking.map((item) => (
-                  <li key={item} className="flex gap-3">
-                    <span className="mt-1 text-catalyst-copper">✓</span>
-                    <span className="text-muted-foreground">{item}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="relative h-full rounded-lg">
+              <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+              <div className="relative rounded-lg border border-border bg-card p-5 h-full">
+                <h2 className="text-xl font-semibold text-catalyst-brown mb-3">
+                  Worth keeping (for now)
+                </h2>
+                <ul className="space-y-3">
+                  {keepTracking.map((item) => (
+                    <li key={item} className="flex gap-3">
+                      <span className="mt-1 text-catalyst-copper">✓</span>
+                      <span className="text-muted-foreground">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <div className="rounded-lg border border-border bg-card p-5">
-              <h2 className="text-xl font-semibold text-catalyst-brown mb-3">
-                Safe to let go of
-              </h2>
-              <ul className="space-y-3">
-                {canLetGo.map((item) => (
-                  <li key={item} className="flex gap-3">
-                    <span className="mt-1 text-catalyst-copper">○</span>
-                    <span className="text-muted-foreground">{item}</span>
-                  </li>
-                ))}
-              </ul>
+            <div className="relative h-full rounded-lg">
+              <GlowingEffect disabled={false} proximity={80} spread={30} borderWidth={2} inactiveZone={0.4} />
+              <div className="relative rounded-lg border border-border bg-card p-5 h-full">
+                <h2 className="text-xl font-semibold text-catalyst-brown mb-3">
+                  Safe to let go of
+                </h2>
+                <ul className="space-y-3">
+                  {canLetGo.map((item) => (
+                    <li key={item} className="flex gap-3">
+                      <span className="mt-1 text-catalyst-copper">○</span>
+                      <span className="text-muted-foreground">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
@@ -193,14 +200,17 @@ const BabyTrackingAnxiety = () => {
           </p>
           <ol className="space-y-4">
             {weanLadder.map((rung, i) => (
-              <li key={rung.step} className="rounded-lg border border-border bg-card p-5">
-                <div className="flex items-start gap-3">
-                  <span className="shrink-0 rounded-full bg-catalyst-copper/15 text-catalyst-brown font-bold w-8 h-8 flex items-center justify-center">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <p className="font-semibold text-catalyst-brown">{rung.step}</p>
-                    <p className="text-muted-foreground mt-1">{rung.detail}</p>
+              <li key={rung.step} className="relative rounded-lg">
+                <GlowingEffect disabled={false} proximity={70} spread={25} borderWidth={2} inactiveZone={0.4} />
+                <div className="relative rounded-lg border border-border bg-card p-5">
+                  <div className="flex items-start gap-3">
+                    <span className="shrink-0 rounded-full bg-catalyst-copper/15 text-catalyst-brown font-bold w-8 h-8 flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-catalyst-brown">{rung.step}</p>
+                      <p className="text-muted-foreground mt-1">{rung.detail}</p>
+                    </div>
                   </div>
                 </div>
               </li>
