@@ -47,7 +47,8 @@ async function sendWelcomeEmail(email: string, name: string, amount: string, ses
       "Idempotency-Key": `stripe-webhook-${sessionId}`,
     },
     body: JSON.stringify({
-      from: "Catalyst Mom <onboarding@resend.dev>",
+      from: "Catalyst Mom <noreply@catalystmomofficial.com>",
+      reply_to: "admin@catalystmom.online",
       to: [email],
       subject: "You're In! Your Catalyst Mom Recovery Starts Now 🌸",
       html: WELCOME_HTML(name, amount),
