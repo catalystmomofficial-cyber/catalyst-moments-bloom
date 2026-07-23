@@ -50,6 +50,16 @@ const STATIC_ROUTES = [
   '/birth-ball-guide/faq',
   '/birth-ball-guide/education',
   '/diastasis-recti-recovery-program-reviews-reddit',
+  '/guides',
+  '/postpartum-body-changes-what-nobody-tells-you',
+  '/c-section-prep-checklist',
+  '/stop-breastfeeding-without-guilt',
+  '/exhausted-mom-sleep-troubleshooting',
+  '/baby-tracking-anxiety',
+  '/honest-pregnancy-truths',
+  '/postpartum-freezer-meal-prep',
+  '/build-your-village',
+  '/baby-allergen-tracker',
 ];
 
 function waitForServer(url, timeoutMs = 30000) {
