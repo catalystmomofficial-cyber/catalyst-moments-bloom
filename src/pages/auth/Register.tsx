@@ -29,6 +29,9 @@ const Register = () => {
   const [paramWarning, setParamWarning] = useState<string>("");
   const [signupSuccess, setSignupSuccess] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
+  // True when she arrived from an assessment results page — keeps the offer
+  // she just clicked visible through the signup friction.
+  const [fromAssessment, setFromAssessment] = useState(false);
 
   // Read & validate URL parameters on mount
   useEffect(() => {
@@ -80,10 +83,10 @@ const Register = () => {
       else issues.push("stage");
     }
 
-    // Score: numeric 0-100
+    // Score: numeric 0-110 (postpartum/pregnancy are /100, TTC is /110)
     if (scoreParam) {
       const n = Number(scoreParam);
-      if (!Number.isFinite(n) || n < 0 || n > 100) issues.push("score");
+      if (!Number.isFinite(n) || n < 0 || n > 110) issues.push("score");
     }
 
     // Tier: short alphanumeric label
@@ -111,7 +114,10 @@ const Register = () => {
       const value = searchParams.get(key);
       if (value) collected[key] = value;
     });
-    if (Object.keys(collected).length > 0) setAssessmentData(collected);
+    if (Object.keys(collected).length > 0) {
+      setAssessmentData(collected);
+      if (collected.score || collected.tier) setFromAssessment(true);
+    }
 
     if (issues.length > 0) {
       setParamWarning(
@@ -147,6 +153,16 @@ const Register = () => {
             p_ref_code: referralCode,
           });
         }
+      }
+
+      // If registration returned a live session (email confirmation off),
+      // don't strand her on a "check your email" screen — take her straight
+      // to the dashboard, where the subscription flow picks up the offer she
+      // just clicked. Momentum is the whole game here.
+      const { data: { session: liveSession } } = await supabase.auth.getSession();
+      if (liveSession) {
+        navigate("/dashboard");
+        return;
       }
 
       setSignupEmail(email);
@@ -223,6 +239,12 @@ const Register = () => {
                 <p className="text-sm text-muted-foreground">
                   Please check your inbox (and spam folder) and click the link to verify your email and activate your account.
                 </p>
+                {fromAssessment && (
+                  <p className="text-sm font-medium text-catalyst-copper">
+                    Your personalised plan, founding seat, and 500 welcome credits are
+                    saved to this email — they'll be waiting the moment you confirm.
+                  </p>
+                )}
                 <div className="pt-2 space-y-2">
                   <Button
                     type="button"
@@ -247,6 +269,17 @@ const Register = () => {
               </div>
             ) : (
             <>
+            {fromAssessment && (
+              <div className="mb-4 rounded-lg border border-catalyst-copper/30 bg-catalyst-copper/5 p-3 text-sm">
+                <p className="font-semibold text-catalyst-copper">
+                  {name ? `${name.split(" ")[0]}, your` : "Your"} personalised plan is ready 🎉
+                </p>
+                <p className="mt-1 text-muted-foreground">
+                  Create your account to claim your Charter Founder seat ($29/month, locked
+                  for life) and your 🎁 500 welcome credits.
+                </p>
+              </div>
+            )}
             {error && (
               <div className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-sm">
                 {error}
