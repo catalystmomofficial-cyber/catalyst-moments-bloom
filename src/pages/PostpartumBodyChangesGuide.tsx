@@ -172,34 +172,24 @@ const PostpartumBodyChangesGuide = () => {
 
         <section className="mb-12">
           <p className="mb-4 leading-relaxed">
-            Scroll through r/beyondthebump, r/NewParents, or r/Mommit and you'll
-            find the same sentence thousands of times over:{" "}
-            <em>"Why did nobody tell me this would happen?"</em>
+            You leave the hospital with a baby and a folder about the baby. What
+            nobody hands you is the honest list of what happens to <em>you</em>.
+            The leaking when you sneeze. The belly that still looks pregnant at
+            three months. The hair coming out in the shower. Feet that don't fit
+            your shoes anymore. The fog where your memory used to be.
           </p>
           <p className="mb-4 leading-relaxed">
-            We notice, because Catalyst Mom didn't start as an app — it started
-            as a handful of digital guides, which meant we were in the messages
-            with moms one at a time, for a long time. Across the 2,000+ moms
-            we've supported since, the thing we hear most often isn't a question
-            about the baby. It's a quieter version of the same worry:{" "}
-            <em>
-              "I don't recognize my own body — and I can't get anyone to tell me
-              whether that's normal."
-            </em>{" "}
-            So here's the honest answer we wish someone had given us.
-          </p>
-          <p className="mb-4 leading-relaxed">
-            The pregnancy apps track your bump. The baby apps track your baby.
-            But the changes that happen to <strong>you</strong> — the leaking,
-            the belly that still looks pregnant, the hair in the drain, the feet
-            that don't fit your shoes, the fog — get treated like a secret you're
-            supposed to figure out alone. You're not imagining them, and you're
-            not the only one. Here's the honest version, and what you can
-            actually do about each part.
+            We know that list because Catalyst Mom started as a handful of
+            digital guides, not an app, which meant years of answering messages
+            from moms one at a time. Across the 2,000+ we've supported, the thing
+            we hear most isn't a question about the baby. It's some version of
+            this: <em>"I don't recognize my own body, and I can't get anyone to
+            tell me whether that's normal."</em> So here is the answer we wish
+            someone had given us.
           </p>
           <div className="rounded-lg border border-border bg-catalyst-copper/5 p-4 text-sm text-muted-foreground">
-            This guide is educational and judgment-free — not medical advice or
-            a diagnosis. Every body recovers differently. Anything that worries
+            This guide is educational and judgment-free, not medical advice or a
+            diagnosis. Every body recovers differently, and anything that worries
             you is worth a call to your own provider.
           </div>
         </section>
@@ -210,8 +200,8 @@ const PostpartumBodyChangesGuide = () => {
           </h2>
           <p className="mb-6 leading-relaxed">
             Some changes feel the most permanent but are actually the most
-            <strong> trainable</strong>. The core-related ones — leaking, the
-            lower-belly gap, the back and hip pain — commonly improve with the
+            <strong> trainable</strong>. The core-related ones (leaking, the
+            lower-belly gap, the back and hip pain) commonly improve with the
             right work done in the right order. Not crunches. Not "wait and see."
             A short, progressive rehab plan.
           </p>
@@ -223,7 +213,7 @@ const PostpartumBodyChangesGuide = () => {
                     What nobody warned you about
                   </th>
                   <th className="p-4 font-semibold text-catalyst-brown w-1/2">
-                    What's really going on — and the way back
+                    What's really going on, and the way back
                   </th>
                 </tr>
               </thead>
