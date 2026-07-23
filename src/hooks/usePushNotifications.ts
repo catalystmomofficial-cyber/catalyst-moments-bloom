@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { getMessagingIfSupported, getToken, onMessage, VAPID_KEY } from '@/lib/firebase';
+import { getMessagingIfSupported, getToken, onMessage, VAPID_KEY, firebaseConfig } from '@/lib/firebase';
 
 export function usePushNotifications() {
   const { user } = useAuth();
@@ -70,7 +70,16 @@ export function usePushNotifications() {
       setPermission(result);
       if (result !== 'granted') return false;
 
-      const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      // The service worker is a static file Vite can't inject env vars into,
+      // so the already-resolved config is passed along as URL params instead.
+      const swParams = new URLSearchParams(
+        Object.fromEntries(
+          Object.entries(firebaseConfig).filter((entry): entry is [string, string] => !!entry[1])
+        )
+      );
+      const swReg = await navigator.serviceWorker.register(
+        `/firebase-messaging-sw.js?${swParams.toString()}`
+      );
       await navigator.serviceWorker.ready;
 
       const messaging = await getMessagingIfSupported();
