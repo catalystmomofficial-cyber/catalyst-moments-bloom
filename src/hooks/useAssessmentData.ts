@@ -27,13 +27,23 @@ export const useAssessmentData = () => {
         setLoading(false);
         return;
       }
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from('profiles')
-        .select('assessment_data')
+        .select('assessment_data, assessment_concern, assessment_reflection')
         .eq('user_id', user.id)
         .maybeSingle();
       if (cancelled) return;
-      setAssessmentData((data?.assessment_data as AssessmentData) || null);
+      const base = (data?.assessment_data as AssessmentData) || null;
+      // Dedicated columns are the durable source of truth for her concern and
+      // its AI reflection; they win over whatever the JSON blob carries.
+      const merged = base || data?.assessment_concern || data?.assessment_reflection
+        ? {
+            ...(base || {}),
+            ...(data?.assessment_concern ? { concern: data.assessment_concern } : {}),
+            ...(data?.assessment_reflection ? { reflection: data.assessment_reflection } : {}),
+          }
+        : null;
+      setAssessmentData(merged);
       setLoading(false);
     };
     load();

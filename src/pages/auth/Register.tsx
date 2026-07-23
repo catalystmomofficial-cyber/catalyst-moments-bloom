@@ -119,8 +119,15 @@ const Register = () => {
       issues.push("concern");
     }
 
+    // The AI's reflection on her concern, generated at the funnel and handed
+    // straight through — no cross-project database lookup involved.
+    const reflectionParam = searchParams.get('reflection');
+    if (reflectionParam && (reflectionParam.length > 800 || /[<>]/.test(reflectionParam))) {
+      issues.push("reflection");
+    }
+
     // Collect only valid assessment params to persist after signup
-    const assessmentKeys = ['score', 'tier', 'stage', 'primary_goal', 'biggest_obstacle', 'birth_experience', 'assessment_id', 'concern'];
+    const assessmentKeys = ['score', 'tier', 'stage', 'primary_goal', 'biggest_obstacle', 'birth_experience', 'assessment_id', 'concern', 'reflection'];
     const collected: Record<string, string> = {};
     assessmentKeys.forEach((key) => {
       if (issues.includes(key)) return;
@@ -155,33 +162,22 @@ const Register = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         if (assessmentData) {
-          const enriched: Record<string, string> = { ...assessmentData };
-          // Pull the AI concern reflection from her assessment row so the
-          // dashboard and wellness coach can speak to her own words from
-          // day one. Non-blocking: signup never fails because of this.
-          if (assessmentData.assessment_id && motherhoodStage !== 'none') {
-            const sourceByStage: Record<string, { table: string; concernCol: string }> = {
-              postpartum: { table: 'postpartum_assessments', concernCol: 'user_concern' },
-              pregnant: { table: 'pregnancy_assessments', concernCol: 'user_concern' },
-              ttc: { table: 'ttc_assessments', concernCol: 'additional_notes' },
-            };
-            const source = sourceByStage[motherhoodStage];
-            try {
-              const { data: row } = await (supabase as any)
-                .from(source.table)
-                .select(`concern_reflection, ${source.concernCol}`)
-                .eq('id', assessmentData.assessment_id)
-                .maybeSingle();
-              if (row?.concern_reflection) enriched.concern_reflection = row.concern_reflection;
-              const rowConcern = row?.[source.concernCol];
-              if (rowConcern && !enriched.concern) enriched.concern = rowConcern;
-            } catch {
-              // RLS or missing column: proceed with what the URL carried
-            }
-          }
-          await supabase
+          // The funnel is a separate Supabase project from this app, so her
+          // concern and its AI reflection travel in the signup URL itself
+          // (assessmentData.concern / .reflection) rather than a cross-project
+          // database read, which can never work across two projects' auth.
+          //
+          // Store them in their own columns — not just inside assessment_data
+          // JSON — so the wellness coach and any future feature can reference
+          // them directly. This app is where she lives long-term; the funnel
+          // is just where she arrived from.
+          await (supabase as any)
             .from('profiles')
-            .update({ assessment_data: enriched })
+            .update({
+              assessment_data: assessmentData,
+              assessment_concern: assessmentData.concern || null,
+              assessment_reflection: assessmentData.reflection || null,
+            })
             .eq('user_id', user.id);
         }
         if (referralCode) {
