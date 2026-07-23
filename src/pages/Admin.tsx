@@ -10,7 +10,7 @@ import { AnalyticsSection } from '@/components/admin/AnalyticsSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles, CreditCard, FileText, Bell, Brain } from 'lucide-react';
+import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles, CreditCard, FileText, Bell, Brain, Gavel } from 'lucide-react';
 import { PushNotificationSection } from '@/components/admin/PushNotificationSection';
 import { BlogPostGenerator } from '@/components/admin/BlogPostGenerator';
 import { BlogPostManager } from '@/components/admin/BlogPostManager';
@@ -20,6 +20,7 @@ import { BlogSchedulerSetup } from '@/components/admin/BlogSchedulerSetup';
 import { StageChangeRequestsSection } from '@/components/admin/StageChangeRequestsSection';
 import { EventRegistrationsSection } from '@/components/admin/EventRegistrationsSection';
 import { CoachInsightsSection } from '@/components/admin/CoachInsightsSection';
+import DisputeResponseSection from '@/components/admin/DisputeResponseSection';
 
 const Admin = () => {
   return (
@@ -79,6 +80,10 @@ const Admin = () => {
                   <Brain className="h-4 w-4" />
                   Coach Insights
                 </TabsTrigger>
+                <TabsTrigger value="disputes" className="flex items-center gap-2 px-4">
+                  <Gavel className="h-4 w-4" />
+                  Disputes
+                </TabsTrigger>
               </TabsList>
             </div>
 
@@ -126,6 +131,10 @@ const Admin = () => {
 
             <TabsContent value="coach-insights">
               <CoachInsightsSection />
+            </TabsContent>
+
+            <TabsContent value="disputes">
+              <DisputeResponseSection />
             </TabsContent>
           </Tabs>
         </div>
