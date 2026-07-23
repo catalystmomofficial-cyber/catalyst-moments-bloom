@@ -1451,7 +1451,9 @@ export type Database = {
         Row: {
           affiliate_status: string
           approved: boolean
+          assessment_concern: string | null
           assessment_data: Json | null
+          assessment_reflection: string | null
           avatar_url: string | null
           bio: string | null
           created_at: string
@@ -1468,7 +1470,9 @@ export type Database = {
         Insert: {
           affiliate_status?: string
           approved?: boolean
+          assessment_concern?: string | null
           assessment_data?: Json | null
+          assessment_reflection?: string | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
@@ -1485,7 +1489,9 @@ export type Database = {
         Update: {
           affiliate_status?: string
           approved?: boolean
+          assessment_concern?: string | null
           assessment_data?: Json | null
+          assessment_reflection?: string | null
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
