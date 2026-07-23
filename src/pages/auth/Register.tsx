@@ -106,8 +106,21 @@ const Register = () => {
       else issues.push("ref");
     }
 
+    // Assessment row link: UUID only. Lets the app pull her full assessment
+    // (including the AI concern reflection) to personalize dashboard + coach.
+    const assessmentIdParam = searchParams.get('assessment_id');
+    if (assessmentIdParam && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(assessmentIdParam)) {
+      issues.push("assessment_id");
+    }
+
+    // Her free-text concern from the assessment (bounded, no markup)
+    const concernParam = searchParams.get('concern');
+    if (concernParam && (concernParam.length > 300 || /[<>]/.test(concernParam))) {
+      issues.push("concern");
+    }
+
     // Collect only valid assessment params to persist after signup
-    const assessmentKeys = ['score', 'tier', 'stage', 'primary_goal', 'biggest_obstacle', 'birth_experience'];
+    const assessmentKeys = ['score', 'tier', 'stage', 'primary_goal', 'biggest_obstacle', 'birth_experience', 'assessment_id', 'concern'];
     const collected: Record<string, string> = {};
     assessmentKeys.forEach((key) => {
       if (issues.includes(key)) return;
@@ -142,9 +155,33 @@ const Register = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         if (assessmentData) {
+          const enriched: Record<string, string> = { ...assessmentData };
+          // Pull the AI concern reflection from her assessment row so the
+          // dashboard and wellness coach can speak to her own words from
+          // day one. Non-blocking: signup never fails because of this.
+          if (assessmentData.assessment_id && motherhoodStage !== 'none') {
+            const sourceByStage: Record<string, { table: string; concernCol: string }> = {
+              postpartum: { table: 'postpartum_assessments', concernCol: 'user_concern' },
+              pregnant: { table: 'pregnancy_assessments', concernCol: 'user_concern' },
+              ttc: { table: 'ttc_assessments', concernCol: 'additional_notes' },
+            };
+            const source = sourceByStage[motherhoodStage];
+            try {
+              const { data: row } = await (supabase as any)
+                .from(source.table)
+                .select(`concern_reflection, ${source.concernCol}`)
+                .eq('id', assessmentData.assessment_id)
+                .maybeSingle();
+              if (row?.concern_reflection) enriched.concern_reflection = row.concern_reflection;
+              const rowConcern = row?.[source.concernCol];
+              if (rowConcern && !enriched.concern) enriched.concern = rowConcern;
+            } catch {
+              // RLS or missing column: proceed with what the URL carried
+            }
+          }
           await supabase
             .from('profiles')
-            .update({ assessment_data: assessmentData })
+            .update({ assessment_data: enriched })
             .eq('user_id', user.id);
         }
         if (referralCode) {
