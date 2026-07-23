@@ -11,7 +11,7 @@ import { Breadcrumb } from "@/components/blog/Breadcrumb";
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Free Guides for Moms — Catalyst Mom",
+  name: "Free Guides for Moms, Catalyst Mom",
   description:
     "Free, judgment-free guides on the things no one warns moms about: postpartum recovery, c-section prep, the breastfeeding decision, and new-mom exhaustion.",
   url: "https://catalystmomofficial.com/guides",
@@ -22,19 +22,19 @@ const guides = [
     stage: "Postpartum",
     title: "What Nobody Tells You About Your Postpartum Body",
     blurb:
-      "The changes moms say no one warned them about — what's normal, what helps, when to call your provider, and what you can rebuild.",
+      "The changes moms say no one warned them about, what's normal, what helps, when to call your provider, and what you can rebuild.",
     href: "/postpartum-body-changes-what-nobody-tells-you",
   },
   {
     stage: "Pregnancy",
     title: "C-Section & \"Plan B\" Prep Checklist",
     blurb:
-      "For the birth you didn't plan on: hospital-bag extras, home setup, recovery-safe first weeks, and a support plan — so a change of plan doesn't catch you off guard.",
+      "For the birth you didn't plan on: hospital-bag extras, home setup, recovery-safe first weeks, and a support plan, so a change of plan doesn't catch you off guard.",
     href: "/c-section-prep-checklist",
   },
   {
     stage: "Postpartum",
-    title: "Breastfeeding Without the Guilt — Scripts & Permission",
+    title: "Breastfeeding Without the Guilt: Scripts & Permission",
     blurb:
       "Word-for-word scripts for telling your partner low supply isn't willpower, setting boundaries with family, and quieting your own guilt.",
     href: "/stop-breastfeeding-without-guilt",
@@ -43,7 +43,7 @@ const guides = [
     stage: "Postpartum",
     title: "Exhausted New Mom? Sleep Troubleshooting",
     blurb:
-      "A structured triage to find your real sleep bottleneck — fragmentation, a racing mind, an unequal load, or run-down levels — and the fix for each.",
+      "A structured triage to find your real sleep bottleneck, fragmentation, a racing mind, an unequal load, or run-down levels, and the fix for each.",
     href: "/exhausted-mom-sleep-troubleshooting",
   },
   {
@@ -57,7 +57,7 @@ const guides = [
     stage: "Pregnancy",
     title: "Honest Pregnancy Advice the Apps Won't Give You",
     blurb:
-      "The no-toxic-positivity version — countering the shaming, contradictory app notifications, while still taking real warning signs seriously.",
+      "The no-toxic-positivity version, countering the shaming, contradictory app notifications, while still taking real warning signs seriously.",
     href: "/honest-pregnancy-truths",
   },
   {
@@ -78,7 +78,7 @@ const guides = [
     stage: "Baby",
     title: "Baby Allergen & First Foods Tracker (Printable)",
     blurb:
-      "The simple checklist parents keep wishing existed — track what your baby has tried and how they responded, to bring to your pediatrician.",
+      "The simple checklist parents keep wishing existed, track what your baby has tried and how they responded, to bring to your pediatrician.",
     href: "/baby-allergen-tracker",
   },
   {
@@ -94,8 +94,8 @@ const Guides = () => {
   return (
     <PageLayout>
       <SEO
-        title="Free Guides for Moms — Pregnancy & Postpartum"
-        description="Free, judgment-free guides on what no one warns moms about — postpartum body changes, c-section prep, the breastfeeding decision, and new-mom exhaustion."
+        title="Free Guides for Moms, Pregnancy & Postpartum"
+        description="Free, judgment-free guides on what no one warns moms about, postpartum body changes, c-section prep, the breastfeeding decision, and new-mom exhaustion."
         canonical="https://catalystmomofficial.com/guides"
         structuredData={structuredData}
       />
@@ -108,7 +108,7 @@ const Guides = () => {
             Free Guides for the Things No One Warns You About
           </h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground">
-            Honest, judgment-free, and safety-first — the guides we wish someone
+            Honest, judgment-free, and safety-first, the guides we wish someone
             had handed us. No email wall, no fluff.
           </p>
         </header>

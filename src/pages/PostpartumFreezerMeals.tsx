@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
 
 // SEO resource page: "Postpartum Freezer Meal Prep + Grocery List." Targets the
-// single most concretely validated seller in the research — mental-load threads
+// single most concretely validated seller in the research, mental-load threads
 // where freezer-meal-prep guides with grocery lists were credited by name with
 // actually reducing the load. Free lead magnet: a usable one-afternoon plan +
 // aisle-grouped grocery list that funnels into the app's personalized meal
@@ -17,7 +17,7 @@ const structuredData = [
     "@type": "Article",
     headline: "Postpartum Freezer Meal Prep: One Afternoon, Weeks of Dinners",
     description:
-      "A free freezer-meal-prep plan and grocery list for new moms — batch six freezer-friendly dinners in one afternoon so future-you doesn't have to think about food.",
+      "A free freezer-meal-prep plan and grocery list for new moms, batch six freezer-friendly dinners in one afternoon so future-you doesn't have to think about food.",
     author: { "@type": "Organization", name: "Catalyst Mom" },
     publisher: {
       "@type": "Organization",
@@ -47,11 +47,11 @@ const groceryList = [
 ];
 
 const freezerTips = [
-  "Label everything with the meal name and the date — frozen food all looks the same at 2am.",
+  "Label everything with the meal name and the date, frozen food all looks the same at 2am.",
   "Freeze soups and stews flat in bags so they stack and thaw fast.",
   "Cool food fully before freezing, and thaw in the fridge overnight for best results.",
   "Most cooked freezer meals are best used within about 3 months.",
-  "Note any allergies or preferences before you batch — you're cooking for future-you.",
+  "Note any allergies or preferences before you batch, you're cooking for future-you.",
 ];
 
 const PostpartumFreezerMeals = () => {
@@ -59,7 +59,7 @@ const PostpartumFreezerMeals = () => {
     <PageLayout>
       <SEO
         title="Postpartum Freezer Meals: Prep & Grocery List"
-        description="A free freezer-meal-prep plan and grocery list for new moms — batch six freezer-friendly dinners in one afternoon so future-you doesn't have to think about food."
+        description="A free freezer-meal-prep plan and grocery list for new moms, batch six freezer-friendly dinners in one afternoon so future-you doesn't have to think about food."
         canonical="https://catalystmomofficial.com/postpartum-freezer-meal-prep"
         type="article"
         structuredData={structuredData}
@@ -81,7 +81,7 @@ const PostpartumFreezerMeals = () => {
             One Afternoon of Freezer Prep = Weeks of Dinners
           </h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground">
-            The mental load isn't the cooking — it's the deciding, every single
+            The mental load isn't the cooking, it's the deciding, every single
             night, when you have nothing left. Front-load it once and hand
             future-you a freezer full of "already handled."
           </p>
@@ -99,7 +99,7 @@ const PostpartumFreezerMeals = () => {
           <div className="rounded-lg border border-border bg-catalyst-copper/5 p-4 text-sm text-muted-foreground">
             General food-prep ideas, not dietary or medical advice. Adjust for
             your own allergies, preferences, and anything your provider has
-            advised — and follow safe food-storage practices.
+            advised, and follow safe food-storage practices.
           </div>
         </section>
 
@@ -164,7 +164,7 @@ const PostpartumFreezerMeals = () => {
               This is the free starter. Inside Catalyst Mom, the{" "}
               <strong>meal plans</strong> do the deciding for you on repeat —
               plans and recipes matched to your stage, with the grocery list
-              built in — so batch day gets easier every single week and the
+              built in, so batch day gets easier every single week and the
               mental load stops resetting every night.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">

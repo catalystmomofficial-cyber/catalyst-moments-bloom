@@ -20,7 +20,7 @@ const faqSchema = {
       name: "Why is it so hard to make mom friends?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Because matching and chatting is the easy part — the conversations fizzle before they ever become a real friendship. The moms who succeed don't wait for chemistry over text; they move a match to a low-stakes, in-person meetup fast (a coffee, a splash pad, a stroller walk), where friendship actually forms. The bottleneck isn't finding people, it's the first three meetups.",
+        text: "Because matching and chatting is the easy part, the conversations fizzle before they ever become a real friendship. The moms who succeed don't wait for chemistry over text; they move a match to a low-stakes, in-person meetup fast (a coffee, a splash pad, a stroller walk), where friendship actually forms. The bottleneck isn't finding people, it's the first three meetups.",
       },
     },
     {
@@ -28,7 +28,7 @@ const faqSchema = {
       name: "How do I build a support village without family nearby?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Build it reciprocally and specifically. Trade concrete help with other parents and neighbors — a two-hour swap so each of you gets a break, a shared school pickup, a meal exchange. Reciprocity makes people comfortable both giving and asking, which is what turns acquaintances into a real support network.",
+        text: "Build it reciprocally and specifically. Trade concrete help with other parents and neighbors, a two-hour swap so each of you gets a break, a shared school pickup, a meal exchange. Reciprocity makes people comfortable both giving and asking, which is what turns acquaintances into a real support network.",
       },
     },
   ],
@@ -41,7 +41,7 @@ const structuredData = [
     "@type": "Article",
     headline: "How to Build Your Village as a New Mom",
     description:
-      "A structured playbook for turning matches and acquaintances into a real support village — the first-three-meetups method plus reciprocal-help swaps.",
+      "A structured playbook for turning matches and acquaintances into a real support village, the first-three-meetups method plus reciprocal-help swaps.",
     author: { "@type": "Organization", name: "Catalyst Mom" },
     publisher: {
       "@type": "Organization",
@@ -54,27 +54,27 @@ const structuredData = [
 
 const meetups = [
   {
-    title: "Meetup 1 — Low stakes, short, in person",
+    title: "Meetup 1: Low stakes, short, in person",
     detail:
       "Skip the long text back-and-forth. Within a few messages: \"Want to grab a coffee or do a stroller walk this week? No pressure, happy to keep it short.\" A 30-minute in-person is worth ten days of texting.",
   },
   {
-    title: "Meetup 2 — Make it a standing thing",
+    title: "Meetup 2: Make it a standing thing",
     detail:
-      "At the end of the first, plant the next: \"This was lovely — same time next week?\" A repeating, low-effort slot (splash pad Tuesdays) beats trying to schedule fresh each time.",
+      "At the end of the first, plant the next: \"This was lovely, same time next week?\" A repeating, low-effort slot (splash pad Tuesdays) beats trying to schedule fresh each time.",
   },
   {
-    title: "Meetup 3 — Trade a small favor",
+    title: "Meetup 3: Trade a small favor",
     detail:
       "Introduce reciprocity: watch each other's babies for 20 minutes so one of you runs in a shop, or swap a spare meal. The first exchange is what shifts 'acquaintance' to 'village.'",
   },
 ];
 
 const openers = [
-  "\"I'm trying to get out more with the baby — want to be my low-pressure coffee this week?\"",
+  "\"I'm trying to get out more with the baby, want to be my low-pressure coffee this week?\"",
   "\"No agenda, just adult conversation and caffeine. You in?\"",
   "\"Splash pad Thursday? Kids do their thing, we get to actually talk.\"",
-  "\"Want to trade a couple hours sometime? You get a break, then I do — no money, just swap.\"",
+  "\"Want to trade a couple hours sometime? You get a break, then I do, no money, just swap.\"",
 ];
 
 const BuildYourVillage = () => {
@@ -82,7 +82,7 @@ const BuildYourVillage = () => {
     <PageLayout>
       <SEO
         title="How to Build Your Village as a New Mom"
-        description="A structured playbook for turning matches and acquaintances into a real support village — the first-three-meetups method plus reciprocal-help swaps."
+        description="A structured playbook for turning matches and acquaintances into a real support village, the first-three-meetups method plus reciprocal-help swaps."
         canonical="https://catalystmomofficial.com/build-your-village"
         type="article"
         structuredData={structuredData}
@@ -102,7 +102,7 @@ const BuildYourVillage = () => {
           </h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground">
             Matching apps get you to a first chat. They almost never get you to a
-            friend. Here's the part nobody spells out — how to close the gap
+            friend. Here's the part nobody spells out, how to close the gap
             between "we matched" and "she's my person."
           </p>
         </header>
@@ -116,7 +116,7 @@ const BuildYourVillage = () => {
             generations leaned on is genuinely harder to come by now.
           </p>
           <p className="mb-4 leading-relaxed">
-            The moms who crack it all do the same thing — they move fast to a
+            The moms who crack it all do the same thing, they move fast to a
             small, in-person, low-stakes meetup, and they build reciprocity. Here
             is that method as a plan.
           </p>
@@ -164,7 +164,7 @@ const BuildYourVillage = () => {
             <p className="mb-4 leading-relaxed">
               The first meetup is easier when you're not starting from strangers.
               The Catalyst Mom <strong>community</strong> is moms in the same
-              stages as you — a warmer place to find the person you'll eventually
+              stages as you, a warmer place to find the person you'll eventually
               text "splash pad Thursday?" It's built into your membership,
               alongside the programs and the guides.
             </p>

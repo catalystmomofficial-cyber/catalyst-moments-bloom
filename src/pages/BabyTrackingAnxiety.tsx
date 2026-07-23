@@ -4,7 +4,7 @@ import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
 
-// SEO resource page: "Baby Tracking Anxiety — How to Log Less, Gently."
+// SEO resource page: "Baby Tracking Anxiety, How to Log Less, Gently."
 // Targets the tracking-app-anxiety pain point validated across r/NewParents,
 // r/beyondthebump, r/Mommit, r/pregnant and r/BabyBumps (rigid wake-window /
 // feed logging spiraling into anxiety; pediatricians telling parents to stop).
@@ -20,7 +20,7 @@ const faqSchema = {
       name: "Is it okay to stop tracking my baby's feeds and sleep?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "For most healthy, thriving babies past the newborn weeks, yes — and many pediatricians actively encourage it, because habit-driven logging can fuel anxiety without adding safety. Keep tracking if your provider asked you to for a specific reason (weight gain, jaundice, medication, reflux) or in the early newborn days when output matters. Otherwise, tracking is a tool, not a requirement.",
+        text: "For most healthy, thriving babies past the newborn weeks, yes, and many pediatricians actively encourage it, because habit-driven logging can fuel anxiety without adding safety. Keep tracking if your provider asked you to for a specific reason (weight gain, jaundice, medication, reflux) or in the early newborn days when output matters. Otherwise, tracking is a tool, not a requirement.",
       },
     },
     {
@@ -28,7 +28,7 @@ const faqSchema = {
       name: "How do I wean off obsessive baby tracking?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Gradually, one category at a time — the same advice parents keep landing on themselves. Drop the lowest-stakes log first (like diapers for a thriving baby), sit with the discomfort for a few days, then drop the next. You're not going cold turkey; you're handing trust back to yourself one step at a time.",
+        text: "Gradually, one category at a time, the same advice parents keep landing on themselves. Drop the lowest-stakes log first (like diapers for a thriving baby), sit with the discomfort for a few days, then drop the next. You're not going cold turkey; you're handing trust back to yourself one step at a time.",
       },
     },
     {
@@ -36,7 +36,7 @@ const faqSchema = {
       name: "Why does wake-window tracking make me anxious?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Because it turns a living baby into a number that's supposed to match an average — and real babies don't. When yours doesn't fit the app's window, it can feel like failure, even though the 'window' is just a population average, not a rule your baby agreed to. If tracking is making you dread the clock, that's a sign to loosen it, not to try harder.",
+        text: "Because it turns a living baby into a number that's supposed to match an average, and real babies don't. When yours doesn't fit the app's window, it can feel like failure, even though the 'window' is just a population average, not a rule your baby agreed to. If tracking is making you dread the clock, that's a sign to loosen it, not to try harder.",
       },
     },
   ],
@@ -49,7 +49,7 @@ const structuredData = [
     "@type": "Article",
     headline: "Baby Tracking Anxiety: How to Log Less, Gently",
     description:
-      "A gentle, non-judgmental way to wean off obsessive baby tracking — when logging is worth keeping, when it's just anxiety, and a step-down plan to trust yourself again.",
+      "A gentle, non-judgmental way to wean off obsessive baby tracking, when logging is worth keeping, when it's just anxiety, and a step-down plan to trust yourself again.",
     author: { "@type": "Organization", name: "Catalyst Mom" },
     publisher: {
       "@type": "Organization",
@@ -63,7 +63,7 @@ const structuredData = [
 const keepTracking = [
   "You're in the early newborn weeks and your provider is watching weight or output",
   "Your pediatrician asked you to track something specific (jaundice, weight gain, a medication, reflux)",
-  "A short, time-limited log genuinely reassures you — and you can stop when it's resolved",
+  "A short, time-limited log genuinely reassures you, and you can stop when it's resolved",
 ];
 
 const canLetGo = [
@@ -82,7 +82,7 @@ const weanLadder = [
   {
     step: "Drop exact feed times, keep a loose sense",
     detail:
-      "Move from 'fed 14 min at 2:47' to simply noticing 'we're feeding roughly every few hours.' You still know your baby is fed — you've just dropped the stopwatch.",
+      "Move from 'fed 14 min at 2:47' to simply noticing 'we're feeding roughly every few hours.' You still know your baby is fed, you've just dropped the stopwatch.",
   },
   {
     step: "Loosen sleep from windows to cues",
@@ -92,7 +92,7 @@ const weanLadder = [
   {
     step: "Keep only what genuinely serves you",
     detail:
-      "Maybe that's nothing. Maybe it's one line in a journal at night. The goal isn't zero — it's that you're the one in charge, not the app.",
+      "Maybe that's nothing. Maybe it's one line in a journal at night. The goal isn't zero, it's that you're the one in charge, not the app.",
   },
 ];
 
@@ -101,7 +101,7 @@ const BabyTrackingAnxiety = () => {
     <PageLayout>
       <SEO
         title="Baby Tracking Anxiety: How to Log Less, Gently"
-        description="A gentle way to wean off obsessive baby tracking — when logging is worth keeping, when it's just anxiety, and a step-down plan to trust your own instincts again."
+        description="A gentle way to wean off obsessive baby tracking, when logging is worth keeping, when it's just anxiety, and a step-down plan to trust your own instincts again."
         canonical="https://catalystmomofficial.com/baby-tracking-anxiety"
         type="article"
         structuredData={structuredData}
@@ -124,7 +124,7 @@ const BabyTrackingAnxiety = () => {
           </h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground">
             When the feeding app, the sleep app, and the wake-window timer start
-            running your day — and your mood — here's how to gently hand the
+            running your day, and your mood, here's how to gently hand the
             trust back to yourself.
           </p>
         </header>
@@ -141,13 +141,13 @@ const BabyTrackingAnxiety = () => {
           <p className="mb-4 leading-relaxed">
             Rigid wake-window and feed tracking can quietly turn a living,
             unpredictable baby into a number that's supposed to match an average.
-            When yours doesn't, it can feel like <em>you</em> failed — when
+            When yours doesn't, it can feel like <em>you</em> failed, when
             really, the "window" was just a population average your baby never
             agreed to. So here's permission, and a plan.
           </p>
           <div className="rounded-lg border border-border bg-catalyst-copper/5 p-4 text-sm text-muted-foreground">
             This is about anxiety-driven habit tracking, not medical tracking.
-            Keep logging anything your provider asked you to — the rest of this
+            Keep logging anything your provider asked you to, the rest of this
             is for the tracking you're doing out of fear, not need.
           </div>
         </section>
@@ -211,17 +211,17 @@ const BabyTrackingAnxiety = () => {
         <section className="mb-6">
           <div className="rounded-lg border border-catalyst-copper/30 bg-catalyst-copper/5 p-6">
             <h2 className="text-2xl font-semibold text-catalyst-brown mb-3">
-              The goal was never a perfect log — it was a well mom
+              The goal was never a perfect log, it was a well mom
             </h2>
             <p className="mb-4 leading-relaxed">
               Your baby didn't read the algorithm, and a spreadsheet of feeds
               won't tell you what your own eyes already can. Catalyst Mom is built
-              around <em>you</em> being okay — a community that gets it and tools
+              around <em>you</em> being okay, a community that gets it and tools
               for the mental load, not one more thing to measure yourself against.
             </p>
             <p className="mb-4 leading-relaxed text-sm text-muted-foreground">
-              And if the anxiety is running the show — racing thoughts, dread,
-              can't-put-it-down checking — that's worth support, not willpower.
+              And if the anxiety is running the show, racing thoughts, dread,
+              can't-put-it-down checking, that's worth support, not willpower.
               PSI: 1-800-944-4773, or call/text 988 any time.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">

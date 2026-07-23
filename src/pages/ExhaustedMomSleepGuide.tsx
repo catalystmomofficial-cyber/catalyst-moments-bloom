@@ -4,7 +4,7 @@ import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
 
-// SEO resource page: "Exhausted New Mom — Sleep Troubleshooting Guide." Targets
+// SEO resource page: "Exhausted New Mom, Sleep Troubleshooting Guide." Targets
 // the sleep-deprivation + decision-fatigue pain point across r/NewParents and
 // r/beyondthebump, which forums usually answer with generic "sleep when the
 // baby sleeps" tips instead of a structured triage. On-brand: this is about the
@@ -22,7 +22,7 @@ const faqSchema = {
       name: "Why am I so exhausted even when I do get some sleep?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Because the bottleneck isn't always the baby. For some moms it's fragmented sleep with no consolidated stretch; for others it's a racing mind that won't let them fall back asleep, an unequal night-duty split, or run-down iron or thyroid levels. Fixing the wrong thing is why generic tips don't work — this guide helps you find your actual bottleneck first.",
+        text: "Because the bottleneck isn't always the baby. For some moms it's fragmented sleep with no consolidated stretch; for others it's a racing mind that won't let them fall back asleep, an unequal night-duty split, or run-down iron or thyroid levels. Fixing the wrong thing is why generic tips don't work, this guide helps you find your actual bottleneck first.",
       },
     },
     {
@@ -38,7 +38,7 @@ const faqSchema = {
       name: "When is exhaustion something to talk to a doctor about?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "If you're getting sleep and still feel completely depleted, ask your provider to check things like iron and thyroid. And if the exhaustion comes with low mood, anxiety you can't switch off, or a sense of hopelessness, that can be more than tiredness — reach out to your provider, Postpartum Support International (1-800-944-4773), or call/text 988.",
+        text: "If you're getting sleep and still feel completely depleted, ask your provider to check things like iron and thyroid. And if the exhaustion comes with low mood, anxiety you can't switch off, or a sense of hopelessness, that can be more than tiredness, reach out to your provider, Postpartum Support International (1-800-944-4773), or call/text 988.",
       },
     },
   ],
@@ -51,7 +51,7 @@ const structuredData = [
     "@type": "Article",
     headline: "Exhausted New Mom: A Sleep Troubleshooting Guide",
     description:
-      "A structured triage for new-mom exhaustion — find your actual sleep bottleneck (fragmentation, a racing mind, an unequal load, or run-down levels) and the highest-leverage fix for each.",
+      "A structured triage for new-mom exhaustion, find your actual sleep bottleneck (fragmentation, a racing mind, an unequal load, or run-down levels) and the highest-leverage fix for each.",
     author: { "@type": "Organization", name: "Catalyst Mom" },
     publisher: {
       "@type": "Organization",
@@ -66,26 +66,26 @@ const structuredData = [
 const branches = [
   {
     tag: "The baby keeps waking me",
-    when: "You'd sleep fine — the wakings just won't stop.",
+    when: "You'd sleep fine, the wakings just won't stop.",
     fix: "The highest-leverage move isn't more tips, it's one protected 3-4 hour block. Have your partner or a support person cover one overnight feed or stretch so you get one consolidated chunk. One unbroken block beats the same hours in fragments.",
     link: { label: "Scripts to split the night with your partner", href: "/stop-breastfeeding-without-guilt" },
   },
   {
     tag: "I can sleep but can't fall back asleep",
     when: "Your mind starts racing the second your head hits the pillow.",
-    fix: "This is a wind-down and mental-load problem, not a willpower one. Keep a notepad by the bed and 'offload' every open loop before sleep so your brain stops rehearsing it. Dim screens an hour before. If anxiety is the thing keeping you awake most nights, that's worth naming to someone — it's common and treatable.",
+    fix: "This is a wind-down and mental-load problem, not a willpower one. Keep a notepad by the bed and 'offload' every open loop before sleep so your brain stops rehearsing it. Dim screens an hour before. If anxiety is the thing keeping you awake most nights, that's worth naming to someone, it's common and treatable.",
     link: null,
   },
   {
     tag: "I get hours but still feel wrecked",
-    when: "The math says you slept — your body says otherwise.",
-    fix: "Look at quality and your levels. Cut caffeine after early afternoon, protect the consolidated block over scattered naps, hydrate. And if you're genuinely resting and still depleted, ask your provider to check iron and thyroid — postpartum dips in both are common and easily missed.",
+    when: "The math says you slept, your body says otherwise.",
+    fix: "Look at quality and your levels. Cut caffeine after early afternoon, protect the consolidated block over scattered naps, hydrate. And if you're genuinely resting and still depleted, ask your provider to check iron and thyroid, postpartum dips in both are common and easily missed.",
     link: { label: "The postpartum changes to ask your provider about", href: "/postpartum-body-changes-what-nobody-tells-you" },
   },
   {
-    tag: "There's no time to sleep — it's all on me",
+    tag: "There's no time to sleep, it's all on me",
     when: "The problem isn't the baby, it's that every task defaults to you.",
-    fix: "You can't out-tip an unequal load. Write the invisible list down, hand off whole categories (not one-off favors), and name who owns nights. Rest isn't the reward for finishing the list — it's the thing that keeps you standing to do any of it.",
+    fix: "You can't out-tip an unequal load. Write the invisible list down, hand off whole categories (not one-off favors), and name who owns nights. Rest isn't the reward for finishing the list, it's the thing that keeps you standing to do any of it.",
     link: null,
   },
 ];
@@ -95,7 +95,7 @@ const ExhaustedMomSleepGuide = () => {
     <PageLayout>
       <SEO
         title="Exhausted New Mom? Sleep Troubleshooting Guide"
-        description="A structured triage for new-mom exhaustion — find your real sleep bottleneck (fragmentation, a racing mind, an unequal load, or run-down levels) and the fix for each."
+        description="A structured triage for new-mom exhaustion, find your real sleep bottleneck (fragmentation, a racing mind, an unequal load, or run-down levels) and the fix for each."
         canonical="https://catalystmomofficial.com/exhausted-mom-sleep-troubleshooting"
         type="article"
         structuredData={structuredData}
@@ -119,7 +119,7 @@ const ExhaustedMomSleepGuide = () => {
           <p className="mt-4 text-lg md:text-xl text-muted-foreground">
             "Sleep when the baby sleeps" is useless advice when you don't know
             what's actually keeping you exhausted. This is the troubleshooting
-            tree nobody hands you — find your bottleneck, then fix that.
+            tree nobody hands you, find your bottleneck, then fix that.
           </p>
         </header>
 
@@ -135,7 +135,7 @@ const ExhaustedMomSleepGuide = () => {
             This is about <em>your</em> rest, not infant sleep-training. For your
             baby's sleep and safe-sleep questions, follow your pediatrician's
             guidance. If exhaustion comes with low mood or anxiety you can't
-            switch off, please reach out — PSI: 1-800-944-4773, or call/text 988.
+            switch off, please reach out, PSI: 1-800-944-4773, or call/text 988.
           </div>
         </section>
 
@@ -177,7 +177,7 @@ const ExhaustedMomSleepGuide = () => {
             <p className="mb-4 leading-relaxed">
               Once you know your bottleneck, the <strong>Sleep Reset for Moms</strong>{" "}
               guide inside Catalyst Mom walks you through reclaiming your rest
-              step by step — built for a mom's broken nights, not a sleep coach's
+              step by step, built for a mom's broken nights, not a sleep coach's
               ideal ones. It's part of your membership alongside the recovery
               programs and the community.
             </p>

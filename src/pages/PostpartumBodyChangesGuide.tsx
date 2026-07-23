@@ -6,7 +6,7 @@ import { Breadcrumb } from "@/components/blog/Breadcrumb";
 
 // SEO landing / resource page: "What Nobody Tells You About Your Postpartum
 // Body." Targets the single largest pain point surfaced across r/BabyBumps,
-// r/beyondthebump, r/NewParents and r/Mommit — "nobody warned me this was
+// r/beyondthebump, r/NewParents and r/Mommit, "nobody warned me this was
 // normal." Safety-first (names what's common, flags when to call a provider,
 // includes crisis resources) and funnels the recoverable changes into Core
 // Restore. Health guidance uses tendency language ("often/commonly") and never
@@ -21,7 +21,7 @@ const faqSchema = {
       name: "Why did nobody tell me about these postpartum body changes?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Most pregnancy and baby apps cover the pregnancy itself and the baby's milestones in depth, but treat the mother's long-term recovery as an afterthought. On forums like r/beyondthebump and r/NewParents, the most common thread is 'nobody prepared me for this.' Changes like pelvic floor weakness, a persistent lower-belly gap, hair shedding, foot-size changes, night sweats and brain fog are extremely common and usually normal — they simply aren't talked about openly.",
+        text: "Most pregnancy and baby apps cover the pregnancy itself and the baby's milestones in depth, but treat the mother's long-term recovery as an afterthought. The most common thing moms tell us is some version of 'nobody prepared me for this.' Changes like pelvic floor weakness, a persistent lower-belly gap, hair shedding, foot-size changes, night sweats and brain fog are extremely common and usually normal, they simply aren't talked about openly.",
       },
     },
     {
@@ -37,7 +37,7 @@ const faqSchema = {
       name: "When should I call my doctor about a postpartum symptom?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Seek care promptly for heavy bleeding (soaking a pad an hour), a fever, severe headache, chest pain or trouble breathing, calf pain or swelling, or a c-section or tear incision that looks infected. For your mood, reach out right away if you feel hopeless, disconnected from your baby, or have frightening thoughts — in the US you can call or text 988 any time, or Postpartum Support International at 1-800-944-4773. This guide is educational and is not a substitute for your provider.",
+        text: "Seek care promptly for heavy bleeding (soaking a pad an hour), a fever, severe headache, chest pain or trouble breathing, calf pain or swelling, or a c-section or tear incision that looks infected. For your mood, reach out right away if you feel hopeless, disconnected from your baby, or have frightening thoughts, in the US you can call or text 988 any time, or Postpartum Support International at 1-800-944-4773. This guide is educational and is not a substitute for your provider.",
       },
     },
   ],
@@ -51,7 +51,7 @@ const structuredData = [
     headline:
       "What Nobody Tells You About Your Postpartum Body (And What Actually Helps)",
     description:
-      "A judgment-free guide to the postpartum body changes moms say no one warned them about — what's normal, what helps, when to call your provider, and which changes you can rebuild.",
+      "A judgment-free guide to the postpartum body changes moms say no one warned them about, what's normal, what helps, when to call your provider, and which changes you can rebuild.",
     author: { "@type": "Organization", name: "Catalyst Mom" },
     publisher: {
       "@type": "Organization",
@@ -63,19 +63,19 @@ const structuredData = [
   },
 ];
 
-// The recoverable, core-related changes — these route into Core Restore.
+// The recoverable, core-related changes, these route into Core Restore.
 const rebuildable = [
   {
     change: "Leaking when you sneeze, laugh, or jump",
-    real: "A pelvic floor that's been stretched and is still switching back on. It's common — and it responds well to targeted, progressive retraining. It is not something you're stuck with.",
+    real: "A pelvic floor that's been stretched and is still switching back on. It's common, and it responds well to targeted, progressive retraining. You are not stuck with it.",
   },
   {
     change: "The lower belly that still looks pregnant (the \"mom pooch\")",
-    real: "Often diastasis recti — a natural separation of the abdominal wall. Crunches and planks tend to make it worse; deep-core rehab in the right order helps knit it back.",
+    real: "Often diastasis recti, a natural separation of the abdominal wall. Crunches and planks tend to make it worse. Deep-core rehab in the right order helps knit it back.",
   },
   {
     change: "Low back, hip, and pelvic pain that wasn't there before",
-    real: "A deep core that isn't yet reconnected leaves the back and hips to compensate. Rebuild the core in sequence and the compensation — and often the pain — tends to ease.",
+    real: "A deep core that isn't yet reconnected leaves the back and hips to compensate. Rebuild the core in sequence and the compensation usually eases, and often the pain with it.",
   },
   {
     change: "Feeling weak, unstable, or \"disconnected\" from your middle",
@@ -83,7 +83,7 @@ const rebuildable = [
   },
   {
     change: "Heaviness, pressure, or a bulge \"down there\"",
-    real: "Common after birth and often tied to a pelvic floor that's still recovering. It frequently improves with targeted pelvic floor work — and it's worth having your provider or a pelvic floor PT take a look so you know exactly what you're working with.",
+    real: "Common after birth and often tied to a pelvic floor that's still recovering. It frequently improves with targeted pelvic floor work. It's worth having your provider or a pelvic floor PT take a look so you know exactly what you're working with.",
   },
 ];
 
@@ -91,10 +91,10 @@ const rebuildable = [
 const hormonalAndCommon = [
   {
     change: "Hair falling out in handfuls (around month 3–4)",
-    real: "Telogen effluvium — the hair you kept during pregnancy shedding at once. It's normal and usually settles and regrows within 6–12 months. Gentle styling and good protein and iron intake support it. Mention it to your provider if it's severe or lasts beyond a year.",
+    real: "Telogen effluvium: the hair you kept during pregnancy shedding all at once. It's normal, and it usually settles and regrows within 6–12 months. Gentle styling and good protein and iron intake help. Mention it to your provider if it's severe or lasts beyond a year.",
   },
   {
-    change: "Your feet got bigger — and stayed bigger",
+    change: "Your feet got bigger, and stayed bigger",
     real: "Relaxin loosened the ligaments in your feet, and for some women the change is permanent. It's not in your head. A half-size up and supportive shoes help more than trying to squeeze back in.",
   },
   {
@@ -107,11 +107,11 @@ const hormonalAndCommon = [
   },
   {
     change: "Brain fog and \"where did that word go?\" moments",
-    real: "\"Mom brain\" is real and tied heavily to sleep loss and the mental load — not a sign something's wrong with you. It commonly improves as sleep does. If it comes with heavy fatigue, mood changes, or weight changes, ask your provider to check your thyroid (see below).",
+    real: "\"Mom brain\" is real and tied heavily to sleep loss and the mental load, not a sign something's wrong with you. It commonly improves as sleep does. If it comes with heavy fatigue, mood changes, or weight changes, ask your provider to check your thyroid (see below).",
   },
   {
     change: "Painful sex once you're cleared",
-    real: "Common — often from hormonal dryness (especially while breastfeeding) and pelvic floor tension. Lubricant, patience, and pelvic floor work help. Bring persistent pain to your provider or a pelvic floor PT.",
+    real: "Common, often from hormonal dryness (especially while breastfeeding) and pelvic floor tension. Lubricant, patience, and pelvic floor work help. Bring persistent pain to your provider or a pelvic floor PT.",
   },
   {
     change: "Wrist, thumb, and hand pain (\"mommy wrist\")",
@@ -119,7 +119,7 @@ const hormonalAndCommon = [
   },
   {
     change: "Evening dread (\"the sunset scaries\") and grief that it's going so fast",
-    real: "Both are more common than anyone admits — a wave of anxiety as night falls, and a strange grief for a stage that's already ending. You can feel these and still be doing beautifully. If the anxiety hits most evenings or the heaviness won't lift, that's worth support (see below), not something to power through.",
+    real: "Both are more common than anyone admits: a wave of anxiety as night falls, and a strange grief for a stage that's already ending. You can feel these and still be doing beautifully. If the anxiety hits most evenings or the heaviness won't lift, that's worth support (see below), not something to power through.",
   },
 ];
 
@@ -128,7 +128,7 @@ const askYourProvider = [
   {
     signal: "Postpartum thyroid changes",
     detail:
-      "Postpartum thyroiditis is more common than most moms realize. Lingering exhaustion, mood swings, hair loss, or unexplained weight changes can overlap with it. It's a simple blood test — ask your provider to check rather than assuming it's 'just new-mom tiredness.'",
+      "Postpartum thyroiditis is more common than most moms realize. Lingering exhaustion, mood swings, hair loss, or unexplained weight changes can overlap with it. It's a simple blood test. Ask your provider to check rather than assuming it's 'just new-mom tiredness.'",
   },
   {
     signal: "New allergies or histamine sensitivity",
@@ -142,7 +142,7 @@ const PostpartumBodyChangesGuide = () => {
     <PageLayout>
       <SEO
         title="Postpartum Body Changes Nobody Warns You About"
-        description="The postpartum changes no one warns you about — pelvic floor, the mom pooch, hair loss, brain fog, mood. What's normal, what helps, and what you can rebuild."
+        description="The postpartum changes no one warns you about, pelvic floor, the mom pooch, hair loss, brain fog, mood. What's normal, what helps, and what you can rebuild."
         canonical="https://catalystmomofficial.com/postpartum-body-changes-what-nobody-tells-you"
         type="article"
         structuredData={structuredData}
@@ -164,7 +164,7 @@ const PostpartumBodyChangesGuide = () => {
             What Nobody Tells You About Your Postpartum Body
           </h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground">
-            The changes moms say no one warned them about — what's actually
+            The changes moms say no one warned them about, what's actually
             normal, what helps, when to call your provider, and the parts you
             can rebuild. No sugar-coating, no shame.
           </p>
@@ -263,7 +263,7 @@ const PostpartumBodyChangesGuide = () => {
             The hormonal stuff that's normal (even when it's alarming)
           </h2>
           <p className="mb-6 leading-relaxed">
-            Most of these surprise nobody who's lived through them — and almost
+            Most of these surprise nobody who's lived through them, and almost
             nobody who hasn't. They're common, usually self-limiting, and rarely
             talked about out loud. Knowing they're normal takes half the fear
             out of them.
@@ -280,7 +280,7 @@ const PostpartumBodyChangesGuide = () => {
 
         <section className="mb-12">
           <h2 className="text-2xl md:text-3xl font-semibold text-catalyst-brown mb-4">
-            Worth asking your provider about — don't just tough these out
+            Worth asking your provider about, don't just tough these out
           </h2>
           <p className="mb-6 leading-relaxed">
             These get brushed off as "just new-mom tiredness" far too often. They
@@ -302,11 +302,11 @@ const PostpartumBodyChangesGuide = () => {
               The one you must never tough out alone: your mind
             </h2>
             <p className="mb-3 leading-relaxed">
-              A few weeks of "baby blues" — teary, overwhelmed, up and down — is
+              A few weeks of "baby blues", teary, overwhelmed, up and down, is
               common and usually lifts. But if heaviness, hopelessness, anxiety
               you can't switch off, feeling disconnected from your baby, or
               frightening or intrusive thoughts show up, that is{" "}
-              <strong>not weakness and not your fault</strong> — it's postpartum
+              <strong>not weakness and not your fault</strong>, it's postpartum
               depression or anxiety, it's common, and it's very treatable. The
               single bravest thing is to say it out loud to someone.
             </p>
@@ -327,7 +327,7 @@ const PostpartumBodyChangesGuide = () => {
           <p className="mb-6 leading-relaxed">
             You can't control the hair or the shoe size. But the parts that make
             you feel weak, leaky, and disconnected from your own middle? Those
-            you can rebuild — with a plan made for a postpartum body, not a
+            you can rebuild, with a plan made for a postpartum body, not a
             generic gym routine. Take the free 2-minute assessment and we'll show
             you exactly where you stand and the way back.
           </p>

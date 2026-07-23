@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
 
 // SEO resource page: "Honest Pregnancy Advice the Apps Won't Give You."
-// Targets the validated pain point on r/pregnant (699 upvotes) — pregnancy
+// Targets the validated pain point on r/pregnant (699 upvotes), pregnancy
 // apps pushing shaming, contradictory, toxic-positivity notifications, with
 // commenters begging for an honest alternative they'd pay for. Warm-honest
 // tone that validates real feelings while never dismissing genuine warning
@@ -20,7 +20,7 @@ const faqSchema = {
       name: "Why do pregnancy apps make me feel worse?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Because many are written in a sanitized, one-size-fits-all voice — warning you about 'saggy breasts,' telling you to walk an hour a day when you can barely move, or pushing 'focus on your miracle' when you feel awful. It's not you failing pregnancy; it's the tone missing the reality. Feeling exhausted, unglamorous, or ambivalent while pregnant is normal and human.",
+        text: "Because many are written in a sanitized, one-size-fits-all voice, warning you about 'saggy breasts,' telling you to walk an hour a day when you can barely move, or pushing 'focus on your miracle' when you feel awful. It's not you failing pregnancy; it's the tone missing the reality. Feeling exhausted, unglamorous, or ambivalent while pregnant is normal and human.",
       },
     },
     {
@@ -28,7 +28,7 @@ const faqSchema = {
       name: "Is it normal to not feel that 'pregnancy glow'?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Completely. Plenty of people spend big stretches of pregnancy nauseated, exhausted, achy, and not remotely glowing — and love their baby all the same. You're allowed to be grateful and miserable in the same breath. One doesn't cancel the other.",
+        text: "Completely. Plenty of people spend big stretches of pregnancy nauseated, exhausted, achy, and not remotely glowing, and love their baby all the same. You're allowed to be grateful and miserable in the same breath. One doesn't cancel the other.",
       },
     },
     {
@@ -36,7 +36,7 @@ const faqSchema = {
       name: "When should I stop 'toughing it out' and call my provider?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Honesty about feelings never means ignoring your body. Call your provider for things like heavy bleeding, severe or sudden headache, vision changes, severe belly pain, a big drop in your baby's movements, or thoughts of harming yourself. Being real about how hard pregnancy is and taking warning signs seriously are not opposites — do both.",
+        text: "Honesty about feelings never means ignoring your body. Call your provider for things like heavy bleeding, severe or sudden headache, vision changes, severe belly pain, a big drop in your baby's movements, or thoughts of harming yourself. Being real about how hard pregnancy is and taking warning signs seriously are not opposites, do both.",
       },
     },
   ],
@@ -49,7 +49,7 @@ const structuredData = [
     "@type": "Article",
     headline: "Honest Pregnancy Advice the Apps Won't Give You",
     description:
-      "The validating, no-toxic-positivity version of pregnancy advice — countering the shaming, contradictory notifications, while still taking real warning signs seriously.",
+      "The validating, no-toxic-positivity version of pregnancy advice, countering the shaming, contradictory notifications, while still taking real warning signs seriously.",
     author: { "@type": "Organization", name: "Catalyst Mom" },
     publisher: {
       "@type": "Organization",
@@ -69,7 +69,7 @@ const truths = [
   {
     app: "\"Aim for 60 minutes of walking a day.\"",
     honest:
-      "Some days getting off the couch is the win. Movement helps when it's realistic for the body you have today — not a quota to feel guilty about missing.",
+      "Some days getting off the couch is the win. Movement helps when it's realistic for the body you have today, not a quota to feel guilty about missing.",
   },
   {
     app: "\"Watch out for sagging and stretch marks.\"",
@@ -93,7 +93,7 @@ const HonestPregnancyTruths = () => {
     <PageLayout>
       <SEO
         title="Honest Pregnancy Advice the Apps Won't Give You"
-        description="The validating, no-toxic-positivity version of pregnancy advice — countering the shaming, contradictory app notifications, while still taking real warning signs seriously."
+        description="The validating, no-toxic-positivity version of pregnancy advice, countering the shaming, contradictory app notifications, while still taking real warning signs seriously."
         canonical="https://catalystmomofficial.com/honest-pregnancy-truths"
         type="article"
         structuredData={structuredData}
@@ -116,7 +116,7 @@ const HonestPregnancyTruths = () => {
           </h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground">
             No toxic positivity, no body-shaming push notifications, no "cherish
-            every moment" while you're throwing up. Just the real version — and
+            every moment" while you're throwing up. Just the real version, and
             we'll still tell you when something's worth a call to your provider.
           </p>
         </header>
@@ -132,7 +132,7 @@ const HonestPregnancyTruths = () => {
           </p>
           <div className="rounded-lg border border-border bg-catalyst-copper/5 p-4 text-sm text-muted-foreground">
             Being honest about how hard pregnancy feels is not the same as
-            ignoring your body. This validates your feelings — it does not
+            ignoring your body. This validates your feelings, it does not
             replace your provider. Real warning signs still deserve a call
             (there's a list at the bottom).
           </div>
@@ -169,7 +169,7 @@ const HonestPregnancyTruths = () => {
         <section className="mb-12">
           <div className="rounded-lg border border-border bg-card p-6">
             <h2 className="text-xl font-semibold text-catalyst-brown mb-3">
-              Honesty cuts both ways — call your provider for these
+              Honesty cuts both ways, call your provider for these
             </h2>
             <p className="mb-3 leading-relaxed text-muted-foreground">
               Being real about the hard parts doesn't mean toughing out the
@@ -179,7 +179,7 @@ const HonestPregnancyTruths = () => {
               <li className="flex gap-3"><span className="mt-1 text-catalyst-copper">•</span> Heavy bleeding, or severe or sudden belly pain</li>
               <li className="flex gap-3"><span className="mt-1 text-catalyst-copper">•</span> A severe headache, vision changes, or sudden swelling</li>
               <li className="flex gap-3"><span className="mt-1 text-catalyst-copper">•</span> A noticeable drop in your baby's movements (later in pregnancy)</li>
-              <li className="flex gap-3"><span className="mt-1 text-catalyst-copper">•</span> Any thoughts of harming yourself — you can call or text 988 any time</li>
+              <li className="flex gap-3"><span className="mt-1 text-catalyst-copper">•</span> Any thoughts of harming yourself, you can call or text 988 any time</li>
             </ul>
           </div>
         </section>
@@ -192,13 +192,13 @@ const HonestPregnancyTruths = () => {
             <p className="mb-4 leading-relaxed">
               You don't need an hour of walking you can't do. Catalyst Mom's{" "}
               <strong>Glow &amp; Go</strong> prenatal program is built for the
-              body you have today — short, safe, trimester-aware sessions with
+              body you have today, short, safe, trimester-aware sessions with
               zero guilt attached. That's the whole difference: met where you
               are, not shamed for where you're not.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button asChild size="lg" className="bg-catalyst-copper hover:bg-catalyst-copper/90">
-                <Link to="/register">Try Glow &amp; Go — gentle prenatal movement</Link>
+                <Link to="/register">Try Glow &amp; Go, gentle prenatal movement</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link to="/c-section-prep-checklist">
