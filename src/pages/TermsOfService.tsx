@@ -89,7 +89,7 @@ const HTML = `
       <p>We reserve the right to suspend or terminate accounts that violate these terms or that we believe have been compromised.</p>
     </section>
 
-    <section class="policy-section">
+    <section class="policy-section" id="refunds">
       <h2 class="section-heading">4. Subscriptions and Payments</h2>
       <h3 class="sub-heading">4.1 Subscription Plans</h3>
       <p>Catalyst Mom offers monthly and annual subscription plans. By subscribing you agree to pay the applicable fees as displayed at the time of purchase.</p>

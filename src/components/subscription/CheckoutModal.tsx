@@ -128,6 +128,20 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 </p>
               </div>
 
+              {/* Refund & cancellation policy link — published terms, visible before payment */}
+              <p className="text-center text-xs text-muted-foreground">
+                By subscribing you agree to our{" "}
+                <a
+                  href="/terms#refunds"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-foreground"
+                >
+                  refund &amp; cancellation policy
+                </a>
+                . Cancel anytime; billing stops at the end of your current period.
+              </p>
+
               <Button
                 variant="ghost"
                 size="sm"
