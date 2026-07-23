@@ -109,12 +109,11 @@ const BuildYourVillage = () => {
 
         <section className="mb-12">
           <p className="mb-4 leading-relaxed">
-            On the friend-finding threads, the complaint is rarely "I can't find
-            anyone." It's that the conversations <em>fizzle</em> — polite texts
-            that never become a coffee, let alone a village. And in a
-            160-comment r/SAHP thread, moms named the deeper problem: the free,
-            reliable community support past generations had is genuinely harder
-            to come by now.
+            The problem is rarely finding people. It's that the conversations{" "}
+            <em>fizzle</em>. You match, trade a few polite texts, and it never
+            becomes a coffee, let alone a village. Underneath that sits a bigger
+            shift moms name all the time: the free, reliable community help past
+            generations leaned on is genuinely harder to come by now.
           </p>
           <p className="mb-4 leading-relaxed">
             The moms who crack it all do the same thing — they move fast to a

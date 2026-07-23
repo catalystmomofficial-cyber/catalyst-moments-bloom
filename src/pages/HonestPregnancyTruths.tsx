@@ -123,12 +123,12 @@ const HonestPregnancyTruths = () => {
 
         <section className="mb-12">
           <p className="mb-4 leading-relaxed">
-            A post on r/pregnant listing the absurd things pregnancy apps
-            actually send — warnings about "saggy breasts," an hour of daily
-            walking while you can barely move, "focus on your miracle" when you
-            feel like garbage — hit <strong>hundreds of upvotes</strong>, and the
-            comments were full of people begging someone to make an honest
-            version instead. So here it is.
+            Pregnancy apps say the strangest things. Warnings about "saggy
+            breasts." An hour of daily walking, sent the week you can barely
+            stand up. "Focus on your miracle," pushed at you while you're hunched
+            over the toilet. When one mom listed hers out loud online, hundreds
+            of women piled in with their own, then begged someone to make an
+            honest version. So here it is.
           </p>
           <div className="rounded-lg border border-border bg-catalyst-copper/5 p-4 text-sm text-muted-foreground">
             Being honest about how hard pregnancy feels is not the same as

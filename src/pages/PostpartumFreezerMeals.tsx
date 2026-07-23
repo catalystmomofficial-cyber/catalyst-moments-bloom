@@ -89,12 +89,12 @@ const PostpartumFreezerMeals = () => {
 
         <section className="mb-12">
           <p className="mb-4 leading-relaxed">
-            In the mental-load threads on r/beyondthebump and r/Mommit, the thing
-            moms credit most with actually helping isn't a gadget — it's{" "}
-            <strong>freezer-meal prep with a grocery list</strong>. One
-            afternoon, a full freezer, and weeks of nights where "what's for
-            dinner" is already answered. Here's a plan you can run this weekend,
-            free.
+            Ask a room of tired moms what actually cut their mental load and
+            almost nobody names a gadget. They name the Sunday they batch-cooked
+            a freezer full of dinners. That's what{" "}
+            <strong>freezer-meal prep with a grocery list</strong> buys you: one
+            afternoon of work for weeks of nights where "what's for dinner" is
+            already answered. Here's a plan you can run this weekend, free.
           </p>
           <div className="rounded-lg border border-border bg-catalyst-copper/5 p-4 text-sm text-muted-foreground">
             General food-prep ideas, not dietary or medical advice. Adjust for

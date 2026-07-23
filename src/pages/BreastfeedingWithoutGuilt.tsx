@@ -155,11 +155,11 @@ const BreastfeedingWithoutGuilt = () => {
 
         <section className="mb-12">
           <p className="mb-4 leading-relaxed">
-            On r/beyondthebump and r/NewParents, one of the most-answered cries
-            for help isn't about latch or pumping schedules. It's some version
-            of: <em>"I need someone to tell me it's okay to stop"</em> — or{" "}
+            Some of the loudest cries for help from new moms aren't about latch
+            or pumping schedules. They're quieter than that:{" "}
+            <em>"I need someone to tell me it's okay to stop,"</em> or{" "}
             <em>"how do I make my partner understand low supply isn't me not
-            trying?"</em>
+            trying hard enough?"</em> If either one is yours, keep reading.
           </p>
           <p className="mb-4 leading-relaxed">
             The trackers and feeds can count ounces. They can't hand you the

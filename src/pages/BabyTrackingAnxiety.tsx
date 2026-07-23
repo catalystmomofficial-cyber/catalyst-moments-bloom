@@ -131,12 +131,12 @@ const BabyTrackingAnxiety = () => {
 
         <section className="mb-12">
           <p className="mb-4 leading-relaxed">
-            On r/NewParents, a mom nine months in posted{" "}
-            <em>"someone please tell me I can stop logging everything."</em> The
-            comments were hundreds of moms saying the same thing — and more than
-            a few saying their <strong>pediatrician told them to stop</strong>,
-            because the tracking had stopped being about the baby and started
-            being about anxiety.
+            There's a moment a lot of moms hit around nine months in. You're
+            still logging every feed and every diaper, and you can't quite say
+            why anymore. The data isn't for the pediatrician. It's become a
+            compulsion. Plenty of pediatricians name it out loud and tell parents
+            to stop, because the tracking has stopped being about the baby and
+            started being about the anxiety.
           </p>
           <p className="mb-4 leading-relaxed">
             Rigid wake-window and feed tracking can quietly turn a living,

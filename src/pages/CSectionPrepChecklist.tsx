@@ -132,10 +132,9 @@ const CSectionPrepChecklist = () => {
         <section className="mb-12">
           <p className="mb-4 leading-relaxed">
             About <strong>1 in 3 births in the US</strong> ends in a c-section,
-            and a lot of them weren't the plan. On r/BabyBumps and
-            r/beyondthebump the same regret shows up over and over: moms who
-            refused to picture a c-section, got one anyway, and came home with no
-            supplies, no setup, and no support plan — recovering from{" "}
+            and a lot of them weren't the plan. The regret we hear most comes
+            from moms who refused to picture one, got one anyway, and came home
+            with no supplies, no home setup, and no support plan, recovering from{" "}
             <em>major abdominal surgery</em> while learning to feed a newborn.
           </p>
           <p className="mb-4 leading-relaxed">

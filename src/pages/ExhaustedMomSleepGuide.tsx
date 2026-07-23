@@ -125,11 +125,11 @@ const ExhaustedMomSleepGuide = () => {
 
         <section className="mb-10">
           <p className="mb-4 leading-relaxed">
-            On r/NewParents the exhaustion threads get thousands of comments —
-            and almost all of them offer the same generic tips. But four moms can
-            be equally wrecked for four completely different reasons, and the fix
-            for one does nothing for another. So don't start with tips. Start by
-            finding which of these is most true for you.
+            Every exhaustion thread fills up fast, and almost every reply offers
+            the same generic tips. But four moms can be equally wrecked for four
+            completely different reasons, and the fix for one does nothing for
+            another. So don't start with tips. Start by finding which of these is
+            most true for you.
           </p>
           <div className="rounded-lg border border-border bg-catalyst-copper/5 p-4 text-sm text-muted-foreground">
             This is about <em>your</em> rest, not infant sleep-training. For your
