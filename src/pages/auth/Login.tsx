@@ -10,6 +10,7 @@ import { LogIn, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Separator } from "@/components/ui/separator";
 import { BorderRotate } from "@/components/ui/border-rotate";
+import SEO from "@/components/seo/SEO";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -52,6 +53,11 @@ const Login = () => {
 
   return (
     <PageLayout>
+      <SEO
+        title="Log In | Catalyst Mom"
+        description="Log in to your Catalyst Mom account."
+        noindex
+      />
       <div className="flex items-center justify-center min-h-[80vh] px-4">
         <BorderRotate
           animationSpeed={9}

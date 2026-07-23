@@ -41,9 +41,10 @@ const STATIC_ROUTES = [
   '/terms',
   '/privacy',
   '/affiliate',
-  '/meal-plan',
-  '/workout-plan',
-  '/programs/glow-and-go',
+  // /meal-plan, /workout-plan, /programs/glow-and-go are intentionally
+  // excluded — they're gated by PrivateRoute, so prerendering them just
+  // bakes the client-side login redirect's HTML into these URLs, which is
+  // what Google was indexing (a login page under a meal-plan URL).
   '/birth-ball-guide',
   '/birth-ball-guide/buying-guide',
   '/birth-ball-guide/safety',

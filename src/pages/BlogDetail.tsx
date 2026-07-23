@@ -140,7 +140,7 @@ const BlogDetail = () => {
     "@type": "BlogPosting",
     "headline": blog.title,
     "description": blog.excerpt || blog.content.substring(0, 160),
-    "image": blog.featured_image_url || `${window.location.origin}/og-image.png`,
+    "image": blog.featured_image_url || "https://catalystmomofficial.com/og-image.png",
     "datePublished": blog.published_at,
     "dateModified": blog.updated_at || blog.published_at,
     "author": {
@@ -152,12 +152,12 @@ const BlogDetail = () => {
       "name": "Catalyst Mom",
       "logo": {
         "@type": "ImageObject",
-        "url": `${window.location.origin}/catalyst-mom-logo.png`
+        "url": "https://catalystmomofficial.com/catalyst-mom-logo.png"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `${window.location.origin}/blog/${slug}`
+      "@id": `https://catalystmomofficial.com/blog/${slug}`
     },
     "keywords": blog.tags?.join(", "),
     "wordCount": blog.content.split(' ').length,
@@ -170,7 +170,7 @@ const BlogDetail = () => {
         title={`${blog.title} | Catalyst Mom Blog`}
         description={blog.excerpt || blog.content.replace(/<[^>]*>/g, '').substring(0, 160)}
         image={blog.featured_image_url}
-        canonical={`${window.location.origin}/blog/${slug}`}
+        canonical={`https://catalystmomofficial.com/blog/${slug}`}
         type="article"
         structuredData={faqSchema ? [structuredData, faqSchema] : structuredData}
       />
