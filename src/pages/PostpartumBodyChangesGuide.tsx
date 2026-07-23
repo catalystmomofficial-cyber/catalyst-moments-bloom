@@ -21,7 +21,7 @@ const faqSchema = {
       name: "Why did nobody tell me about these postpartum body changes?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Most pregnancy and baby apps cover the pregnancy itself and the baby's milestones in depth, but treat the mother's long-term recovery as an afterthought. The most common thing moms tell us is some version of 'nobody prepared me for this.' Changes like pelvic floor weakness, a persistent lower-belly gap, hair shedding, foot-size changes, night sweats and brain fog are extremely common and usually normal, they simply aren't talked about openly.",
+        text: "Most pregnancy and baby apps cover the pregnancy itself and the baby's milestones in depth, but treat the mother's long-term recovery as an afterthought. It's the single most common thing moms tell us, and the same refrain fills parent communities like r/beyondthebump and r/NewParents: 'nobody prepared me for this.' Changes like pelvic floor weakness, a persistent lower-belly gap, hair shedding, foot-size changes, night sweats and brain fog are extremely common and usually normal, they simply aren't talked about openly.",
       },
     },
     {
