@@ -4,6 +4,7 @@ import SEO from "@/components/seo/SEO";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb } from "@/components/blog/Breadcrumb";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
+import { useAuth } from "@/contexts/AuthContext";
 
 // SEO resource page: "Postpartum Freezer Meal Prep + Grocery List." Targets the
 // single most concretely validated seller in the research, mental-load threads
@@ -56,6 +57,10 @@ const freezerTips = [
 ];
 
 const PostpartumFreezerMeals = () => {
+  // This is a public SEO guide, but members land here too (the postpartum
+  // dashboard's quick-access row links straight in). A member should never
+  // be told to "sign up" — route her to her actual meal plans instead.
+  const { isAuthenticated } = useAuth();
   return (
     <PageLayout>
       <SEO
@@ -173,7 +178,11 @@ const PostpartumFreezerMeals = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button asChild size="lg" className="bg-catalyst-copper hover:bg-catalyst-copper/90">
-                <Link to="/register">Get your meal plans in the app</Link>
+                {isAuthenticated ? (
+                  <Link to="/meal-plan?stage=postpartum">Open your meal plans</Link>
+                ) : (
+                  <Link to="/register">Get your meal plans in the app</Link>
+                )}
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link to="/exhausted-mom-sleep-troubleshooting">

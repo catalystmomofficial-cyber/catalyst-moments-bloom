@@ -1,5 +1,10 @@
 import { ContentItem } from '@/hooks/useContentFilter';
 import postpartumGlowUpCover from '@/assets/30-days-glow-up-professional-cover.jpg';
+// Bundled fallbacks for recipes whose external Unsplash photo IDs went dead
+// (they 404'd in production, leaving blank image boxes). Local assets ship
+// with the build and can never break.
+import recipeCardCover from '@/assets/recipe-card-cover.jpg';
+import mealPlanCover from '@/assets/meal-plan-cover.jpg';
 
 interface Recipe extends ContentItem {
   prepTime: string;
@@ -36,7 +41,7 @@ export const recipes: Recipe[] = [
     title: 'Antioxidant Berry & Maca Smoothie',
     description: 'Antioxidant-rich smoothie with maca, spinach, and berries',
     prepTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
+    image: recipeCardCover,
     category: 'Breakfast',
     tags: ['Folate-Rich', 'Antioxidants', 'Maca', 'Quick'],
     journey: ['ttc'],
@@ -324,7 +329,7 @@ export const recipes: Recipe[] = [
     title: 'Selenium Brazil Nut Smoothie',
     description: 'Selenium-rich smoothie with Brazil nuts to support thyroid function',
     prepTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
+    image: recipeCardCover,
     category: 'Breakfast',
     tags: ['Selenium', 'Thyroid Support', 'Antioxidants'],
     journey: ['ttc'],
@@ -681,7 +686,7 @@ export const recipes: Recipe[] = [
     title: 'Adaptogen Power Smoothie',
     description: 'Stress-fighting smoothie with multiple adaptogens to support fertility',
     prepTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
+    image: recipeCardCover,
     category: 'Breakfast',
     tags: ['Adaptogens', 'Stress Support', 'Antioxidants'],
     journey: ['ttc'],
@@ -1236,7 +1241,7 @@ export const recipes: Recipe[] = [
     title: 'Anti-Nausea Ginger Smoothie',
     description: 'Gentle smoothie with ginger and mint to calm morning sickness',
     prepTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
+    image: recipeCardCover,
     category: 'Breakfast',
     tags: ['Anti-Nausea', 'Ginger', 'Gentle'],
     journey: ['pregnant'],
@@ -1595,7 +1600,7 @@ export const recipes: Recipe[] = [
     title: 'Magnesium Sleep Smoothie',
     description: 'Calming smoothie with magnesium-rich ingredients to support sleep',
     prepTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
+    image: recipeCardCover,
     category: 'Beverages',
     tags: ['Magnesium', 'Sleep Support', 'Calming'],
     journey: ['pregnant'],
@@ -1994,7 +1999,7 @@ export const recipes: Recipe[] = [
     title: 'Prenatal Power Smoothie Bowl',
     description: 'Thick smoothie bowl topped with prenatal superfoods and healthy fats',
     prepTime: '10 min',
-    image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
+    image: recipeCardCover,
     category: 'Breakfast',
     tags: ['Prenatal Superfoods', 'Antioxidants', 'Healthy Fats'],
     journey: ['pregnant'],
@@ -2238,7 +2243,7 @@ export const recipes: Recipe[] = [
     title: 'Iron-Rich Recovery Smoothie',
     description: 'Powerhouse smoothie with spinach, spirulina, and blackstrap molasses to replenish iron stores',
     prepTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
+    image: recipeCardCover,
     category: 'Breakfast',
     tags: ['Iron Rich', 'Recovery', 'Energy Boost', 'Lactation'],
     journey: ['postpartum'],
@@ -2279,7 +2284,7 @@ export const recipes: Recipe[] = [
     title: 'Power Lactation Cookies',
     description: 'Nutrient-dense oat, brewers yeast, and flax cookies for nursing moms',
     prepTime: '25 min',
-    image: 'https://images.unsplash.com/photo-1606913947356-89296d414c0b',
+    image: mealPlanCover,
     category: 'Snacks',
     tags: ['Lactation Support', 'Oats', 'Brewers Yeast', 'Batch Cook'],
     journey: ['postpartum'],
@@ -3152,7 +3157,7 @@ export const recipes: Recipe[] = [
     title: 'Stress-Support Adaptogen Smoothie',
     description: 'Creamy smoothie with adaptogens to support adrenals and stress resilience',
     prepTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1638436684761-367dbfead4f3',
+    image: recipeCardCover,
     category: 'Breakfast',
     tags: ['Adaptogens', 'Stress Support', 'Adrenals', 'Energy'],
     journey: ['postpartum'],

@@ -52,6 +52,11 @@ export const NutritionSection = () => {
               alt=""
               loading="lazy"
               className="h-14 w-14 shrink-0 rounded-md object-cover bg-muted"
+              onError={(e) => {
+                // External recipe photos can die (Unsplash IDs get removed).
+                // Hide the broken box instead of showing an empty gray square.
+                (e.currentTarget as HTMLImageElement).style.display = 'none';
+              }}
             />
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-2">
