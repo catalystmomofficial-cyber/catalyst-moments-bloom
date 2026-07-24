@@ -318,14 +318,18 @@ const Dashboard = () => {
                   </div>
                 ) : (
                   (() => {
-                    const glowUpId = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
+                    const recoveryProgramId = '266ae389-409f-4847-9a10-e29a2f3eb3f9';
                     const score = wellnessScore ?? 60;
                     const startWeek = score < 50 ? 1 : score <= 70 ? 2 : score <= 85 ? 3 : 4;
-                    const weekCopy: Record<number, string> = {
-                      1: 'Start gently — Week 1: foundations & breath',
-                      2: 'Build momentum — Week 2: core reconnection',
-                      3: 'Step it up — Week 3: strength & stability',
-                      4: 'Glow phase — Week 4: full-body transformation',
+                    // Title and copy are kept in lockstep per week so the card
+                    // can never show "Strength & Stamina" over a "Week 1, gentle"
+                    // subhead (those used to disagree). Body-image "transformation"
+                    // language removed.
+                    const weekMeta: Record<number, { title: string; copy: string }> = {
+                      1: { title: 'Week 1 · Foundations & Breath', copy: 'Start gently — core and breath basics' },
+                      2: { title: 'Week 2 · Core Reconnection', copy: 'Build momentum — reconnect your core' },
+                      3: { title: 'Week 3 · Strength & Stability', copy: 'Step it up — strength and stability' },
+                      4: { title: 'Week 4 · Full Strength', copy: 'Peak phase — full-body strength' },
                     };
 
                     // If user recently played any program/video, surface that instead
@@ -365,13 +369,13 @@ const Dashboard = () => {
 
                     return (
                       <PlanCard
-                        title="Phase 2: Strength & Stamina"
+                        title={weekMeta[startWeek].title}
                         category="Postpartum Recovery Program"
-                        description={weekCopy[startWeek]}
+                        description={weekMeta[startWeek].copy}
                         completed={false}
                         icon={<Activity className="h-5 w-5" />}
                         time="10–20 mins/day"
-                        link={`/course/${glowUpId}?startWeek=${startWeek}`}
+                        link={`/course/${recoveryProgramId}?startWeek=${startWeek}`}
                         buttonText={`Start Week ${startWeek}`}
                         progress={0}
                         tags={["Postpartum", "Recovery", `Week ${startWeek}`]}

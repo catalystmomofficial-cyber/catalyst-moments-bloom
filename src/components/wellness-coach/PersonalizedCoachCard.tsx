@@ -81,6 +81,14 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
     medium: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20',
     high: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/20',
   }[output.urgencyLevel];
+  // The badge signals how much support today's check-in suggests — NOT a health
+  // status. A bare "high" in a rose badge reads as a medical alarm to an anxious
+  // postpartum reader, so we label it with warmth instead of the raw level.
+  const urgencyLabel = {
+    low: 'Steady',
+    medium: 'Gentle nudge',
+    high: 'Extra care',
+  }[output.urgencyLevel];
 
   return (
     <Card className="overflow-hidden border-catalyst-copper/20 bg-gradient-to-br from-background to-catalyst-copper/5">
@@ -96,8 +104,12 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
               {output.meta.timeOfDay} · {output.meta.state.replace('_', ' ')}
             </p>
           </div>
-          <Badge variant="outline" className={urgencyTone}>
-            {output.urgencyLevel}
+          <Badge
+            variant="outline"
+            className={urgencyTone}
+            title="How much support today's check-in suggests — not a health status."
+          >
+            {urgencyLabel}
           </Badge>
         </div>
 

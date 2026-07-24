@@ -285,10 +285,14 @@ export const useWellnessData = () => {
   };
 
   const scorable = wellnessEntries.filter((e) => calcScore(e) != null);
-  const wellnessScore = scorable[0] ? calcScore(scorable[0])! : 0;
+  // null (not 0) when she has never logged a scorable check-in, so downstream
+  // `?? 60` fallbacks actually fire. Returning 0 here silently defeated them:
+  // `0 ?? 60` is 0, which drove the coach to a false "needs support / high"
+  // state and the dashboard hero to "Week 1" by accident rather than intent.
+  const wellnessScore = scorable[0] ? calcScore(scorable[0])! : null;
   const previousWellnessScore = scorable[1] ? calcScore(scorable[1]) : null;
   const wellnessTrend: 'up' | 'down' | 'flat' | null =
-    previousWellnessScore == null
+    wellnessScore == null || previousWellnessScore == null
       ? null
       : wellnessScore > previousWellnessScore
         ? 'up'

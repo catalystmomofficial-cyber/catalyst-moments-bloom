@@ -202,7 +202,7 @@ const Wellness = () => {
                             <div className="text-sm text-muted-foreground">Sleep</div>
                           </div>
                           <div className="text-center">
-                            <div className="text-2xl font-bold text-primary">{wellnessScore}%</div>
+                            <div className="text-2xl font-bold text-primary">{wellnessScore != null ? `${wellnessScore}%` : '—'}</div>
                             <div className="text-sm text-muted-foreground">Wellness Score</div>
                           </div>
                         </div>
