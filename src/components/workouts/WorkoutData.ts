@@ -34,9 +34,9 @@ export const getWorkoutData = (week: number, day: number): Exercise[] => {
   
   const weekTitles = {
     1: 'Foundation',
-    2: 'Strength', 
+    2: 'Strength',
     3: 'Energy',
-    4: 'Glow'
+    4: 'Stamina'
   };
   
   const weekTitle = weekTitles[week as keyof typeof weekTitles] || 'Workout';

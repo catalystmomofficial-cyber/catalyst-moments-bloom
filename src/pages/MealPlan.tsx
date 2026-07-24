@@ -22,7 +22,7 @@ const CHALLENGE_WEEKS = [
     title: 'Reset & Rejuvenate',
     subtitle: 'Ease In & Mobility',
     days: [
-      { day: 1,  title: 'Set Your Glow Goals',    tasks: ['Write down 3 personal glow-up goals.', 'Take a "before" photo to track progress.'],               tip: 'Post your goals somewhere visible to stay motivated!' },
+      { day: 1,  title: 'Set Your Goals',    tasks: ['Write down 3 personal goals.', 'Take a "before" photo to track progress.'],               tip: 'Post your goals somewhere visible to stay motivated!' },
       { day: 2,  title: 'Hydrate & Refresh',       tasks: ['Start your morning with warm lemon water.', 'Drink at least 8 glasses of water today.'],          tip: 'Tag @Catalyst_Mom when you hit your water goal!' },
       { day: 3,  title: 'Quick Energy Boost',      tasks: ['Move your body for 10 minutes (stretch, dance, or walk).'],                                        tip: 'Snap a quick post-workout selfie and share your energy boost!' },
       { day: 4,  title: 'Mindful Eating',          tasks: ['Eat slowly and enjoy every bite.', 'No distractions (no phone or TV while eating).'],             tip: 'Try a new healthy recipe and share your favorite!' },
@@ -67,8 +67,8 @@ const CHALLENGE_WEEKS = [
       { day: 8,  title: 'Protein Power',         tasks: ['Add a protein-packed meal (eggs, chicken, lentils, or Greek yogurt).'],            tip: 'Strong body, strong mind — fuel up!' },
       { day: 9,  title: '15-Minute Workout',     tasks: ['Try a quick HIIT or strength session.'],                                            tip: 'Feeling strong? Tag @Catalyst_Mom and share your fave move!' },
       { day: 10, title: 'Green Boost',           tasks: ['Add leafy greens to two meals today.'],                                             tip: "Drop a 🥗 if you're fueling up with greens!" },
-      { day: 11, title: 'Gratitude Check-In',   tasks: ['Write down 3 things you\'re grateful for.'],                                        tip: "A grateful heart is a glowing heart — what's yours today?" },
-      { day: 12, title: 'Sleep Upgrade',         tasks: ['Start a nighttime routine: herbal tea, dim lights, no screens.'],                   tip: 'Better sleep = better glow. Try it tonight!' },
+      { day: 11, title: 'Gratitude Check-In',   tasks: ['Write down 3 things you\'re grateful for.'],                                        tip: "A grateful heart lifts the whole day — what's yours today?" },
+      { day: 12, title: 'Sleep Upgrade',         tasks: ['Start a nighttime routine: herbal tea, dim lights, no screens.'],                   tip: 'Better sleep = better everything. Try it tonight!' },
       { day: 13, title: 'Fresh Air & Movement', tasks: ['Spend 20+ minutes outside today.'],                                                  tip: 'Step outside, take a deep breath, and enjoy!' },
       { day: 14, title: 'Treat Yourself',        tasks: ['Buy or do something small that makes you happy.'],                                  tip: "You deserve it, mama — what's your treat today?" },
     ],
@@ -106,7 +106,7 @@ const CHALLENGE_WEEKS = [
     title: 'Strength & Confidence',
     subtitle: 'Cardio Bursts + Toning',
     days: [
-      { day: 15, title: 'Power Walk',          tasks: ['Walk for 20 minutes at a brisk pace.'],                       tip: 'Moving = glowing!' },
+      { day: 15, title: 'Power Walk',          tasks: ['Walk for 20 minutes at a brisk pace.'],                       tip: 'Moving = mood boost!' },
       { day: 16, title: 'Affirmation Day',     tasks: ['Say 3 positive affirmations out loud.'],                      tip: 'Confidence starts with your words — own them!' },
       { day: 17, title: 'Healthy Swap',        tasks: ['Replace one processed food with a whole, nutritious option.'], tip: 'Small changes = big results!' },
       { day: 18, title: 'Posture Check',       tasks: ['Stand tall, shoulders back, chin up.'],                       tip: 'Confidence starts with how you carry yourself!' },
@@ -145,18 +145,18 @@ const CHALLENGE_WEEKS = [
   {
     number: 4,
     label: 'Week 4',
-    title: 'Mindset & Glow',
-    subtitle: 'Total Glow-Up Challenge',
+    title: 'Mindset & Momentum',
+    subtitle: 'Strength & Stamina',
     days: [
-      { day: 22, title: 'Deep Breathing',       tasks: ['Try 5 minutes of deep breathing or meditation.'],             tip: 'Calm mind, glowing skin!' },
-      { day: 23, title: 'Strength Workout',     tasks: ['Do a 20-minute strength training session.'],                   tip: 'Strong mama, strong glow!' },
+      { day: 22, title: 'Deep Breathing',       tasks: ['Try 5 minutes of deep breathing or meditation.'],             tip: 'Calm mind, calm body!' },
+      { day: 23, title: 'Strength Workout',     tasks: ['Do a 20-minute strength training session.'],                   tip: 'Strong mama, strong body!' },
       { day: 24, title: 'Hydration Reset',      tasks: ['Drink an extra 2 glasses of water today.'],                    tip: 'Water = energy & radiance!' },
       { day: 25, title: 'Play Time',            tasks: ['Have fun with your kids or by yourself — just play!'],         tip: 'Joy keeps you youthful!' },
       { day: 26, title: 'Fresh Start',          tasks: ['Clean & reset your most-used space.'],                         tip: 'A fresh space = a fresh mind!' },
       { day: 27, title: 'Compliment Challenge', tasks: ['Give 3 genuine compliments today.'],                           tip: 'Kindness makes you shine!' },
-      { day: 28, title: 'Self-Reflection',      tasks: ['Journal about your glow-up journey.'],                         tip: "Celebrate how far you've come!" },
-      { day: 29, title: 'Laugh More',           tasks: ['Watch or listen to something that makes you laugh.'],          tip: 'Laughter is the best glow-up trick!' },
-      { day: 30, title: '🎉 Celebrate YOU!',   tasks: ['Look in the mirror & appreciate your progress.'],              tip: 'You did it, Mama! Keep glowing!' },
+      { day: 28, title: 'Self-Reflection',      tasks: ['Journal about your recovery journey.'],                         tip: "Celebrate how far you've come!" },
+      { day: 29, title: 'Laugh More',           tasks: ['Watch or listen to something that makes you laugh.'],          tip: 'Laughter is the best medicine!' },
+      { day: 30, title: '🎉 Celebrate YOU!',   tasks: ['Look in the mirror & appreciate your progress.'],              tip: 'You did it, Mama! Keep going!' },
     ],
     workouts: [
       { label: 'Full Body Burn (20–30 min)',    items: ['Combo of squats, bridges, jacks, planks'] },
@@ -165,7 +165,7 @@ const CHALLENGE_WEEKS = [
       { label: 'Challenge Yourself (30–40 min)', items: ["Repeat your fave week's workout"] },
       { label: 'Cardio + Abs (20 min)',         items: ['Jump rope / march', 'Core circuit'] },
       { label: 'Stretch + Reflect (15 min)',    items: ['Full body stretch', 'Gratitude reflection'] },
-      { label: 'Glow Reset Day',                items: ['Light walk', 'Hydration', 'Pamper yourself'] },
+      { label: 'Rest & Reset Day',                items: ['Light walk', 'Hydration', 'Pamper yourself'] },
     ],
     meals: [
       { breakfast: 'Protein smoothie bowl',    lunch: 'Turkey + cheese wrap + lettuce + tomato',   snack: 'Hummus + carrot sticks', dinner: 'Stuffed peppers' },
@@ -387,8 +387,8 @@ function PostpartumGlowUpChallenge() {
 
   const handleShare = async () => {
     const shareData = {
-      title: '30-Day Mom Glow-Up Challenge',
-      text: 'Join me on the 30-Day Mom Glow-Up Challenge with Catalyst Mom!',
+      title: 'Phase 2: Strength & Stamina',
+      text: 'Doing Phase 2: Strength & Stamina with Catalyst Mom — join me!',
       url: window.location.href,
     };
     try {
@@ -417,7 +417,7 @@ function PostpartumGlowUpChallenge() {
               <div className="aspect-video">
                 <img
                   src={postpartumGlowUpCover}
-                  alt="30-Day Mom Glow-Up Challenge"
+                  alt="Phase 2: Strength & Stamina"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -426,7 +426,7 @@ function PostpartumGlowUpChallenge() {
               </div>
             </div>
             <div className="p-6">
-              <h2 className="text-xl font-bold mb-2 text-foreground">30-Day Mom Glow-Up Challenge</h2>
+              <h2 className="text-xl font-bold mb-2 text-foreground">Phase 2: Strength & Stamina</h2>
               <p className="text-muted-foreground mb-4 leading-relaxed">
                 Comprehensive 30-day plan with iron-dense, gut-sealing, lactation-safe recipes plus daily workouts and check-ins for optimal postpartum healing.
               </p>
@@ -472,7 +472,7 @@ function PostpartumGlowUpChallenge() {
       <div className="w-full aspect-video md:aspect-[21/9] overflow-hidden rounded-2xl mb-6">
         <img
           src={postpartumGlowUpCover}
-          alt="30-Day Mom Glow-Up Challenge"
+          alt="Phase 2: Strength & Stamina"
           className="w-full h-full object-cover"
         />
       </div>
@@ -490,11 +490,11 @@ function PostpartumGlowUpChallenge() {
 
       {/* Title + description — matches recipe heading */}
       <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2 leading-tight">
-        30-Day Mom Glow-Up Challenge
+        Phase 2: Strength & Stamina
       </h1>
       <p className="text-muted-foreground text-base mb-6 leading-relaxed max-w-2xl">
         Your step-by-step guide to feeling stronger, more confident, and full of energy.
-        No overwhelm — just simple, doable steps to glow from the inside out. 🌟
+        No overwhelm — just simple, doable steps to feel more like yourself. 🌟
       </p>
 
       {/* Stats row — matches Total Time / Servings / Difficulty */}
@@ -655,7 +655,7 @@ function PostpartumGlowUpChallenge() {
                 <div className="rounded-xl bg-[#B5651D]/10 border border-[#B5651D]/20 p-4">
                   <p className="text-sm font-semibold text-[#8B4513] mb-1">💪 Remember</p>
                   <p className="text-sm text-[#8B4513] leading-relaxed">
-                    Progress over perfection. Every small action adds up to a big glow-up. You've got this, mama.
+                    Progress over perfection. Every small action adds up. You've got this, mama.
                   </p>
                 </div>
               </div>
@@ -740,7 +740,7 @@ function PostpartumGlowUpChallenge() {
                 <div className="rounded-xl bg-[#B5651D]/10 border border-[#B5651D]/20 p-4">
                   <p className="text-sm font-bold text-[#8B4513] mb-2">You're unstoppable, Mama 🤍</p>
                   <p className="text-sm text-[#8B4513] leading-relaxed mb-3">
-                    Tag <strong>@Catalyst_Mom</strong> and share your glow-up! Your journey inspires other mamas.
+                    Tag <strong>@Catalyst_Mom</strong> and share your progress! Your journey inspires other mamas.
                   </p>
                   <button
                     onClick={handleDownload}
