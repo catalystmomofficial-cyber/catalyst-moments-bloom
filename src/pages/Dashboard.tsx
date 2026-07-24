@@ -403,11 +403,20 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Uniform quick-access row — same on every stage (TTC, pregnancy, postpartum) */}
+            {/* Quick-access row. For postpartum the Recovery Nutrition card
+                directly above already owns the meal-plan entry point, so a
+                second "Meal Plan" button here is pure duplication — swap it for
+                a genuinely useful, postpartum-specific destination instead. */}
             <div className="mt-6 grid grid-cols-3 gap-3">
-              <Button asChild variant="outline" size="sm" className="w-full min-w-0">
-                <Link to={`/meal-plan?stage=${mealStageParam}`} className="truncate">Meal Plan</Link>
-              </Button>
+              {isPostpartum ? (
+                <Button asChild variant="outline" size="sm" className="w-full min-w-0">
+                  <Link to="/postpartum-freezer-meal-prep" className="truncate">Freezer Prep</Link>
+                </Button>
+              ) : (
+                <Button asChild variant="outline" size="sm" className="w-full min-w-0">
+                  <Link to={`/meal-plan?stage=${mealStageParam}`} className="truncate">Meal Plan</Link>
+                </Button>
+              )}
               <Button asChild variant="outline" size="sm" className="w-full min-w-0">
                 <Link to={communityLink} className="truncate">Community</Link>
               </Button>

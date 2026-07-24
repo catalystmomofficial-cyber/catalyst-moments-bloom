@@ -1,8 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, ChefHat, Leaf } from 'lucide-react';
+import { Clock, ChefHat } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { recipes } from '@/data/recipeData';
 
 const stageToParam = (stage?: string | null) => {
   switch ((stage || '').toLowerCase()) {
@@ -14,110 +15,69 @@ const stageToParam = (stage?: string | null) => {
   }
 };
 
-interface Recipe {
-  id: string;
-  title: string;
-  description: string;
-  prepTime: number;
-  servings: number;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  tags: string[];
-  image?: string;
-}
-
-const breakfastRecipes: Recipe[] = [
-  {
-    id: '1',
-    title: 'Overnight Oats with Berries',
-    description: 'Nutritious make-ahead breakfast packed with fiber and antioxidants',
-    prepTime: 5,
-    servings: 1,
-    difficulty: 'Easy',
-    tags: ['Make-ahead', 'High-fiber', 'Antioxidants'],
-  },
-  {
-    id: '2',
-    title: 'Protein Smoothie Bowl',
-    description: 'Energizing smoothie bowl with protein powder and fresh fruits',
-    prepTime: 8,
-    servings: 1,
-    difficulty: 'Easy',
-    tags: ['High-protein', 'Quick', 'Energizing'],
-  },
-  {
-    id: '3',
-    title: 'Avocado Toast Plus',
-    description: 'Elevated avocado toast with egg and microgreens for sustained energy',
-    prepTime: 10,
-    servings: 1,
-    difficulty: 'Easy',
-    tags: ['Healthy fats', 'Protein', 'Quick'],
-  },
-];
+// Real, authored postpartum recipes from the app's own data — not hardcoded
+// placeholder "avocado toast". Every user used to see the identical three
+// generic breakfasts; now the card shows the app's actual recovery-focused
+// food (iron, lactation support, gut-healing), which is what makes it belong
+// on a postpartum dashboard instead of any diet app.
+const featuredRecipes = recipes
+  .filter((r) => r.journey.includes('postpartum'))
+  .slice(0, 3);
 
 export const NutritionSection = () => {
   const { profile } = useAuth();
   const stageParam = stageToParam(profile?.motherhood_stage);
   const mealPlanHref = stageParam ? `/meal-plan?stage=${stageParam}` : '/meal-plan';
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <ChefHat className="h-5 w-5 text-green-500" />
-          Quick Breakfast Ideas
+          <ChefHat className="h-5 w-5 text-primary" />
+          Recovery Nutrition
         </CardTitle>
         <CardDescription>
-          Nutritious recipes for busy mornings
+          Real, nourishing recipes to support your recovery
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {breakfastRecipes.map((recipe) => (
-          <div key={recipe.id} className="border rounded-lg p-4 hover:bg-muted/30 transition-colors">
-            <div className="flex justify-between items-start mb-2">
-              <h4 className="font-semibold text-sm">{recipe.title}</h4>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Clock className="h-3 w-3" />
-                {recipe.prepTime}m
-              </div>
-            </div>
-            
-            <p className="text-xs text-muted-foreground mb-3">{recipe.description}</p>
-            
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  {recipe.servings} serving
-                </span>
-                <span className="flex items-center gap-1">
-                  <Leaf className="h-3 w-3" />
-                  {recipe.difficulty}
+      <CardContent className="space-y-3">
+        {/* Rows are previews, not links: there is no per-recipe detail route,
+            so a per-row button would be a broken affordance (it promised "open
+            this recipe" but dumped every tap on the same index). One clear CTA
+            at the bottom instead — the app's single primary action for the card. */}
+        {featuredRecipes.map((recipe) => (
+          <div key={recipe.id} className="flex gap-3 rounded-lg border p-3">
+            <img
+              src={recipe.image}
+              alt=""
+              loading="lazy"
+              className="h-14 w-14 shrink-0 rounded-md object-cover bg-muted"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-2">
+                <h4 className="text-sm font-semibold leading-snug">{recipe.title}</h4>
+                <span className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  {recipe.prepTime}
                 </span>
               </div>
+              <div className="mt-1.5 flex flex-wrap gap-1">
+                {recipe.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] text-primary"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-            
-            <div className="flex flex-wrap gap-1 mb-3">
-              {recipe.tags.map((tag) => (
-                <span 
-                  key={tag}
-                  className="text-xs py-1 px-2 bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-            
-            <Button variant="outline" size="sm" className="w-full" asChild>
-              <Link to={mealPlanHref}>
-                View Meal Plan
-              </Link>
-            </Button>
           </div>
         ))}
-        
-        <Button variant="ghost" className="w-full mt-4" asChild>
+
+        <Button variant="outline" className="w-full" asChild>
           <Link to={mealPlanHref}>
-            View All Meal Plans →
+            View recovery meal plans →
           </Link>
         </Button>
       </CardContent>
