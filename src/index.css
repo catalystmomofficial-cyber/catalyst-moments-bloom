@@ -36,13 +36,14 @@
 
     --warning: 38 92% 50%;
 
-    /* Recovery violet — the postpartum "Your Recovery" accent. A soft amethyst
-       chosen as a cool counterweight to the warm copper brand: copper stays the
-       action/energy colour, violet carries rest, night and healing. Scoped to
-       the recovery feature so it can be dropped, or promoted brand-wide, as one
+    /* Recovery violet — the postpartum "Your Recovery" accent. A dusty plum:
+       violet enough to be its own thing (copper stays action, this carries rest
+       and healing), but warm enough to sit beside copper on cream instead of
+       reading cold and borrowed the way a blue-violet does. Scoped to the
+       recovery feature so it can be dropped, or promoted brand-wide, as one
        block. */
-    --recovery: 268 45% 58%;
-    --recovery-soft: 268 55% 96%;
+    --recovery: 300 26% 54%;
+    --recovery-soft: 300 38% 96%;
 
     --radius: 1rem;
   }
@@ -78,8 +79,8 @@
     --ring: 25 50% 45%;
 
     /* Recovery violet, lifted for contrast against pure black */
-    --recovery: 268 58% 70%;
-    --recovery-soft: 268 30% 14%;
+    --recovery: 300 34% 70%;
+    --recovery-soft: 300 20% 14%;
   }
 }
 
