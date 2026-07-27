@@ -19,6 +19,7 @@ import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
 import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
 import { PrenatalPlanCard } from '@/components/pregnancy/PrenatalPlanCard';
 import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
+import { RecoveryTracker } from '@/components/postpartum/RecoveryTracker';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter } from '@/hooks/useContentFilter';
 import JourneySelector from '@/components/onboarding/JourneySelector';
@@ -316,6 +317,11 @@ const Dashboard = () => {
                   <div id="ttc-tracker">
                     <TTCTracker />
                   </div>
+                ) : isPostpartum ? (
+                  /* Postpartum finally gets its own hero, the way pregnancy and
+                     TTC always had one — instead of falling through to the same
+                     generic branch as a user who never picked a stage. */
+                  <RecoveryTracker />
                 ) : (
                   (() => {
                     const recoveryProgramId = '266ae389-409f-4847-9a10-e29a2f3eb3f9';

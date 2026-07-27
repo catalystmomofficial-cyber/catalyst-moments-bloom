@@ -53,9 +53,14 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Postpartum "Your Recovery" accent (see --recovery in index.css)
+				recovery: {
+					DEFAULT: 'hsl(var(--recovery))',
+					soft: 'hsl(var(--recovery-soft))'
+				},
 				// Custom colors
 				catalyst: {
-					copper: '#C17F45', 
+					copper: '#C17F45',
 					brown: '#5D2906',
 					peach: '#FDE1D3',
 					beige: '#F9F0E6',

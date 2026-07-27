@@ -1,0 +1,198 @@
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ArrowRight, CalendarDays, Heart, Sparkles } from 'lucide-react';
+import { useContentFilter } from '@/hooks/useContentFilter';
+import RecoveryRing from './RecoveryRing';
+import OneTapCheckIn from './OneTapCheckIn';
+import {
+  MOOD_META,
+  daysSinceBirth,
+  evaluateSafetyNudge,
+  getBirthDate,
+  localDateKey,
+  phaseForDay,
+  phaseForStageLabel,
+  readCheckIns,
+  recentCheckIns,
+  setBirthDate,
+  type RecoveryCheckIn,
+} from '@/lib/recovery';
+
+const RECOVERY_PROGRAM = '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9';
+
+/**
+ * "Your Recovery" — the postpartum hero.
+ *
+ * Pregnancy has a tracker. TTC has one. Postpartum had nothing: she landed in
+ * the same default branch as a user who never picked a stage. This is the
+ * missing piece, and it is deliberately about the MOTHER — not the baby, which
+ * is the one thing every competing app already does.
+ *
+ * It also closes a real safety gap. The recommendation used to key off her mood
+ * score, so one good check-in could push a woman three weeks post-caesarean
+ * toward "full-body transformation". Here the recommendation keys off her
+ * actual timeline, and before the six-week mark it never suggests a workout.
+ */
+export const RecoveryTracker = () => {
+  const { stageInfo } = useContentFilter();
+  const [birthDate, setBirthDateState] = useState<string | null>(() => getBirthDate());
+  const [draftDate, setDraftDate] = useState('');
+  const [checkIns, setCheckIns] = useState<RecoveryCheckIn[]>(() => readCheckIns());
+
+  const days = useMemo(() => daysSinceBirth(birthDate), [birthDate]);
+  const phase = days != null ? phaseForDay(days) : phaseForStageLabel(stageInfo?.phase);
+
+  const safety = useMemo(() => evaluateSafetyNudge(days, checkIns), [days, checkIns]);
+
+  const saveDate = () => {
+    if (!draftDate) return;
+    setBirthDate(draftDate);
+    setBirthDateState(draftDate);
+  };
+
+  // Before the standard six-week check-up we never point her at a workout.
+  const clearedWindow = days == null || days >= 42;
+
+  const last14 = useMemo(() => {
+    const map = new Map(recentCheckIns(14, checkIns).map((c) => [c.date, c]));
+    return Array.from({ length: 14 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (13 - i));
+      return { key: localDateKey(d), entry: map.get(localDateKey(d)) };
+    });
+  }, [checkIns]);
+
+  const hasHistory = last14.some((d) => d.entry);
+
+  return (
+    <Card className="overflow-hidden border-recovery/25">
+      {/* Soft violet wash so the card reads as "rest", distinct from the
+          copper action surfaces elsewhere on the dashboard. */}
+      <div className="bg-gradient-to-b from-recovery/[0.07] to-transparent">
+        <CardContent className="space-y-6 p-6">
+          <div className="flex items-center gap-2">
+            <Heart className="h-4 w-4 text-recovery" />
+            <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-recovery">
+              Your Recovery
+            </h2>
+          </div>
+
+          <RecoveryRing dayPostpartum={days} phase={phase} />
+
+          {/* What's normal right now — reassurance, not metrics */}
+          <div className="rounded-xl border border-recovery/20 bg-recovery-soft/60 p-4">
+            <p className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-recovery">
+              <Sparkles className="h-3 w-3" />
+              What&apos;s normal right now
+            </p>
+            <p className="text-sm leading-relaxed text-foreground">{phase.normal}</p>
+          </div>
+
+          {/* Birth date — asked once, gently, and always skippable */}
+          {!birthDate && (
+            <div className="rounded-xl border border-dashed border-border p-4">
+              <label
+                htmlFor="recovery-birth-date"
+                className="mb-2 flex items-center gap-1.5 text-sm font-medium text-foreground"
+              >
+                <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                When was your baby born?
+              </label>
+              <p className="mb-3 text-xs text-muted-foreground">
+                Optional — it just makes the weeks above yours instead of an estimate.
+              </p>
+              <div className="flex gap-2">
+                <Input
+                  id="recovery-birth-date"
+                  type="date"
+                  value={draftDate}
+                  max={localDateKey(new Date())}
+                  onChange={(e) => setDraftDate(e.target.value)}
+                  className="h-9"
+                />
+                <Button size="sm" onClick={saveDate} disabled={!draftDate} className="h-9 shrink-0">
+                  Save
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <OneTapCheckIn checkIns={checkIns} onSaved={setCheckIns} />
+
+          {/* Two weeks at a glance — presence, never a streak to protect */}
+          {hasHistory && (
+            <div>
+              <p className="mb-2 text-xs text-muted-foreground">Your last two weeks</p>
+              <div className="flex items-end gap-1">
+                {last14.map(({ key, entry }) => (
+                  <span
+                    key={key}
+                    title={entry ? MOOD_META[entry.mood].label : 'No check-in'}
+                    className="h-6 flex-1 rounded-sm transition-colors"
+                    style={{
+                      background: entry
+                        ? entry.mood === 'good'
+                          ? 'hsl(var(--recovery))'
+                          : entry.mood === 'okay'
+                            ? 'hsl(var(--recovery) / 0.5)'
+                            : 'hsl(var(--recovery) / 0.22)'
+                        : 'hsl(var(--border) / 0.6)',
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* The quiet safety net. Not a diagnosis, not a warning colour —
+              just a mother being told a hard run is worth saying out loud. */}
+          {safety.show && (
+            <div className="rounded-xl border border-recovery/30 bg-recovery-soft/70 p-4">
+              <p className="mb-1.5 text-sm font-semibold text-foreground">
+                That&apos;s been a lot of hard days.
+              </p>
+              <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
+                You&apos;ve marked {safety.roughDays} rough days in the last two weeks. That
+                doesn&apos;t mean anything is wrong with you — it means you&apos;re carrying
+                something heavy, and you deserve someone in your corner. Telling your provider,
+                or one of the lines below, is a completely normal thing to do.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                <strong className="text-foreground">Postpartum Support International:</strong>{' '}
+                1-800-944-4773 · <strong className="text-foreground">Call or text 988</strong>,
+                any time.
+              </p>
+            </div>
+          )}
+
+          {/* Recommendation keyed to her TIMELINE, never her mood score */}
+          {clearedWindow ? (
+            <Button asChild className="w-full justify-between">
+              <Link to={RECOVERY_PROGRAM}>
+                <span>Continue your recovery program</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          ) : (
+            <div className="rounded-xl border border-border p-4">
+              <p className="mb-2 text-sm leading-relaxed text-foreground">
+                <strong>{phase.focus}</strong> Movement can wait until after your six-week
+                check-up — there&apos;s nothing to catch up on.
+              </p>
+              <Button asChild variant="outline" size="sm" className="w-full">
+                <Link to="/postpartum-body-changes-what-nobody-tells-you">
+                  What nobody tells you about postpartum
+                </Link>
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </div>
+    </Card>
+  );
+};
+
+export default RecoveryTracker;
