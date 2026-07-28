@@ -462,8 +462,8 @@ const WellnessResourceCard = ({ product }: { product: DigitalProduct }) => {
       <Link to={`/wellness/resources?product=${product.slug}`} className="block">
         <CardContent className="p-6">
           <div className="mb-3 flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-catalyst-copper to-catalyst-brown text-white shadow-glow">
-              <Icon className="h-6 w-6" strokeWidth={1.75} />
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-catalyst-copper to-catalyst-brown text-white shadow-sm">
+              <Icon className="h-5 w-5" strokeWidth={1.75} />
             </div>
             <div className="min-w-0">
               <div className="mb-1 flex items-center gap-2">
