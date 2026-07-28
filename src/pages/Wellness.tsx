@@ -16,6 +16,12 @@ import {
   Utensils,
   PenLine,
   Sparkles,
+  Activity,
+  Users,
+  ClipboardList,
+  BookOpen,
+  HeartPulse,
+  Salad,
 } from 'lucide-react';
 import { Calendar } from "@/components/ui/calendar";
 import { Link } from 'react-router-dom';
@@ -34,6 +40,131 @@ import { usePoints } from '@/hooks/usePoints';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Plus } from 'lucide-react';
+
+// Stage-specific wellness resources, each wired to a REAL guide/route (no
+// invented generic titles). Postpartum and pregnancy point at the guides we
+// actually wrote from the research; TTC has no dedicated guide pages yet, so it
+// honestly surfaces the real TTC destinations (cycle-aware meal plans,
+// community, movement, the library) instead of faking guide links.
+interface StageResource {
+  title: string;
+  description: string;
+  category: string;
+  time: string;
+  href: string;
+  icon: React.ReactNode;
+}
+
+const STAGE_RESOURCES: Record<string, StageResource[]> = {
+  postpartum: [
+    {
+      title: 'Exhausted New Mom? Start Here',
+      description: "Find your actual sleep bottleneck instead of one more generic tip.",
+      category: 'Sleep',
+      time: '5 min read',
+      href: '/exhausted-mom-sleep-troubleshooting',
+      icon: <MoonStar className="h-5 w-5" />,
+    },
+    {
+      title: "You're Allowed to Stop Logging Everything",
+      description: "A gentle way off the feed-and-diaper tracking that's fueling the anxiety.",
+      category: 'Peace of Mind',
+      time: '4 min read',
+      href: '/baby-tracking-anxiety',
+      icon: <Sparkles className="h-5 w-5" />,
+    },
+    {
+      title: 'Stop Breastfeeding Without Guilt',
+      description: 'Permission, plus the exact words for your partner and your own head.',
+      category: 'Feeding',
+      time: '6 min read',
+      href: '/stop-breastfeeding-without-guilt',
+      icon: <Heart className="h-5 w-5" />,
+    },
+    {
+      title: 'What Nobody Tells You About Recovery',
+      description: 'The postpartum body changes to expect, and what to ask your provider.',
+      category: 'Recovery',
+      time: '7 min read',
+      href: '/postpartum-body-changes-what-nobody-tells-you',
+      icon: <HeartPulse className="h-5 w-5" />,
+    },
+  ],
+  pregnant: [
+    {
+      title: 'Honest Pregnancy Truths',
+      description: "The parts nobody posts about, and why you're still doing fine.",
+      category: 'Real Talk',
+      time: '6 min read',
+      href: '/honest-pregnancy-truths',
+      icon: <Heart className="h-5 w-5" />,
+    },
+    {
+      title: 'C-Section Prep Checklist',
+      description: 'What to pack, ask, and expect if a caesarean is on the table.',
+      category: 'Birth Prep',
+      time: '8 min read',
+      href: '/c-section-prep-checklist',
+      icon: <ClipboardList className="h-5 w-5" />,
+    },
+    {
+      title: 'Glow & Go Prenatal Movement',
+      description: 'Trimester-safe workouts, core and pelvic-floor friendly, at home.',
+      category: 'Movement',
+      time: 'Program',
+      href: '/programs/glow-and-go',
+      icon: <Activity className="h-5 w-5" />,
+    },
+    {
+      title: 'The Birth Ball Guide',
+      description: 'Comfort, positioning and labour prep with one simple tool.',
+      category: 'Comfort',
+      time: 'Guide',
+      href: '/birth-ball-guide',
+      icon: <Sparkles className="h-5 w-5" />,
+    },
+  ],
+  ttc: [
+    {
+      title: 'Eat for Fertility',
+      description: 'Cycle-aware meal plans built around what actually helps.',
+      category: 'Nutrition',
+      time: 'Meal plans',
+      href: '/meal-plan?stage=ttc',
+      icon: <Salad className="h-5 w-5" />,
+    },
+    {
+      title: "The Wait Is Lonely — Find Your People",
+      description: 'A room full of women in the exact same two-week wait.',
+      category: 'Community',
+      time: 'Community',
+      href: '/community',
+      icon: <Users className="h-5 w-5" />,
+    },
+    {
+      title: 'Move Gently While You Try',
+      description: "Fertility-friendly movement that won't work against you.",
+      category: 'Movement',
+      time: 'Workouts',
+      href: '/workouts',
+      icon: <Activity className="h-5 w-5" />,
+    },
+    {
+      title: 'The Full Resource Library',
+      description: "Every guide we've written, in one place.",
+      category: 'Library',
+      time: 'Browse',
+      href: '/guides',
+      icon: <BookOpen className="h-5 w-5" />,
+    },
+  ],
+};
+
+const STAGE_LABEL: Record<string, string> = {
+  ttc: 'Trying to Conceive',
+  pregnant: 'Pregnancy',
+  postpartum: 'Postpartum',
+};
 
 const Wellness = () => {
   const [searchParams] = useSearchParams();
@@ -275,106 +406,30 @@ const Wellness = () => {
                   <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold">Journey-Specific Resources</h2>
                     <div className="flex items-center gap-3">
-                      <Badge variant="outline" className="flex items-center gap-1">
+                      <Badge variant="outline" className="flex items-center gap-1 border-primary/30 text-primary">
                         <Sparkles className="h-3 w-3" />
-                        {currentJourney || 'General'} - {currentStage || 'All Stages'}
+                        {STAGE_LABEL[currentJourney ?? ''] || 'For You'}
                       </Badge>
-                      <Link to="/wellness/resources">
+                      <Link to="/guides">
                         <Button variant="outline" size="sm">
                           View All Resources
                         </Button>
                       </Link>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {currentJourney === 'pregnant' && (
-                      <>
-                        <WellnessResourceCard
-                          title="Prenatal Wellness Essentials"
-                          description="Comprehensive guide for maintaining health during pregnancy"
-                          category="Pregnancy"
-                          time="8 min read"
-                          icon={<Heart className="h-5 w-5" />}
-                          color="bg-pink-100 dark:bg-pink-950/40"
-                          onClick={() => window.location.assign('/wellness/resources')}
-                        />
-                        <WellnessResourceCard
-                          title="Managing Pregnancy Stress"
-                          description="Techniques for emotional wellbeing during pregnancy"
-                          category="Mental Health"
-                          time="6 min read"
-                          icon={<SmilePlus className="h-5 w-5" />}
-                          color="bg-purple-100 dark:bg-purple-950/40"
-                          onClick={() => window.location.assign('/wellness/resources')}
-                        />
-                      </>
-                    )}
-                    
-                    {currentJourney === 'postpartum' && (
-                      <>
-                        <WellnessResourceCard
-                          title="Sleep Strategies for New Moms"
-                          description="Evidence-based tips to maximize sleep quality when dealing with nighttime feedings"
-                          category="Sleep"
-                          time="5 min read"
-                          icon={<MoonStar className="h-5 w-5" />}
-                          color="bg-blue-100 dark:bg-blue-950/40"
-                          onClick={() => window.location.assign('/wellness/resources')}
-                        />
-                        <WellnessResourceCard
-                          title="Postpartum Recovery Guide"
-                          description="Supporting your body and mind in the fourth trimester"
-                          category="Recovery"
-                          time="10 min read"
-                          icon={<Heart className="h-5 w-5" />}
-                          color="bg-green-100 dark:bg-green-950/40"
-                          onClick={() => window.location.assign('/wellness/resources')}
-                        />
-                      </>
-                    )}
-                    
-                    {currentJourney === 'ttc' && (
-                      <>
-                        <WellnessResourceCard
-                          title="Fertility and Wellness"
-                          description="How lifestyle choices impact conception and reproductive health"
-                          category="Fertility"
-                          time="7 min read"
-                          icon={<Heart className="h-5 w-5" />}
-                          color="bg-rose-100"
-                          onClick={() => window.location.assign('/wellness/resources')}
-                        />
-                        <WellnessResourceCard
-                          title="Stress Management for TTC"
-                          description="Managing the emotional journey of trying to conceive"
-                          category="Mental Health"
-                          time="5 min read"
-                          icon={<SmilePlus className="h-5 w-5" />}
-                          color="bg-purple-100 dark:bg-purple-950/40"
-                          onClick={() => window.location.assign('/wellness/resources')}
-                        />
-                      </>
-                    )}
-                    
-                    <WellnessResourceCard
-                      title="5-Minute Mindfulness Practices"
-                      description="Quick mindfulness exercises you can do anywhere, anytime"
-                      category="Mental Wellbeing"
-                      time="Audio: 5 min"
-                      icon={<Heart className="h-5 w-5" />}
-                      color="bg-red-100 dark:bg-red-950/40"
-                      onClick={() => window.location.assign('/wellness/resources')}
-                    />
-                    <WellnessResourceCard
-                      title="Hydration & Energy Guide"
-                      description="How proper hydration affects your energy levels and overall health"
-                      category="Nutrition"
-                      time="8 min read"
-                      icon={<Utensils className="h-5 w-5" />}
-                      color="bg-green-100 dark:bg-green-950/40"
-                      onClick={() => window.location.assign('/wellness/resources')}
-                    />
+                    {(STAGE_RESOURCES[currentJourney ?? ''] ?? STAGE_RESOURCES.postpartum).map((r) => (
+                      <WellnessResourceCard
+                        key={r.href}
+                        title={r.title}
+                        description={r.description}
+                        category={r.category}
+                        time={r.time}
+                        icon={r.icon}
+                        href={r.href}
+                      />
+                    ))}
                   </div>
                 </div>
               </TabsContent>
@@ -500,35 +555,35 @@ interface WellnessResourceCardProps {
   category: string;
   time: string;
   icon: React.ReactNode;
-  color: string;
-  onClick?: () => void;
+  /** The real guide/route this card opens — the whole card links here. */
+  href: string;
 }
 
-const WellnessResourceCard = ({ title, description, category, time, icon, color, onClick }: WellnessResourceCardProps) => (
-  <Card className="card-hover cursor-pointer" onClick={onClick}>
-    <CardContent className="p-6">
-      <div className="flex items-start space-x-3 mb-3">
-        <div className={`${color} p-2 rounded-md flex-shrink-0`}>
-          {icon}
+const WellnessResourceCard = ({ title, description, category, time, icon, href }: WellnessResourceCardProps) => (
+  <Card className="card-hover">
+    <Link to={href} className="block">
+      <CardContent className="p-6">
+        <div className="flex items-start space-x-3 mb-3">
+          <div className="bg-primary/10 text-primary p-2 rounded-md flex-shrink-0">
+            {icon}
+          </div>
+          <div>
+            <p className="text-sm font-medium text-muted-foreground mb-1">{category}</p>
+            <h3 className="font-semibold mb-1">{title}</h3>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-medium text-muted-foreground mb-1">{category}</p>
-          <h3 className="font-semibold mb-1">{title}</h3>
+
+        <p className="text-sm text-muted-foreground mb-4">{description}</p>
+
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-muted-foreground flex items-center">
+            <Timer className="h-3 w-3 mr-1" />
+            {time}
+          </span>
+          <span className="text-sm font-medium text-primary">View Resource →</span>
         </div>
-      </div>
-      
-      <p className="text-sm text-muted-foreground mb-4">{description}</p>
-      
-      <div className="flex justify-between items-center">
-        <span className="text-xs text-muted-foreground flex items-center">
-          <Timer className="h-3 w-3 mr-1" />
-          {time}
-        </span>
-        <Button variant="link" size="sm" className="p-0" asChild>
-          <Link to="/wellness/resources">View Resource</Link>
-        </Button>
-      </div>
-    </CardContent>
+      </CardContent>
+    </Link>
   </Card>
 );
 
