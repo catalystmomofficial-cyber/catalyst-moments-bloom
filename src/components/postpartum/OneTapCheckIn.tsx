@@ -57,12 +57,12 @@ export const OneTapCheckIn = ({ checkIns, onSaved }: Props) => {
               aria-pressed={isSelected}
               className={`group relative flex min-h-[86px] flex-col items-center justify-center gap-1.5 rounded-xl border px-2 py-3 transition-all duration-200 active:scale-[0.97] ${
                 isSelected
-                  ? 'border-recovery bg-recovery/10 shadow-sm'
-                  : 'border-border bg-card hover:border-recovery/40 hover:bg-recovery/5'
+                  ? 'border-primary bg-primary/10 shadow-sm'
+                  : 'border-border bg-card hover:border-primary/40 hover:bg-primary/5'
               }`}
             >
               {isSelected && (
-                <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-recovery">
+                <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary">
                   <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
                 </span>
               )}
@@ -71,7 +71,7 @@ export const OneTapCheckIn = ({ checkIns, onSaved }: Props) => {
               </span>
               <span
                 className={`text-sm font-medium ${
-                  isSelected ? 'text-recovery' : 'text-foreground'
+                  isSelected ? 'text-primary' : 'text-foreground'
                 }`}
               >
                 {meta.label}

@@ -68,14 +68,13 @@ export const RecoveryTracker = () => {
   const hasHistory = last14.some((d) => d.entry);
 
   return (
-    <Card className="overflow-hidden border-recovery/25">
-      {/* Soft violet wash so the card reads as "rest", distinct from the
-          copper action surfaces elsewhere on the dashboard. */}
-      <div className="bg-gradient-to-b from-recovery/[0.07] to-transparent">
+    <Card className="overflow-hidden border-primary/25">
+      {/* Soft copper wash, matching every other feature surface on the app. */}
+      <div className="bg-gradient-to-b from-primary/[0.06] to-transparent">
         <CardContent className="space-y-6 p-6">
           <div className="flex items-center gap-2">
-            <Heart className="h-4 w-4 text-recovery" />
-            <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-recovery">
+            <Heart className="h-4 w-4 text-primary" />
+            <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-primary">
               Your Recovery
             </h2>
           </div>
@@ -83,8 +82,8 @@ export const RecoveryTracker = () => {
           <RecoveryRing dayPostpartum={days} phase={phase} />
 
           {/* What's normal right now — reassurance, not metrics */}
-          <div className="rounded-xl border border-recovery/20 bg-recovery-soft/60 p-4">
-            <p className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-recovery">
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+            <p className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary">
               <Sparkles className="h-3 w-3" />
               What&apos;s normal right now
             </p>
@@ -135,10 +134,10 @@ export const RecoveryTracker = () => {
                     style={{
                       background: entry
                         ? entry.mood === 'good'
-                          ? 'hsl(var(--recovery))'
+                          ? 'hsl(var(--primary))'
                           : entry.mood === 'okay'
-                            ? 'hsl(var(--recovery) / 0.5)'
-                            : 'hsl(var(--recovery) / 0.22)'
+                            ? 'hsl(var(--primary) / 0.5)'
+                            : 'hsl(var(--primary) / 0.22)'
                         : 'hsl(var(--border) / 0.6)',
                     }}
                   />
@@ -150,7 +149,7 @@ export const RecoveryTracker = () => {
           {/* The quiet safety net. Not a diagnosis, not a warning colour —
               just a mother being told a hard run is worth saying out loud. */}
           {safety.show && (
-            <div className="rounded-xl border border-recovery/30 bg-recovery-soft/70 p-4">
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
               <p className="mb-1.5 text-sm font-semibold text-foreground">
                 That&apos;s been a lot of hard days.
               </p>

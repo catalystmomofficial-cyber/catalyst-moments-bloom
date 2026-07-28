@@ -157,7 +157,7 @@ export const RecoveryRing = ({ dayPostpartum, phase }: RecoveryRingProps) => {
             style={{
               width: i === phaseIndex ? 26 : 10,
               background:
-                i <= phaseIndex ? 'hsl(var(--recovery))' : 'hsl(var(--border))',
+                i <= phaseIndex ? 'hsl(var(--primary))' : 'hsl(var(--border))',
               opacity: i === phaseIndex ? 1 : i < phaseIndex ? 0.45 : 1,
             }}
           />
