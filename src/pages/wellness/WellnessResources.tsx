@@ -514,22 +514,17 @@ const WellnessResources = () => {
     };
   }, []);
 
-  // Only a finished, purchasable guide can headline the page.
-  const featured = useMemo(
-    () =>
-      PRODUCTS.find((p) => isAvailable(p) && p.demand === 'HIGH') ??
-      PRODUCTS.find(isAvailable) ??
-      PRODUCTS[0],
-    [],
-  );
-
+  // One clean library — no oversized hero banner. Available guides sort first
+  // so what a mother can actually get today leads the grid.
   const filteredProducts = useMemo(
     () =>
       (activeCategory === 'All Resources'
         ? PRODUCTS
         : PRODUCTS.filter((p) => p.category === activeCategory)
-      ).filter((p) => p.slug !== featured?.slug),
-    [activeCategory, featured],
+      )
+        .slice()
+        .sort((a, b) => Number(isAvailable(b)) - Number(isAvailable(a))),
+    [activeCategory],
   );
 
   const renderUnlockButton = (p: Product) => {
@@ -593,8 +588,18 @@ const WellnessResources = () => {
                 {points.toLocaleString()} points available
               </Badge>
             </div>
-            <div className="hidden md:block w-40 h-40 opacity-20 animate-float shrink-0">
-              <Sparkles className="w-full h-full text-catalyst-copper" strokeWidth={1} />
+            {/* Richer brand emblem — a solid copper mark with presence,
+                not a faint outline. */}
+            <div className="hidden md:flex shrink-0 items-center justify-center">
+              <div className="relative h-36 w-36">
+                <div className="absolute inset-0 rounded-full bg-catalyst-copper/10" />
+                <div className="absolute inset-4 rounded-full bg-gradient-to-br from-catalyst-gold/30 to-catalyst-copper/25" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-catalyst-copper to-catalyst-brown shadow-glow">
+                    <Sparkles className="h-9 w-9 text-white" strokeWidth={1.75} />
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -617,47 +622,6 @@ const WellnessResources = () => {
             ))}
           </div>
 
-          {/* Featured */}
-          {featured && (
-            <section className="mb-8">
-              <div
-                id={`product-${featured.slug}`}
-                className={`relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden shadow-soft group cursor-pointer transition-all ${
-                  highlighted === featured.slug
-                    ? 'ring-2 ring-catalyst-copper ring-offset-2 ring-offset-background'
-                    : ''
-                }`}
-              >
-                <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-105">
-                  <CoverImage
-                    src={featured.cover}
-                    alt={featured.title}
-                    slug={featured.slug}
-                    title={featured.title}
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end text-white">
-                  <Badge className="mb-3 w-fit bg-catalyst-copper text-white border-none gap-1 tracking-wide">
-                    <Flame className="w-3 h-3" /> MAMA FAVORITE
-                  </Badge>
-                  <h2 className="text-2xl md:text-3xl font-semibold mb-1 drop-shadow-md">
-                    {featured.title}
-                  </h2>
-                  <p className="text-white/85 max-w-xl mb-4 drop-shadow-sm">
-                    {featured.tagline}
-                  </p>
-                  <Button
-                    className="w-fit bg-catalyst-copper hover:bg-catalyst-copper/90 gap-2"
-                    onClick={() => setModalProduct(featured)}
-                  >
-                    {renderUnlockButton(featured)}
-                  </Button>
-                </div>
-              </div>
-            </section>
-          )}
-
           {/* Product grid */}
           <section className="mb-8">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -669,14 +633,15 @@ const WellnessResources = () => {
                   <Card
                     key={p.slug}
                     id={`product-${p.slug}`}
-                    className={`group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 rounded-xl ${
+                    className={`group flex flex-col overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
                       highlighted === p.slug
                         ? 'ring-2 ring-catalyst-copper ring-offset-2 ring-offset-background'
                         : ''
                     }`}
                   >
-                    <div className="relative h-60 overflow-hidden">
-                      <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+                    {/* Cover — a calm, contained thumbnail, not a full-bleed banner */}
+                    <div className="relative aspect-[3/2] overflow-hidden">
+                      <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.04]">
                         <CoverImage
                           src={p.cover}
                           alt={`${p.title} cover`}
@@ -684,68 +649,66 @@ const WellnessResources = () => {
                           title={p.title}
                         />
                       </div>
-                      {/* dark gradient for legibility */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-
-                      {/* top-right badge */}
                       <div className="absolute top-3 right-3">
                         {isOwned ? (
-                          <div className="bg-emerald-500 text-white rounded-full p-1 shadow">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          <div className="rounded-full bg-emerald-500 p-1 text-white shadow">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
                           </div>
                         ) : available ? (
-                          <Badge className="bg-black/40 text-white border-0 backdrop-blur-sm text-[10px] gap-0.5 px-2 py-0.5">
-                            <Flame className="w-2.5 h-2.5" /> {p.demand}
+                          <Badge className="border-0 bg-black/40 px-2 py-0.5 text-[10px] gap-0.5 text-white backdrop-blur-sm">
+                            <Flame className="h-2.5 w-2.5" /> {p.demand}
                           </Badge>
                         ) : (
-                          <Badge className="bg-catalyst-copper/90 text-white border-0 backdrop-blur-sm text-[10px] gap-1 px-2 py-0.5 uppercase tracking-wide">
-                            <Clock3 className="w-2.5 h-2.5" /> Coming Soon
+                          <Badge className="border-0 bg-catalyst-copper/90 px-2 py-0.5 text-[10px] gap-1 uppercase tracking-wide text-white backdrop-blur-sm">
+                            <Clock3 className="h-2.5 w-2.5" /> Coming Soon
                           </Badge>
                         )}
                       </div>
+                    </div>
 
-                      {/* overlay content at bottom */}
-                      <div className="absolute bottom-0 inset-x-0 p-4 space-y-2">
-                        <h4 className="font-semibold text-sm text-white leading-snug drop-shadow">
-                          {p.title}
-                        </h4>
-                        <p className="text-[11px] text-white/75 line-clamp-2 leading-relaxed">
-                          {p.description}
-                        </p>
+                    {/* Content on the card surface — the clean library layout */}
+                    <div className="flex flex-1 flex-col p-4">
+                      <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-catalyst-copper">
+                        {p.category}
+                      </p>
+                      <h4 className="mb-1 font-semibold leading-snug text-foreground">
+                        {p.title}
+                      </h4>
+                      <p className="mb-4 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+                        {p.tagline}
+                      </p>
+
+                      <div className="mt-auto space-y-2.5">
                         {available ? (
                           <div className="flex items-baseline gap-1.5">
-                            <span className="text-white font-bold text-sm drop-shadow">
+                            <span className="text-base font-bold text-foreground">
                               ${(p.priceCents / 100).toFixed(2)}
                             </span>
-                            <span className="text-white/65 text-[11px]">
+                            <span className="text-[11px] text-muted-foreground">
                               or {p.pointsCost.toLocaleString()} pts
                             </span>
                           </div>
                         ) : (
-                          <p className="text-[11px] text-white/70">
-                            In the studio now — members get first access.
+                          <p className="text-[11px] text-muted-foreground">
+                            In the studio now · members get first access
                           </p>
                         )}
+
                         {isOwned ? (
                           <Button
                             asChild
                             size="sm"
-                            className="w-full bg-white text-foreground hover:bg-white/90 h-8 text-xs font-semibold"
+                            className="h-9 w-full bg-catalyst-copper text-xs font-semibold text-white hover:bg-catalyst-copper/90"
                           >
-                            <a
-                              href={p.pdf}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              download
-                            >
-                              <Download className="w-3.5 h-3.5 mr-1.5" />
+                            <a href={p.pdf} target="_blank" rel="noopener noreferrer" download>
+                              <Download className="mr-1.5 h-3.5 w-3.5" />
                               {p.cta}
                             </a>
                           </Button>
                         ) : available ? (
                           <Button
                             size="sm"
-                            className="w-full bg-white text-foreground hover:bg-white/90 h-8 text-xs font-semibold"
+                            className="h-9 w-full bg-catalyst-copper text-xs font-semibold text-white hover:bg-catalyst-copper/90"
                             onClick={() => setModalProduct(p)}
                           >
                             {renderUnlockButton(p)}
@@ -754,9 +717,10 @@ const WellnessResources = () => {
                           <Button
                             size="sm"
                             disabled
-                            className="w-full bg-white/85 text-foreground/70 h-8 text-xs font-semibold cursor-not-allowed"
+                            variant="outline"
+                            className="h-9 w-full cursor-not-allowed border-catalyst-copper/30 text-xs font-semibold text-muted-foreground"
                           >
-                            <Clock3 className="w-3.5 h-3.5 mr-1.5" />
+                            <Clock3 className="mr-1.5 h-3.5 w-3.5" />
                             Coming Soon
                           </Button>
                         )}

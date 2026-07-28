@@ -34,11 +34,18 @@ import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Plus } from 'lucide-react';
 import {
+  Timer,
+  HeartHandshake,
+  Feather,
+  Snowflake,
+  NotebookPen,
+  type LucideIcon,
+} from 'lucide-react';
+import {
   productsForJourney,
   isAvailable,
   type DigitalProduct,
 } from '@/data/digitalProducts';
-import { CoverImage } from '@/components/wellness/ProductCoverArt';
 
 // The journey-specific section is a funnel INTO the premium digital guides
 // (the paid products on /wellness/resources), not a scatter of free links.
@@ -49,6 +56,17 @@ const STAGE_LABEL: Record<string, string> = {
   ttc: 'Trying to Conceive',
   pregnant: 'Pregnancy',
   postpartum: 'Postpartum',
+};
+
+// One rich symbol per guide — the card's representing mark, rendered in a solid
+// copper tile rather than a faint tinted icon.
+const RESOURCE_ICON: Record<string, LucideIcon> = {
+  'momodoro-planner': Timer,
+  'busy-mom-self-care': HeartHandshake,
+  'sleep-reset-guide': MoonStar,
+  'emotional-load-workbook': Feather,
+  'freezer-stash-guide': Snowflake,
+  'keepsake-journal': NotebookPen,
 };
 
 const Wellness = () => {
@@ -432,49 +450,42 @@ const WellnessQuickCard = ({ title, icon, value, trend, color, action }: Wellnes
 );
 
 /**
- * A funnel card into one premium digital guide. The whole card deep-links to
- * that guide on the store page (/wellness/resources?product=slug), so a mother
- * lands exactly on it. Available guides show their price; the ones still in the
- * studio show a "Coming soon" chip instead of a fake price.
+ * A funnel card into one premium digital guide — the clean icon + text layout,
+ * with a richer copper symbol. No product imagery here; the whole card
+ * deep-links to that guide on the store page (/wellness/resources?product=slug).
  */
 const WellnessResourceCard = ({ product }: { product: DigitalProduct }) => {
   const available = isAvailable(product);
+  const Icon = RESOURCE_ICON[product.slug] ?? Sparkles;
   return (
-    <Card className="card-hover overflow-hidden">
-      <Link
-        to={`/wellness/resources?product=${product.slug}`}
-        className="flex h-full"
-      >
-        <div className="relative w-24 shrink-0 overflow-hidden sm:w-28 min-h-[9rem]">
-          <CoverImage
-            src={product.cover}
-            alt={product.title}
-            slug={product.slug}
-            title={product.title}
-          />
-        </div>
-
-        <CardContent className="flex flex-1 flex-col p-4">
-          <div className="mb-1.5 flex items-center gap-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-primary">
-              {product.category}
-            </span>
-            {!available && (
-              <Badge
-                variant="outline"
-                className="border-primary/30 text-primary text-[9px] px-1.5 py-0 uppercase tracking-wide"
-              >
-                Coming soon
-              </Badge>
-            )}
+    <Card className="card-hover">
+      <Link to={`/wellness/resources?product=${product.slug}`} className="block">
+        <CardContent className="p-6">
+          <div className="mb-3 flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-catalyst-copper to-catalyst-brown text-white shadow-glow">
+              <Icon className="h-6 w-6" strokeWidth={1.75} />
+            </div>
+            <div className="min-w-0">
+              <div className="mb-1 flex items-center gap-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                  {product.category}
+                </p>
+                {!available && (
+                  <Badge
+                    variant="outline"
+                    className="border-primary/30 px-1.5 py-0 text-[9px] uppercase tracking-wide text-primary"
+                  >
+                    Coming soon
+                  </Badge>
+                )}
+              </div>
+              <h3 className="font-semibold leading-snug">{product.title}</h3>
+            </div>
           </div>
 
-          <h3 className="font-semibold leading-snug mb-1">{product.title}</h3>
-          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-            {product.hook}
-          </p>
+          <p className="mb-4 text-sm text-muted-foreground">{product.hook}</p>
 
-          <div className="mt-auto flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">
               {available
                 ? `$${(product.priceCents / 100).toFixed(2)} · or ${product.pointsCost.toLocaleString()} pts`
