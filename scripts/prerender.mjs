@@ -70,6 +70,8 @@ const STATIC_ROUTES = [
   '/terms',
   '/privacy',
   '/affiliate',
+  '/contact',
+  '/medical-disclaimer',
   // /meal-plan, /workout-plan, /programs/glow-and-go are intentionally
   // excluded — they're gated by PrivateRoute, so prerendering them just
   // bakes the client-side login redirect's HTML into these URLs, which is
