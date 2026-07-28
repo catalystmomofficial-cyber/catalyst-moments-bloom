@@ -15,6 +15,13 @@ Disallow: /questionnaire
 Disallow: /progress
 Disallow: /courses
 Disallow: /programs/
+# Birth-ball sub-guides are public SEO content — they're in the sitemap and
+# prerendered, so allow them explicitly. The broader Disallow below still
+# blocks the interactive routes (exercises, saved, trimester tools).
+Allow: /birth-ball-guide/buying-guide
+Allow: /birth-ball-guide/safety
+Allow: /birth-ball-guide/faq
+Allow: /birth-ball-guide/education
 Disallow: /birth-ball-guide/
 Disallow: /saved-
 Disallow: /affiliate/dashboard
