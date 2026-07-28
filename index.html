@@ -4,7 +4,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
+    <!-- Hide the injected "Made with Lovable" badge on the published site -->
+    <style>
+      #lovable-badge, .lovable-badge, #lovable-badge-button,
+      a[href*="lovable.dev"], a[href*="lovable.app"], a[href*="gpteng.co"],
+      [data-lovable-badge], [class*="lovable-badge"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+    </style>
+
     <!-- Favicon and Apple Touch Icons -->
     <link rel="icon" href="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" type="image/png">
     <link rel="apple-touch-icon" href="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png">
