@@ -573,18 +573,17 @@ const WellnessResources = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
           {/* Hero */}
-          <section className="relative py-6 md:py-10 mb-8 text-center md:text-left md:flex md:items-center md:justify-between gap-8 overflow-hidden">
+          <section className="py-6 md:py-10 mb-8 text-center md:text-left">
             <div className="md:max-w-2xl">
-              <h1 className="text-3xl md:text-5xl font-bold text-catalyst-copper mb-3 leading-tight">
-                Premium Wellness Resources
+              <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-3 leading-tight">
+                Wellness Resources
               </h1>
               <p className="text-lg text-muted-foreground mb-4">
-                Digital guides crafted for every stage of your motherhood
-                journey. Nurture your mind, body, and soul with curated
-                professional wisdom.
+                Premium digital guides crafted to support every stage of your
+                motherhood journey.
               </p>
-              <Badge variant="outline" className="gap-1.5 border-catalyst-copper/30 text-catalyst-copper px-3 py-1.5 text-sm">
-                <Sparkles className="w-4 h-4" />
+              <Badge variant="outline" className="gap-1.5 border-border text-muted-foreground px-3 py-1.5 text-sm">
+                <Sparkles className="w-4 h-4 text-catalyst-copper" />
                 {points.toLocaleString()} points available
               </Badge>
             </div>
@@ -620,29 +619,32 @@ const WellnessResources = () => {
                   <Card
                     key={p.slug}
                     id={`product-${p.slug}`}
-                    className={`group flex flex-col overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
+                    className={`group relative flex flex-col overflow-hidden rounded-2xl border-0 shadow-md transition-all duration-500 hover:-translate-y-1 hover:shadow-xl ${
                       highlighted === p.slug
                         ? 'ring-2 ring-catalyst-copper ring-offset-2 ring-offset-background'
                         : ''
                     }`}
                   >
-                    {/* Cover — a calm, contained thumbnail, not a full-bleed banner */}
-                    <div className="relative aspect-[3/2] overflow-hidden">
-                      <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.04]">
-                        <CoverImage
-                          src={p.cover}
-                          alt={`${p.title} cover`}
-                          slug={p.slug}
-                          title={p.title}
-                        />
-                      </div>
+                    {/* Full cover art — the guide's own artwork carries the card */}
+                    <div className="relative aspect-[4/5] w-full overflow-hidden">
+                      <CoverImage
+                        src={p.cover}
+                        alt={`${p.title} cover`}
+                        slug={p.slug}
+                        title={p.title}
+                      />
+
+                      {/* Dark gradient keeps the overlaid copy legible over any cover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+
+                      {/* Status badge, top-right */}
                       <div className="absolute top-3 right-3">
                         {isOwned ? (
-                          <div className="rounded-full bg-emerald-500 p-1 text-white shadow">
-                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          <div className="rounded-full bg-emerald-500 p-1.5 text-white shadow-lg">
+                            <CheckCircle2 className="h-4 w-4" />
                           </div>
                         ) : available ? (
-                          <Badge className="border-0 bg-black/40 px-2 py-0.5 text-[10px] gap-0.5 text-white backdrop-blur-sm">
+                          <Badge className="border-0 bg-black/45 px-2 py-0.5 text-[10px] gap-0.5 text-white backdrop-blur-sm">
                             <Flame className="h-2.5 w-2.5" /> {p.demand}
                           </Badge>
                         ) : (
@@ -651,63 +653,54 @@ const WellnessResources = () => {
                           </Badge>
                         )}
                       </div>
-                    </div>
 
-                    {/* Content on the card surface — the clean library layout */}
-                    <div className="flex flex-1 flex-col p-4">
-                      <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-catalyst-copper">
-                        {p.category}
-                      </p>
-                      <h4 className="mb-1 font-semibold leading-snug text-foreground">
-                        {p.title}
-                      </h4>
-                      <p className="mb-4 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                        {p.tagline}
-                      </p>
-
-                      <div className="mt-auto space-y-2.5">
+                      {/* Price + description + action, overlaid at the bottom */}
+                      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-3 p-5">
                         {available ? (
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-base font-bold text-foreground">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-2xl font-bold text-white drop-shadow-sm">
                               ${(p.priceCents / 100).toFixed(2)}
                             </span>
-                            <span className="text-[11px] text-muted-foreground">
+                            <span className="text-xs font-medium text-white/80">
                               or {p.pointsCost.toLocaleString()} pts
                             </span>
                           </div>
                         ) : (
-                          <p className="text-[11px] text-muted-foreground">
+                          <p className="text-xs font-medium text-white/85">
                             In the studio now · members get first access
                           </p>
                         )}
 
+                        <p className="line-clamp-2 text-sm leading-relaxed text-white/90 drop-shadow-sm">
+                          {p.description}
+                        </p>
+
                         {isOwned ? (
                           <Button
                             asChild
-                            size="sm"
-                            className="h-9 w-full bg-catalyst-copper text-xs font-semibold text-white hover:bg-catalyst-copper/90"
+                            size="lg"
+                            className="h-11 w-full rounded-full bg-white text-sm font-semibold text-catalyst-brown hover:bg-white/90"
                           >
                             <a href={p.pdf} target="_blank" rel="noopener noreferrer" download>
-                              <Download className="mr-1.5 h-3.5 w-3.5" />
+                              <Download className="mr-2 h-4 w-4" />
                               {p.cta}
                             </a>
                           </Button>
                         ) : available ? (
                           <Button
-                            size="sm"
-                            className="h-9 w-full bg-catalyst-copper text-xs font-semibold text-white hover:bg-catalyst-copper/90"
+                            size="lg"
+                            className="h-11 w-full rounded-full bg-white text-sm font-semibold text-catalyst-brown hover:bg-white/90"
                             onClick={() => setModalProduct(p)}
                           >
                             {renderUnlockButton(p)}
                           </Button>
                         ) : (
                           <Button
-                            size="sm"
+                            size="lg"
                             disabled
-                            variant="outline"
-                            className="h-9 w-full cursor-not-allowed border-catalyst-copper/30 text-xs font-semibold text-muted-foreground"
+                            className="h-11 w-full cursor-not-allowed rounded-full border border-white/40 bg-white/10 text-sm font-semibold text-white/80 backdrop-blur-sm hover:bg-white/10"
                           >
-                            <Clock3 className="mr-1.5 h-3.5 w-3.5" />
+                            <Clock3 className="mr-2 h-4 w-4" />
                             Coming Soon
                           </Button>
                         )}
