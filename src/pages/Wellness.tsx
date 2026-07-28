@@ -327,7 +327,7 @@ const Wellness = () => {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {productsForJourney(currentJourney).map((product) => (
+                    {productsForJourney(currentJourney as Parameters<typeof productsForJourney>[0]).map((product) => (
                       <WellnessResourceCard key={product.slug} product={product} />
                     ))}
                   </div>
