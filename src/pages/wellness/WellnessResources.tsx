@@ -498,7 +498,7 @@ const WellnessResources = () => {
     const params = new URLSearchParams(window.location.search);
     const category = params.get('category');
     const slug = params.get('product');
-    if (category && CATEGORIES.includes(category)) setActiveCategory(category);
+    if (category && (CATEGORIES as readonly string[]).includes(category)) setActiveCategory(category as typeof CATEGORIES[number]);
     if (!slug) return;
     setActiveCategory('All Resources');
     setHighlighted(slug);
