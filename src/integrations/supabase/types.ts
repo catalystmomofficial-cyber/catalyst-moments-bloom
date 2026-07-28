@@ -1457,6 +1457,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string
+          delivery_date: string | null
           display_name: string | null
           id: string
           motherhood_stage: string | null
@@ -1476,6 +1477,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          delivery_date?: string | null
           display_name?: string | null
           id?: string
           motherhood_stage?: string | null
@@ -1495,6 +1497,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          delivery_date?: string | null
           display_name?: string | null
           id?: string
           motherhood_stage?: string | null
