@@ -12,16 +12,9 @@ import {
   Heart,
   MoonStar,
   SmilePlus,
-  Timer,
   Utensils,
   PenLine,
   Sparkles,
-  Activity,
-  Users,
-  ClipboardList,
-  BookOpen,
-  HeartPulse,
-  Salad,
 } from 'lucide-react';
 import { Calendar } from "@/components/ui/calendar";
 import { Link } from 'react-router-dom';
@@ -40,125 +33,17 @@ import { usePoints } from '@/hooks/usePoints';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Plus } from 'lucide-react';
+import {
+  productsForJourney,
+  isAvailable,
+  type DigitalProduct,
+} from '@/data/digitalProducts';
+import { CoverImage } from '@/components/wellness/ProductCoverArt';
 
-// Stage-specific wellness resources, each wired to a REAL guide/route (no
-// invented generic titles). Postpartum and pregnancy point at the guides we
-// actually wrote from the research; TTC has no dedicated guide pages yet, so it
-// honestly surfaces the real TTC destinations (cycle-aware meal plans,
-// community, movement, the library) instead of faking guide links.
-interface StageResource {
-  title: string;
-  description: string;
-  category: string;
-  time: string;
-  href: string;
-  icon: React.ReactNode;
-}
-
-const STAGE_RESOURCES: Record<string, StageResource[]> = {
-  postpartum: [
-    {
-      title: 'Exhausted New Mom? Start Here',
-      description: "Find your actual sleep bottleneck instead of one more generic tip.",
-      category: 'Sleep',
-      time: '5 min read',
-      href: '/exhausted-mom-sleep-troubleshooting',
-      icon: <MoonStar className="h-5 w-5" />,
-    },
-    {
-      title: "You're Allowed to Stop Logging Everything",
-      description: "A gentle way off the feed-and-diaper tracking that's fueling the anxiety.",
-      category: 'Peace of Mind',
-      time: '4 min read',
-      href: '/baby-tracking-anxiety',
-      icon: <Sparkles className="h-5 w-5" />,
-    },
-    {
-      title: 'Stop Breastfeeding Without Guilt',
-      description: 'Permission, plus the exact words for your partner and your own head.',
-      category: 'Feeding',
-      time: '6 min read',
-      href: '/stop-breastfeeding-without-guilt',
-      icon: <Heart className="h-5 w-5" />,
-    },
-    {
-      title: 'What Nobody Tells You About Recovery',
-      description: 'The postpartum body changes to expect, and what to ask your provider.',
-      category: 'Recovery',
-      time: '7 min read',
-      href: '/postpartum-body-changes-what-nobody-tells-you',
-      icon: <HeartPulse className="h-5 w-5" />,
-    },
-  ],
-  pregnant: [
-    {
-      title: 'Honest Pregnancy Truths',
-      description: "The parts nobody posts about, and why you're still doing fine.",
-      category: 'Real Talk',
-      time: '6 min read',
-      href: '/honest-pregnancy-truths',
-      icon: <Heart className="h-5 w-5" />,
-    },
-    {
-      title: 'C-Section Prep Checklist',
-      description: 'What to pack, ask, and expect if a caesarean is on the table.',
-      category: 'Birth Prep',
-      time: '8 min read',
-      href: '/c-section-prep-checklist',
-      icon: <ClipboardList className="h-5 w-5" />,
-    },
-    {
-      title: 'Glow & Go Prenatal Movement',
-      description: 'Trimester-safe workouts, core and pelvic-floor friendly, at home.',
-      category: 'Movement',
-      time: 'Program',
-      href: '/programs/glow-and-go',
-      icon: <Activity className="h-5 w-5" />,
-    },
-    {
-      title: 'The Birth Ball Guide',
-      description: 'Comfort, positioning and labour prep with one simple tool.',
-      category: 'Comfort',
-      time: 'Guide',
-      href: '/birth-ball-guide',
-      icon: <Sparkles className="h-5 w-5" />,
-    },
-  ],
-  ttc: [
-    {
-      title: 'Eat for Fertility',
-      description: 'Cycle-aware meal plans built around what actually helps.',
-      category: 'Nutrition',
-      time: 'Meal plans',
-      href: '/meal-plan?stage=ttc',
-      icon: <Salad className="h-5 w-5" />,
-    },
-    {
-      title: "The Wait Is Lonely — Find Your People",
-      description: 'A room full of women in the exact same two-week wait.',
-      category: 'Community',
-      time: 'Community',
-      href: '/community',
-      icon: <Users className="h-5 w-5" />,
-    },
-    {
-      title: 'Move Gently While You Try',
-      description: "Fertility-friendly movement that won't work against you.",
-      category: 'Movement',
-      time: 'Workouts',
-      href: '/workouts',
-      icon: <Activity className="h-5 w-5" />,
-    },
-    {
-      title: 'The Full Resource Library',
-      description: "Every guide we've written, in one place.",
-      category: 'Library',
-      time: 'Browse',
-      href: '/guides',
-      icon: <BookOpen className="h-5 w-5" />,
-    },
-  ],
-};
+// The journey-specific section is a funnel INTO the premium digital guides
+// (the paid products on /wellness/resources), not a scatter of free links.
+// productsForJourney() picks the guides that fit her stage — available ones
+// first — and every card deep-links to that guide on the store page.
 
 const STAGE_LABEL: Record<string, string> = {
   ttc: 'Trying to Conceive',
@@ -404,31 +289,28 @@ const Wellness = () => {
                 
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold">Journey-Specific Resources</h2>
+                    <div>
+                      <h2 className="text-xl font-bold">Guides for Your Journey</h2>
+                      <p className="text-sm text-muted-foreground">
+                        Premium guides chosen for where you are right now.
+                      </p>
+                    </div>
                     <div className="flex items-center gap-3">
                       <Badge variant="outline" className="flex items-center gap-1 border-primary/30 text-primary">
                         <Sparkles className="h-3 w-3" />
                         {STAGE_LABEL[currentJourney ?? ''] || 'For You'}
                       </Badge>
-                      <Link to="/guides">
+                      <Link to="/wellness/resources">
                         <Button variant="outline" size="sm">
-                          View All Resources
+                          Browse All Guides
                         </Button>
                       </Link>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {(STAGE_RESOURCES[currentJourney ?? ''] ?? STAGE_RESOURCES.postpartum).map((r) => (
-                      <WellnessResourceCard
-                        key={r.href}
-                        title={r.title}
-                        description={r.description}
-                        category={r.category}
-                        time={r.time}
-                        icon={r.icon}
-                        href={r.href}
-                      />
+                    {productsForJourney(currentJourney).map((product) => (
+                      <WellnessResourceCard key={product.slug} product={product} />
                     ))}
                   </div>
                 </div>
@@ -549,42 +431,63 @@ const WellnessQuickCard = ({ title, icon, value, trend, color, action }: Wellnes
   </div>
 );
 
-interface WellnessResourceCardProps {
-  title: string;
-  description: string;
-  category: string;
-  time: string;
-  icon: React.ReactNode;
-  /** The real guide/route this card opens — the whole card links here. */
-  href: string;
-}
-
-const WellnessResourceCard = ({ title, description, category, time, icon, href }: WellnessResourceCardProps) => (
-  <Card className="card-hover">
-    <Link to={href} className="block">
-      <CardContent className="p-6">
-        <div className="flex items-start space-x-3 mb-3">
-          <div className="bg-primary/10 text-primary p-2 rounded-md flex-shrink-0">
-            {icon}
-          </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground mb-1">{category}</p>
-            <h3 className="font-semibold mb-1">{title}</h3>
-          </div>
+/**
+ * A funnel card into one premium digital guide. The whole card deep-links to
+ * that guide on the store page (/wellness/resources?product=slug), so a mother
+ * lands exactly on it. Available guides show their price; the ones still in the
+ * studio show a "Coming soon" chip instead of a fake price.
+ */
+const WellnessResourceCard = ({ product }: { product: DigitalProduct }) => {
+  const available = isAvailable(product);
+  return (
+    <Card className="card-hover overflow-hidden">
+      <Link
+        to={`/wellness/resources?product=${product.slug}`}
+        className="flex h-full"
+      >
+        <div className="relative w-24 shrink-0 overflow-hidden sm:w-28 min-h-[9rem]">
+          <CoverImage
+            src={product.cover}
+            alt={product.title}
+            slug={product.slug}
+            title={product.title}
+          />
         </div>
 
-        <p className="text-sm text-muted-foreground mb-4">{description}</p>
+        <CardContent className="flex flex-1 flex-col p-4">
+          <div className="mb-1.5 flex items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-primary">
+              {product.category}
+            </span>
+            {!available && (
+              <Badge
+                variant="outline"
+                className="border-primary/30 text-primary text-[9px] px-1.5 py-0 uppercase tracking-wide"
+              >
+                Coming soon
+              </Badge>
+            )}
+          </div>
 
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-muted-foreground flex items-center">
-            <Timer className="h-3 w-3 mr-1" />
-            {time}
-          </span>
-          <span className="text-sm font-medium text-primary">View Resource →</span>
-        </div>
-      </CardContent>
-    </Link>
-  </Card>
-);
+          <h3 className="font-semibold leading-snug mb-1">{product.title}</h3>
+          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+            {product.hook}
+          </p>
+
+          <div className="mt-auto flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">
+              {available
+                ? `$${(product.priceCents / 100).toFixed(2)} · or ${product.pointsCost.toLocaleString()} pts`
+                : 'Members get first access'}
+            </span>
+            <span className="text-sm font-medium text-primary">
+              {available ? 'Unlock →' : 'Preview →'}
+            </span>
+          </div>
+        </CardContent>
+      </Link>
+    </Card>
+  );
+};
 
 export default Wellness;

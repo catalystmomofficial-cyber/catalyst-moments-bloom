@@ -20,9 +20,7 @@ import {
   Zap,
   CreditCard,
   Loader2,
-  Moon,
-  HeartHandshake,
-  Clock,
+  Clock3,
 } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import SEO from '@/components/seo/SEO';
@@ -34,217 +32,21 @@ import {
   PayPalScriptProvider,
   PayPalButtons,
 } from '@paypal/react-paypal-js';
-import momodoroCover from '@/assets/momodoro-planner-cover.png';
-import selfCareCover from '@/assets/busy-mom-self-care-cover.png';
-import sleepResetCover from '@/assets/sleep-reset-guide-cover.jpg';
-import emotionalLoadCover from '@/assets/emotional-load-workbook-cover.jpg';
+import {
+  DIGITAL_PRODUCTS,
+  PRODUCT_CATEGORIES,
+  isAvailable,
+  type DigitalProduct,
+} from '@/data/digitalProducts';
+import { CoverImage } from '@/components/wellness/ProductCoverArt';
 
 const PAYPAL_CLIENT_ID =
   (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) ||
   'AVx-CDjcjaMtNsqlKBIm-edzwezhGiMtti86hVwfMbc967nLU2QlJXTAn62Vsk6HCPB6nB8sfOz8khKB';
 
-const MOMODORO_PDF =
-  'https://catalystmomofficial.com/Momon%20guide/The%20Momodoro%20Planner.pdf';
-const SELFCARE_PDF =
-  'https://catalystmomofficial.com/catalyst%20guide/The%20Busy%20Mom%E2%80%99s%20Self-Care%20%26%20Stress%20Relief%20System.pdf';
-
-// Cover artwork from the uploaded design, bundled locally so it never
-// expires or depends on external hosting. If a cover is ever missing,
-// the branded ProductCoverArt fallback renders instead (see CoverImage).
-const MOMODORO_COVER = momodoroCover;
-const SELFCARE_COVER = selfCareCover;
-const SLEEP_COVER = sleepResetCover;
-const EMOTIONAL_COVER = emotionalLoadCover;
-
-type Product = {
-  slug: string;
-  title: string;
-  tagline: string;
-  description: string;
-  cover?: string;
-  fallbackIcon?: React.ReactNode;
-  pdf: string;
-  cta: string;
-  priceCents: number;
-  pointsCost: number;
-  demand: string;
-  category: string;
-};
-
-const CATEGORIES = ['All Resources', 'Self-Care', 'Sleep', 'Mindfulness'];
-
-const PRODUCTS: Product[] = [
-  {
-    slug: 'momodoro-planner',
-    title: 'The Momodoro Planner',
-    tagline: '15-Minute Focus Sessions for Busy Moms',
-    description:
-      'A beautifully structured premium time-management tool that helps busy moms organize their days and reclaim their time — one focused 15-minute session at a time.',
-    cover: MOMODORO_COVER,
-    pdf: MOMODORO_PDF,
-    cta: 'Download Planner',
-    priceCents: 1200,
-    pointsCost: 1200,
-    demand: 'HIGH',
-    category: 'Self-Care',
-  },
-  {
-    slug: 'busy-mom-self-care',
-    title: "The Busy Mom's Self-Care & Stress Relief System",
-    tagline: 'Simple Daily Habits to Feel Energized, Relaxed & In Control',
-    description:
-      'A practical, stress-relief system designed specifically to help busy mothers find calm, recharge, and feel in control — every single day.',
-    cover: SELFCARE_COVER,
-    pdf: SELFCARE_PDF,
-    cta: 'Download System',
-    priceCents: 1700,
-    pointsCost: 1700,
-    demand: 'HIGH',
-    category: 'Self-Care',
-  },
-  {
-    slug: 'sleep-reset-guide',
-    title: 'Sleep Reset Guide',
-    tagline: 'Maximize Rest as a New or Expecting Mom',
-    description:
-      'A practical guide to resetting your sleep patterns and maximizing rest, even with a newborn or during pregnancy.',
-    cover: SLEEP_COVER,
-    fallbackIcon: <Moon className="w-10 h-10" />,
-    pdf: '#',
-    cta: 'Download Guide',
-    priceCents: 1500,
-    pointsCost: 1500,
-    demand: 'MEDIUM',
-    category: 'Sleep',
-  },
-  {
-    slug: 'emotional-load-workbook',
-    title: 'Emotional Load Workbook',
-    tagline: 'Process and Release the Invisible Mental Load',
-    description:
-      'A guided workbook to help you identify, process, and lighten the invisible emotional and mental load of motherhood.',
-    cover: EMOTIONAL_COVER,
-    fallbackIcon: <HeartHandshake className="w-10 h-10" />,
-    pdf: '#',
-    cta: 'Download Workbook',
-    priceCents: 1000,
-    pointsCost: 1000,
-    demand: 'MEDIUM',
-    category: 'Mindfulness',
-  },
-];
-
-const ProductCoverArt = ({
-  slug,
-  fallbackIcon,
-}: {
-  slug: string;
-  fallbackIcon?: React.ReactNode;
-}) => {
-  switch (slug) {
-    case 'momodoro-planner':
-      return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-catalyst-tan via-catalyst-gold to-catalyst-brown overflow-hidden">
-          <div className="absolute inset-3 border border-white/30 rounded-sm" />
-          <Clock className="w-9 h-9 text-white/90 mb-3" strokeWidth={1.5} />
-          <p className="font-serif text-lg tracking-[0.12em] text-white leading-snug">
-            THE MOMODORO
-            <br />
-            PLANNER
-          </p>
-          <p className="mt-2 text-[10px] tracking-[0.18em] text-white/80 uppercase">
-            15-Minute Focus Sessions
-          </p>
-        </div>
-      );
-    case 'busy-mom-self-care':
-      return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-catalyst-sage via-catalyst-peach to-catalyst-beige overflow-hidden">
-          <div className="absolute -top-8 -left-8 w-32 h-32 rounded-full bg-white/40 blur-2xl" />
-          <div className="absolute bottom-0 right-0 w-36 h-36 rounded-full bg-catalyst-copper/20 blur-2xl" />
-          <HeartHandshake className="relative w-9 h-9 text-catalyst-brown mb-3" strokeWidth={1.5} />
-          <p className="relative font-semibold text-base text-catalyst-brown leading-snug">
-            The Busy Mom's
-            <br />
-            Self-Care System
-          </p>
-          <p className="relative mt-1.5 text-[10px] tracking-wide text-catalyst-brown/70 uppercase">
-            A Practical Guide to Thriving
-          </p>
-        </div>
-      );
-    case 'sleep-reset-guide':
-      return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-gradient-to-b from-slate-900 via-slate-800 to-catalyst-brown overflow-hidden">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <span
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-white/70"
-              style={{ top: `${(i * 37) % 90}%`, left: `${(i * 53) % 95}%` }}
-            />
-          ))}
-          <Moon className="relative w-10 h-10 text-catalyst-gold mb-3" strokeWidth={1.5} />
-          <p className="relative font-semibold text-base text-white leading-snug">
-            Sleep Reset Guide
-          </p>
-          <p className="relative mt-1.5 text-[10px] tracking-wide text-white/70 uppercase">
-            Find Rest &amp; Restore Balance
-          </p>
-        </div>
-      );
-    case 'emotional-load-workbook':
-      return (
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 bg-catalyst-cream overflow-hidden">
-          <div className="absolute top-5 left-5 w-16 h-16 rounded-full bg-catalyst-copper/80" />
-          <div className="absolute bottom-8 right-6 w-20 h-20 rounded-full border-8 border-catalyst-brown/60" />
-          <div className="absolute -bottom-5 left-8 w-12 h-12 rounded-full bg-catalyst-gold/70" />
-          <HeartHandshake className="relative z-10 w-9 h-9 text-catalyst-brown mb-3" strokeWidth={1.5} />
-          <p className="relative z-10 font-semibold text-base text-catalyst-brown leading-snug">
-            Emotional Load
-            <br />
-            Workbook
-          </p>
-        </div>
-      );
-    default:
-      return (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-catalyst-copper/30 to-catalyst-brown/60 text-white">
-          {fallbackIcon}
-        </div>
-      );
-  }
-};
-
-// Renders the real cover image when available; if the image fails to
-// load (e.g. a temporary URL expired), it gracefully falls back to the
-// branded ProductCoverArt so the card is never blank.
-const CoverImage = ({
-  src,
-  alt,
-  slug,
-  fallbackIcon,
-}: {
-  src?: string;
-  alt: string;
-  slug: string;
-  fallbackIcon?: React.ReactNode;
-}) => {
-  const [errored, setErrored] = useState(false);
-
-  if (src && !errored) {
-    return (
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        onError={() => setErrored(true)}
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-      />
-    );
-  }
-
-  return <ProductCoverArt slug={slug} fallbackIcon={fallbackIcon} />;
-};
+const CATEGORIES = [...PRODUCT_CATEGORIES];
+const PRODUCTS = DIGITAL_PRODUCTS;
+type Product = DigitalProduct;
 
 type PaymentMethod = 'points' | 'stripe';
 
@@ -636,6 +438,7 @@ const WellnessResources = () => {
   const [points, setPoints] = useState(0);
   const [modalProduct, setModalProduct] = useState<Product | null>(null);
   const [activeCategory, setActiveCategory] = useState('All Resources');
+  const [highlighted, setHighlighted] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     if (!user) {
@@ -688,8 +491,35 @@ const WellnessResources = () => {
     })();
   }, [user, refresh]);
 
+  // Deep links from the wellness funnel: /wellness/resources?product=slug
+  // (and optional ?category=). We open the tab that holds the guide, scroll to
+  // it, and give it a brief ring so a mother lands exactly on what she tapped.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get('category');
+    const slug = params.get('product');
+    if (category && CATEGORIES.includes(category)) setActiveCategory(category);
+    if (!slug) return;
+    setActiveCategory('All Resources');
+    setHighlighted(slug);
+    const raf = requestAnimationFrame(() => {
+      document
+        .getElementById(`product-${slug}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    const timer = window.setTimeout(() => setHighlighted(null), 2800);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  // Only a finished, purchasable guide can headline the page.
   const featured = useMemo(
-    () => PRODUCTS.find((p) => p.demand === 'HIGH') ?? PRODUCTS[0],
+    () =>
+      PRODUCTS.find((p) => isAvailable(p) && p.demand === 'HIGH') ??
+      PRODUCTS.find(isAvailable) ??
+      PRODUCTS[0],
     [],
   );
 
@@ -790,13 +620,20 @@ const WellnessResources = () => {
           {/* Featured */}
           {featured && (
             <section className="mb-8">
-              <div className="relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden shadow-soft group cursor-pointer">
+              <div
+                id={`product-${featured.slug}`}
+                className={`relative w-full h-[320px] md:h-[380px] rounded-xl overflow-hidden shadow-soft group cursor-pointer transition-all ${
+                  highlighted === featured.slug
+                    ? 'ring-2 ring-catalyst-copper ring-offset-2 ring-offset-background'
+                    : ''
+                }`}
+              >
                 <div className="absolute inset-0 transition-transform duration-1000 group-hover:scale-105">
                   <CoverImage
                     src={featured.cover}
                     alt={featured.title}
                     slug={featured.slug}
-                    fallbackIcon={featured.fallbackIcon}
+                    title={featured.title}
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
@@ -826,11 +663,17 @@ const WellnessResources = () => {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {filteredProducts.map((p) => {
                 const isOwned = owned.has(p.slug);
+                const available = isAvailable(p);
 
                 return (
                   <Card
                     key={p.slug}
-                    className="group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 rounded-xl"
+                    id={`product-${p.slug}`}
+                    className={`group overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 rounded-xl ${
+                      highlighted === p.slug
+                        ? 'ring-2 ring-catalyst-copper ring-offset-2 ring-offset-background'
+                        : ''
+                    }`}
                   >
                     <div className="relative h-60 overflow-hidden">
                       <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
@@ -838,7 +681,7 @@ const WellnessResources = () => {
                           src={p.cover}
                           alt={`${p.title} cover`}
                           slug={p.slug}
-                          fallbackIcon={p.fallbackIcon}
+                          title={p.title}
                         />
                       </div>
                       {/* dark gradient for legibility */}
@@ -850,9 +693,13 @@ const WellnessResources = () => {
                           <div className="bg-emerald-500 text-white rounded-full p-1 shadow">
                             <CheckCircle2 className="w-3.5 h-3.5" />
                           </div>
-                        ) : (
+                        ) : available ? (
                           <Badge className="bg-black/40 text-white border-0 backdrop-blur-sm text-[10px] gap-0.5 px-2 py-0.5">
                             <Flame className="w-2.5 h-2.5" /> {p.demand}
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-catalyst-copper/90 text-white border-0 backdrop-blur-sm text-[10px] gap-1 px-2 py-0.5 uppercase tracking-wide">
+                            <Clock3 className="w-2.5 h-2.5" /> Coming Soon
                           </Badge>
                         )}
                       </div>
@@ -865,14 +712,20 @@ const WellnessResources = () => {
                         <p className="text-[11px] text-white/75 line-clamp-2 leading-relaxed">
                           {p.description}
                         </p>
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="text-white font-bold text-sm drop-shadow">
-                            ${(p.priceCents / 100).toFixed(2)}
-                          </span>
-                          <span className="text-white/65 text-[11px]">
-                            or {p.pointsCost.toLocaleString()} pts
-                          </span>
-                        </div>
+                        {available ? (
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-white font-bold text-sm drop-shadow">
+                              ${(p.priceCents / 100).toFixed(2)}
+                            </span>
+                            <span className="text-white/65 text-[11px]">
+                              or {p.pointsCost.toLocaleString()} pts
+                            </span>
+                          </div>
+                        ) : (
+                          <p className="text-[11px] text-white/70">
+                            In the studio now — members get first access.
+                          </p>
+                        )}
                         {isOwned ? (
                           <Button
                             asChild
@@ -889,13 +742,22 @@ const WellnessResources = () => {
                               {p.cta}
                             </a>
                           </Button>
-                        ) : (
+                        ) : available ? (
                           <Button
                             size="sm"
                             className="w-full bg-white text-foreground hover:bg-white/90 h-8 text-xs font-semibold"
                             onClick={() => setModalProduct(p)}
                           >
                             {renderUnlockButton(p)}
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            disabled
+                            className="w-full bg-white/85 text-foreground/70 h-8 text-xs font-semibold cursor-not-allowed"
+                          >
+                            <Clock3 className="w-3.5 h-3.5 mr-1.5" />
+                            Coming Soon
                           </Button>
                         )}
                       </div>
