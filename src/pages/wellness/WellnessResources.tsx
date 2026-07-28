@@ -588,19 +588,6 @@ const WellnessResources = () => {
                 {points.toLocaleString()} points available
               </Badge>
             </div>
-            {/* Richer brand emblem — a solid copper mark with presence,
-                not a faint outline. */}
-            <div className="hidden md:flex shrink-0 items-center justify-center">
-              <div className="relative h-24 w-24">
-                <div className="absolute inset-0 rounded-full bg-catalyst-copper/10" />
-                <div className="absolute inset-3 rounded-full bg-gradient-to-br from-catalyst-gold/30 to-catalyst-copper/25" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-catalyst-copper to-catalyst-brown shadow-sm">
-                    <Sparkles className="h-6 w-6 text-white" strokeWidth={1.75} />
-                  </div>
-                </div>
-              </div>
-            </div>
           </section>
 
           {/* Category filter */}

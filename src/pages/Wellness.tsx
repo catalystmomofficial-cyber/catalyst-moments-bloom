@@ -485,15 +485,8 @@ const WellnessResourceCard = ({ product }: { product: DigitalProduct }) => {
 
           <p className="mb-4 text-sm text-muted-foreground">{product.hook}</p>
 
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">
-              {available
-                ? `$${(product.priceCents / 100).toFixed(2)} · or ${product.pointsCost.toLocaleString()} pts`
-                : 'Members get first access'}
-            </span>
-            <span className="text-sm font-medium text-primary">
-              {available ? 'Unlock →' : 'Preview →'}
-            </span>
+          <div className="flex items-center justify-end">
+            <span className="text-sm font-medium text-primary">View guide →</span>
           </div>
         </CardContent>
       </Link>
