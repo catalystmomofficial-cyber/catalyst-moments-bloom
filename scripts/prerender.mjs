@@ -43,7 +43,13 @@ const DIST_DIR = path.resolve(process.cwd(), 'dist');
 
 async function fetchBlogSlugs() {
   const url = process.env.VITE_SUPABASE_URL || 'https://moxxceccaftkeuaowctw.supabase.co';
-  const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  // Public anon key — the same one committed in src/integrations/supabase/client.ts
+  // and already shipped in the browser bundle. Hardcoded as a fallback so blog
+  // prerendering never silently skips when the build has no .env, which is the
+  // normal case for a GitHub-based build (.env is gitignored). This was the root
+  // cause of every post falling back to the homepage's static file.
+  const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY
+    || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1veHhjZWNjYWZ0a2V1YW93Y3R3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY4NTEyOTYsImV4cCI6MjA2MjQyNzI5Nn0.zInlBzKCVwrhKBW-nAc5b7BoxrXmlYF25cuqfippu3U';
   if (!key) { console.warn('No Supabase key — skipping blog prerender'); return []; }
   try {
     const res = await fetch(
