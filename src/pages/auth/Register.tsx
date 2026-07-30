@@ -252,9 +252,7 @@ const Register = () => {
             <CardDescription>
               {signupSuccess
                 ? "One last step to activate your account"
-                : fromAssessment
-                  ? "You're one step from your plan, mama 🤍"
-                  : "You're in the right place, mama"}
+                : "Join the Catalyst Mom community today"}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -305,23 +303,13 @@ const Register = () => {
             ) : (
             <>
             {fromAssessment && (
-              <div className="mb-4 rounded-lg border border-catalyst-copper/30 bg-catalyst-copper/5 p-4 text-sm">
+              <div className="mb-4 rounded-lg border border-catalyst-copper/30 bg-catalyst-copper/5 p-3 text-sm">
                 <p className="font-semibold text-catalyst-copper">
-                  {(() => {
-                    const first = name.trim().split(/\s+/)[0];
-                    const looksLikeName = /^[\p{L}][\p{L}'-]{1,20}$/u.test(first);
-                    return looksLikeName
-                      ? `${first.charAt(0).toUpperCase() + first.slice(1)}, your plan is ready 🤍`
-                      : "Your plan is ready, mama 🤍";
-                  })()}
+                  {name ? `${name.split(" ")[0]}, your` : "Your"} personalised plan is ready 🎉
                 </p>
-                <p className="mt-1.5 text-muted-foreground">
-                  This is the gentle place to start — breathing and recovery you can do
-                  lying down, tonight, before any clearance. Create your account to save
-                  your plan and begin your first 5-minute session.
-                </p>
-                <p className="mt-2 text-xs text-muted-foreground/80">
-                  Members get everything for $29/month, and your first 500 credits are on us.
+                <p className="mt-1 text-muted-foreground">
+                  Create your account to claim your Charter Founder seat ($29/month, locked
+                  for life) and your 🎁 500 welcome credits.
                 </p>
               </div>
             )}
