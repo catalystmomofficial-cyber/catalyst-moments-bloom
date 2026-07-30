@@ -111,23 +111,24 @@ const AssessmentResults = () => {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 70) return 'text-green-600 dark:text-green-400';
-    if (score >= 40) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-orange-600 dark:text-orange-400';
+    if (score >= 70) return 'text-emerald-600 dark:text-emerald-400';
+    // A lower score is a starting point, not an alarm — keep it warm, never red/orange.
+    return 'text-catalyst-copper';
   };
 
   const getTierBadge = (tier: string | null) => {
     if (!tier) return null;
-    
-    const variants: Record<string, any> = {
-      high: 'default',
-      medium: 'secondary',
-      low: 'destructive'
+
+    // Never shame her: no red "LOW". Every tier is just a place on the journey.
+    const labels: Record<string, string> = {
+      high: 'Strong Foundation',
+      medium: 'Building Momentum',
+      low: 'Starting Point',
     };
 
     return (
-      <Badge variant={variants[tier] || 'outline'}>
-        {tier.toUpperCase()}
+      <Badge variant="outline" className="border-catalyst-copper/40 text-catalyst-copper">
+        {labels[tier.toLowerCase()] || 'Your Starting Point'}
       </Badge>
     );
   };
@@ -233,8 +234,8 @@ const AssessmentResults = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-2xl">Overall Wellness Score</CardTitle>
-                <CardDescription>Your comprehensive health assessment</CardDescription>
+                <CardTitle className="text-2xl">Where You Are Today</CardTitle>
+                <CardDescription>A starting point, not a grade — we build from here</CardDescription>
               </div>
               {getTierBadge(assessment.tier)}
             </div>
@@ -246,9 +247,9 @@ const AssessmentResults = () => {
               </div>
               <Progress value={overallScore} className="h-4 mb-4" />
               <p className="text-muted-foreground">
-                {overallScore >= 70 && "Excellent work! You're maintaining great wellness habits."}
-                {overallScore >= 40 && overallScore < 70 && "Good progress! There's room to optimize your wellness journey."}
-                {overallScore < 40 && "This is your starting point. We'll help you improve step by step!"}
+                {overallScore >= 70 && "You're already doing so much right, mama. Let's build on it, together."}
+                {overallScore >= 40 && overallScore < 70 && "You're carrying a lot — and the fact that you're here shows you're trying. This is a strong place to build from."}
+                {overallScore < 40 && "First — thank you for being honest. This is a starting point, not a verdict. We'll take it one gentle step at a time, together."}
               </p>
             </div>
           </CardContent>
