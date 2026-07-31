@@ -1,33 +1,138 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
+import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { generateText, Output } from "npm:ai";
+import { z } from "npm:zod";
+import { createLovableAiGatewayProvider } from "../_shared/ai-gateway.ts";
 
-const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+const ProfileSchema = z.object({
+  journey: z.string().min(1).max(50).default("general"),
+  stage: z.string().min(1).max(100).default("general"),
+  moodScore: z.number().min(0).max(10).default(5),
+  energyLevel: z.number().min(0).max(10).default(5),
+  stressLevel: z.number().min(0).max(10).default(5),
+  sleepHours: z.number().min(0).max(24).default(8),
+  hydrationGlasses: z.number().min(0).max(100).default(0),
+  selfCareCompleted: z.boolean().default(false),
+  recentActivities: z.array(z.string().max(100)).max(20).default([]),
+  preferences: z.array(z.string().max(200)).max(20).default([]),
+}).passthrough();
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const BodySchema = z.object({
+  action: z.enum(["selfcare", "insights"]).optional(),
+  prompt: z.string().max(10_000).optional(),
+  profile: ProfileSchema,
+});
+
+const RecommendationSchema = z.object({
+  id: z.string(),
+  type: z.enum(["nutrition", "exercise", "mindfulness", "self-care", "sleep"]),
+  title: z.string(),
+  description: z.string(),
+  action: z.string(),
+  priority: z.enum(["high", "medium", "low"]),
+  reasoning: z.string(),
+  timeframe: z.string(),
+  category: z.string(),
+  icon: z.string(),
+});
+
+const SelfCareIdeaSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  duration: z.string(),
+  category: z.enum(["breathing", "movement", "mindfulness", "relaxation", "energy"]),
+  instructions: z.array(z.string()),
+  benefits: z.string(),
+  icon: z.string(),
+});
+
+type Profile = z.infer<typeof ProfileSchema>;
+
+const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
+  status,
+  headers: { ...corsHeaders, "Content-Type": "application/json" },
+});
+
+const fallbackRecommendations = (profile: Profile) => ({
+  recommendations: [
+    {
+      id: "fallback-hydration", type: "self-care", title: "Hydration Reset",
+      description: "A small hydration reset can support energy and focus.",
+      action: "Drink one glass of water", priority: profile.hydrationGlasses < 6 ? "high" : "low",
+      reasoning: `You logged ${profile.hydrationGlasses} glasses today.`, timeframe: "Now", category: "Hydration", icon: "💧",
+    },
+    {
+      id: "fallback-breathe", type: "mindfulness", title: "Long-Exhale Breathing",
+      description: "Slow breathing can help your body shift out of a stressed state.",
+      action: "Take five slow breaths", priority: profile.stressLevel > 6 ? "high" : "medium",
+      reasoning: `Your stress level is ${profile.stressLevel}/10.`, timeframe: "2 minutes", category: "Mindfulness", icon: "🫁",
+    },
+    {
+      id: "fallback-movement", type: "exercise", title: "Gentle Movement Break",
+      description: "Brief, comfortable movement can reduce stiffness and support energy.",
+      action: "Try five minutes of stretching", priority: profile.energyLevel < 5 ? "high" : "medium",
+      reasoning: `Your energy level is ${profile.energyLevel}/10.`, timeframe: "5 minutes", category: "Movement", icon: "⚡",
+    },
+    {
+      id: "fallback-rest", type: "sleep", title: "Protect Tonight's Rest",
+      description: "Choose one small step that makes winding down easier tonight.",
+      action: "Set a screen-free wind-down time", priority: profile.sleepHours < 7 ? "high" : "low",
+      reasoning: `You logged ${profile.sleepHours} hours of sleep.`, timeframe: "Tonight", category: "Sleep", icon: "😴",
+    },
+    {
+      id: "fallback-stage", type: "self-care", title: "One Kind Choice",
+      description: `Choose one realistic act of care that fits your ${profile.journey} journey today.`,
+      action: "Schedule a ten-minute pause", priority: "medium",
+      reasoning: "Small, achievable actions are easier to repeat on demanding days.", timeframe: "Today", category: "Self-Care", icon: "♥",
+    },
+  ],
+});
+
+const fallbackSelfCare = {
+  ideas: [
+    { id: "fallback-breathing", title: "Deep Breathing", description: "Five breaths with a longer exhale", duration: "2 min", category: "breathing", instructions: ["Sit comfortably", "Inhale for four counts", "Exhale for six counts", "Repeat five times"], benefits: "Helps your body settle", icon: "🫁" },
+    { id: "fallback-movement", title: "Shoulder Release", description: "Gentle shoulder rolls to release tension", duration: "3 min", category: "movement", instructions: ["Roll shoulders back five times", "Roll shoulders forward five times", "Finish with a gentle neck stretch"], benefits: "Relieves upper-body tension", icon: "🤸‍♀️" },
+    { id: "fallback-mindfulness", title: "Gratitude Moment", description: "Name one thing that supported you today", duration: "2 min", category: "mindfulness", instructions: ["Pause somewhere comfortable", "Notice one helpful moment", "Write it down or say it aloud"], benefits: "Creates a brief positive focus", icon: "🧘‍♀️" },
+  ],
 };
 
-serve(async (req) => {
+const getStatusCode = (error: unknown): number | undefined => {
+  if (!error || typeof error !== "object") return undefined;
+  const value = error as { statusCode?: number; status?: number; cause?: unknown };
+  return value.statusCode ?? value.status ?? getStatusCode(value.cause);
+};
+
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { prompt, profile, action } = await req.json();
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) return json({ error: "Authentication required" }, 401);
 
-    if (!lovableApiKey) {
-      console.error('Lovable API key not found. Available env vars:', Object.keys(Deno.env.toObject()));
-      return new Response(JSON.stringify({ error: 'Lovable API key not configured' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    if (!supabaseUrl || !anonKey) return json({ error: "Service configuration unavailable" }, 500);
 
-    console.log('Lovable API key found, generating recommendations...');
+    const authClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+      auth: { persistSession: false },
+    });
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    if (authError || !user) return json({ error: "Invalid or expired session" }, 401);
+
+    const parsed = BodySchema.safeParse(await req.json());
+    if (!parsed.success) return json({ error: parsed.error.flatten().fieldErrors }, 400);
+    const { profile, action } = parsed.data;
+
+    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
+    if (!lovableApiKey) return json({ ...fallbackRecommendations(profile), degraded: true });
 
     let systemPrompt = '';
     let userPrompt = '';
+    let output;
 
     if (action === 'insights') {
       systemPrompt = `You are a wellness AI coach. Generate 2-3 personalized wellness insights based on the user's profile.`;
@@ -36,6 +141,7 @@ serve(async (req) => {
 Generate 2-3 personalized wellness insights. Each insight should be specific, actionable, and encouraging. Focus on patterns, improvements, or gentle guidance.
 
 Return as JSON: {"insights": ["insight 1", "insight 2", "insight 3"]}`;
+      output = Output.object({ schema: z.object({ insights: z.array(z.string()).min(2).max(3) }) });
     } else if (action === 'selfcare') {
       systemPrompt = `You are a wellness AI coach. Generate personalized self-care ideas for quick wellness boosts.`;
       userPrompt = `Based on this wellness profile: ${JSON.stringify(profile)}
@@ -51,6 +157,7 @@ Generate 3-4 personalized self-care ideas for quick wellness boosts. Each should
 Consider their current mood, energy, stress levels, and journey stage. Focus on activities that can be done anywhere, anytime.
 
 Return as JSON: {"ideas": [array of idea objects with fields: id, title, description, duration, category, instructions, benefits, icon]}`;
+      output = Output.object({ schema: z.object({ ideas: z.array(SelfCareIdeaSchema).min(3).max(4) }) });
     } else {
       systemPrompt = `You are a specialized wellness AI coach for mothers and women on their motherhood journey. 
       Generate personalized, actionable wellness recommendations based on the user's current state and journey stage.
@@ -63,86 +170,34 @@ Return as JSON: {"ideas": [array of idea objects with fields: id, title, descrip
       
       Return a JSON object with a "recommendations" array containing exactly 5 recommendations.
       Each recommendation should have: type, title, description, action, priority, reasoning, timeframe, category, icon.`;
-      userPrompt = prompt;
+      userPrompt = parsed.data.prompt || `Wellness profile: ${JSON.stringify(profile)}`;
+      output = Output.object({ schema: z.object({ recommendations: z.array(RecommendationSchema).length(5) }) });
     }
 
-    // Retry logic with exponential backoff
-    const maxRetries = 3;
-    let lastError;
-    
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      try {
-        if (attempt > 0) {
-          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
-          console.log(`Retry attempt ${attempt} after ${delay}ms delay`);
-          await new Promise(resolve => setTimeout(resolve, delay));
-        }
-
-        const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${lovableApiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'google/gemini-2.5-flash',
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: userPrompt }
-            ],
-            response_format: { type: "json_object" }
-          }),
-        });
-
-        if (!response.ok) {
-          if (response.status === 429) {
-            return new Response(JSON.stringify({ error: 'Rate limits exceeded, please try again later.' }), {
-              status: 429,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            });
-          }
-          if (response.status === 402) {
-            return new Response(JSON.stringify({ error: 'Payment required, please add credits to your Lovable AI workspace.' }), {
-              status: 402,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            });
-          }
-          const errorData = await response.text();
-          console.error('Lovable AI error:', errorData);
-          throw new Error(`Lovable AI error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const content = data.choices[0].message.content;
-        
-        let recommendations;
-        try {
-          recommendations = JSON.parse(content);
-        } catch (parseError) {
-          console.error('Error parsing AI response:', parseError);
-          throw new Error('Invalid JSON response from AI');
-        }
-
-        return new Response(JSON.stringify(recommendations), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      } catch (error) {
-        lastError = error;
-        console.error(`Attempt ${attempt + 1} failed:`, error.message);
-        if (attempt === maxRetries - 1) break;
+    try {
+      const gateway = createLovableAiGatewayProvider(lovableApiKey);
+      const result = await generateText({
+        model: gateway("google/gemini-3.6-flash"),
+        output,
+        system: systemPrompt,
+        prompt: userPrompt,
+      });
+      return json(result.output);
+    } catch (error) {
+      const status = getStatusCode(error);
+      if (status === 402 || status === 429) {
+        const fallback = action === "selfcare"
+          ? fallbackSelfCare
+          : action === "insights"
+            ? { insights: [] }
+            : fallbackRecommendations(profile);
+        return json({ ...fallback, degraded: true, reason: status === 402 ? "credits_unavailable" : "rate_limited" });
       }
+      throw error;
     }
-
-    throw lastError;
-
-  } catch (error) {
-    console.error('Error in generate-wellness-recommendations function:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      recommendations: []
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unable to generate wellness recommendations";
+    console.error('Error in generate-wellness-recommendations function:', message);
+    return json({ error: message }, 500);
   }
 });
