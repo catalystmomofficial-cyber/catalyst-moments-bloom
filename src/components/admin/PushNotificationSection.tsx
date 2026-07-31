@@ -25,7 +25,7 @@ export const PushNotificationSection = () => {
   const [selectedStages, setSelectedStages] = useState<string[]>([]);
   const [userIdsRaw, setUserIdsRaw] = useState('');
   const [sending, setSending] = useState(false);
-  const [lastResult, setLastResult] = useState<{ sent: number; failed: number; total?: number } | null>(null);
+  const [lastResult, setLastResult] = useState<{ sent: number; failed: number; total?: number; errors?: string[] } | null>(null);
 
   const toggleStage = (stage: string) => {
     setSelectedStages((prev) =>
@@ -64,8 +64,19 @@ export const PushNotificationSection = () => {
         body: payload,
       });
       if (error) throw error;
-      setLastResult({ sent: data.sent ?? 0, failed: data.failed ?? 0, total: data.total });
-      toast.success(`Sent to ${data.sent ?? 0} devices`);
+      setLastResult({ sent: data.sent ?? 0, failed: data.failed ?? 0, total: data.total, errors: data.errors });
+      if (data.failed > 0 && data.sent === 0) {
+        // Every send failed - almost always a server-side config problem
+        // (bad/missing FIREBASE_SERVICE_ACCOUNT, project-ID mismatch), not
+        // individually dead tokens. Surface it as an error, not a success.
+        toast.error(
+          data.errors?.[0]
+            ? `All sends failed: ${data.errors[0]}`
+            : 'All sends failed - check the error detail below.'
+        );
+      } else {
+        toast.success(`Sent to ${data.sent ?? 0} devices${data.failed ? ` (${data.failed} failed)` : ''}`);
+      }
     } catch (e: any) {
       console.error(e);
       toast.error(e.message || 'Failed to send');
@@ -222,11 +233,21 @@ export const PushNotificationSection = () => {
           </Button>
 
           {lastResult && (
-            <p className="text-sm text-muted-foreground">
-              Last blast: {lastResult.sent} delivered
-              {typeof lastResult.total === 'number' ? ` / ${lastResult.total} targeted` : ''},{' '}
-              {lastResult.failed} failed.
-            </p>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p>
+                Last blast: {lastResult.sent} delivered
+                {typeof lastResult.total === 'number' ? ` / ${lastResult.total} targeted` : ''},{' '}
+                {lastResult.failed} failed.
+              </p>
+              {lastResult.errors && lastResult.errors.length > 0 && (
+                <div className="rounded-md border border-destructive/30 bg-destructive/5 p-2 text-xs text-destructive space-y-0.5">
+                  <p className="font-medium">Failure reason(s):</p>
+                  {lastResult.errors.map((err, i) => (
+                    <p key={i} className="break-all">{err}</p>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
 
           <div className="pt-4 border-t space-y-2">

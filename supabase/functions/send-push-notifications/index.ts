@@ -175,11 +175,20 @@ const handler = async (req: Request): Promise<Response> => {
 
     const successful = results.filter((r) => r.status === 'fulfilled').length;
     const failed = results.length - successful;
+    // Surface the actual FCM/OAuth error text (e.g. a project-ID mismatch,
+    // an expired key) instead of only logging it server-side where no one
+    // can see it - a bare failure count gives no way to diagnose why sends
+    // are failing.
+    const errors = Array.from(new Set(
+      results
+        .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+        .map((r) => (r.reason instanceof Error ? r.reason.message : String(r.reason)))
+    )).slice(0, 5);
     results.forEach((r) => {
       if (r.status === 'rejected') console.error('FCM send failed:', r.reason);
     });
 
-    return new Response(JSON.stringify({ success: true, sent: successful, failed }), {
+    return new Response(JSON.stringify({ success: true, sent: successful, failed, ...(errors.length ? { errors } : {}) }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {

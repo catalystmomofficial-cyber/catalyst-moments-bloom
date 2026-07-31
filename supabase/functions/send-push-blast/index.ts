@@ -234,7 +234,18 @@ serve(async (req) => {
 
     const sent = results.filter((r) => r.status === 'fulfilled').length;
     const failed = results.length - sent;
-    return new Response(JSON.stringify({ success: true, sent, failed, total: subs.length }), {
+    // Same reasoning as send-push-notifications: surface why sends failed
+    // instead of only logging server-side, so a project-ID mismatch or an
+    // expired key shows up directly in the admin panel.
+    const errors = Array.from(new Set(
+      results
+        .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+        .map((r) => (r.reason instanceof Error ? r.reason.message : String(r.reason)))
+    )).slice(0, 5);
+    results.forEach((r) => {
+      if (r.status === 'rejected') console.error('FCM send failed:', r.reason);
+    });
+    return new Response(JSON.stringify({ success: true, sent, failed, total: subs.length, ...(errors.length ? { errors } : {}) }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
