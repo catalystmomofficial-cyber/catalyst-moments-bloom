@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/assessment",
+      "destination": "https://catalystmom.online",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/rss.xml",

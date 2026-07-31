@@ -69,8 +69,10 @@ SEO REQUIREMENTS:
 - Minimum 1200 words of body content.
 - ONE <h1> with primary keyword. <h2>/<h3> for structure.
 - Meta title <60 chars, meta description <160 chars.
-- Include link <a href="https://catalystmomofficial.com/assessment">personalized postpartum assessment</a> in the body.
-- End with CTA paragraph linking to https://catalystmomofficial.com/assessment.
+- The real assessment/lead-magnet lives at catalystmom.online (a separate site), NOT at catalystmomofficial.com/assessment (that page does not exist - never link there).
+- Pick the assessment URL that matches this post's own "category" value: https://catalystmom.online/postpartum-assessment for Postpartum Recovery/Fourth Trimester/Breastfeeding/Self-Care, https://catalystmom.online/pregnancy-assessment for Pregnancy, https://catalystmom.online/ttc-assessment for TTC, or plain https://catalystmom.online if the post spans multiple stages.
+- Include one contextual link to that matched assessment URL in the body (natural anchor text, not "personalized postpartum assessment" verbatim - match the post's actual stage).
+- End with a CTA paragraph linking to that same matched assessment URL.
 - Author always "Catalyst Mom Team".
 - FAQ section at the bottom with 5 real questions.
 
