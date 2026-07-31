@@ -112,6 +112,7 @@ const HTML = `
       <h2 class="section-heading">4. Sensitive Health Information</h2>
       <p>Catalyst Mom is a wellness platform. Some information you share with us — such as postpartum symptoms, cycle data, pregnancy details, and physical measurements — is sensitive in nature.</p>
       <p>We treat all health-related information with the highest level of care. We do not sell this information. We do not share it with third parties for advertising purposes. We use it solely to personalise your experience on the Platform.</p>
+      <p>If you choose to upload a document — such as bloodwork or lab results — so we can automatically fill in your results, that document is sent securely to our AI processing partner (see Section 5.1) solely to extract the values into your dashboard. The document itself is not stored by Catalyst Mom once processing is complete, and it is never sold or used for advertising, marketing, or any purpose other than filling in your results.</p>
       <p>Catalyst Mom provides wellness information for educational purposes only and is not a substitute for professional medical advice.</p>
     </section>
 
@@ -125,6 +126,7 @@ const HTML = `
         <li><span><strong>Stripe</strong> — payment processing</span></li>
         <li><span><strong>Omnisend / Resend</strong> — email communication</span></li>
         <li><span><strong>Firebase</strong> — push notifications</span></li>
+        <li><span><strong>Lovable AI Gateway</strong> — used only when you choose to upload a document, such as bloodwork or lab results, to automatically extract values into your dashboard; the document itself is not retained after processing</span></li>
       </ul>
       <p>All service providers are contractually required to protect your data and use it only for the purposes we specify.</p>
       <h3 class="sub-heading">5.2 Community Content</h3>
