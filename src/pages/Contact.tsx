@@ -2,8 +2,9 @@ import PageLayout from "@/components/layout/PageLayout";
 import SEO from "@/components/seo/SEO";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Instagram, Facebook, HelpCircle } from "lucide-react";
+import { Mail, Instagram, Facebook, HelpCircle, Handshake } from "lucide-react";
 
+const PARTNERSHIP_EMAIL = "hello@catalystmomofficial.com";
 const SUPPORT_EMAIL = "admin@catalystmom.online";
 
 const Contact = () => {
@@ -18,7 +19,7 @@ const Contact = () => {
       "@type": "Organization",
       name: "Catalyst Mom",
       url: "https://catalystmomofficial.com",
-      email: SUPPORT_EMAIL,
+      email: PARTNERSHIP_EMAIL,
       sameAs: [
         "https://www.instagram.com/catalyst_mom/",
         "https://www.pinterest.com/catalystmoms/",
@@ -38,22 +39,41 @@ const Contact = () => {
         <div className="max-w-2xl mx-auto">
           <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
           <p className="text-muted-foreground mb-8">
-            We're a small team that genuinely reads every message. Whether you
-            need help with your account, have a question about a program, or want
-            to partner with us, here's how to reach the right place. We typically
-            reply within 1–2 business days.
+            Built from love, for moms. Whether you're navigating your recovery, a
+            brand looking to partner, or a journalist wanting to share our
+            mission—every message is read by a real person on our team.
           </p>
 
           <div className="space-y-4">
             <Card>
               <CardContent className="flex items-start gap-4 pt-6">
                 <div className="rounded-full bg-primary/10 p-3">
+                  <Handshake className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-semibold">Partnerships &amp; Founder Inquiries</h2>
+                  <p className="text-sm text-muted-foreground mb-1">
+                    Press, guest content, coaching applications, or collaboration.
+                  </p>
+                  <a
+                    href={`mailto:${PARTNERSHIP_EMAIL}`}
+                    className="text-primary hover:underline break-all"
+                  >
+                    {PARTNERSHIP_EMAIL}
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="flex items-start gap-4 pt-6">
+                <div className="rounded-full bg-primary/10 p-3">
                   <Mail className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h2 className="font-semibold">Email support</h2>
+                  <h2 className="font-semibold">App &amp; Account Support</h2>
                   <p className="text-sm text-muted-foreground mb-1">
-                    Account help, billing, programs, or anything else.
+                    Billing, technical help, or program access.
                   </p>
                   <a
                     href={`mailto:${SUPPORT_EMAIL}`}
@@ -73,8 +93,8 @@ const Contact = () => {
                 <div>
                   <h2 className="font-semibold">Check the FAQ first</h2>
                   <p className="text-sm text-muted-foreground mb-1">
-                    Many questions about programs, subscriptions, and refunds are
-                    answered instantly.
+                    Answers to common questions about subscriptions, refunds, and
+                    getting started are available instantly.
                   </p>
                   <Link to="/faq" className="text-primary hover:underline">
                     Visit our FAQ
@@ -91,7 +111,7 @@ const Contact = () => {
                 <div>
                   <h2 className="font-semibold">Find us on social</h2>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Daily tips and community on your favorite platform.
+                    Daily tips, clinical insights, and community.
                   </p>
                   <div className="flex flex-wrap gap-4 text-sm">
                     <a
@@ -125,12 +145,13 @@ const Contact = () => {
           </div>
 
           <p className="text-sm text-muted-foreground mt-8">
-            Please note: Catalyst Mom provides educational content and support,
-            not medical care. For anything health-related, see our{" "}
+            Please note: Catalyst Mom provides educational content and
+            expert-guided wellness support, not medical care. For
+            health-related decisions, please consult your healthcare
+            provider. See our full{" "}
             <Link to="/medical-disclaimer" className="text-primary hover:underline">
               medical disclaimer
-            </Link>{" "}
-            and consult your healthcare provider.
+            </Link>.
           </p>
         </div>
       </div>
