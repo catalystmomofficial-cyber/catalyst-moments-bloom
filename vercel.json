@@ -1,6 +1,12 @@
 {
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.catalystmomofficial.com" }],
+      "destination": "https://catalystmomofficial.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/assessment",
       "destination": "https://catalystmom.online",
       "permanent": true
