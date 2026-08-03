@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { isServiceRoleRequest, getUser, isAdmin, forbidden } from "../_shared/auth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -89,6 +90,42 @@ serve(async (req) => {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    // ---- Authorization (never trust the request to decide this) ------------
+    // This function had NO caller check: an anonymous POST of {type:'welcome'}
+    // pushed a notification to every user holding an FCM token, and an
+    // explicit user_ids array let specific users be targeted. It then calls
+    // send-push-blast with the SERVICE_ROLE key, so an unauthenticated caller
+    // effectively inherited service-role reach through it.
+    //
+    // Legitimate callers:
+    //   1. The pg_cron jobs, using the service-role key -> full access
+    //   2. An authenticated admin -> full access
+    //   3. An authenticated user notifying ONLY themselves — this is the
+    //      onboarding/profile "welcome push", which posts user_ids:[own id].
+    const serviceRole = isServiceRoleRequest(req);
+    let callerId: string | null = null;
+    let admin = false;
+
+    if (!serviceRole) {
+      const user = await getUser(req);
+      if (!user) return forbidden(corsHeaders, 401, 'Unauthorized');
+      callerId = user.id;
+      admin = await isAdmin(user.id);
+    }
+
+    if (!serviceRole && !admin) {
+      // A plain user may only target themselves, and only explicitly. Without
+      // user_ids the function fans out to the whole subscriber list, so an
+      // absent list is a broadcast attempt and must be refused.
+      const onlySelf =
+        Array.isArray(user_ids) &&
+        user_ids.length > 0 &&
+        user_ids.every((id) => id === callerId);
+      if (!onlySelf) {
+        return forbidden(corsHeaders, 403, 'Not authorized to notify other users');
+      }
     }
 
     const copy = COPY[type];
