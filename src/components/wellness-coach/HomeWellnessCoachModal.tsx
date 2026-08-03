@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { detectIntent, logCoachGap } from "@/components/wellness-coach/WellnessCoachIntelligence";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import coachPortrait from '@/assets/wellness-coach-portrait.jpg';
@@ -213,6 +214,11 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
     addUserMessage(userMsg);
     setInputMessage('');
     setIsLoading(true);
+
+    // Log the intent so it surfaces in the admin Coach Insights panel. This is
+    // the home/pre-signup entry point, so it captures demand from visitors who
+    // never reach the in-app coach.
+    void logCoachGap(userMsg, detectIntent(userMsg).intent, null, user?.id);
 
     try {
       // Call AI edge function with conversation history

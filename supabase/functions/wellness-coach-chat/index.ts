@@ -217,6 +217,46 @@ Use check-in data to provide targeted advice:
 - Connect their measurements to their wellness goals`;
     }
     
+    // ── What the app actually contains ─────────────────────────────────────
+    // Without this the coach can describe wellness concepts but cannot tell a
+    // user where anything lives or how a feature works, so it falls back to
+    // vague generalities. Keep this in sync when sections are added/renamed.
+    const appKnowledge = `
+
+WHAT EXISTS IN THE CATALYST MOM APP (use this to answer "where do I find…",
+"how does X work", "what do you have for…"). Name the section and tell her how
+to get there. Never invent a feature that is not on this list.
+
+- Dashboard - her home base: current stage, streaks, points, next actions.
+- Workouts - stage-specific programs. Includes Core Restore Foundations (the
+  4-week deep-core / diastasis recti rehab: Foundation, Secure, Stability,
+  Integration) and the 30-Day Glow Up challenge. Members only.
+- Meal Plan - 7-day mom-friendly meal plans honoring dietary preferences,
+  with per-recipe nutrition. Members only.
+- Wellness - self-care tracker, sleep tracker, mood/stress check-ins, and
+  personalized recommendations.
+- Wellness Resources - the paid digital guide library (Momodoro Planner,
+  Busy Mom's Self-Care & Stress Relief System, Sleep Reset Guide, Emotional
+  Load Workbook, and more). Bought with money or redeemed with points.
+- Community - groups, discussion feed, and EVENTS (live workshops and
+  sessions with specialists; see the events list below). Also the Birth Ball
+  community.
+- Birth Ball Guide - free public guide: trimester-by-trimester exercises,
+  buying guide, safety, FAQ, and a weekly challenge tracker.
+- TTC tools - cycle tracking (period, ovulation, fertile window), daily
+  check-ins, bloodwork logging (she can upload a lab PDF and it auto-fills
+  hormone values), and a TTC pattern report.
+- Progress - measurements, progress photos, and milestone check-ins.
+- Free Guides / Blog - public articles on postpartum recovery, pregnancy,
+  TTC, sleep, and nutrition.
+- Points - earned through streaks, check-ins, and challenges; redeemable for
+  digital guides and some events.
+
+MEMBERSHIP: $29/month unlocks workouts, meal plans, wellness tools, and
+community. There is a 30-day fair-try guarantee - give it a genuine try and
+if it is not right, email for a refund. Do not invent other pricing, tiers,
+trials, or discounts.`;
+
     // ── Upcoming community events ──────────────────────────────────────────
     // The coach used to invent generic workshops ("a Fertility-Boosting
     // Nutrition workshop would be beneficial") because it had no idea what
@@ -249,9 +289,11 @@ ${shown
     const when = e.event_date
       ? new Date(e.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       : 'date TBA';
-    const host = e.specialist_name
+    // Speakers are often not confirmed yet - say "Guest Expert TBA" rather
+    // than naming someone who has not actually been booked.
+    const host = e.specialist_name?.trim()
       ? ` - hosted by ${e.specialist_name}${e.specialist_title ? `, ${e.specialist_title}` : ''}`
-      : '';
+      : ' - hosted by Guest Expert TBA';
     const cost = e.is_free_for_members
       ? ' (free for members)'
       : e.points_cost
@@ -333,7 +375,7 @@ TTC COACHING RULES:
     }
 
     // Build comprehensive system prompt focused on the four pillars and conversion
-    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}${ttcContext}${eventsContext}
+    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}${ttcContext}${appKnowledge}${eventsContext}
 
 ## CATALYST MOM CORE OFFERING
 The four pillars of our platform:
