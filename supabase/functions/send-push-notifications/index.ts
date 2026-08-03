@@ -95,6 +95,52 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
+    // ---- Authorization (never trust the request to decide this) ------------
+    // This endpoint previously had NO caller authentication: anyone who knew
+    // the URL could push arbitrary notifications to any user_id, which is a
+    // phishing vector against our own users. Mirrors send-push-blast.
+    // Legitimate callers:
+    //   1. Internal/cron functions using the service-role key -> full access
+    //   2. An authenticated admin -> full access
+    //   3. An authenticated user notifying ONLY themselves
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+    const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const ANON = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const jsonResp = (status: number, payload: unknown) =>
+      new Response(JSON.stringify(payload), {
+        status,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+
+    const authHeader = req.headers.get('Authorization') || '';
+    const bearer = authHeader.replace(/^Bearer\s+/i, '');
+    const isServiceRole = bearer.length > 0 && bearer === SERVICE_ROLE;
+
+    let isAdmin = false;
+    let callerId: string | null = null;
+    if (!isServiceRole) {
+      if (!authHeader) return jsonResp(401, { error: 'Unauthorized' });
+      const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        headers: { apikey: ANON, Authorization: authHeader },
+      });
+      if (!userRes.ok) return jsonResp(401, { error: 'Invalid token' });
+      const u = await userRes.json();
+      callerId = u.id;
+      const adminRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/admin_roles?user_id=eq.${u.id}&role=eq.admin&select=role`,
+        { headers: { apikey: ANON, Authorization: `Bearer ${SERVICE_ROLE}` } },
+      );
+      const adminRows = await adminRes.json();
+      isAdmin = Array.isArray(adminRows) && adminRows.length > 0;
+    }
+
+    if (!isServiceRole && !isAdmin) {
+      const onlySelf = user_ids.every((id: string) => id === callerId);
+      if (!onlySelf) {
+        return jsonResp(403, { error: 'Not authorized to send to other users' });
+      }
+    }
+
     console.log('Sending FCM to users:', user_ids);
 
     const subsRes = await fetch(
