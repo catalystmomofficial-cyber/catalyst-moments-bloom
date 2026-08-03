@@ -1607,8 +1607,10 @@ export type Database = {
           endpoint: string | null
           fcm_token: string | null
           id: string
+          last_seen_at: string | null
           p256dh_key: string | null
           updated_at: string
+          user_agent: string | null
           user_id: string
         }
         Insert: {
@@ -1617,8 +1619,10 @@ export type Database = {
           endpoint?: string | null
           fcm_token?: string | null
           id?: string
+          last_seen_at?: string | null
           p256dh_key?: string | null
           updated_at?: string
+          user_agent?: string | null
           user_id: string
         }
         Update: {
@@ -1627,8 +1631,10 @@ export type Database = {
           endpoint?: string | null
           fcm_token?: string | null
           id?: string
+          last_seen_at?: string | null
           p256dh_key?: string | null
           updated_at?: string
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: []

@@ -24,12 +24,23 @@ export function usePushNotifications() {
     if (!user || !isSupported || Notification.permission !== 'granted') return;
     (async () => {
       try {
-        const { data } = await supabase
+        // A user can now have several devices, so maybeSingle() would throw
+        // the moment a second one registers. What matters for THIS toggle is
+        // whether this device is registered, not whether any device is.
+        const thisDevice = (() => {
+          try { return localStorage.getItem('cm_fcm_token'); } catch { return null; }
+        })();
+
+        const query = supabase
           .from('push_subscriptions')
           .select('fcm_token')
-          .eq('user_id', user.id)
-          .maybeSingle();
-        setIsSubscribed(!!data?.fcm_token);
+          .eq('user_id', user.id);
+
+        const { data } = thisDevice
+          ? await query.eq('fcm_token', thisDevice).limit(1)
+          : await query.limit(1);
+
+        setIsSubscribed(!!data?.[0]?.fcm_token);
       } catch {
         setIsSubscribed(false);
       }
@@ -91,6 +102,12 @@ export function usePushNotifications() {
       });
       if (!token) throw new Error('Failed to obtain FCM token');
 
+      // Conflict on fcm_token, NOT user_id. A token identifies a DEVICE; a
+      // user is a person who owns several. Upserting on user_id made this
+      // one-row-per-user, so opting in on a laptop overwrote the phone's
+      // token and the phone silently stopped receiving — while sends still
+      // reported success, because a valid token existed. It just was not the
+      // device she was looking at.
       const { error } = await supabase
         .from('push_subscriptions')
         .upsert(
@@ -100,10 +117,16 @@ export function usePushNotifications() {
             endpoint: `fcm:${token}`,
             auth_key: 'fcm',
             p256dh_key: 'fcm',
+            user_agent: typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 300) : null,
+            last_seen_at: new Date().toISOString(),
           },
-          { onConflict: 'user_id' }
+          { onConflict: 'fcm_token' }
         );
       if (error) throw error;
+
+      // Remember which token belongs to THIS device, so turning notifications
+      // off here does not also unregister her other devices.
+      try { localStorage.setItem('cm_fcm_token', token); } catch {}
 
       setIsSubscribed(true);
       return true;
@@ -118,7 +141,22 @@ export function usePushNotifications() {
   const unsubscribe = useCallback(async () => {
     if (!user) return;
     try {
-      await supabase.from('push_subscriptions').delete().eq('user_id', user.id);
+      // Remove only this device. Deleting every row for the user meant
+      // switching notifications off on a laptop also killed them on her
+      // phone, with no indication that had happened.
+      const thisDevice = (() => {
+        try { return localStorage.getItem('cm_fcm_token'); } catch { return null; }
+      })();
+
+      if (thisDevice) {
+        await supabase.from('push_subscriptions').delete().eq('fcm_token', thisDevice);
+        try { localStorage.removeItem('cm_fcm_token'); } catch {}
+      } else {
+        // No local record of this device's token (subscribed before this
+        // change, or storage cleared). Falling back to clearing the account
+        // is the only way to honour "turn it off" here.
+        await supabase.from('push_subscriptions').delete().eq('user_id', user.id);
+      }
       setIsSubscribed(false);
     } catch (err) {
       console.error('Unsubscribe failed:', err);
