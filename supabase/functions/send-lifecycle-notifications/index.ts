@@ -10,8 +10,14 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const ANON = Deno.env.get('SUPABASE_ANON_KEY')!;
 
-type LifecycleType = 'welcome' | 'daily_workout' | 'meal_reminder' | 'inactivity';
+type LifecycleType =
+  | 'welcome' | 'daily_workout' | 'meal_reminder' | 'inactivity'
+  | 'milestone_ready' | 'achievement';
 type Stage = 'ttc' | 'pregnancy' | 'postpartum' | 'none';
+
+// Types whose message is built per user from their own data rather than
+// picked from the COPY table. They skip the stage-variant lookup entirely.
+const DYNAMIC_TYPES = new Set<LifecycleType>(['milestone_ready', 'achievement']);
 
 // Users span US, Canada, UK, Australia and Asia. There is no UTC hour that is
 // morning for all of them, so every scheduled type names the LOCAL hour it
@@ -25,6 +31,12 @@ const SLOT: Record<Exclude<LifecycleType, 'welcome'>, {
   daily_workout: { localHour: 9,  usePreferredTime: true, prefField: 'daily_reminders_enabled' },
   meal_reminder: { localHour: 17, prefField: 'daily_reminders_enabled' },
   inactivity:    { localHour: 19, prefField: 'daily_reminders_enabled' },
+  // Late morning: she is awake, and the Calendly page is something you sit
+  // down with rather than glance at.
+  milestone_ready: { localHour: 10, prefField: 'event_reminders_enabled' },
+  // Earning a badge should land while the win is still warm, so this one runs
+  // at every hour that is not the middle of the night.
+  achievement:     { localHour: -1, prefField: 'achievement_alerts_enabled' },
 };
 
 // ── Time -------------------------------------------------------------------
@@ -113,7 +125,43 @@ const COPY: Record<LifecycleType, Partial<Record<Stage, Copy[]>> & { none: Copy[
     pregnancy: [{ title: 'How are you feeling this week?', body: 'Log where you are. It only takes a minute.', url: '/dashboard' }],
     postpartum: [{ title: 'No guilt, just a check-in', body: 'Some weeks survival is the win. Come back when ready.', url: '/dashboard' }],
   },
+  // Built per user in selectDynamic(); these are only a safety net.
+  milestone_ready: { none: [{ title: 'Your check-in is ready to book', body: 'Two weeks in. Grab a slot with your expert.', url: '/progress' }] },
+  achievement:     { none: [{ title: 'You earned a badge', body: 'Nice work, mama.', url: '/progress' }] },
 };
+
+// The Progress page tells her "your 2-week check-in is ready" and some users
+// never scroll far enough to see it. This mirrors that message, worded for a
+// lock screen, and escalates once if she has not booked the next day.
+function milestoneCopy(p: ProfileRow, day: 1 | 2): Copy {
+  const first = (p.display_name ?? '').trim().split(/\s+/)[0];
+  const who = first && first.length <= 20 ? first : 'mama';
+  const stage = (p.motherhood_stage ?? 'none') as Stage;
+  const what = stage === 'ttc' ? 'fertility momentum'
+    : stage === 'pregnancy' ? 'pregnancy momentum'
+    : stage === 'postpartum' ? 'recovery momentum'
+    : 'momentum';
+
+  return day === 1
+    ? { title: `${who}, your 2-week check-in is unlocked`,
+        body: `Two weeks of ${what}. Book your 1-on-1 and shape what comes next.`,
+        url: '/progress' }
+    : { title: 'Your check-in slot is still open',
+        body: 'Day two. It takes a minute to book, and the spot is yours.',
+        url: '/progress' };
+}
+
+// One-time congratulation using the badge's own title, so it reads as the app
+// noticing her specifically rather than a generic "achievement unlocked".
+function achievementCopy(p: ProfileRow, a: AchievementRow): Copy {
+  const first = (p.display_name ?? '').trim().split(/\s+/)[0];
+  const who = first && first.length <= 20 ? `${first}, ` : '';
+  return {
+    title: `${who}you earned "${a.title}"`,
+    body: a.description?.slice(0, 120) || 'Badge unlocked. Go take a look.',
+    url: '/progress',
+  };
+}
 
 /**
  * Swap in her own words where we have them. She told us her concern in the
@@ -146,8 +194,17 @@ interface ProfileRow {
   motherhood_stage: string | null;
   timezone: string | null;
   last_active_at: string | null;
+  created_at: string | null;
   assessment_concern: string | null;
   assessment_data: Record<string, unknown> | null;
+}
+
+interface AchievementRow {
+  user_id: string;
+  achievement_id: string;
+  title: string;
+  description: string | null;
+  earned_at: string;
 }
 
 interface PrefRow {
@@ -248,7 +305,7 @@ serve(async (req) => {
     for (const ids of chunk(candidateIds, 200)) {
       const inList = `(${ids.join(',')})`;
       const [pr, nr] = await Promise.all([
-        sbFetch(`/rest/v1/profiles?user_id=in.${inList}&select=user_id,display_name,motherhood_stage,timezone,last_active_at,assessment_concern,assessment_data`),
+        sbFetch(`/rest/v1/profiles?user_id=in.${inList}&select=user_id,display_name,motherhood_stage,timezone,last_active_at,created_at,assessment_concern,assessment_data`),
         sbFetch(`/rest/v1/notification_preferences?user_id=in.${inList}&select=user_id,daily_reminders_enabled,reminder_time,quiet_hours_start,quiet_hours_end,max_pushes_per_day`),
       ]);
       profiles.push(...(await pr.json() as ProfileRow[]));
@@ -273,6 +330,45 @@ serve(async (req) => {
       }
     }
 
+    // ---- Extra data for the per-user types ---------------------------------
+    // milestone_ready needs the 14-day anchor: her last booking, else when her
+    // paid subscription began, else account creation. Bookings used to live
+    // only in localStorage, which is why this reminder could not exist before.
+    const lastBooking = new Map<string, string>();
+    const subStart = new Map<string, string>();
+    const freshAchievements: AchievementRow[] = [];
+
+    if (type === 'milestone_ready') {
+      for (const ids of chunk(candidateIds, 200)) {
+        const inList = `(${ids.join(',')})`;
+        const [mb, sb] = await Promise.all([
+          sbFetch(`/rest/v1/milestone_bookings?user_id=in.${inList}&select=user_id,booked_at&order=booked_at.desc`),
+          sbFetch(`/rest/v1/subscribers?user_id=in.${inList}&subscribed=eq.true&select=user_id,created_at`),
+        ]);
+        // Ordered desc, so the first row seen per user is their latest.
+        for (const r of await mb.json() as { user_id: string; booked_at: string }[]) {
+          if (!lastBooking.has(r.user_id)) lastBooking.set(r.user_id, r.booked_at);
+        }
+        for (const r of await sb.json() as { user_id: string; created_at: string }[]) {
+          subStart.set(r.user_id, r.created_at);
+        }
+      }
+    }
+
+    if (type === 'achievement') {
+      // Only badges earned since the last sweep. The dedupe key is the
+      // achievement id, so a wider window is harmless — it just re-checks
+      // rows already claimed — but keeping it tight keeps the query small.
+      const since = new Date(now.getTime() - 3 * 3600 * 1000).toISOString();
+      for (const ids of chunk(candidateIds, 200)) {
+        const r = await sbFetch(
+          `/rest/v1/user_achievements?user_id=in.(${ids.join(',')})&earned_at=gte.${since}` +
+          `&select=user_id,achievement_id,title,description,earned_at&order=earned_at.desc`,
+        );
+        if (r.ok) freshAchievements.push(...(await r.json() as AchievementRow[]));
+      }
+    }
+
     // ---- Select who gets this, right now -----------------------------------
     const selected: { p: ProfileRow; copy: Copy; dedupeKey: string }[] = [];
 
@@ -293,7 +389,9 @@ serve(async (req) => {
         if (typeof local_hour !== 'number' && slot.usePreferredTime && pref?.reminder_time) {
           wanted = Number(pref.reminder_time.slice(0, 2));
         }
-        if (hour !== wanted) continue;
+        // achievement uses localHour -1, meaning "any waking hour" — a badge
+        // should land while the win is warm, not at a fixed slot tomorrow.
+        if (wanted >= 0 && hour !== wanted) continue;
 
         if (inQuietHours(hour, pref?.quiet_hours_start, pref?.quiet_hours_end)) continue;
 
@@ -308,6 +406,45 @@ serve(async (req) => {
           if (daysAway < 4) continue;   // still active, leave her alone
           if (daysAway > 120) continue; // long gone, this is spam not outreach
         }
+      }
+
+      // ---- Per-user types: message and eligibility come from her own data --
+      if (DYNAMIC_TYPES.has(type) && !immediate) {
+        if (type === 'milestone_ready') {
+          // Same 14-day anchor the Progress page uses: last booking, else
+          // paid subscription start, else account creation.
+          const anchorIso = lastBooking.get(p.user_id)
+            ?? subStart.get(p.user_id)
+            ?? p.created_at;
+          if (!anchorIso) continue;
+
+          const daysSince = Math.floor((now.getTime() - new Date(anchorIso).getTime()) / 86400000);
+          // Day 14 is the unlock. Day 15 is the single follow-up she asked
+          // for. After that we stop — a third nudge about the same booking is
+          // where a reminder turns into nagging.
+          const day = daysSince === 14 ? 1 : daysSince === 15 ? 2 : 0;
+          if (day === 0) continue;
+
+          selected.push({
+            p,
+            copy: milestoneCopy(p, day as 1 | 2),
+            // Keyed on the anchor, so a new cycle after booking gets its own
+            // pair of nudges rather than being suppressed as a duplicate.
+            dedupeKey: `${anchorIso.slice(0, 10)}:d${day}`,
+          });
+        }
+
+        if (type === 'achievement') {
+          for (const a of freshAchievements.filter((x) => x.user_id === p.user_id)) {
+            selected.push({
+              p,
+              copy: achievementCopy(p, a),
+              // One congratulation per badge, ever.
+              dedupeKey: a.achievement_id,
+            });
+          }
+        }
+        continue;
       }
 
       const stage = (p.motherhood_stage ?? 'none') as Stage;
@@ -354,7 +491,12 @@ serve(async (req) => {
           }))),
         });
         if (res.ok) {
-          for (const row of await res.json() as { user_id: string }[]) claimed.add(row.user_id);
+          // Keyed on user AND dedupe key, not user alone: one user can have
+          // two new badges in the same sweep, and claiming per-user would send
+          // both even when only one was actually new.
+          for (const row of await res.json() as { user_id: string; dedupe_key: string }[]) {
+            claimed.add(`${row.user_id}|${row.dedupe_key}`);
+          }
         } else {
           // Ledger unavailable: skip rather than risk duplicate sends.
           console.error('push_delivery_log claim failed:', await res.text());
@@ -362,7 +504,9 @@ serve(async (req) => {
       }
     }
 
-    const toSend = immediate ? selected : selected.filter((s) => claimed.has(s.p.user_id));
+    const toSend = immediate
+      ? selected
+      : selected.filter((s) => claimed.has(`${s.p.user_id}|${s.dedupeKey}`));
     if (toSend.length === 0) {
       return new Response(JSON.stringify({ success: true, sent: 0, type, reason: 'already sent this window' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

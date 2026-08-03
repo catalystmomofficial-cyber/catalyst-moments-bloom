@@ -253,6 +253,33 @@ export const MilestoneCheckInModal = ({
       }
     }
 
+    // Record the booking server-side FIRST. localStorage alone was per-browser:
+    // booking on a phone then opening on a laptop showed the prompt again, and
+    // nothing server-side could see it, so no reminder could ever be sent.
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error: bookErr } = await supabase.from('milestone_bookings').insert({
+          user_id: user.id,
+          booked_at: bookedAt,
+          stage,
+          event_uri: booking?.eventUri ?? null,
+          invitee_uri: booking?.inviteeUri ?? null,
+          start_time: startTime,
+          join_url: joinUrl,
+        });
+        // 23505 = Calendly fired its confirmation twice for one booking. That
+        // is the unique index doing its job, not a failure.
+        if (bookErr && bookErr.code !== '23505') {
+          console.error('Failed to persist milestone booking:', bookErr);
+        }
+      }
+    } catch (err) {
+      // Never block the confirmation UI on this. localStorage below still
+      // keeps this device correct until the next successful sync.
+      console.error('Milestone booking persistence failed:', err);
+    }
+
     try {
       localStorage.setItem('cm_last_milestone_at', bookedAt);
       const record = {

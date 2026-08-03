@@ -1267,6 +1267,42 @@ export type Database = {
         }
         Relationships: []
       }
+      milestone_bookings: {
+        Row: {
+          booked_at: string
+          created_at: string
+          event_uri: string | null
+          id: string
+          invitee_uri: string | null
+          join_url: string | null
+          stage: string | null
+          start_time: string | null
+          user_id: string
+        }
+        Insert: {
+          booked_at?: string
+          created_at?: string
+          event_uri?: string | null
+          id?: string
+          invitee_uri?: string | null
+          join_url?: string | null
+          stage?: string | null
+          start_time?: string | null
+          user_id: string
+        }
+        Update: {
+          booked_at?: string
+          created_at?: string
+          event_uri?: string | null
+          id?: string
+          invitee_uri?: string | null
+          join_url?: string | null
+          stage?: string | null
+          start_time?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_preferences: {
         Row: {
           achievement_alerts_enabled: boolean
