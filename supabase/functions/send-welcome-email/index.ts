@@ -3,18 +3,33 @@ import { Resend } from 'npm:resend@4.0.0'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { WelcomeEmail } from './_templates/welcome-email.tsx'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { checkSharedSecret, forbidden } from '../_shared/auth.ts'
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY') as string)
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-webhook-secret',
 }
 
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
+  }
+
+  // ---- Authorization -------------------------------------------------------
+  // Called by the on_user_email_verified DB trigger, which presents the ANON
+  // key (not service role), so a service-role/admin check would break signup
+  // emails. Gate on a shared secret instead.
+  //
+  // Deliberately fail-OPEN while WELCOME_EMAIL_SECRET is unset, so deploying
+  // this cannot break welcome emails. Once the trigger is updated to send the
+  // header AND the secret is set in Supabase, it fails closed. See
+  // docs/security/edge-function-lockdown.md for the safe rollout order.
+  const secretCheck = checkSharedSecret(req, 'WELCOME_EMAIL_SECRET')
+  if (secretCheck === false) {
+    return forbidden(corsHeaders, 403, 'Invalid or missing webhook secret')
   }
 
   try {

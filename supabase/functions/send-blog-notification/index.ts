@@ -4,15 +4,29 @@ import { Resend } from "npm:resend@4.0.0";
 import React from "npm:react@18.3.1";
 import { renderAsync } from "npm:@react-email/components@0.0.22";
 import { BlogNotificationEmail } from "./_templates/blog-notification.tsx";
+import { checkSharedSecret, forbidden } from "../_shared/auth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-webhook-secret',
 };
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // ---- Authorization -------------------------------------------------------
+  // Called by the notify_blog_published DB trigger, which presents the ANON
+  // key (not service role), so a service-role/admin check would stop
+  // subscriber emails from going out on publish. Gate on a shared secret.
+  //
+  // Fails OPEN while BLOG_NOTIFICATION_SECRET is unset so deploying this is
+  // safe; fails closed once the trigger sends the header and the secret is
+  // set. Without this, anyone knowing the URL could blast every subscriber.
+  const secretCheck = checkSharedSecret(req, 'BLOG_NOTIFICATION_SECRET');
+  if (secretCheck === false) {
+    return forbidden(corsHeaders, 403, 'Invalid or missing webhook secret');
   }
 
   try {
