@@ -217,6 +217,60 @@ Use check-in data to provide targeted advice:
 - Connect their measurements to their wellness goals`;
     }
     
+    // ── Upcoming community events ──────────────────────────────────────────
+    // The coach used to invent generic workshops ("a Fertility-Boosting
+    // Nutrition workshop would be beneficial") because it had no idea what
+    // events actually exist in the app. Load the real ones so it recommends
+    // bookable sessions by name instead of describing imaginary ones.
+    let eventsContext = '';
+    try {
+      const { data: events } = await supabase
+        .from('events')
+        .select('title, description, event_date, time_display, category, stage_filter, specialist_name, specialist_title, location_type, is_free_for_members, points_cost')
+        .gte('event_date', new Date().toISOString())
+        .order('event_date', { ascending: true })
+        .limit(8);
+
+      if (events && events.length > 0) {
+        const relevant = events.filter(
+          (e: any) => !e.stage_filter || e.stage_filter === 'all' || e.stage_filter === motherhoodStage,
+        );
+        const shown = relevant.length > 0 ? relevant : events;
+
+        eventsContext = `
+
+UPCOMING EVENTS IN THE APP (Community -> Events). These are REAL and bookable.
+When she asks about events, workshops, sessions, or "what's happening", recommend
+BY NAME from this list and tell her where to find it (the Community section).
+NEVER invent an event or describe a hypothetical workshop. If nothing here fits
+her, say so plainly and point her to the Community section for the full schedule.
+${shown
+  .map((e: any) => {
+    const when = e.event_date
+      ? new Date(e.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : 'date TBA';
+    const host = e.specialist_name
+      ? ` - hosted by ${e.specialist_name}${e.specialist_title ? `, ${e.specialist_title}` : ''}`
+      : '';
+    const cost = e.is_free_for_members
+      ? ' (free for members)'
+      : e.points_cost
+        ? ` (${e.points_cost} pts)`
+        : '';
+    return `- "${e.title}" | ${when}${e.time_display ? ` ${e.time_display}` : ''} | ${e.category || 'general'} | ${e.location_type || 'virtual'}${host}${cost}${e.description ? `\n  ${String(e.description).slice(0, 160)}` : ''}`;
+  })
+  .join('\n')}`;
+      } else {
+        eventsContext = `
+
+UPCOMING EVENTS: none on the calendar right now. If she asks about events or
+workshops, say honestly that nothing is scheduled yet and point her to the
+Community section to watch for new sessions. Do NOT invent one.`;
+      }
+    } catch (e) {
+      console.error('[WELLNESS_COACH] Could not load events:', e);
+    }
+
     // ── TTC-specific context: cycle phase, recent check-ins, latest bloodwork ──
     let ttcContext = '';
     if (userId && motherhoodStage === 'ttc') {
@@ -279,7 +333,7 @@ TTC COACHING RULES:
     }
 
     // Build comprehensive system prompt focused on the four pillars and conversion
-    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}${ttcContext}
+    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}${ttcContext}${eventsContext}
 
 ## CATALYST MOM CORE OFFERING
 The four pillars of our platform:

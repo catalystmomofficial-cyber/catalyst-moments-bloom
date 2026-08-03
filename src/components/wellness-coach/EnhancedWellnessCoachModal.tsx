@@ -5,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, MotherhoodStage } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { detectIntent, logCoachGap } from '@/components/wellness-coach/WellnessCoachIntelligence';
 import { 
   Phone, 
   PhoneOff, 
@@ -377,6 +378,16 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
     setSelectedImages([]);
     setShowQuickSuggestions(false);
     setIsLoading(true);
+
+    // Log what she actually asked for, so the admin Coach Insights panel can
+    // show real demand signals ("people keep asking about events"). This was
+    // written but never wired up, which is why that panel stayed empty.
+    void logCoachGap(
+      inputMessage,
+      detectIntent(inputMessage).intent,
+      (profile?.motherhood_stage as MotherhoodStage) ?? null,
+      user?.id,
+    );
 
     try {
       const response = await supabase.functions.invoke('wellness-coach-chat', {
