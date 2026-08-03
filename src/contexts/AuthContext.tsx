@@ -111,6 +111,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
+      // Where this user actually is. Reminders are sent against local clock
+      // time, so without this every nudge lands at a fixed UTC hour — 4am for
+      // US Eastern, mid-evening for Sydney. Read from the browser rather than
+      // asked for, because a timezone question in onboarding is friction users
+      // drop out on, and the browser already knows the answer.
+      const browserTimezone = (() => {
+        try {
+          return Intl.DateTimeFormat().resolvedOptions().timeZone || null;
+        } catch {
+          return null;
+        }
+      })();
+
       if (!existing) {
         const { data: inserted, error: insErr } = await supabase
           .from('profiles')
@@ -119,6 +132,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             display_name: (u.user_metadata as any)?.full_name ?? null,
             motherhood_stage: (u.user_metadata as any)?.motherhood_stage ?? 'none',
             referred_by_code: (u.user_metadata as any)?.referral_code ?? null,
+            timezone: browserTimezone,
+            last_active_at: new Date().toISOString(),
           })
           .select('*')
           .single();
@@ -129,6 +144,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         setProfile(inserted as UserProfile);
+      } else {
+        // Existing user: refresh both on every login. Timezone because people
+        // travel and relocate, last_active_at because the inactivity sweep
+        // depends on it meaning exactly "last opened the app" — updated_at
+        // cannot serve that purpose since this very write would bump it.
+        const { error: touchErr } = await supabase
+          .from('profiles')
+          .update({
+            ...(browserTimezone ? { timezone: browserTimezone } : {}),
+            last_active_at: new Date().toISOString(),
+          })
+          .eq('user_id', u.id);
+
+        // Non-fatal: a failure here degrades reminder timing, never login.
+        if (touchErr) console.error('Error refreshing profile activity:', touchErr);
       }
     } catch (err) {
       console.error('ensureProfile error:', err);

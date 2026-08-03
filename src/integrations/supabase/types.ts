@@ -1272,7 +1272,11 @@ export type Database = {
           achievement_alerts_enabled: boolean
           created_at: string
           daily_reminders_enabled: boolean
+          event_reminders_enabled: boolean
           id: string
+          max_pushes_per_day: number
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
           reminder_time: string
           updated_at: string
           user_id: string
@@ -1282,7 +1286,11 @@ export type Database = {
           achievement_alerts_enabled?: boolean
           created_at?: string
           daily_reminders_enabled?: boolean
+          event_reminders_enabled?: boolean
           id?: string
+          max_pushes_per_day?: number
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
           reminder_time?: string
           updated_at?: string
           user_id: string
@@ -1292,7 +1300,11 @@ export type Database = {
           achievement_alerts_enabled?: boolean
           created_at?: string
           daily_reminders_enabled?: boolean
+          event_reminders_enabled?: boolean
           id?: string
+          max_pushes_per_day?: number
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
           reminder_time?: string
           updated_at?: string
           user_id?: string
@@ -1460,11 +1472,13 @@ export type Database = {
           delivery_date: string | null
           display_name: string | null
           id: string
+          last_active_at: string | null
           motherhood_stage: string | null
           paypal_email: string | null
           referral_code: string | null
           referred_by_code: string | null
           theme_preference: string | null
+          timezone: string | null
           updated_at: string
           user_id: string
         }
@@ -1480,11 +1494,13 @@ export type Database = {
           delivery_date?: string | null
           display_name?: string | null
           id?: string
+          last_active_at?: string | null
           motherhood_stage?: string | null
           paypal_email?: string | null
           referral_code?: string | null
           referred_by_code?: string | null
           theme_preference?: string | null
+          timezone?: string | null
           updated_at?: string
           user_id: string
         }
@@ -1500,12 +1516,50 @@ export type Database = {
           delivery_date?: string | null
           display_name?: string | null
           id?: string
+          last_active_at?: string | null
           motherhood_stage?: string | null
           paypal_email?: string | null
           referral_code?: string | null
           referred_by_code?: string | null
           theme_preference?: string | null
+          timezone?: string | null
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      push_delivery_log: {
+        Row: {
+          body: string | null
+          dedupe_key: string
+          delivered: boolean
+          error: string | null
+          id: string
+          notification_type: string
+          sent_at: string
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          dedupe_key: string
+          delivered?: boolean
+          error?: string | null
+          id?: string
+          notification_type: string
+          sent_at?: string
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          dedupe_key?: string
+          delivered?: boolean
+          error?: string | null
+          id?: string
+          notification_type?: string
+          sent_at?: string
+          title?: string | null
           user_id?: string
         }
         Relationships: []
