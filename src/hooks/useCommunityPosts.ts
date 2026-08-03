@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
+import posthog from '@/lib/posthog';
 
 export interface CommunityPostData {
   id: string;
@@ -112,6 +113,10 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
       content: content.trim(),
     });
     if (!error) {
+      posthog.capture('community_post_created', {
+        group_slug: groupSlug,
+        sub_category: subCategory,
+      });
       await awardPoints(10, 'community_post', 'Shared a community post');
     } else {
       console.error('Error creating post:', error);
@@ -129,11 +134,19 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
     } : p));
 
     if (currentlyLiked) {
-      await supabase.from('community_post_likes').delete().eq('post_id', postId).eq('user_id', user.id);
-      await supabase.from('community_posts').update({ likes_count: Math.max(0, (posts.find(p => p.id === postId)?.likes_count ?? 1) - 1) }).eq('id', postId);
+      const { error } = await supabase.from('community_post_likes').delete().eq('post_id', postId).eq('user_id', user.id);
+      if (!error) {
+        await supabase.from('community_posts').update({ likes_count: Math.max(0, (posts.find(p => p.id === postId)?.likes_count ?? 1) - 1) }).eq('id', postId);
+      }
     } else {
-      await supabase.from('community_post_likes').insert({ post_id: postId, user_id: user.id });
-      await supabase.from('community_posts').update({ likes_count: (posts.find(p => p.id === postId)?.likes_count ?? 0) + 1 }).eq('id', postId);
+      const { error } = await supabase.from('community_post_likes').insert({ post_id: postId, user_id: user.id });
+      if (!error) {
+        await supabase.from('community_posts').update({ likes_count: (posts.find(p => p.id === postId)?.likes_count ?? 0) + 1 }).eq('id', postId);
+        posthog.capture('community_post_liked', {
+          group_slug: groupSlug,
+          sub_category: subCategory,
+        });
+      }
     }
   }, [user, posts]);
 
@@ -174,6 +187,10 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
       if (post) {
         await supabase.from('community_posts').update({ comments_count: post.comments_count + 1 }).eq('id', postId);
       }
+      posthog.capture('community_comment_created', {
+        group_slug: groupSlug,
+        sub_category: subCategory,
+      });
       await awardPoints(5, 'community_comment', 'Commented on a community post');
     }
   }, [user, posts, awardPoints]);

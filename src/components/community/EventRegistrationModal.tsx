@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import type { Event } from './EnhancedEventsList';
+import posthog from '@/lib/posthog';
 
 const PAYPAL_CLIENT_ID =
   (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) ||
@@ -124,6 +125,12 @@ const EventRegistrationModal = ({
     }
 
     await awardPoints(50, 'event_registration', `Registered for ${event.title}`);
+    posthog.capture('event_registration_completed', {
+      event_id: event.id,
+      payment_method: paymentMethod,
+      amount_paid_cents: paymentMethod === 'stripe' ? displayPrice : 0,
+      points_used: paymentMethod === 'points' ? pointsCost : 0,
+    });
 
     supabase.functions
       .invoke('send-transactional-email', {

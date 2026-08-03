@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
+import './lib/posthog'
 import './index.css'
 
 // Guard: don't register SW in iframes or preview hosts

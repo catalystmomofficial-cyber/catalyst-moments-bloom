@@ -8,6 +8,7 @@ import { Heart, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { usePoints } from '@/hooks/usePoints';
+import posthog from '@/lib/posthog';
 
 interface SelfCareTrackerProps {
   trigger?: React.ReactNode;
@@ -55,6 +56,10 @@ export const SelfCareTracker = ({ trigger }: SelfCareTrackerProps) => {
     setLoading(true);
     try {
       await addSelfCareEntry(notes.trim() || undefined);
+      posthog.capture('self_care_logged', {
+        activity_count: selectedActivities.length,
+        activity_types: selectedActivities,
+      });
       await awardPoints(5, 'self_care', 'Self-care logged');
       toast({
         title: "Self-care logged! +5 points ✨",

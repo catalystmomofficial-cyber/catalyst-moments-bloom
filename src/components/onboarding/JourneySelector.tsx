@@ -6,6 +6,7 @@ import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { Baby, Heart, Sparkles, Users } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import posthog from '@/lib/posthog';
 
 interface JourneyOption {
   id: string;
@@ -96,6 +97,11 @@ export const JourneySelector = ({ onComplete, isOnboarding = false }: JourneySel
         motherhood_stage: stageValue
       });
       
+      posthog.capture('journey_updated', {
+        journey: selectedJourney,
+        stage: stageValue,
+        source: isOnboarding ? 'onboarding' : 'profile',
+      });
       toast.success('Your journey has been updated!');
       onComplete();
     } catch (error) {
