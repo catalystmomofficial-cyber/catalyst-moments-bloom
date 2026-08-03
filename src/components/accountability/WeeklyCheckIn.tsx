@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import progressPhotoGuide from '@/assets/progress-photo-guide-woman.png';
 import { usePoints } from '@/hooks/usePoints';
+import posthog from '@/lib/posthog';
 export const WeeklyCheckIn = () => {
   const {
     toast
@@ -140,6 +141,9 @@ export const WeeklyCheckIn = () => {
         });
         return;
       }
+      posthog.capture('weekly_checkin_completed', {
+        has_progress_photo: imageUrls.length > 0,
+      });
       // Award points for weekly check-in
       await awardPoints(15, 'weekly_checkin', 'Completed weekly check-in');
 

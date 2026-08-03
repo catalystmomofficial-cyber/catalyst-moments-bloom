@@ -9,6 +9,7 @@ import { Heart, MessageCircle, Share2, Send, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunityPosts, type PostComment } from '@/hooks/useCommunityPosts';
 import { formatDistanceToNow } from 'date-fns';
+import posthog from '@/lib/posthog';
 
 import mom1 from '@/assets/member-avatars/mom-1.jpg';
 import mom2 from '@/assets/member-avatars/mom-2.jpg';
@@ -58,8 +59,11 @@ export const DynamicCommunityFeed = ({ groupSlug = 'general', isTTC = false }: D
   const handleCreatePost = async () => {
     if (!user || !newPostContent.trim()) return;
     setIsPosting(true);
-    await createPost(newPostContent);
-    setNewPostContent('');
+    const postCreated = await createPost(newPostContent);
+    if (postCreated) {
+      posthog.capture('community_post_created', { group: actualGroup, category: subCat });
+      setNewPostContent('');
+    }
     setIsPosting(false);
   };
 

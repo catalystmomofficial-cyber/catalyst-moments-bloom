@@ -12,6 +12,7 @@ import VideoPlayer from './VideoPlayer';
 import CheckpointVideoPlayer from '@/components/video/CheckpointVideoPlayer';
 import ExerciseTimer from './ExerciseTimer';
 import ExerciseList from './ExerciseList';
+import posthog from '@/lib/posthog';
 
 export default function WorkoutPlayer({ week, day, onComplete, onBack }: WorkoutPlayerProps) {
   const { toast } = useToast();
@@ -91,6 +92,11 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
   };
 
   const completeWorkout = async () => {
+    posthog.capture('workout_completed', {
+      workout_week: week,
+      workout_day: day,
+      exercise_count: exercises.length,
+    });
     await awardPoints(15, 'workout_complete', `Completed Week ${week}, Day ${day} workout`);
     toast({
       title: "Workout Complete! 🎉 +15 points",

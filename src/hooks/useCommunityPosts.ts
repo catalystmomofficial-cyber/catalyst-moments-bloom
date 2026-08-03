@@ -104,7 +104,7 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
   }, [user, groupSlug, subCategory, fetchPosts]);
 
   const createPost = useCallback(async (content: string) => {
-    if (!user || !content.trim()) return;
+    if (!user || !content.trim()) return false;
     const { error } = await supabase.from('community_posts').insert({
       user_id: user.id,
       group_slug: groupSlug,
@@ -113,9 +113,11 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
     });
     if (!error) {
       await awardPoints(10, 'community_post', 'Shared a community post');
-    } else {
-      console.error('Error creating post:', error);
+      return true;
     }
+
+    console.error('Error creating post:', error);
+    return false;
   }, [user, groupSlug, subCategory, awardPoints]);
 
   const toggleLike = useCallback(async (postId: string, currentlyLiked: boolean) => {

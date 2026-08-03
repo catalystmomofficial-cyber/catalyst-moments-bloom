@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, Check } from "lucide-react";
 import EmbeddedCheckout from "./EmbeddedCheckout";
 import PricingToggle from "./PricingToggle";
+import posthog from '@/lib/posthog';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -33,6 +34,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
   };
 
   const handleSelectPlan = (priceId: string) => {
+    posthog.capture('subscription_plan_selected', { price_id: priceId });
     setIsTransitioning(true);
     setTimeout(() => {
       setSelectedPriceId(priceId);

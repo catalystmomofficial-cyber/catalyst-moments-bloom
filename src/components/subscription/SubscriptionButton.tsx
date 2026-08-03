@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import posthog from '@/lib/posthog';
 
 interface SubscriptionButtonProps {
   variant?: "default" | "outline" | "secondary" | "ghost" | "link" | "destructive";
@@ -30,6 +31,7 @@ const SubscriptionButton = ({
     // Open checkout modal
     setIsLoading(true);
     try {
+      posthog.capture('subscription_checkout_opened');
       setShowCheckoutModal(true);
       toast.info("Opening secure checkout...");
     } finally {

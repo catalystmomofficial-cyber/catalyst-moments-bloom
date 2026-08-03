@@ -3,6 +3,7 @@ import { Download, X, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLocation } from 'react-router-dom';
+import posthog from '@/lib/posthog';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -75,6 +76,7 @@ const PWAInstallBanner = () => {
     await deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
+      posthog.capture('pwa_install_accepted');
       setShowBanner(false);
     }
     setDeferredPrompt(null);
