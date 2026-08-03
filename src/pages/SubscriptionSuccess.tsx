@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { Helmet } from 'react-helmet-async';
+import posthog from '@/lib/posthog';
 
 const SubscriptionSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -52,6 +53,7 @@ const SubscriptionSuccess = () => {
       }
 
       setStatus('success');
+      posthog.capture('subscription_activated');
 
       // Send confirmation email only after server-side confirmation (idempotent).
       try {

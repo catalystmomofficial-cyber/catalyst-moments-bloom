@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import posthog from '@/lib/posthog';
 import { toast } from 'sonner';
 
 export type MotherhoodStage = "ttc" | "pregnant" | "postpartum" | "toddler" | "none";
@@ -58,6 +59,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isReturningCustomer, setIsReturningCustomer] = useState<boolean>(cachedSub?.is_returning_customer ?? false);
   const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const identifiedUserId = useRef<string | null>(null);
+
+  const identifyUser = (authenticatedUser: User) => {
+    if (identifiedUserId.current === authenticatedUser.id) return;
+
+    if (identifiedUserId.current) {
+      posthog.reset();
+    }
+
+    const metadata = authenticatedUser.user_metadata as { full_name?: string; name?: string; motherhood_stage?: string };
+    posthog.identify(authenticatedUser.id, {
+      ...(authenticatedUser.email && { email: authenticatedUser.email }),
+      ...(metadata.full_name && { name: metadata.full_name }),
+      ...(metadata.motherhood_stage && { motherhood_stage: metadata.motherhood_stage }),
+    });
+    identifiedUserId.current = authenticatedUser.id;
+  };
 
   // Fetch user profile from the profiles table
   const fetchProfile = async (userId: string) => {
@@ -126,6 +144,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
+          identifyUser(session.user);
+
           // Defer profile fetching to avoid potential deadlocks
           setTimeout(() => {
             (async () => {
@@ -139,6 +159,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         
         if (event === 'SIGNED_OUT') {
+          posthog.reset();
+          identifiedUserId.current = null;
           setProfile(null);
           setSubscribed(false);
           setSubscriptionTier(null);
@@ -155,6 +177,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
+        identifyUser(session.user);
+
         // Use setTimeout for consistency and to avoid race conditions
         setTimeout(() => {
           (async () => {

@@ -13,6 +13,7 @@ import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Target, Heart, TrendingUp, CheckCircle2 } from 'lucide-react';
+import posthog from '@/lib/posthog';
 
 interface AssessmentData {
   id: string;
@@ -78,6 +79,7 @@ export const PersonalizedOnboarding = () => {
     setLoading(true);
     try {
       setOpen(false);
+      posthog.capture('onboarding_completed');
       navigate('/dashboard');
       
       toast({

@@ -7,6 +7,7 @@ import {
   type RecoveryCheckIn,
   type RecoveryMood,
 } from '@/lib/recovery';
+import posthog from '@/lib/posthog';
 
 interface Props {
   checkIns: RecoveryCheckIn[];
@@ -33,6 +34,7 @@ export const OneTapCheckIn = ({ checkIns, onSaved }: Props) => {
 
   const pick = (mood: RecoveryMood) => {
     const next = saveCheckIn(mood);
+    posthog.capture('recovery_check_in_completed');
     setJustSaved(mood);
     onSaved(next);
   };
