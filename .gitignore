@@ -27,3 +27,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# hyperresearch: local vault state (machine-specific, do not commit)
+.hyperresearch/hyperresearch.db
+.hyperresearch/hyperresearch.db-wal
+.hyperresearch/hyperresearch.db-shm
+research/runs/
