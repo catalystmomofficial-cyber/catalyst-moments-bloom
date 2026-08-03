@@ -14,6 +14,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import posthog from '@/lib/posthog';
 
 interface AffiliateSignupModalProps {
   isOpen: boolean;
@@ -92,6 +93,11 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
           name: formData.fullName || 'there',
         },
       }).catch(() => {});
+
+      posthog.capture('affiliate_application_submitted', {
+        applicant_role: formData.role,
+        is_authenticated: Boolean(user),
+      });
 
       toast({
         title: 'Application Submitted ✨',

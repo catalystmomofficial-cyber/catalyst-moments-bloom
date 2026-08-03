@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import posthog from '@/lib/posthog';
 import { toast } from 'sonner';
 
 export type MotherhoodStage = "ttc" | "pregnant" | "postpartum" | "toddler" | "none";
@@ -58,6 +59,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isReturningCustomer, setIsReturningCustomer] = useState<boolean>(cachedSub?.is_returning_customer ?? false);
   const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const identifiedUserId = useRef<string | null>(null);
+
+  const identifyUser = (authenticatedUser: User) => {
+    if (!authenticatedUser.id || identifiedUserId.current === authenticatedUser.id) {
+      return;
+    }
+
+    if (identifiedUserId.current) {
+      posthog.reset();
+    }
+
+    posthog.identify(authenticatedUser.id, {
+      email: authenticatedUser.email,
+      name: authenticatedUser.user_metadata?.full_name ?? authenticatedUser.user_metadata?.name,
+    });
+    identifiedUserId.current = authenticatedUser.id;
+  };
 
   // Fetch user profile from the profiles table
   const fetchProfile = async (userId: string) => {
@@ -126,6 +144,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
+          identifyUser(session.user);
           // Defer profile fetching to avoid potential deadlocks
           setTimeout(() => {
             (async () => {
@@ -139,6 +158,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         
         if (event === 'SIGNED_OUT') {
+          posthog.reset();
+          identifiedUserId.current = null;
           setProfile(null);
           setSubscribed(false);
           setSubscriptionTier(null);
@@ -155,6 +176,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
+        identifyUser(session.user);
         // Use setTimeout for consistency and to avoid race conditions
         setTimeout(() => {
           (async () => {

@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import type { Event } from './EnhancedEventsList';
+import posthog from '@/lib/posthog';
 
 const PAYPAL_CLIENT_ID =
   (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) ||
@@ -142,6 +143,11 @@ const EventRegistrationModal = ({
       })
       .catch((err) => console.error('Confirmation email failed:', err));
 
+    posthog.capture('event_registration_completed', {
+      event_id: event.id.toString(),
+      payment_method: paymentMethod,
+      is_member: subscribed,
+    });
     setIsSuccess(true);
     onRegistrationComplete?.();
     toast({
