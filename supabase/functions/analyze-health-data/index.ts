@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { isServiceRoleRequest, getUser, forbidden } from "../_shared/auth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,6 +9,20 @@ const corsHeaders = {
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // ---- Authorization -------------------------------------------------------
+  // This endpoint had no caller check and spends LOVABLE_API_KEY credits on
+  // every call, with an attacker-supplied systemPrompt and attacker-supplied
+  // files. Anyone knowing the URL could run up the AI bill without limit, and
+  // use it as a free general-purpose vision model.
+  //
+  // Every legitimate caller is a signed-in user uploading her own lab PDF or
+  // tracker screenshot (TTCTracker, TTCBloodworkModal, SleepTracker), so a
+  // plain authenticated-user check costs nothing and closes it.
+  if (!isServiceRoleRequest(req)) {
+    const user = await getUser(req);
+    if (!user) return forbidden(corsHeaders, 401, 'Unauthorized');
   }
 
   try {
