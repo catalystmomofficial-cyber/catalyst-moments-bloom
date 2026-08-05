@@ -5,6 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, Timer, RotateCcw, TrendingUp, AlertTriangle, Sparkles, Sun, Moon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { usePregnancyProgress } from '@/hooks/usePregnancyProgress';
 
 interface KickSession {
   id: string;
@@ -27,6 +30,9 @@ const AFFIRMATIONS = [
 export const BabyKickCounter = () => {
   const { toast } = useToast();
   const { vibrate } = useHapticFeedback();
+  const { user } = useAuth();
+  // Named to avoid colliding with the local `progress` bar value below.
+  const { progress: gestation } = usePregnancyProgress();
   const [isTracking, setIsTracking] = useState(false);
   const [kickCount, setKickCount] = useState(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
@@ -38,11 +44,53 @@ export const BabyKickCounter = () => {
   const [milestoneShown, setMilestoneShown] = useState(false);
   const audioRef = useRef<AudioContext | null>(null);
 
-  // Load sessions
+  // Load sessions. localStorage paints first so the history is there instantly
+  // and still works offline, then the server copy replaces it. The server is
+  // the source of truth: the pattern check below is a safety net, and a safety
+  // net that only exists on one browser is not one.
   useEffect(() => {
     const saved = localStorage.getItem('kickCounterSessions');
-    if (saved) try { setSessions(JSON.parse(saved)); } catch {}
+    if (saved) try { setSessions(JSON.parse(saved)); } catch { /* corrupt cache */ }
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+
+    (async () => {
+      const { data, error } = await supabase
+        .from('kick_sessions')
+        .select('id, started_at, ended_at, kick_count, duration_min')
+        .eq('user_id', user.id)
+        .order('started_at', { ascending: false })
+        .limit(30);
+
+      if (cancelled || error || !data) return;
+
+      const remote: KickSession[] = data.map((r) => {
+        const start = new Date(r.started_at);
+        return {
+          id: r.id,
+          date: start.toDateString(),
+          startTime: start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          endTime: new Date(r.ended_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          startedAt: start.getTime(),
+          kickCount: r.kick_count,
+          duration: r.duration_min,
+        };
+      });
+
+      // Merge rather than overwrite: a session logged offline is still only in
+      // localStorage and must not vanish when the server list arrives.
+      setSessions((local) => {
+        const byStart = new Map<number, KickSession>();
+        for (const s of [...remote, ...local]) byStart.set(s.startedAt, s);
+        return [...byStart.values()].sort((a, b) => b.startedAt - a.startedAt).slice(0, 30);
+      });
+    })();
+
+    return () => { cancelled = true; };
+  }, [user]);
 
   useEffect(() => {
     if (sessions.length) localStorage.setItem('kickCounterSessions', JSON.stringify(sessions));
@@ -132,6 +180,27 @@ export const BabyKickCounter = () => {
     setStartTime(null);
     setElapsedSec(0);
     toast({ title: 'Session saved', description: `${kickCount} movements in ${dur} min.` });
+
+    // Persist to the server so the pattern check survives a new phone. Fire
+    // and forget: the local copy is already saved above, so a failure here
+    // never costs her the session or blocks the confirmation.
+    if (user) {
+      void (async () => {
+        const { error } = await supabase.from('kick_sessions').insert({
+          user_id: user.id,
+          started_at: startTime.toISOString(),
+          ended_at: endTime.toISOString(),
+          kick_count: kickCount,
+          duration_min: dur,
+          week: gestation?.week ?? null,
+        });
+        // 23505 = the same session already stored (double tap, or a second
+        // device syncing). That is the unique index working, not a failure.
+        if (error && error.code !== '23505') {
+          console.error('Failed to save kick session:', error);
+        }
+      })();
+    }
   };
 
   const resetSession = () => { setIsTracking(false); setKickCount(0); setStartTime(null); setElapsedSec(0); };

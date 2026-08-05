@@ -1267,6 +1267,39 @@ export type Database = {
         }
         Relationships: []
       }
+      kick_sessions: {
+        Row: {
+          created_at: string
+          duration_min: number
+          ended_at: string
+          id: string
+          kick_count: number
+          started_at: string
+          user_id: string
+          week: number | null
+        }
+        Insert: {
+          created_at?: string
+          duration_min: number
+          ended_at: string
+          id?: string
+          kick_count: number
+          started_at: string
+          user_id: string
+          week?: number | null
+        }
+        Update: {
+          created_at?: string
+          duration_min?: number
+          ended_at?: string
+          id?: string
+          kick_count?: number
+          started_at?: string
+          user_id?: string
+          week?: number | null
+        }
+        Relationships: []
+      }
       milestone_bookings: {
         Row: {
           booked_at: string
