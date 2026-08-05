@@ -241,7 +241,7 @@ export const PregnancyTracker = () => {
                     This week
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    about {note.size} · roughly {note.compare}
+                    about {note.size} · {note.growth}
                   </span>
                 </div>
                 <p className="text-sm">
