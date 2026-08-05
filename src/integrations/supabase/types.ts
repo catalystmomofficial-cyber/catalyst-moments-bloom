@@ -597,6 +597,66 @@ export type Database = {
         }
         Relationships: []
       }
+      births: {
+        Row: {
+          archived_at: string | null
+          baby_count: number
+          birth_date: string
+          birth_type: string | null
+          created_at: string
+          id: string
+          pregnancy_journey_id: string | null
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          baby_count?: number
+          birth_date: string
+          birth_type?: string | null
+          created_at?: string
+          id?: string
+          pregnancy_journey_id?: string | null
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          baby_count?: number
+          birth_date?: string
+          birth_type?: string | null
+          created_at?: string
+          id?: string
+          pregnancy_journey_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      recovery_checkins: {
+        Row: {
+          birth_id: string | null
+          created_at: string
+          date: string
+          id: string
+          mood: string
+          user_id: string
+        }
+        Insert: {
+          birth_id?: string | null
+          created_at?: string
+          date: string
+          id?: string
+          mood: string
+          user_id: string
+        }
+        Update: {
+          birth_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          mood?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       contractions: {
         Row: {
           created_at: string
@@ -2498,6 +2558,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      record_birth: {
+        Args: {
+          p_birth_date: string
+          p_birth_type?: string | null
+          p_baby_count?: number
+        }
+        Returns: string
+      }
       archive_contractions: {
         Args: Record<PropertyKey, never>
         Returns: undefined

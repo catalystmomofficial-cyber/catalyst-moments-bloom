@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, CalendarDays, Heart, Sparkles } from 'lucide-react';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { useRecovery } from '@/hooks/useRecovery';
 import RecoveryRing from './RecoveryRing';
 import OneTapCheckIn from './OneTapCheckIn';
 import {
@@ -38,9 +39,11 @@ const RECOVERY_PROGRAM = '/course/266ae389-409f-4847-9a10-e29a2f3eb3f9';
  */
 export const RecoveryTracker = () => {
   const { stageInfo } = useContentFilter();
-  const [birthDate, setBirthDateState] = useState<string | null>(() => getBirthDate());
+  // Server-backed. Both the birth date and every check-in used to live only in
+  // localStorage, so a new phone erased how many weeks postpartum she was and
+  // silently reset the safety nudge that watches for a run of hard days.
+  const { birthDate, checkIns, saveBirth, checkIn, reload } = useRecovery();
   const [draftDate, setDraftDate] = useState('');
-  const [checkIns, setCheckIns] = useState<RecoveryCheckIn[]>(() => readCheckIns());
 
   const days = useMemo(() => daysSinceBirth(birthDate), [birthDate]);
   const phase = days != null ? phaseForDay(days) : phaseForStageLabel(stageInfo?.phase);
@@ -49,8 +52,7 @@ export const RecoveryTracker = () => {
 
   const saveDate = () => {
     if (!draftDate) return;
-    setBirthDate(draftDate);
-    setBirthDateState(draftDate);
+    void saveBirth(draftDate);
   };
 
   // Before the standard six-week check-up we never point her at a workout.
@@ -119,7 +121,7 @@ export const RecoveryTracker = () => {
             </div>
           )}
 
-          <OneTapCheckIn checkIns={checkIns} onSaved={setCheckIns} />
+          <OneTapCheckIn checkIns={checkIns} onSaved={() => { void reload(); }} onCheckIn={checkIn} />
 
           {/* Two weeks at a glance — presence, never a streak to protect */}
           {hasHistory && (

@@ -10,6 +10,9 @@ import {
 import posthog from '@/lib/posthog';
 
 interface Props {
+  /** Writes through to the server. Optional so the component still works if
+      mounted somewhere without the recovery hook. */
+  onCheckIn?: (mood: RecoveryMood) => Promise<{ error: unknown }>;
   checkIns: RecoveryCheckIn[];
   onSaved: (next: RecoveryCheckIn[]) => void;
 }
@@ -28,14 +31,18 @@ const ORDER: RecoveryMood[] = ['rough', 'okay', 'good'];
  * does not synthesise energy/stress values to feed the wellness score — the
  * full check-in on the Wellness page is where those come from.
  */
-export const OneTapCheckIn = ({ checkIns, onSaved }: Props) => {
+export const OneTapCheckIn = ({ checkIns, onSaved, onCheckIn }: Props) => {
   const existing = todaysCheckIn(checkIns);
   const [justSaved, setJustSaved] = useState<RecoveryMood | null>(null);
 
-  const pick = (mood: RecoveryMood) => {
+  const pick = async (mood: RecoveryMood) => {
+    // Local write first so the tap feels instant and still works offline; the
+    // server write follows. localStorage alone was the bug — the safety nudge
+    // reads this history and reset itself on every new device.
     const next = saveCheckIn(mood);
     posthog.capture('recovery_check_in_completed');
     setJustSaved(mood);
+    if (onCheckIn) await onCheckIn(mood);
     onSaved(next);
   };
 
@@ -55,7 +62,7 @@ export const OneTapCheckIn = ({ checkIns, onSaved }: Props) => {
             <button
               key={mood}
               type="button"
-              onClick={() => pick(mood)}
+              onClick={() => void pick(mood)}
               aria-pressed={isSelected}
               className={`group relative flex min-h-[86px] flex-col items-center justify-center gap-1.5 rounded-xl border px-2 py-3 transition-all duration-200 active:scale-[0.97] ${
                 isSelected
