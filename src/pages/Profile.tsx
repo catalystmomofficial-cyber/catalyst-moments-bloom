@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ProfilePushToggle from "@/components/profile/ProfilePushToggle";
+import { PregnancyOutcomeSettings } from "@/components/pregnancy/PregnancyOutcomeSettings";
 import { BorderBeamButton } from "@/components/ui/border-beam-button";
 
 const Profile = () => {
@@ -370,6 +371,16 @@ const Profile = () => {
 
         <div className="mt-6">
           <ProfilePushToggle />
+        </div>
+
+        {/* Life-stage transitions live in Profile, not on the Today tab.
+            "I've had a loss" sitting under her week-8 growth ring every day
+            reads as the app anticipating failure. It has to stay reachable in
+            any week — roughly 80% of losses happen before week 13, so gating
+            it on the due date would leave the most common case with no way to
+            tell us — but reachable is not the same as visible. */}
+        <div className="mt-6">
+          <PregnancyOutcomeSettings />
         </div>
       </div>
     </PageLayout>

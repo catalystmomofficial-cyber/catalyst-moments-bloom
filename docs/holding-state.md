@@ -55,10 +55,19 @@ paragraph is the answer.
    different events. They must stay separate and reachable from each other's
    confirmation, because landing in the celebratory postpartum flow after a loss
    is the worst misclick in the product.
-5. **The word is "loss".** Not "miscarriage" (clinical), not "ended" or
+5. **Always reachable, never visible.** The doors live in Profile, not on the
+   Today tab. "I've had a loss" sitting under her week-8 growth ring every day
+   reads as the app anticipating failure.
+
+   They must NOT be gated on week, trimester or due date. Around 80% of losses
+   happen before week 13; anything that waits for the due date leaves the most
+   common case with no way to tell us, and the pushes keep arriving. The guard
+   lives inside `PregnancyOutcomeSettings` so it travels with the component and
+   cannot be dropped somewhere it does not belong.
+6. **The word is "loss".** Not "miscarriage" (clinical), not "ended" or
    "changed" (reads as the app being uncomfortable — and if the app flinches,
    she learns she should too).
-6. **A new pregnancy starts a new ring.** The old one is archived, never
+7. **A new pregnancy starts a new ring.** The old one is archived, never
    resumed. She must never feel she is continuing something that ended.
 
 ## Adding a new notification type

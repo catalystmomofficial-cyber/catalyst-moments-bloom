@@ -26,10 +26,18 @@ import { usePregnancyProgress } from '@/hooks/usePregnancyProgress';
  */
 export const PregnancyOutcomeSettings = () => {
   const { toast } = useToast();
-  const { progress } = usePregnancyProgress();
-  const { recordOutcome } = usePregnancyJourney();
+  const { progress, dueDate, loading } = usePregnancyProgress();
+  const { state, recordOutcome } = usePregnancyJourney();
   const [confirming, setConfirming] = useState<'birth' | 'loss' | null>(null);
   const [saving, setSaving] = useState(false);
+
+  // The guard lives here rather than at the call site, so this can never be
+  // dropped into a screen and shown to someone who is not pregnant. Note it
+  // does NOT gate on week or trimester: around 80% of losses happen before
+  // week 13, so anything that waits for the due date would leave the most
+  // common case with no way to tell us — and pushes would keep arriving.
+  const hasPregnancy = state === 'active' || Boolean(dueDate);
+  if (loading || !hasPregnancy) return null;
 
   const submit = async () => {
     if (!confirming) return;
