@@ -337,16 +337,30 @@ export const BabyKickCounter = () => {
               <h4 className="text-sm font-medium">Recent sessions</h4>
               <span className="text-xs text-muted-foreground">{sessions.length} logged</span>
             </div>
+            {/* h-full on the column matters: the bar sizes itself as a
+                percentage, and a percentage height inside an auto-height
+                parent resolves to zero. The bars were rendering at 0px, which
+                is why the count said "3 logged" above an empty strip. */}
             <div className="flex gap-1 items-end h-16">
               {sessions.slice(0, 14).reverse().map(s => (
-                <div key={s.id} className="flex-1 flex flex-col items-center gap-1" title={`${s.kickCount} kicks · ${s.duration}m`}>
+                <div
+                  key={s.id}
+                  className="flex-1 flex h-full flex-col justify-end items-center gap-1"
+                  title={`${s.kickCount} kicks · ${s.duration}m · ${s.date}`}
+                >
                   <div
                     className={`w-full rounded-t-md transition-all ${s.kickCount >= 10 ? 'bg-catalyst-copper' : s.kickCount >= 6 ? 'bg-catalyst-gold' : 'bg-muted-foreground/40'}`}
-                    style={{ height: `${Math.min(100, (s.kickCount / 12) * 100)}%` }}
+                    // Floor of 8% so a very quiet session is still a visible
+                    // mark rather than nothing — a session that happened and
+                    // shows as blank reads as data loss.
+                    style={{ height: `${Math.max(8, Math.min(100, (s.kickCount / 12) * 100))}%` }}
                   />
                 </div>
               ))}
             </div>
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              Each bar is one session. Copper means 10 or more movements.
+            </p>
           </div>
         )}
       </CardContent>
