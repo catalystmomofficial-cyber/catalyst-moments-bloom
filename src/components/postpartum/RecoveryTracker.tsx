@@ -11,6 +11,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import RecoveryRing from './RecoveryRing';
+import { DiastasisLogger } from './DiastasisLogger';
+import { useDiastasis, formatMeasurement } from '@/hooks/useDiastasis';
 import OneTapCheckIn from './OneTapCheckIn';
 import {
   MOOD_META,
@@ -46,8 +48,9 @@ export const RecoveryTracker = () => {
   // Server-backed. Both the birth date and every check-in used to live only in
   // localStorage, so a new phone erased how many weeks postpartum she was and
   // silently reset the safety nudge that watches for a run of hard days.
-  const { birthDate, checkIns, saveBirth, checkIn, reload, hasActiveRecovery, birth } = useRecovery();
+  const { birthDate, checkIns, saveBirth, checkIn, reload, hasActiveRecovery, birth, recoveryId } = useRecovery();
   const [confirmNewBaby, setConfirmNewBaby] = useState(false);
+  const { latest: diastasis, changeFromStart } = useDiastasis(recoveryId);
   const [draftDate, setDraftDate] = useState('');
 
   const days = useMemo(() => daysSinceBirth(birthDate), [birthDate]);
@@ -90,7 +93,20 @@ export const RecoveryTracker = () => {
             </h2>
           </div>
 
-          <RecoveryRing dayPostpartum={days} phase={phase} />
+          <RecoveryRing
+            dayPostpartum={days}
+            phase={phase}
+            measurement={formatMeasurement(diastasis)}
+            measurementChange={changeFromStart}
+          />
+
+          {/* Only once she has told us when the baby arrived — a measurement
+              with no timeline to sit on is just a number. */}
+          {birthDate && (
+            <div className="mt-6 w-full max-w-sm">
+              <DiastasisLogger recoveryId={recoveryId} />
+            </div>
+          )}
 
           {/* What's normal right now — reassurance, not metrics */}
           <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">

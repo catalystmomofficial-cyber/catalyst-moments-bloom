@@ -1008,6 +1008,39 @@ export type Database = {
         }
         Relationships: []
       }
+      diastasis_measurements: {
+        Row: {
+          created_at: string
+          id: string
+          measured_on: string
+          notes: string | null
+          recovery_id: string | null
+          unit: string
+          user_id: string
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          measured_on?: string
+          notes?: string | null
+          recovery_id?: string | null
+          unit?: string
+          user_id: string
+          value: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          measured_on?: string
+          notes?: string | null
+          recovery_id?: string | null
+          unit?: string
+          user_id?: string
+          value?: number
+        }
+        Relationships: []
+      }
       digital_product_purchases: {
         Row: {
           amount_paid_cents: number

@@ -5,6 +5,13 @@ interface RecoveryRingProps {
   /** Whole days postpartum, or null when she hasn't set a date yet. */
   dayPostpartum: number | null;
   phase: RecoveryPhase;
+  /** Her latest diastasis measurement, already formatted ("2.1 cm"). */
+  measurement?: string | null;
+  /**
+   * Change since her first measurement, in the same unit. Negative means the
+   * gap narrowed. Shown as a plain fact, never as praise or concern.
+   */
+  measurementChange?: number | null;
 }
 
 const SIZE = 208;
@@ -23,7 +30,7 @@ const GAP_ROTATION = 90 + (1 - SWEEP) * 180; // centre the gap at the bottom
  * with the full phase sequence as pips beneath — movement she can see without
  * a percentage telling her how "done" healing is supposed to be.
  */
-export const RecoveryRing = ({ dayPostpartum, phase }: RecoveryRingProps) => {
+export const RecoveryRing = ({ dayPostpartum, phase, measurement, measurementChange }: RecoveryRingProps) => {
   const hasDate = dayPostpartum != null;
   const count = hasDate ? recoveryCount(dayPostpartum) : null;
 
@@ -139,6 +146,24 @@ export const RecoveryRing = ({ dayPostpartum, phase }: RecoveryRingProps) => {
               <span className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 {count.unit} postpartum
               </span>
+              {/* The number nobody else shows. Every competitor draws the baby
+                  and stops at birth; this is her body, healing, week over
+                  week. Stated as a fact — no target, no praise for a smaller
+                  number, no concern at a larger one. Separation does not close
+                  on a schedule and a scored version would make a quiet month
+                  feel like failure. */}
+              {measurement && (
+                <div className="mt-3 flex flex-col items-center gap-0.5 border-t border-border/70 pt-2">
+                  <span className="text-base font-semibold text-foreground tabular-nums">
+                    {measurement}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                    {measurementChange != null && measurementChange !== 0
+                      ? `${measurementChange < 0 ? '−' : '+'}${Math.abs(measurementChange)} since you started`
+                      : 'your measurement'}
+                  </span>
+                </div>
+              )}
             </>
           ) : (
             <span className="text-sm font-medium leading-snug text-muted-foreground">
