@@ -6,6 +6,39 @@ import { usePregnancyProgress } from '@/hooks/usePregnancyProgress';
 import { useLaborContacts } from '@/hooks/useLaborContacts';
 
 const DISMISS_KEY = 'cm_labor_contacts_prompt_dismissed';
+const QUIET_DAYS = 7;
+/** The appointment where her provider hands over the "when to call" sheet. */
+const HANDOVER_WEEK = 36;
+
+interface Dismissal { at: number; week: number; }
+
+const readDismissal = (): Dismissal | null => {
+  try {
+    const raw = localStorage.getItem(DISMISS_KEY);
+    return raw ? JSON.parse(raw) as Dismissal : null;
+  } catch { return null; }
+};
+
+/**
+ * Whether a past dismissal still holds.
+ *
+ * sessionStorage was the obvious choice and it has a hole: it only clears when
+ * the tab closes, and on a resident mobile PWA the tab may not close for days.
+ * Dismiss on Monday, leave the app open, and by Friday she is past her 36-week
+ * appointment having never been reminded — the exact failure the resurfacing
+ * was meant to prevent, just on a longer timescale.
+ *
+ * So it resurfaces after a quiet week, or the moment she crosses the handover
+ * week, whichever comes first. Dismissing at or after 36 weeks is final: by
+ * then she either has the number or is deliberately choosing not to add it,
+ * and asking again would be nagging.
+ */
+const dismissalHolds = (d: Dismissal | null, currentWeek: number): boolean => {
+  if (!d) return false;
+  if (d.week >= HANDOVER_WEEK) return true;
+  if (currentWeek >= HANDOVER_WEEK) return false;
+  return Date.now() - d.at < QUIET_DAYS * 86400000;
+};
 
 /**
  * A card, not a flow.
@@ -23,18 +56,17 @@ const DISMISS_KEY = 'cm_labor_contacts_prompt_dismissed';
 export const LaborContactsPrompt = () => {
   const { progress } = usePregnancyProgress();
   const { hasTriageLine, loading } = useLaborContacts();
-  const [dismissed, setDismissed] = useState(() => {
-    try { return sessionStorage.getItem(DISMISS_KEY) === '1'; } catch { return false; }
-  });
+  const [dismissal, setDismissal] = useState<Dismissal | null>(() => readDismissal());
 
-  // sessionStorage, not localStorage: "dismissed" lasts this visit only.
   const dismiss = () => {
-    setDismissed(true);
-    try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch { /* private mode */ }
+    const d = { at: Date.now(), week: progress?.week ?? 0 };
+    setDismissal(d);
+    try { localStorage.setItem(DISMISS_KEY, JSON.stringify(d)); } catch { /* private mode */ }
   };
 
-  if (loading || dismissed || hasTriageLine) return null;
+  if (loading || hasTriageLine) return null;
   if (!progress || progress.week < 34) return null;
+  if (dismissalHolds(dismissal, progress.week)) return null;
 
   return (
     <div className="rounded-lg border border-dashed p-4">
