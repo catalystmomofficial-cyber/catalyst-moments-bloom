@@ -16,6 +16,8 @@ import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
 import { TTCEducationalResources } from '@/components/ttc/TTCEducationalResources';
 import { TTCDailyCheckIn } from '@/components/ttc/TTCDailyCheckIn';
 import { PregnancyTracker } from '@/components/pregnancy/PregnancyTracker';
+import { HoldingCard } from '@/components/pregnancy/HoldingCard';
+import { usePregnancyJourney } from '@/hooks/usePregnancyJourney';
 import { PregnancyJournal } from '@/components/pregnancy/PregnancyJournal';
 import { PrenatalPlanCard } from '@/components/pregnancy/PrenatalPlanCard';
 import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnessDigest';
@@ -128,6 +130,7 @@ const Dashboard = () => {
   useScrollToHash();
 
   const isTTC = stageInfo?.journey === 'ttc';
+  const { isHolding } = usePregnancyJourney();
   const isPregnant = stageInfo?.journey === 'pregnant';
   const isPostpartum = stageInfo?.journey === 'postpartum';
   const isToddler = stageInfo?.journey === 'toddler';
@@ -306,7 +309,13 @@ const Dashboard = () => {
               {/* Left Column - Primary Actions */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Recommended Activity */}
-                {isPregnant ? (
+                {/* Holding wins over every stage branch. After a loss she must
+                    never land on a pregnancy tracker, a TTC tracker, or a
+                    recovery plan — none of those fit, and being filed into
+                    "trying to conceive" a week later is unforgivable. */}
+                {isHolding ? (
+                  <HoldingCard />
+                ) : isPregnant ? (
                   <>
                     {/* Hero: her week/trimester tracker, then her prenatal plan, then journal */}
                     <PregnancyTracker />

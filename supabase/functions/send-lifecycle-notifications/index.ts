@@ -195,8 +195,37 @@ interface ProfileRow {
   timezone: string | null;
   last_active_at: string | null;
   created_at: string | null;
+  pregnancy_state: 'none' | 'active' | 'holding' | null;
   assessment_concern: string | null;
   assessment_data: Record<string, unknown> | null;
+}
+
+// Types that reference a pregnancy in progress. After a loss these must stop
+// the same moment, with no grace period and no "next digest" — the reported
+// harm from other apps is a "You're 25 weeks today!" push arriving two days
+// after. Anything added to this file that mentions the pregnancy belongs here.
+const PREGNANCY_TYPES = new Set<LifecycleType>([
+  'daily_workout',
+  'milestone_ready',
+]);
+
+/**
+ * Holding is the state after a loss. She is not "inactive", she is not between
+ * stages, and nothing may nudge her toward either. Only the coach stays
+ * reachable, and she reaches for it — it does not reach for her.
+ */
+function suppressedByHolding(p: ProfileRow, type: LifecycleType): boolean {
+  if (p.pregnancy_state !== 'holding') return false;
+
+  // Everything that measures progress, celebrates, or asks her to come back.
+  // achievement is included deliberately: a badge congratulating her during
+  // this would be worse than silence.
+  if (PREGNANCY_TYPES.has(type)) return true;
+  if (type === 'inactivity') return true;
+  if (type === 'achievement') return true;
+  if (type === 'meal_reminder') return true;
+
+  return false;
 }
 
 interface AchievementRow {
@@ -305,7 +334,7 @@ serve(async (req) => {
     for (const ids of chunk(candidateIds, 200)) {
       const inList = `(${ids.join(',')})`;
       const [pr, nr] = await Promise.all([
-        sbFetch(`/rest/v1/profiles?user_id=in.${inList}&select=user_id,display_name,motherhood_stage,timezone,last_active_at,created_at,assessment_concern,assessment_data`),
+        sbFetch(`/rest/v1/profiles?user_id=in.${inList}&select=user_id,display_name,motherhood_stage,timezone,last_active_at,created_at,pregnancy_state,assessment_concern,assessment_data`),
         sbFetch(`/rest/v1/notification_preferences?user_id=in.${inList}&select=user_id,daily_reminders_enabled,reminder_time,quiet_hours_start,quiet_hours_end,max_pushes_per_day`),
       ]);
       profiles.push(...(await pr.json() as ProfileRow[]));
@@ -373,6 +402,11 @@ serve(async (req) => {
     const selected: { p: ProfileRow; copy: Copy; dedupeKey: string }[] = [];
 
     for (const p of profiles) {
+      // Hard stop. Placed before every other check, and outside the
+      // `!immediate` guard on purpose: a targeted or admin-triggered send must
+      // not reach a woman in holding either.
+      if (suppressedByHolding(p, type)) continue;
+
       const tz = p.timezone || DEFAULT_TZ;
       const { hour, dateKey, isoWeek } = localParts(tz, now);
       const pref = prefs.get(p.user_id);

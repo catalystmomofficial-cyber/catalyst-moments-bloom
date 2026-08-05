@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { usePregnancyProgress } from '@/hooks/usePregnancyProgress';
 import { weekNote } from '@/lib/pregnancy';
 import { GrowthRing } from './GrowthRing';
+import { PregnancyOutcomeSettings } from './PregnancyOutcomeSettings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -256,6 +257,9 @@ export const PregnancyTracker = () => {
                 </p>
               </div>
             )}
+
+            {/* Two doors, at the bottom, never prompted. She comes here. */}
+            {progress && <PregnancyOutcomeSettings />}
 
             {/* Quick Tracking */}
             <div className="grid grid-cols-2 gap-3">

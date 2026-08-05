@@ -1528,6 +1528,51 @@ export type Database = {
         }
         Relationships: []
       }
+      pregnancy_journeys: {
+        Row: {
+          created_at: string
+          data_choice: string | null
+          data_choice_at: string | null
+          due_date: string | null
+          frozen_day: number | null
+          frozen_week: number | null
+          id: string
+          outcome: string | null
+          outcome_at: string | null
+          prompt_after: string | null
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data_choice?: string | null
+          data_choice_at?: string | null
+          due_date?: string | null
+          frozen_day?: number | null
+          frozen_week?: number | null
+          id?: string
+          outcome?: string | null
+          outcome_at?: string | null
+          prompt_after?: string | null
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data_choice?: string | null
+          data_choice_at?: string | null
+          due_date?: string | null
+          frozen_day?: number | null
+          frozen_week?: number | null
+          id?: string
+          outcome?: string | null
+          outcome_at?: string | null
+          prompt_after?: string | null
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           affiliate_status: string
@@ -1544,6 +1589,7 @@ export type Database = {
           last_active_at: string | null
           motherhood_stage: string | null
           paypal_email: string | null
+          pregnancy_state: string
           referral_code: string | null
           referred_by_code: string | null
           theme_preference: string | null
@@ -1566,6 +1612,7 @@ export type Database = {
           last_active_at?: string | null
           motherhood_stage?: string | null
           paypal_email?: string | null
+          pregnancy_state?: string
           referral_code?: string | null
           referred_by_code?: string | null
           theme_preference?: string | null
@@ -1588,6 +1635,7 @@ export type Database = {
           last_active_at?: string | null
           motherhood_stage?: string | null
           paypal_email?: string | null
+          pregnancy_state?: string
           referral_code?: string | null
           referred_by_code?: string | null
           theme_preference?: string | null
@@ -2399,6 +2447,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      record_pregnancy_outcome: {
+        Args: {
+          p_outcome: string
+          p_week?: number
+          p_day?: number
+        }
+        Returns: undefined
+      }
+      leave_pregnancy_holding: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       add_purchased_credits: {
         Args: {
           p_amount: number
