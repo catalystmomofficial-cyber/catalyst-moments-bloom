@@ -7,6 +7,10 @@ import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLaborContacts } from '@/hooks/useLaborContacts';
+import * as queue from '@/lib/contractionQueue';
+import { Link } from 'react-router-dom';
+import { Phone } from 'lucide-react';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -58,6 +62,9 @@ export const ContractionTracker = () => {
   const [openId, setOpenId] = useState<string | null>(null);
   const [online, setOnline] = useState(true);
   const [pendingDelete, setPendingDelete] = useState<Contraction | null>(null);
+  const { contacts, hasTriageLine } = useLaborContacts();
+  /** Client-side id for the running contraction, used to match queued writes. */
+  const [localId, setLocalId] = useState<string | null>(null);
 
   // localStorage paints first and keeps the log readable with no signal, but
   // the database is the record. This used to be the ONLY store, so a refresh
@@ -111,7 +118,7 @@ export const ContractionTracker = () => {
   useEffect(() => { void loadFromServer.current(); }, [user]);
 
   useEffect(() => {
-    const on = () => setOnline(true);
+    const on = () => { setOnline(true); void drainQueue(); };
     const off = () => setOnline(false);
     setOnline(navigator.onLine);
     window.addEventListener('online', on);
@@ -141,16 +148,53 @@ export const ContractionTracker = () => {
 
     // Write one: open the row now, not at the end. If her phone dies mid
     // contraction, this row is what tells us it happened and when.
-    if (!user) return;
-    const { data, error } = await supabase
-      .from('contractions')
-      .insert({ user_id: user.id, started_at: new Date(startedAt).toISOString() })
-      .select('id')
-      .single();
-    // 23505 = a row is already open (double tap, second device). Recover its
-    // id rather than orphaning the timer.
-    if (error?.code === '23505') { void loadFromServer.current(); return; }
-    if (!error && data) setOpenId(data.id);
+    //
+    // Queued first, so a start with no signal is still durable — the UI has
+    // already responded, and the row lands when connectivity returns.
+    const lid = `${startedAt}`;
+    setLocalId(lid);
+    queue.enqueue({ kind: 'start', localId: lid, startedAt });
+    void drainQueue();
+  };
+
+  /**
+   * Push queued writes to the server, in order.
+   *
+   * A unique-constraint failure means a row is already open — a retry after a
+   * timeout, or a second device. Recover that row's id and carry on. It is not
+   * an error, and during labour an error toast is the last thing she needs.
+   */
+  const drainQueue = async () => {
+    if (!user || !navigator.onLine) return;
+    await queue.drain({
+      start: async (w) => {
+        const { data, error } = await supabase
+          .from('contractions')
+          .insert({ user_id: user.id, started_at: new Date(w.startedAt).toISOString() })
+          .select('id')
+          .single();
+        if (!error && data) { setOpenId(data.id); return data.id; }
+        if (error?.code === '23505') {
+          const { data: open } = await supabase
+            .from('contractions')
+            .select('id')
+            .eq('user_id', user.id)
+            .is('ended_at', null)
+            .limit(1)
+            .maybeSingle();
+          if (open?.id) { setOpenId(open.id); return open.id; }
+        }
+        return null; // stays queued
+      },
+      end: async (w) => {
+        if (!w.serverId) return false;
+        const { error } = await supabase.rpc('end_contraction', {
+          p_id: w.serverId, p_intensity: w.intensity,
+        });
+        return !error;
+      },
+    });
+    void loadFromServer.current();
   };
 
   const end = async () => {
@@ -165,15 +209,18 @@ export const ContractionTracker = () => {
     vibrate('success');
     toast({ title: 'Wave complete', description: `${fmt(dur)} · intensity ${intensity}/10` });
 
-    // Write two: close the row. Duration and interval are computed in the
-    // database so the numbers driving triage are not whatever the client
-    // happened to calculate.
-    if (openId) {
-      const { error } = await supabase.rpc('end_contraction', { p_id: openId, p_intensity: intensity });
-      if (error) console.error('Failed to close contraction:', error);
-      setOpenId(null);
-      void loadFromServer.current();
-    }
+    // Write two: close the row. Queued for the same reason as the start —
+    // ending a contraction in a car park must not lose it.
+    queue.enqueue({
+      kind: 'end',
+      localId: localId ?? String(activeStart),
+      serverId: openId,
+      endedAt: endAt,
+      intensity,
+    });
+    setOpenId(null);
+    setLocalId(null);
+    void drainQueue();
   };
 
   const remove = async (id: string) => {
@@ -282,6 +329,25 @@ export const ContractionTracker = () => {
       ? effectiveServer
       : localState;
   const usingLocalOnly = !effectiveServer || !online;
+
+  // Written for a midwife reading it on a partner's phone, not for us.
+  const shareSummary = (() => {
+    if (contractions.length === 0) return '';
+    const first = contractions[contractions.length - 1];
+    const since = Math.round((Date.now() - first.startTime) / 60000);
+    const hrs = Math.floor(since / 60), mins = since % 60;
+    const elapsed = hrs > 0 ? `${hrs} hr ${mins} min` : `${mins} min`;
+    const startedAt = new Date(first.startTime).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    const avgIntMin = stats ? Math.round(stats.avgInt) : null;
+    const avgDurSec = stats ? Math.round(stats.avgDur) : null;
+    return [
+      avgIntMin !== null
+        ? `Contractions every ${avgIntMin} min, about ${avgDurSec} sec long.`
+        : `${contractions.length} contractions logged.`,
+      `Started ${elapsed} ago at ${startedAt}.`,
+      `${contractions.length} logged in total.`,
+    ].join(' ');
+  })();
 
   const intensityColor = (n: number) =>
     n <= 3 ? 'bg-emerald-500' : n <= 6 ? 'bg-catalyst-gold' : n <= 8 ? 'bg-orange-500' : 'bg-destructive';
@@ -447,6 +513,42 @@ export const ContractionTracker = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* The call path. The button ALWAYS renders — a missing call button
+            during active labour is worse than one that prompts setup. With no
+            number it links to settings instead of dialling. */}
+        <div className="grid gap-2 sm:grid-cols-2">
+          {hasTriageLine ? (
+            <Button asChild variant={displayState === 'READY' ? 'destructive' : 'outline'}>
+              <a href={`tel:${contacts.provider_triage_phone?.replace(/[^\d+]/g, '')}`}>
+                <Phone className="h-4 w-4 mr-1.5" />
+                Call {contacts.provider_name || 'your provider'}
+              </a>
+            </Button>
+          ) : (
+            <Button asChild variant="outline">
+              <Link to="/profile#labor-contacts">
+                <Phone className="h-4 w-4 mr-1.5" />Add labor contact
+              </Link>
+            </Button>
+          )}
+          <Button asChild variant="outline" disabled={contractions.length === 0}>
+            {/* Her partner sends this. It has to read to someone who did not
+                build the app and is not looking at the screen. */}
+            <a href={`sms:${contacts.backup_contact_phone ?? ''}?&body=${encodeURIComponent(shareSummary)}`}>
+              Share log
+            </a>
+          </Button>
+        </div>
+
+        {/* Persistent until set. It comes back next session rather than being
+            dismissed forever — a number added after labour starts is a number
+            added too late. */}
+        {!hasTriageLine && (
+          <p className="text-xs text-muted-foreground text-center">
+            Add your provider's labor line so the call button works when you need it.
+          </p>
+        )}
 
         <div className="p-3 rounded-lg bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-xs text-orange-900">
           <p className="font-semibold mb-1">Call your provider if:</p>

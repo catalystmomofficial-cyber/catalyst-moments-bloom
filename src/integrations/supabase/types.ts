@@ -1622,7 +1622,12 @@ export type Database = {
           last_active_at: string | null
           motherhood_stage: string | null
           paypal_email: string | null
+          backup_contact_name: string | null
+          backup_contact_phone: string | null
+          hospital_name: string | null
           pregnancy_state: string
+          provider_name: string | null
+          provider_triage_phone: string | null
           referral_code: string | null
           referred_by_code: string | null
           theme_preference: string | null
@@ -1645,7 +1650,12 @@ export type Database = {
           last_active_at?: string | null
           motherhood_stage?: string | null
           paypal_email?: string | null
+          backup_contact_name?: string | null
+          backup_contact_phone?: string | null
+          hospital_name?: string | null
           pregnancy_state?: string
+          provider_name?: string | null
+          provider_triage_phone?: string | null
           referral_code?: string | null
           referred_by_code?: string | null
           theme_preference?: string | null
@@ -1668,7 +1678,12 @@ export type Database = {
           last_active_at?: string | null
           motherhood_stage?: string | null
           paypal_email?: string | null
+          backup_contact_name?: string | null
+          backup_contact_phone?: string | null
+          hospital_name?: string | null
           pregnancy_state?: string
+          provider_name?: string | null
+          provider_triage_phone?: string | null
           referral_code?: string | null
           referred_by_code?: string | null
           theme_preference?: string | null
