@@ -233,13 +233,12 @@ export const BabyKickCounter = () => {
     setActiveSec(0);
     setRunStartedAt(null);
     setPausedAt(null);
-    // An incomplete session is real data, not a failure. Saying so out loud
-    // matters — she stopped at 6 because life happened, not because she lost.
+    // Same sentence whatever the count. An earlier version appended "Saved
+    // as-is" below ten, which apologised for a session she finished on
+    // purpose — the phrasing implied it should have been something else.
     toast({
       title: 'Session saved',
-      description: kickCount >= 10
-        ? `${kickCount} movements in ${dur} min.`
-        : `${kickCount} movements in ${dur} min. Saved as-is.`,
+      description: `${kickCount} ${kickCount === 1 ? 'movement' : 'movements'} in ${dur} min.`,
     });
 
     // Persist to the server so the pattern check survives a new phone. Fire
