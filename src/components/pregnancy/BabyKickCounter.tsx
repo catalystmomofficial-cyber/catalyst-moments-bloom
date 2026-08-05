@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Timer, RotateCcw, TrendingUp, AlertTriangle, Sparkles, Sun, Moon } from 'lucide-react';
+import { Heart, Timer, RotateCcw, TrendingUp, AlertTriangle, Sparkles, Sun, Moon, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import {
@@ -59,6 +59,7 @@ export const BabyKickCounter = () => {
   const [runStartedAt, setRunStartedAt] = useState<number | null>(null);
   const [pausedAt, setPausedAt] = useState<number | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const [sessions, setSessions] = useState<KickSession[]>([]);
   const [ripples, setRipples] = useState<number[]>([]);
   const [affirmation, setAffirmation] = useState(AFFIRMATIONS[0]);
@@ -477,13 +478,27 @@ export const BabyKickCounter = () => {
           </div>
         )}
 
-        {/* Recent strip */}
+        {/* Collapsed by default. History grows without limit, and an
+            ever-lengthening list pushes the counter itself off the screen —
+            the thing she actually came here to use. The count stays visible on
+            the header so she can see there IS history without opening it. */}
         {sessions.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-medium">Recent sessions</h4>
+            <button
+              onClick={() => setHistoryOpen((o) => !o)}
+              aria-expanded={historyOpen}
+              className="flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left transition-colors hover:bg-muted/40"
+            >
+              <span className="flex items-center gap-1.5 text-sm font-medium">
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${historyOpen ? '' : '-rotate-90'}`}
+                  aria-hidden
+                />
+                Recent sessions
+              </span>
               <span className="text-xs text-muted-foreground">{sessions.length} logged</span>
-            </div>
+            </button>
+            {historyOpen && (<>
             {/* A list, not a chart.
                 A bar collapsed the one thing that matters — how many — into a
                 colour, so 9 and 0 looked identical. It carried no dates, so a
@@ -518,6 +533,7 @@ export const BabyKickCounter = () => {
                 );
               })}
             </ul>
+            </>)}
           </div>
         )}
       </CardContent>
