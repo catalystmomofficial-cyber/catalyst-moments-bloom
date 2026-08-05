@@ -5,6 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, Timer, RotateCcw, TrendingUp, AlertTriangle, Sparkles, Sun, Moon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { usePregnancyProgress } from '@/hooks/usePregnancyProgress';
@@ -17,6 +21,18 @@ interface KickSession {
   startedAt: number;
   kickCount: number;
   duration: number; // minutes
+}
+
+/** "Today, 2:15 PM" / "Yesterday, 9:04 PM" / "Sat 2 Aug, 7:30 AM". */
+function relativeDay(ts: number): string {
+  const d = new Date(ts);
+  const time = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const midnight = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const days = Math.round((midnight(new Date()) - midnight(d)) / 86400000);
+  if (days === 0) return `Today, ${time}`;
+  if (days === 1) return `Yesterday, ${time}`;
+  if (days < 7) return `${days} days ago, ${time}`;
+  return `${d.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' })}, ${time}`;
 }
 
 const AFFIRMATIONS = [
@@ -37,6 +53,12 @@ export const BabyKickCounter = () => {
   const [kickCount, setKickCount] = useState(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [elapsedSec, setElapsedSec] = useState(0);
+  /** Seconds banked from finished run segments. */
+  const [activeSec, setActiveSec] = useState(0);
+  /** When the current run segment began, or null while paused. */
+  const [runStartedAt, setRunStartedAt] = useState<number | null>(null);
+  const [pausedAt, setPausedAt] = useState<number | null>(null);
+  const [confirmReset, setConfirmReset] = useState(false);
   const [sessions, setSessions] = useState<KickSession[]>([]);
   const [ripples, setRipples] = useState<number[]>([]);
   const [affirmation, setAffirmation] = useState(AFFIRMATIONS[0]);
@@ -96,14 +118,38 @@ export const BabyKickCounter = () => {
     if (sessions.length) localStorage.setItem('kickCounterSessions', JSON.stringify(sessions));
   }, [sessions]);
 
-  // Live timer (1s)
+  // Live timer (1s). Counts ACTIVE seconds only.
+  //
+  // It used to read `now - startTime`, which meant time spent away from the
+  // app counted against her two-hour window: answer a text at count 2 / 0:54,
+  // come back 45 minutes later, and the timer said 46:54. The session looked
+  // failed when she had simply put the phone down.
   useEffect(() => {
-    if (!isTracking || !startTime) return;
-    const i = setInterval(() => {
-      setElapsedSec(Math.floor((Date.now() - startTime.getTime()) / 1000));
-    }, 1000);
+    if (!isTracking || runStartedAt === null) return;
+    const tick = () => setElapsedSec(activeSec + Math.floor((Date.now() - runStartedAt) / 1000));
+    tick();
+    const i = setInterval(tick, 1000);
     return () => clearInterval(i);
-  }, [isTracking, startTime]);
+  }, [isTracking, runStartedAt, activeSec]);
+
+  // Pause when she leaves the app; never auto-resume when she returns.
+  // Auto-resuming would silently start the clock again while she is reading a
+  // message, which is the same bug in a smaller window. She chooses.
+  useEffect(() => {
+    if (!isTracking) return;
+    const onHide = () => {
+      if (document.visibilityState === 'visible' || runStartedAt === null) return;
+      setActiveSec((a) => a + Math.floor((Date.now() - runStartedAt) / 1000));
+      setRunStartedAt(null);
+      setPausedAt(Date.now());
+    };
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('pagehide', onHide);
+    return () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', onHide);
+    };
+  }, [isTracking, runStartedAt]);
 
   // Rotate affirmations during a session
   useEffect(() => {
@@ -138,6 +184,9 @@ export const BabyKickCounter = () => {
     setStartTime(now);
     setKickCount(0);
     setElapsedSec(0);
+    setActiveSec(0);
+    setRunStartedAt(Date.now());
+    setPausedAt(null);
     setMilestoneShown(false);
     setLastKickAt(null);
     toast({ title: 'Counting started 💛', description: 'Tap the heart with each movement.' });
@@ -165,7 +214,9 @@ export const BabyKickCounter = () => {
   const stopTracking = () => {
     if (!startTime) return;
     const endTime = new Date();
-    const dur = Math.max(1, Math.floor((endTime.getTime() - startTime.getTime()) / 1000 / 60));
+    // Active minutes, not wall clock — a paused hour is not counting time.
+    const totalActive = activeSec + (runStartedAt ? Math.floor((Date.now() - runStartedAt) / 1000) : 0);
+    const dur = Math.max(1, Math.round(totalActive / 60));
     const session: KickSession = {
       id: String(Date.now()),
       date: startTime.toDateString(),
@@ -179,7 +230,17 @@ export const BabyKickCounter = () => {
     setIsTracking(false);
     setStartTime(null);
     setElapsedSec(0);
-    toast({ title: 'Session saved', description: `${kickCount} movements in ${dur} min.` });
+    setActiveSec(0);
+    setRunStartedAt(null);
+    setPausedAt(null);
+    // An incomplete session is real data, not a failure. Saying so out loud
+    // matters — she stopped at 6 because life happened, not because she lost.
+    toast({
+      title: 'Session saved',
+      description: kickCount >= 10
+        ? `${kickCount} movements in ${dur} min.`
+        : `${kickCount} movements in ${dur} min. Saved as-is.`,
+    });
 
     // Persist to the server so the pattern check survives a new phone. Fire
     // and forget: the local copy is already saved above, so a failure here
@@ -203,7 +264,30 @@ export const BabyKickCounter = () => {
     }
   };
 
-  const resetSession = () => { setIsTracking(false); setKickCount(0); setStartTime(null); setElapsedSec(0); };
+  const pauseSession = () => {
+    if (runStartedAt === null) return;
+    setActiveSec((a) => a + Math.floor((Date.now() - runStartedAt) / 1000));
+    setRunStartedAt(null);
+    setPausedAt(Date.now());
+  };
+
+  const resumeSession = () => {
+    setRunStartedAt(Date.now());
+    setPausedAt(null);
+  };
+
+  // Discards everything. Confirmed, never one tap: losing a count of 8 after
+  // ninety minutes to a misplaced thumb is unrecoverable.
+  const resetSession = () => {
+    setIsTracking(false);
+    setKickCount(0);
+    setStartTime(null);
+    setElapsedSec(0);
+    setActiveSec(0);
+    setRunStartedAt(null);
+    setPausedAt(null);
+    setConfirmReset(false);
+  };
 
   // Live status
   const sinceLast = lastKickAt ? Math.floor((Date.now() - lastKickAt) / 1000) : null;
@@ -218,6 +302,12 @@ export const BabyKickCounter = () => {
 
   // Pattern detection on history
   const pattern = useMemo(() => {
+    // A pattern claim needs enough spread to be honest. Four sessions in one
+    // afternoon is not a pattern, and "Movement is in a normal range" shown on
+    // that basis is a reassurance the data cannot support.
+    const distinctDays = new Set(sessions.map((s) => new Date(s.startedAt).toDateString())).size;
+    if (sessions.length < 5 || distinctDays < 5) return null;
+
     const last3 = sessions.slice(0, 3);
     if (last3.length < 2) return null;
     const low = last3.filter(s => s.kickCount < 10).length;
@@ -238,6 +328,14 @@ export const BabyKickCounter = () => {
     const top = Object.entries(buckets).sort((a,b)=>b[1]-a[1])[0];
     return top[1] > 0 ? top[0] : null;
   }, [sessions]);
+
+  const isPaused = isTracking && runStartedAt === null;
+  const pausedFor = (() => {
+    if (!pausedAt) return null;
+    const m = Math.floor((Date.now() - pausedAt) / 60000);
+    if (m < 1) return null;
+    return m < 60 ? `${m} min` : `${Math.floor(m / 60)} hr`;
+  })();
 
   const progress = Math.min(100, (kickCount / 10) * 100);
   const mins = Math.floor(elapsedSec / 60);
@@ -275,12 +373,29 @@ export const BabyKickCounter = () => {
           </button>
         </div>
 
-        {/* Live affirmation + status */}
-        {isTracking && (
-          <div className="text-center space-y-2 animate-fade-in">
-            <p className="text-sm font-medium text-catalyst-brown flex items-center justify-center gap-1">
-              <Sparkles className="h-3.5 w-3.5" />{affirmation}
+        {/* Paused. Never auto-resumes — she is reading a message, and the
+            clock restarting behind her is the bug in miniature. */}
+        {isTracking && isPaused && (
+          <div className="rounded-lg border border-dashed p-3 text-center space-y-2">
+            <p className="text-sm font-medium">Paused{pausedFor ? ` ${pausedFor} ago` : ''}</p>
+            <p className="text-xs text-muted-foreground">
+              Time away doesn't count. Your {kickCount} {kickCount === 1 ? 'movement is' : 'movements are'} still here.
             </p>
+            <Button size="sm" onClick={resumeSession}>Resume counting</Button>
+          </div>
+        )}
+
+        {/* Live status. The UI quiets down as the session progresses — she is
+            trying to feel her body, and every word on screen competes with
+            that. Encouragement only at the very start; after that the number,
+            the timer, and anything actually actionable. */}
+        {isTracking && !isPaused && (
+          <div className="text-center space-y-2 animate-fade-in">
+            {kickCount <= 1 && (
+              <p className="text-sm font-medium text-catalyst-brown flex items-center justify-center gap-1">
+                <Sparkles className="h-3.5 w-3.5" />{affirmation}
+              </p>
+            )}
             {liveStatus && (
               <p className={`text-xs ${liveStatus.tone === 'gentle' ? 'text-amber-700' : liveStatus.tone === 'great' ? 'text-emerald-700' : 'text-muted-foreground'}`}>
                 {liveStatus.text}
@@ -292,18 +407,51 @@ export const BabyKickCounter = () => {
           </div>
         )}
 
-        {/* Action row */}
+        {/* Action row. Finish is primary and saves whatever she has; Reset is
+            demoted to a small text control behind a confirmation, because
+            losing a count of 8 after ninety minutes to a stray thumb cannot be
+            undone. */}
         {isTracking ? (
-          <div className="grid grid-cols-2 gap-2">
-            <Button onClick={stopTracking} variant="outline">Finish session</Button>
-            <Button onClick={resetSession} variant="ghost"><RotateCcw className="h-4 w-4 mr-1" />Reset</Button>
+          <div className="space-y-2">
+            <Button onClick={stopTracking} className="w-full" size="lg">Finish session</Button>
+            <div className="flex justify-center gap-4">
+              {!isPaused && (
+                <button onClick={pauseSession} className="text-xs text-muted-foreground hover:text-foreground">
+                  Pause
+                </button>
+              )}
+              <button
+                onClick={() => setConfirmReset(true)}
+                className="text-xs text-muted-foreground hover:text-destructive inline-flex items-center gap-1"
+              >
+                <RotateCcw className="h-3 w-3" />Reset
+              </button>
+            </div>
           </div>
         ) : (
           <Button onClick={startTracking} className="w-full" size="lg">Start Kick Counting</Button>
         )}
 
-        {/* Pattern + active window */}
-        {(pattern || activeWindow) && (
+        <AlertDialog open={confirmReset} onOpenChange={setConfirmReset}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Reset session?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This clears your count of {kickCount} and starts over. It can't be undone.
+                To keep what you have, choose Finish session instead.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep counting</AlertDialogCancel>
+              <AlertDialogAction onClick={resetSession}>Reset</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Context for the rest state, not the counting state. During a
+            session these are noise competing with the thing she is trying to
+            feel. */}
+        {!isTracking && (pattern || activeWindow) && (
           <div className="grid sm:grid-cols-2 gap-2">
             {pattern && (
               <div className={`p-3 rounded-lg text-sm border ${
@@ -337,30 +485,40 @@ export const BabyKickCounter = () => {
               <h4 className="text-sm font-medium">Recent sessions</h4>
               <span className="text-xs text-muted-foreground">{sessions.length} logged</span>
             </div>
-            {/* h-full on the column matters: the bar sizes itself as a
-                percentage, and a percentage height inside an auto-height
-                parent resolves to zero. The bars were rendering at 0px, which
-                is why the count said "3 logged" above an empty strip. */}
-            <div className="flex gap-1 items-end h-16">
-              {sessions.slice(0, 14).reverse().map(s => (
-                <div
-                  key={s.id}
-                  className="flex-1 flex h-full flex-col justify-end items-center gap-1"
-                  title={`${s.kickCount} kicks · ${s.duration}m · ${s.date}`}
-                >
-                  <div
-                    className={`w-full rounded-t-md transition-all ${s.kickCount >= 10 ? 'bg-catalyst-copper' : s.kickCount >= 6 ? 'bg-catalyst-gold' : 'bg-muted-foreground/40'}`}
-                    // Floor of 8% so a very quiet session is still a visible
-                    // mark rather than nothing — a session that happened and
-                    // shows as blank reads as data loss.
-                    style={{ height: `${Math.max(8, Math.min(100, (s.kickCount / 12) * 100))}%` }}
-                  />
-                </div>
-              ))}
-            </div>
-            <p className="mt-2 text-[11px] text-muted-foreground">
-              Each bar is one session. Copper means 10 or more movements.
-            </p>
+            {/* A list, not a chart.
+                A bar collapsed the one thing that matters — how many — into a
+                colour, so 9 and 0 looked identical. It carried no dates, so a
+                run of sessions from three weeks ago read as reassuring even if
+                nothing had been felt since; and gaps are precisely the signal
+                kick counting exists to surface. Bars also imply comparison
+                between categories, but these are discrete events in a
+                sequence. The category advice about colour-coded charts was for
+                continuous data — periods, mood, weight — not for this. */}
+            <ul className="divide-y rounded-lg border">
+              {sessions.slice(0, 10).map((s) => {
+                const complete = s.kickCount >= 10;
+                return (
+                  <li key={s.id} className="flex items-center justify-between gap-3 px-3 py-2.5">
+                    <div className="min-w-0">
+                      <p className="text-sm">{relativeDay(s.startedAt)}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {s.kickCount} {s.kickCount === 1 ? 'movement' : 'movements'} · {s.duration} min
+                      </p>
+                    </div>
+                    <span
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                        complete
+                          ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
+                          : 'bg-muted text-muted-foreground'
+                      }`}
+                      title={complete ? '10 or more movements' : 'Fewer than 10 — saved as it was'}
+                    >
+                      {complete ? 'Reached 10' : 'Incomplete'}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         )}
       </CardContent>
