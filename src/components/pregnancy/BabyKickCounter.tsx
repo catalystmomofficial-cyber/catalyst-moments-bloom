@@ -351,7 +351,7 @@ export const BabyKickCounter = () => {
             </Badge>
           )}
         </CardTitle>
-        <CardDescription>Aim for 10 movements within 2 hours. Get quiet, lie on your side, and listen.</CardDescription>
+        <CardDescription>Aim for 10 movements within 2 hours. Get quiet, lie on your side, and pay attention to movement.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
         {/* Conic progress ring with pulsing heart */}
