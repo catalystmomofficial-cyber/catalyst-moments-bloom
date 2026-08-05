@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePregnancyJourney } from '@/hooks/usePregnancyJourney';
+import { useToast } from '@/hooks/use-toast';
 
 const DISMISS_KEY = 'cm_holding_next_dismissed';
 
@@ -22,6 +23,8 @@ const DISMISS_KEY = 'cm_holding_next_dismissed';
  */
 export const HoldingCard = () => {
   const { journey, leaveHolding } = usePregnancyJourney();
+  const { toast } = useToast();
+  const [leaving, setLeaving] = useState(false);
   const [dismissed, setDismissed] = useState(() => {
     try { return localStorage.getItem(DISMISS_KEY) === '1'; } catch { return false; }
   });
@@ -138,11 +141,28 @@ export const HoldingCard = () => {
           <div className="mt-6 w-full max-w-sm space-y-2">
             <Button
               variant="outline" className="w-full"
-              onClick={() => { void leaveHolding(); }}
+              disabled={leaving}
+              onClick={async () => {
+                setLeaving(true);
+                const { error } = await leaveHolding();
+                // On success the dashboard swaps this card out, so there is
+                // nothing left to re-enable. Only reset on failure.
+                if (error) {
+                  setLeaving(false);
+                  toast({
+                    title: "That didn't go through",
+                    description: 'Please try again in a moment.',
+                  });
+                }
+              }}
             >
-              I'd like to try again
+              {leaving ? 'One moment…' : "I'd like to try again"}
             </Button>
-            <Button variant="ghost" className="w-full" onClick={() => setShowOptions(false)}>
+            <Button
+              variant="ghost" className="w-full"
+              disabled={leaving}
+              onClick={() => setShowOptions(false)}
+            >
               I'm not ready
             </Button>
             <p className="pt-1 text-center text-xs text-muted-foreground">
