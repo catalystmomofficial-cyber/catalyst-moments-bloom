@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { usePregnancyProgress } from '@/hooks/usePregnancyProgress';
+import { weekNote } from '@/lib/pregnancy';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -40,58 +44,41 @@ export const PregnancyTracker = () => {
     else if (tool === 'contractions') setActiveTab('contractions');
   }, [tool]);
   
-  // Determine trimester from user's profile
-  const getCurrentTrimester = () => {
-    if (!profile?.motherhood_stage) return 2;
-    if (profile.motherhood_stage.includes('trimester_1')) return 1;
-    if (profile.motherhood_stage.includes('trimester_2')) return 2;
-    if (profile.motherhood_stage.includes('trimester_3')) return 3;
-    return 2;
-  };
+  // Her real gestational age, from her real due date. This used to be
+  // Math.random() inside a trimester band, with a hardcoded 2024 due date —
+  // so the week number changed on every render and the guidance below it was
+  // written for whichever number came up.
+  const { progress, dueDate, loading: dueDateLoading, saveDueDate, needsDate } =
+    usePregnancyProgress();
 
-  const getCurrentWeek = () => {
-    const trimester = getCurrentTrimester();
-    if (trimester === 1) return Math.floor(Math.random() * 12) + 1; // 1-12 weeks
-    if (trimester === 2) return Math.floor(Math.random() * 14) + 13; // 13-26 weeks
-    return Math.floor(Math.random() * 14) + 27; // 27-40 weeks
-  };
+  const [draftDueDate, setDraftDueDate] = useState('');
 
-  const [pregnancyData, setPregnancyData] = useState<PregnancyData>({
-    week: getCurrentWeek(),
-    trimester: getCurrentTrimester(),
-    dueDate: '2024-08-15',
-    symptoms: getCurrentTrimester() === 1 
-      ? ['Morning sickness', 'Fatigue', 'Breast tenderness', 'Frequent urination', 'Food aversions']
-      : getCurrentTrimester() === 2 
-        ? ['Lower back pain', 'Round ligament pain', 'Sciatica', 'Heartburn', 'Increased energy']
-        : ['Shortness of breath', 'Swelling', 'Hip pain', 'Braxton Hicks', 'Frequent urination', 'Fatigue'],
+  // Trimester now comes from the week, not from a profile string that could
+  // disagree with it. A woman marked "trimester_2" at 28 weeks was being shown
+  // second-trimester content.
+  const trimester = progress?.trimester ?? 2;
+  const week = progress?.week ?? 0;
+  const note = progress ? weekNote(progress.week) : null;
+
+  const [pregnancyData, setPregnancyData] = useState<Omit<PregnancyData, 'week' | 'trimester' | 'dueDate'>>({
+    symptoms: [],
     mood: 7,
-    energy: getCurrentTrimester() === 2 ? 8 : 5,
-    sleep: getCurrentTrimester() === 3 ? 4 : 6,
-    weight: 145
+    energy: 6,
+    sleep: 6,
+    weight: 0,
   });
 
   const getWeeklyMessage = () => {
-    const week = pregnancyData.week;
-    const trimester = pregnancyData.trimester;
-    
-    if (trimester === 1) {
-      if (week <= 4) return `Week ${week}: Your little one is just beginning! Focus on folic acid and gentle care.`;
-      if (week <= 8) return `Week ${week}: Major organs are forming. Rest when you need to and eat well.`;
-      return `Week ${week}: You're almost through the first trimester! Symptoms may start easing soon.`;
-    } else if (trimester === 2) {
-      if (week <= 16) return `Week ${week}: Welcome to the golden period! Energy is returning and you might feel those first flutters.`;
-      if (week <= 20) return `Week ${week}: Halfway there! Your anatomy scan might reveal your baby's gender.`;
-      return `Week ${week}: Your baby is getting stronger and you're feeling more movement every day.`;
-    } else {
-      if (week <= 32) return `Week ${week}: Third trimester has begun! Your baby is developing rapidly and gaining weight.`;
-      if (week <= 36) return `Week ${week}: Almost full term! Start preparing your hospital bag and birth plan.`;
-      return `Week ${week}: Any day now! Your baby is considered full term and ready to meet you.`;
+    if (!progress) return 'Add your due date to see where you are this week.';
+    if (progress.isOverdue) {
+      return `${progress.label}. Only about 4% of babies arrive on their due date — you are not late.`;
     }
+    if (!note) return progress.label;
+    return `${progress.label} · ${note.baby}`;
   };
 
   const getPersonalizedTip = () => {
-    const { symptoms, mood, energy, sleep, trimester } = pregnancyData;
+    const { symptoms, mood, energy, sleep } = pregnancyData;
     
     // First trimester specific tips
     if (trimester === 1) {
@@ -169,21 +156,62 @@ export const PregnancyTracker = () => {
             <Baby className="mr-2 h-5 w-5" />
             Pregnancy Journey
           </div>
-          <Badge variant="secondary" className="bg-pink-100 dark:bg-pink-950/40 text-pink-800 dark:text-pink-300">
-            Week {pregnancyData.week}
-          </Badge>
+          {progress && (
+            <Badge variant="secondary" className="bg-primary/10 text-primary border border-primary/25">
+              Week {progress.week}
+              <span className="opacity-70">+{progress.dayOfWeek}</span>
+            </Badge>
+          )}
         </CardTitle>
         <CardDescription>
           {getWeeklyMessage()}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Without a due date there is no honest week number to show, so ask
+            for one instead of inventing it — which is what this component
+            used to do. */}
+        {!dueDateLoading && needsDate && (
+          <div className="rounded-lg border border-dashed p-4 space-y-3">
+            <div>
+              <Label htmlFor="pregnancy-due-date" className="text-sm font-semibold">
+                When is your baby due?
+              </Label>
+              <p className="text-xs text-muted-foreground mt-1">
+                Everything else here — your week, your kick counts, your movement
+                plan — is worked out from this one date.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Input
+                id="pregnancy-due-date"
+                type="date"
+                value={draftDueDate}
+                onChange={(e) => setDraftDueDate(e.target.value)}
+                className="max-w-[200px]"
+              />
+              <Button
+                size="sm"
+                disabled={!draftDueDate}
+                onClick={async () => {
+                  const { error } = await saveDueDate(draftDueDate);
+                  toast(error
+                    ? { title: "Couldn't save your due date", description: 'Please try again.' }
+                    : { title: 'Due date saved', description: 'Your week updates from here on.' });
+                }}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        )}
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="symptoms">Symptoms</TabsTrigger>
-            {pregnancyData.trimester >= 2 && <TabsTrigger value="kicks">Kicks</TabsTrigger>}
-            {pregnancyData.trimester === 3 && <TabsTrigger value="contractions">Contractions</TabsTrigger>}
+            {trimester >= 2 && <TabsTrigger value="kicks">Kicks</TabsTrigger>}
+            {trimester === 3 && <TabsTrigger value="contractions">Contractions</TabsTrigger>}
             <TabsTrigger value="insights">Insights</TabsTrigger>
           </TabsList>
 
@@ -191,12 +219,43 @@ export const PregnancyTracker = () => {
             {/* Current Status */}
             <div className="text-center p-4 bg-muted/30 rounded-lg">
               <div className="text-2xl font-bold mb-1">
-                {pregnancyData.trimester === 1 ? '1st' : pregnancyData.trimester === 2 ? '2nd' : '3rd'} Trimester
+                {trimester === 1 ? '1st' : trimester === 2 ? '2nd' : '3rd'} Trimester
               </div>
-              <p className="text-sm text-muted-foreground">
-                Week {pregnancyData.week} • Due {new Date(pregnancyData.dueDate).toLocaleDateString()}
-              </p>
+              {progress && dueDate ? (
+                <p className="text-sm text-muted-foreground">
+                  {progress.label} • Due {new Date(dueDate).toLocaleDateString()}
+                  {!progress.isOverdue && ` • ${progress.daysRemaining} days to go`}
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">Add your due date to see your week</p>
+              )}
             </div>
+
+            {/* This week — the baby, and her. Every competitor writes the first
+                half; the second half is the framing the rest of the product
+                already takes. */}
+            {note && progress && (
+              <div className="rounded-lg border p-4 space-y-3">
+                <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    This week
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    about {note.size} · roughly {note.compare}
+                  </span>
+                </div>
+                <p className="text-sm">
+                  <span className="font-semibold">Baby: </span>{note.baby}
+                </p>
+                <p className="text-sm">
+                  <span className="font-semibold text-primary">You: </span>{note.mother}
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  Sizes are averages and vary widely. Your provider's scan is the
+                  measurement that matters.
+                </p>
+              </div>
+            )}
 
             {/* Quick Tracking */}
             <div className="grid grid-cols-2 gap-3">
@@ -255,9 +314,9 @@ export const PregnancyTracker = () => {
             <div className="space-y-2">
               <h4 className="font-medium text-sm">Quick Log</h4>
               <div className="grid grid-cols-2 gap-2">
-                {(pregnancyData.trimester === 1 
+                {(trimester === 1 
                   ? ['Morning sickness', 'Fatigue', 'Breast tenderness', 'Food aversions', 'Headaches', 'Dizziness', 'Mood swings', 'Constipation']
-                  : pregnancyData.trimester === 2 
+                  : trimester === 2 
                     ? ['Sciatica', 'Hip pain', 'Heartburn', 'Baby kicks', 'Round ligament pain', 'Increased appetite', 'Skin changes', 'Leg cramps']
                     : ['Shortness of breath', 'Swelling', 'Braxton Hicks', 'Restless legs', 'Pelvic pressure', 'Frequent urination', 'Insomnia', 'Nesting urge']
                 ).map((symptom) => (
@@ -276,7 +335,7 @@ export const PregnancyTracker = () => {
           </TabsContent>
 
           {/* Baby Kick Counter - 2nd & 3rd Trimester (Premium) */}
-          {pregnancyData.trimester >= 2 && (
+          {trimester >= 2 && (
             <TabsContent value="kicks" className="space-y-4">
               <PremiumToolGuard
                 toolName="Baby Kick Counter"
@@ -288,7 +347,7 @@ export const PregnancyTracker = () => {
           )}
 
           {/* Contraction Tracker - 3rd Trimester Only (Premium) */}
-          {pregnancyData.trimester === 3 && (
+          {trimester === 3 && (
             <TabsContent value="contractions" className="space-y-4">
               <PremiumToolGuard
                 toolName="Contraction Tracker"
@@ -307,11 +366,11 @@ export const PregnancyTracker = () => {
             >
             <div className="space-y-3">
               <div className="p-4 bg-blue-50 dark:bg-blue-950/40 rounded-lg">
-                <h4 className="font-medium text-sm mb-2">Week {pregnancyData.week} Development</h4>
+                <h4 className="font-medium text-sm mb-2">Week {week} Development</h4>
                 <p className="text-sm text-gray-700">
-                  {pregnancyData.trimester === 1 
+                  {trimester === 1 
                     ? "Your baby's major organs are forming! Neural tube development is crucial right now."
-                    : pregnancyData.trimester === 2 
+                    : trimester === 2 
                       ? "Your baby is about the size of a carrot! They're developing their senses and you might feel more movement."
                       : "Your baby is gaining weight and their lungs are maturing. They're getting ready to meet you!"
                   }
@@ -321,9 +380,9 @@ export const PregnancyTracker = () => {
               <div className="p-4 bg-green-50 dark:bg-green-950/40 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Your Body This Week</h4>
                 <p className="text-sm text-gray-700">
-                  {pregnancyData.trimester === 1 
+                  {trimester === 1 
                     ? "Your body is adjusting to pregnancy hormones. Fatigue and nausea are common as your body works hard."
-                    : pregnancyData.trimester === 2 
+                    : trimester === 2 
                       ? "Your belly is really showing now! Back pain is common as your center of gravity shifts. Stay active but listen to your body."
                       : "Your body is preparing for birth. Your ribcage may expand and you might feel more pressure as baby drops lower."
                   }
@@ -333,9 +392,9 @@ export const PregnancyTracker = () => {
               <div className="p-4 bg-purple-50 dark:bg-purple-950/40 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Wellness Focus</h4>
                 <p className="text-sm text-gray-700">
-                  {pregnancyData.trimester === 1 
+                  {trimester === 1 
                     ? "Focus on folic acid, staying hydrated, and gentle movement. Listen to your body and rest when needed."
-                    : pregnancyData.trimester === 2 
+                    : trimester === 2 
                       ? "Focus on calcium-rich foods, gentle exercise, and enjoying this energy boost. Great time for prenatal classes!"
                       : "Focus on preparing for birth, practicing breathing techniques, and getting plenty of rest. Pack your hospital bag!"
                   }
