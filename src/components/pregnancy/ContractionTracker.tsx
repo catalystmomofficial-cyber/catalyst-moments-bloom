@@ -82,6 +82,7 @@ export const ContractionTracker = () => {
       .from('contractions')
       .select('id, started_at, ended_at, duration_seconds, intensity')
       .eq('user_id', user.id)
+      .is('archived_at', null)
       .order('started_at', { ascending: false })
       .limit(200);
     if (error || !data) return;
@@ -330,6 +331,26 @@ export const ContractionTracker = () => {
       : localState;
   const usingLocalOnly = !effectiveServer || !online;
 
+  // How long since anything was logged. Nothing here archives on its own —
+  // she might be in the car, in triage, or genuinely finished, and the app
+  // cannot tell which.
+  const lastLoggedAt = contractions[0]?.startTime ?? null;
+  const staleMin = !activeStart && lastLoggedAt
+    ? Math.floor((now - lastLoggedAt) / 60000)
+    : 0;
+
+  const archiveSession = async () => {
+    setContractions([]);
+    setOpenId(null);
+    setLocalId(null);
+    setActiveStart(null);
+    try { localStorage.removeItem('contractionLog'); } catch { /* private mode */ }
+    queue.clear();
+    if (user) await supabase.rpc('archive_contractions');
+    void loadFromServer.current();
+    toast({ title: 'Session archived', description: 'Everything you logged is saved. Start again whenever you need to.' });
+  };
+
   // Written for a midwife reading it on a partner's phone, not for us.
   const shareSummary = (() => {
     if (contractions.length === 0) return '';
@@ -369,6 +390,30 @@ export const ContractionTracker = () => {
         <CardDescription>Tap to time waves. We'll watch for the 5-1-1 pattern with you.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
+        {/* Stale. Two thresholds, both offering the same two choices — and
+            "archive" rather than "end", because "end" would be telling her
+            her labour ended. */}
+        {staleMin >= 30 && (
+          <div className="rounded-lg border border-dashed p-3 space-y-2">
+            <p className="text-sm">
+              {staleMin >= 120
+                ? `No contractions logged for ${Math.floor(staleMin / 60)} hours.`
+                : `Your last contraction was ${staleMin} minutes ago.`}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {staleMin >= 120
+                ? 'Archive this session if things have moved on, or carry on timing.'
+                : 'Tap start when the next one comes, or archive if you are done for now.'}
+            </p>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={() => { void archiveSession(); }}>
+                Archive session
+              </Button>
+              <Button size="sm" variant="ghost" onClick={start}>Keep timing</Button>
+            </div>
+          </div>
+        )}
+
         {/* What the reconciled assessment currently is, in one place. */}
         <div className={`p-3 rounded-lg border text-sm ${phaseStyles[STATE_MESSAGES[displayState].tone] ?? phaseStyles.muted}`}>
           <p className="font-medium">{STATE_MESSAGES[displayState].title}</p>

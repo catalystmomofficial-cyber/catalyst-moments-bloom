@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { usePregnancyProgress } from '@/hooks/usePregnancyProgress';
 import { weekNote } from '@/lib/pregnancy';
 import { GrowthRing } from './GrowthRing';
+import { LaborContactsPrompt } from './LaborContactsPrompt';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -230,6 +231,9 @@ export const PregnancyTracker = () => {
                 </p>
               )}
             </div>
+
+            {/* From 34 weeks, until her triage line is set. */}
+            <LaborContactsPrompt />
 
             {/* This week — the baby, and her. Every competitor writes the first
                 half; the second half is the framing the rest of the product

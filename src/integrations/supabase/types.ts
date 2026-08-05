@@ -600,6 +600,7 @@ export type Database = {
       contractions: {
         Row: {
           created_at: string
+          archived_at: string | null
           duration_seconds: number | null
           ended_at: string | null
           id: string
@@ -610,6 +611,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          archived_at?: string | null
           duration_seconds?: number | null
           ended_at?: string | null
           id?: string
@@ -620,6 +622,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          archived_at?: string | null
           duration_seconds?: number | null
           ended_at?: string | null
           id?: string
@@ -2495,6 +2498,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      archive_contractions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       end_contraction: {
         Args: {
           p_id: string
