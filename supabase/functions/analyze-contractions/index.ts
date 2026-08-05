@@ -19,19 +19,41 @@ const variance = (arr: number[]) => {
 
 function analyzeContractions(contractions: Contraction[]) {
   if (contractions.length < 3) return 'EARLY';
+
   const intervals: number[] = [];
   const durations: number[] = [];
+
+  // Interval is START to START — the obstetric definition, and what the "5" in
+  // 5-1-1 means. This used to measure startTime[i] - endTime[i-1], which is
+  // the REST GAP between contractions: a different and always smaller number.
+  // The client measured start-to-start, so the two engines were never
+  // comparing the same quantity — that, not the thresholds, is why they
+  // disagreed. It also over-escalated: contractions six minutes apart lasting
+  // a minute leave a 300-second gap, which used to read as 5-1-1.
   for (let i = 1; i < contractions.length; i++) {
     intervals.push(
       (new Date(contractions[i].startTime).getTime() -
-        new Date(contractions[i - 1].endTime).getTime()) / 1000,
+        new Date(contractions[i - 1].startTime).getTime()) / 1000,
     );
   }
   contractions.forEach((c) => durations.push(c.duration));
+
   const avgInterval = average(intervals);
   const avgDuration = average(durations);
-  const consistency = variance(intervals);
-  if (avgInterval <= 300 && avgDuration >= 60 && consistency < 30) return 'READY';
+
+  // Regularity as a standard deviation in seconds, not a raw variance. The old
+  // gate was `variance(intervals) < 30` — variance is in SECONDS SQUARED, so
+  // it demanded a standard deviation under about 5.5 seconds. Labour does not
+  // run to a metronome: a woman in a genuine 5-1-1 pattern varying by half a
+  // minute has a variance near 900 and could never reach READY. That is a
+  // false negative, and false negatives keep her at home too long.
+  const sd = Math.sqrt(variance(intervals));
+
+  // All three parts of 5-1-1: five minutes apart, one minute long, holding
+  // steady. The duration floor is the part most timers omit — contractions
+  // every five minutes lasting twenty seconds are early labour, and sending
+  // her in on interval alone gets her sent home again.
+  if (avgInterval <= 300 && avgDuration >= 60 && sd <= 90) return 'READY';
   if (avgInterval <= 360 && avgDuration >= 50) return 'PREPARE';
   if (avgInterval <= 480) return 'BUILDING';
   return 'EARLY';

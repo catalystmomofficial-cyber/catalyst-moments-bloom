@@ -6,6 +6,11 @@ import { Timer, AlertTriangle, Baby, Heart, Wind } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 type LaborState = 'EARLY' | 'BUILDING' | 'PREPARE' | 'READY';
 
@@ -48,13 +53,71 @@ export const ContractionTracker = () => {
   const breathRef = useRef<HTMLDivElement>(null);
   const [serverState, setServerState] = useState<LaborState | null>(null);
   const lastServerStateRef = useRef<LaborState | null>(null);
+  const { user } = useAuth();
+  /** Row id of the contraction currently running, so it can be closed. */
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [online, setOnline] = useState(true);
+  const [pendingDelete, setPendingDelete] = useState<Contraction | null>(null);
 
-  // Restore
+  // localStorage paints first and keeps the log readable with no signal, but
+  // the database is the record. This used to be the ONLY store, so a refresh
+  // or a flat battery at 3am erased the whole labour.
   useEffect(() => {
     const saved = localStorage.getItem('contractionLog');
-    if (saved) try { setContractions(JSON.parse(saved)); } catch {}
+    if (saved) try { setContractions(JSON.parse(saved)); } catch { /* corrupt */ }
   }, []);
   useEffect(() => { localStorage.setItem('contractionLog', JSON.stringify(contractions)); }, [contractions]);
+
+  const loadFromServer = useRef<() => Promise<void>>(async () => {});
+  loadFromServer.current = async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('contractions')
+      .select('id, started_at, ended_at, duration_seconds, intensity')
+      .eq('user_id', user.id)
+      .order('started_at', { ascending: false })
+      .limit(200);
+    if (error || !data) return;
+
+    // A row with no ended_at is a contraction that was running when she left.
+    // Restoring it is what makes the tool survive a refresh mid-labour.
+    const open = data.find((r) => !r.ended_at);
+    if (open) {
+      setOpenId(open.id);
+      setActiveStart(new Date(open.started_at).getTime());
+      setIntensity(open.intensity ?? 5);
+    }
+
+    const closed: Contraction[] = data
+      .filter((r) => r.ended_at)
+      .map((r) => ({
+        id: r.id,
+        startTime: new Date(r.started_at).getTime(),
+        endTime: new Date(r.ended_at as string).getTime(),
+        duration: r.duration_seconds ?? 0,
+        intensity: r.intensity ?? 5,
+      }));
+
+    // Merge, newest first. No cap: a long labour can run to hundreds of
+    // contractions, and the earliest ones answer the first question triage
+    // asks — when did they start.
+    setContractions((local) => {
+      const byStart = new Map<number, Contraction>();
+      for (const c of [...closed, ...local]) byStart.set(c.startTime, c);
+      return [...byStart.values()].sort((a, b) => b.startTime - a.startTime);
+    });
+  };
+
+  useEffect(() => { void loadFromServer.current(); }, [user]);
+
+  useEffect(() => {
+    const on = () => setOnline(true);
+    const off = () => setOnline(false);
+    setOnline(navigator.onLine);
+    window.addEventListener('online', on);
+    window.addEventListener('offline', off);
+    return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); };
+  }, []);
 
   // Tick
   useEffect(() => {
@@ -69,25 +132,61 @@ export const ContractionTracker = () => {
     return () => clearInterval(i);
   }, [activeStart]);
 
-  const start = () => {
-    setActiveStart(Date.now());
+  const start = async () => {
+    const startedAt = Date.now();
+    setActiveStart(startedAt);
     setIntensity(5);
     vibrate('medium');
     toast({ title: 'Wave starting', description: 'Soften. Breathe. Sway if you need to.' });
+
+    // Write one: open the row now, not at the end. If her phone dies mid
+    // contraction, this row is what tells us it happened and when.
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('contractions')
+      .insert({ user_id: user.id, started_at: new Date(startedAt).toISOString() })
+      .select('id')
+      .single();
+    // 23505 = a row is already open (double tap, second device). Recover its
+    // id rather than orphaning the timer.
+    if (error?.code === '23505') { void loadFromServer.current(); return; }
+    if (!error && data) setOpenId(data.id);
   };
 
-  const end = () => {
+  const end = async () => {
     if (!activeStart) return;
     const endAt = Date.now();
     const dur = Math.max(1, Math.floor((endAt - activeStart) / 1000));
-    const c: Contraction = { id: String(endAt), startTime: activeStart, endTime: endAt, duration: dur, intensity };
-    setContractions(prev => [c, ...prev].slice(0, 50));
+    // No slice cap. It existed for localStorage size, and it dropped the
+    // OLDEST contractions — the ones that answer "when did they start".
+    const c: Contraction = { id: openId ?? String(endAt), startTime: activeStart, endTime: endAt, duration: dur, intensity };
+    setContractions(prev => [c, ...prev]);
     setActiveStart(null);
     vibrate('success');
     toast({ title: 'Wave complete', description: `${fmt(dur)} · intensity ${intensity}/10` });
+
+    // Write two: close the row. Duration and interval are computed in the
+    // database so the numbers driving triage are not whatever the client
+    // happened to calculate.
+    if (openId) {
+      const { error } = await supabase.rpc('end_contraction', { p_id: openId, p_intensity: intensity });
+      if (error) console.error('Failed to close contraction:', error);
+      setOpenId(null);
+      void loadFromServer.current();
+    }
   };
 
-  const remove = (id: string) => setContractions(prev => prev.filter(c => c.id !== id));
+  const remove = async (id: string) => {
+    setContractions(prev => prev.filter(c => c.id !== id));
+    setPendingDelete(null);
+    if (!user) return;
+    await supabase.from('contractions').delete().eq('id', id).eq('user_id', user.id);
+    // Removing one contraction invalidates the interval of the one after it,
+    // so the recalculation happens server-side and stays consistent with the
+    // stored record rather than only with this screen.
+    await supabase.rpc('recompute_contraction_intervals');
+    void loadFromServer.current();
+  };
 
   const liveSec = activeStart ? Math.floor((now - activeStart) / 1000) : 0;
 
@@ -115,15 +214,19 @@ export const ContractionTracker = () => {
     return { key: 'irregular', label: 'Irregular', tone: 'muted', message: 'Contractions are still irregular. Stay calm 💛' };
   }, [stats]);
 
-  // Trigger urgent toast once when transition / active
+  // The local engine no longer raises its own alert.
+  //
+  // Two engines each firing their own toast meant she could be told "Active
+  // Labor — call your provider" by one and "Labor Progressing" by the other,
+  // minutes apart, about the same contractions. During labour that is not
+  // noise, it is contradictory triage advice.
+  //
+  // The server is the single voice: its thresholds can be corrected without a
+  // client release, which matters when the rule itself is subtle. The local
+  // computation stays, but only to drive the on-screen label when the server
+  // is unreachable — and only ever upward. See `displayPhase` below.
   const lastPhaseRef = useRef<string>('');
-  useEffect(() => {
-    if (phase.key !== lastPhaseRef.current && (phase.key === 'active' || phase.key === 'transition')) {
-      vibrate('error');
-      toast({ title: phase.label, description: phase.message, variant: 'destructive' });
-    }
-    lastPhaseRef.current = phase.key;
-  }, [phase.key]);
+  useEffect(() => { lastPhaseRef.current = phase.key; }, [phase.key]);
 
   // Server-side labor analysis
   useEffect(() => {
@@ -154,6 +257,32 @@ export const ContractionTracker = () => {
     return () => { cancelled = true; };
   }, [contractions]);
 
+  // ── Reconciling the two engines ───────────────────────────────────────────
+  // The server is the source of truth: its thresholds can be corrected without
+  // a client release, which matters because 5-1-1 is subtler than it looks.
+  // But labour is exactly when connectivity fails, so the local computation
+  // stays as a fallback — and the two are combined by taking the HIGHER of the
+  // two, never the lower.
+  //
+  // The asymmetry is deliberate. A false escalation sends her to her provider
+  // early; a false de-escalation keeps her at home too long. Those are not
+  // equally bad, so the display never steps down because a response disagreed.
+  const SEVERITY: Record<LaborState, number> = { EARLY: 0, BUILDING: 1, PREPARE: 2, READY: 3 };
+  const LOCAL_AS_STATE: Record<string, LaborState> = {
+    tracking: 'EARLY', irregular: 'EARLY', early: 'BUILDING',
+    'early-active': 'PREPARE', active: 'READY', transition: 'READY',
+  };
+
+  // Cached, so a server outage mid-labour does not silently drop her back to
+  // whatever local thinks — she keeps the assessment she has been reading.
+  const effectiveServer = serverState ?? lastServerStateRef.current;
+  const localState = LOCAL_AS_STATE[phase.key] ?? 'EARLY';
+  const displayState: LaborState =
+    effectiveServer && SEVERITY[effectiveServer] >= SEVERITY[localState]
+      ? effectiveServer
+      : localState;
+  const usingLocalOnly = !effectiveServer || !online;
+
   const intensityColor = (n: number) =>
     n <= 3 ? 'bg-emerald-500' : n <= 6 ? 'bg-catalyst-gold' : n <= 8 ? 'bg-orange-500' : 'bg-destructive';
 
@@ -169,11 +298,23 @@ export const ContractionTracker = () => {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center"><Timer className="mr-2 h-5 w-5 text-catalyst-copper" />Contraction Tracker</div>
-          <Badge variant="outline" className="border-catalyst-copper/40 text-catalyst-brown">{phase.label}</Badge>
+          <Badge variant="outline" className="border-catalyst-copper/40 text-catalyst-brown">{STATE_MESSAGES[displayState].title}</Badge>
         </CardTitle>
         <CardDescription>Tap to time waves. We'll watch for the 5-1-1 pattern with you.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
+        {/* What the reconciled assessment currently is, in one place. */}
+        <div className={`p-3 rounded-lg border text-sm ${phaseStyles[STATE_MESSAGES[displayState].tone] ?? phaseStyles.muted}`}>
+          <p className="font-medium">{STATE_MESSAGES[displayState].title}</p>
+          <p className="text-xs mt-0.5">{STATE_MESSAGES[displayState].message}</p>
+          {usingLocalOnly && (
+            // She deserves to know which engine is driving her triage view.
+            <p className="mt-1.5 text-[11px] opacity-80">
+              Offline — using on-device thresholds.
+            </p>
+          )}
+        </div>
+
         {/* Active wave panel */}
         {activeStart ? (
           <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-catalyst-cream to-catalyst-peach border border-catalyst-tan space-y-4">
@@ -273,7 +414,11 @@ export const ContractionTracker = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       {interval !== null && <span className="text-muted-foreground">{interval}m apart</span>}
-                      <button onClick={() => remove(c.id)} className="text-muted-foreground hover:text-destructive">×</button>
+                      <button
+                        onClick={() => setPendingDelete(c)}
+                        aria-label="Delete this contraction"
+                        className="text-muted-foreground hover:text-destructive px-1"
+                      >×</button>
                     </div>
                   </div>
                 );
@@ -282,10 +427,31 @@ export const ContractionTracker = () => {
           </div>
         )}
 
+        <AlertDialog open={pendingDelete !== null} onOpenChange={(o) => !o && setPendingDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Delete the contraction logged at{' '}
+                {pendingDelete && new Date(pendingDelete.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This recalculates the time between every contraction after it, which
+                changes the pattern you're being shown. It can't be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep it</AlertDialogCancel>
+              <AlertDialogAction onClick={() => pendingDelete && remove(pendingDelete.id)}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         <div className="p-3 rounded-lg bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-xs text-orange-900">
           <p className="font-semibold mb-1">Call your provider if:</p>
           <ul className="space-y-0.5">
-            <li>• Waves are 5 minutes apart for 1 hour (5-1-1)</li>
+            <li>• Waves are 5 minutes apart, lasting 1 minute, for 1 hour (5-1-1)</li>
             <li>• Water breaks or any bleeding</li>
             <li>• Severe pain or reduced baby movement</li>
           </ul>

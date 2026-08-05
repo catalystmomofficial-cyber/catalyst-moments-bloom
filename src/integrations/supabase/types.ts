@@ -597,6 +597,39 @@ export type Database = {
         }
         Relationships: []
       }
+      contractions: {
+        Row: {
+          created_at: string
+          duration_seconds: number | null
+          ended_at: string | null
+          id: string
+          intensity: number | null
+          interval_seconds: number | null
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          id?: string
+          intensity?: number | null
+          interval_seconds?: number | null
+          started_at: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          id?: string
+          intensity?: number | null
+          interval_seconds?: number | null
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       course_content: {
         Row: {
           calories_target: number | null
@@ -2447,6 +2480,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      end_contraction: {
+        Args: {
+          p_id: string
+          p_intensity?: number
+        }
+        Returns: undefined
+      }
+      recompute_contraction_intervals: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       record_pregnancy_outcome: {
         Args: {
           p_outcome: string
