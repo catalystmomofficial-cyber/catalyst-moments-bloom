@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { usePregnancyProgress } from '@/hooks/usePregnancyProgress';
 import { weekNote } from '@/lib/pregnancy';
+import { GrowthRing } from './GrowthRing';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -216,18 +217,17 @@ export const PregnancyTracker = () => {
           </TabsList>
 
           <TabsContent value="today" className="space-y-4">
-            {/* Current Status */}
-            <div className="text-center p-4 bg-muted/30 rounded-lg">
-              <div className="text-2xl font-bold mb-1">
-                {trimester === 1 ? '1st' : trimester === 2 ? '2nd' : '3rd'} Trimester
-              </div>
-              {progress && dueDate ? (
-                <p className="text-sm text-muted-foreground">
-                  {progress.label} • Due {new Date(dueDate).toLocaleDateString()}
-                  {!progress.isOverdue && ` • ${progress.daysRemaining} days to go`}
+            {/* The weekly moment. Ovia, Flo and The Bump all anchor pregnancy
+                on one image that changes each week; this is ours, drawn as
+                growth rather than as the baby. */}
+            <div className="flex flex-col items-center py-2">
+              <GrowthRing progress={progress} />
+              {progress && dueDate && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Due {new Date(dueDate).toLocaleDateString(undefined, {
+                    day: 'numeric', month: 'long', year: 'numeric',
+                  })}
                 </p>
-              ) : (
-                <p className="text-sm text-muted-foreground">Add your due date to see your week</p>
               )}
             </div>
 

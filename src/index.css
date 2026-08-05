@@ -45,6 +45,14 @@
     --recovery: 300 26% 54%;
     --recovery-soft: 300 38% 96%;
 
+    /* Gestation sage — the pregnancy "This Week" accent. Living green rather
+       than the pink every competitor in this category reaches for, and cool
+       enough to read as growth beside copper without competing with it for
+       attention. Same scoping rule as recovery: one block, droppable or
+       promotable brand-wide. */
+    --gestation: 96 20% 42%;
+    --gestation-soft: 96 26% 96%;
+
     --radius: 1rem;
   }
 
@@ -81,6 +89,11 @@
     /* Recovery violet, lifted for contrast against pure black */
     --recovery: 300 34% 70%;
     --recovery-soft: 300 20% 14%;
+
+    /* Gestation sage, lifted the same way — the 42% light version disappears
+       against pure black */
+    --gestation: 96 30% 62%;
+    --gestation-soft: 96 18% 13%;
   }
 }
 
