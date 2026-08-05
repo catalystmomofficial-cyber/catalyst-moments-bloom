@@ -605,6 +605,7 @@ export type Database = {
           birth_type: string | null
           created_at: string
           id: string
+          outcome: string
           pregnancy_journey_id: string | null
           user_id: string
         }
@@ -615,6 +616,7 @@ export type Database = {
           birth_type?: string | null
           created_at?: string
           id?: string
+          outcome?: string
           pregnancy_journey_id?: string | null
           user_id: string
         }
@@ -625,10 +627,46 @@ export type Database = {
           birth_type?: string | null
           created_at?: string
           id?: string
+          outcome?: string
           pregnancy_journey_id?: string | null
           user_id?: string
         }
         Relationships: []
+      }
+      recoveries: {
+        Row: {
+          archived_at: string | null
+          birth_id: string
+          created_at: string
+          id: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          birth_id: string
+          created_at?: string
+          id?: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          birth_id?: string
+          created_at?: string
+          id?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recoveries_birth_id_fkey"
+            columns: ["birth_id"]
+            isOneToOne: false
+            referencedRelation: "births"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       recovery_checkins: {
         Row: {
@@ -637,6 +675,7 @@ export type Database = {
           date: string
           id: string
           mood: string
+          recovery_id: string | null
           user_id: string
         }
         Insert: {
@@ -645,6 +684,7 @@ export type Database = {
           date: string
           id?: string
           mood: string
+          recovery_id?: string | null
           user_id: string
         }
         Update: {
@@ -653,6 +693,7 @@ export type Database = {
           date?: string
           id?: string
           mood?: string
+          recovery_id?: string | null
           user_id?: string
         }
         Relationships: []
@@ -2563,6 +2604,7 @@ export type Database = {
           p_birth_date: string
           p_birth_type?: string | null
           p_baby_count?: number
+          p_outcome?: string
         }
         Returns: string
       }

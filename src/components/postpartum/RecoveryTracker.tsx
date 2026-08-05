@@ -6,6 +6,10 @@ import { Input } from '@/components/ui/input';
 import { ArrowRight, CalendarDays, Heart, Sparkles } from 'lucide-react';
 import { useContentFilter } from '@/hooks/useContentFilter';
 import { useRecovery } from '@/hooks/useRecovery';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import RecoveryRing from './RecoveryRing';
 import OneTapCheckIn from './OneTapCheckIn';
 import {
@@ -42,7 +46,8 @@ export const RecoveryTracker = () => {
   // Server-backed. Both the birth date and every check-in used to live only in
   // localStorage, so a new phone erased how many weeks postpartum she was and
   // silently reset the safety nudge that watches for a run of hard days.
-  const { birthDate, checkIns, saveBirth, checkIn, reload } = useRecovery();
+  const { birthDate, checkIns, saveBirth, checkIn, reload, hasActiveRecovery, birth } = useRecovery();
+  const [confirmNewBaby, setConfirmNewBaby] = useState(false);
   const [draftDate, setDraftDate] = useState('');
 
   const days = useMemo(() => daysSinceBirth(birthDate), [birthDate]);
@@ -52,6 +57,10 @@ export const RecoveryTracker = () => {
 
   const saveDate = () => {
     if (!draftDate) return;
+    // Correcting a date on the birth she already has is not a new baby, so it
+    // updates in place. Only a genuinely new birth archives the old recovery,
+    // and only after she says so.
+    if (hasActiveRecovery && !birth) { setConfirmNewBaby(true); return; }
     void saveBirth(draftDate);
   };
 
@@ -93,7 +102,29 @@ export const RecoveryTracker = () => {
           </div>
 
           {/* Birth date — asked once, gently, and always skippable */}
-          {!birthDate && (
+          <AlertDialog open={confirmNewBaby} onOpenChange={setConfirmNewBaby}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>You're adding a new baby</AlertDialogTitle>
+            {/* Her language, not the database's. It names what is happening,
+                promises the old recovery is kept, and frames the new one as
+                starting rather than the old one as ending. One tap; the
+                archive happens on confirm. */}
+            <AlertDialogDescription>
+              Your recovery from your first will be kept — you can still find it in
+              your history. Start fresh recovery?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Not yet</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { setConfirmNewBaby(false); void saveBirth(draftDate); }}>
+              Start fresh recovery
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {!birthDate && (
             <div className="rounded-xl border border-dashed border-border p-4">
               <label
                 htmlFor="recovery-birth-date"

@@ -15,6 +15,7 @@ export interface BirthRecord {
   birth_date: string;
   birth_type: string | null;
   baby_count: number;
+  outcome?: string | null;
 }
 
 /**
@@ -28,6 +29,7 @@ export interface BirthRecord {
 export function useRecovery() {
   const { user } = useAuth();
   const [birth, setBirth] = useState<BirthRecord | null>(null);
+  const [recoveryId, setRecoveryId] = useState<string | null>(null);
   const [checkIns, setCheckIns] = useState<RecoveryCheckIn[]>(() => readLocalCheckIns());
   const [loading, setLoading] = useState(true);
 
@@ -35,12 +37,14 @@ export function useRecovery() {
     if (!user) { setLoading(false); return; }
 
     const [{ data: b }, { data: c }] = await Promise.all([
+      // The ACTIVE RECOVERY is the question, not "an unarchived birth". A
+      // birth is never archived — it happened — so archived_at lives on the
+      // recovery and that is what decides which timeline is current.
       supabase
-        .from('births')
-        .select('id, birth_date, birth_type, baby_count')
+        .from('recoveries')
+        .select('id, started_at, births!inner(id, birth_date, birth_type, baby_count, outcome)')
         .eq('user_id', user.id)
         .is('archived_at', null)
-        .order('birth_date', { ascending: false })
         .limit(1),
       supabase
         .from('recovery_checkins')
@@ -50,11 +54,12 @@ export function useRecovery() {
         .limit(120),
     ]);
 
-    const record = (b?.[0] as BirthRecord) ?? null;
-    if (record) {
-      setBirth(record);
+    const row = b?.[0] as { id: string; births: BirthRecord } | undefined;
+    if (row?.births) {
+      setBirth(row.births);
+      setRecoveryId(row.id);
       // Heal the local cache so an offline first paint is not stale.
-      setLocalBirthDate(record.birth_date);
+      setLocalBirthDate(row.births.birth_date);
     }
 
     if (c) {
@@ -86,7 +91,7 @@ export function useRecovery() {
    */
   const saveBirth = useCallback(async (
     birthDate: string,
-    opts?: { birthType?: string; babyCount?: number },
+    opts?: { birthType?: string; babyCount?: number; outcome?: string },
   ) => {
     setLocalBirthDate(birthDate);
     if (!user) return { error: null };
@@ -108,6 +113,7 @@ export function useRecovery() {
       p_birth_date: birthDate,
       p_birth_type: opts?.birthType ?? null,
       p_baby_count: opts?.babyCount ?? 1,
+      p_outcome: opts?.outcome ?? 'live',
     });
     if (!error) await load();
     return { error };
@@ -123,14 +129,52 @@ export function useRecovery() {
     const { error } = await supabase
       .from('recovery_checkins')
       .upsert(
-        { user_id: user.id, birth_id: birth?.id ?? null, date, mood },
+        { user_id: user.id, birth_id: birth?.id ?? null, recovery_id: recoveryId, date, mood },
         { onConflict: 'user_id,date' },
       );
     return { error };
-  }, [user, birth]);
+  }, [user, birth, recoveryId]);
+
+  /**
+   * One-time lift of the localStorage era into the database.
+   *
+   * Runs silently, never blocks the UI, and only clears the local keys after
+   * the server has confirmed — a migration that deletes first and fails second
+   * would lose exactly the timeline it was meant to rescue.
+   */
+  useEffect(() => {
+    if (loading || !user || birth) return;
+    const local = localBirthDate();
+    if (!local) return;
+
+    let cancelled = false;
+    (async () => {
+      const { error } = await supabase.rpc('record_birth', {
+        p_birth_date: local,
+        p_birth_type: 'unknown',   // she can correct it later
+        p_baby_count: 1,
+        p_outcome: 'live',
+      });
+      if (cancelled || error) return;
+
+      // Carry her check-ins across before touching the local copy.
+      const localCheckIns = readLocalCheckIns();
+      if (localCheckIns.length > 0) {
+        await supabase.from('recovery_checkins').upsert(
+          localCheckIns.map((c) => ({ user_id: user.id, date: c.date, mood: c.mood })),
+          { onConflict: 'user_id,date' },
+        );
+      }
+      await load();
+    })();
+    return () => { cancelled = true; };
+  }, [loading, user, birth, load]);
 
   return {
     birth,
+    recoveryId,
+    /** True when a recovery is already running — drives the second-birth confirm. */
+    hasActiveRecovery: Boolean(recoveryId),
     /** Falls back to the local cache so an offline first paint still works. */
     birthDate: birth?.birth_date ?? localBirthDate(),
     checkIns,
