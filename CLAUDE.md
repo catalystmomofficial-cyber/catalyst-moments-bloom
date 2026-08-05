@@ -250,3 +250,25 @@ Summaries must be specific — "Mamba achieves linear-time sequence modeling via
 - After editing `.md` files directly, run `hyperresearch sync` to update the index
 - Run `hyperresearch --help` for the full command list
 <!-- hyperresearch:end -->
+
+## Pregnancy loss — the Holding state
+
+**Read `docs/holding-state.md` before touching notifications, the dashboard,
+analytics, or the growth funnel.**
+
+Holding is the state after a pregnancy loss. Two rules that are easy to break
+without noticing:
+
+- **Nothing moves a user out of Holding except a control she presses.** No
+  timer, no cron, no default, and never an "it's been six weeks, are you ready
+  to try again?" prompt.
+- **Analytics on Holding users are never used to improve engagement.** The
+  metric exists so we can audit the experience and be accountable to the women
+  in it — not as a cohort to re-activate. Their engagement is supposed to be
+  low.
+
+Any new notification type that references a pregnancy, congratulates, scores,
+or asks her to come back must be added to `suppressedByHolding` in
+`supabase/functions/send-lifecycle-notifications/index.ts`. When in doubt,
+suppress it: a missed nudge costs nothing, the other mistake sends "You're 25
+weeks today!" two days after a loss.

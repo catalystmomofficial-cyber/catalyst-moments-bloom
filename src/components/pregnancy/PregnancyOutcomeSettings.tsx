@@ -83,14 +83,33 @@ export const PregnancyOutcomeSettings = () => {
                 <>
                   We'll move you to your recovery plan and your pregnancy tracking will stop.
                   Everything you logged stays saved.
+                  {/* The two doors must be reachable from each other. The
+                      postpartum flow is celebratory by design, so landing
+                      there after a loss is the worst misclick in the app. */}
+                  <br /><br />
+                  <button
+                    type="button"
+                    className="underline underline-offset-2 hover:no-underline"
+                    onClick={() => setConfirming('loss')}
+                  >
+                    If your pregnancy ended differently, you can hold your journey instead.
+                  </button>
                 </>
               ) : (
                 <>
-                  Your pregnancy reminders will stop right away. Nothing you've written or
-                  logged will be deleted, and nothing will be asked of you.
+                  This will hold your journey here. Your reminders will stop, and nothing
+                  will be asked of you. You can always come back to this.
                   <br /><br />
-                  We'll check in once in a month about what you'd like kept. Until then,
-                  it's simply held.
+                  Nothing you've written or logged will be deleted. We'll check in once in
+                  a month about what you'd like kept. Until then, it's simply held.
+                  <br /><br />
+                  <button
+                    type="button"
+                    className="underline underline-offset-2 hover:no-underline"
+                    onClick={() => setConfirming('birth')}
+                  >
+                    If your baby has arrived, go here instead.
+                  </button>
                 </>
               )}
             </AlertDialogDescription>

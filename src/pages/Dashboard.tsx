@@ -192,7 +192,8 @@ const Dashboard = () => {
         ) : (
           <>
             {/* Intent Signal Banner — highest priority eligible signal, if any */}
-            <IntentSignalBanner />
+            {/* Nothing that nudges, scores or re-engages renders in holding. */}
+            {!isHolding && <IntentSignalBanner />}
 
             {/* Push Notification Prompt */}
             <div className="mb-4">
@@ -400,20 +401,24 @@ const Dashboard = () => {
                 )}
 
                 {/* Monthly Challenge (not shown on the pregnancy dashboard — it's a workout-count challenge) */}
-                {!isPregnant && <MonthlyChallenge />}
+                {!isHolding && !isPregnant && <MonthlyChallenge />}
               </div>
               
               {/* Right Column - Quick Access */}
               <div className="space-y-6">
 
                 {/* Personalized Wellness Coach */}
-                <PersonalizedCoachCard />
+                {/* The coach card is a nudge engine — its own copy includes
+                    "Gentle nudge" and a support level. In holding the coach is
+                    present, not pushing, and that presence lives inside
+                    HoldingCard instead. */}
+                {!isHolding && <PersonalizedCoachCard />}
 
                 {/* Daily Check-in Checklist (generic — hidden for pregnancy to declutter) */}
-                {!isTTC && !isPregnant && <DailyChecklistCard />}
+                {!isHolding && !isTTC && !isPregnant && <DailyChecklistCard />}
 
                 {/* Quick Links */}
-                {!isTTC && !isPregnant && <NutritionSection />}
+                {!isHolding && !isTTC && !isPregnant && <NutritionSection />}
 
               </div>
             </div>

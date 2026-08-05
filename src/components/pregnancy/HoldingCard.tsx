@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { usePregnancyJourney } from '@/hooks/usePregnancyJourney';
 
 const DISMISS_KEY = 'cm_holding_next_dismissed';
@@ -99,6 +100,21 @@ export const HoldingCard = () => {
         <p className="mt-6 text-center text-sm text-muted-foreground max-w-xs">
           Your journey is held here, exactly as it was.
         </p>
+
+        {/* The coach, present rather than pushing. PersonalizedCoachCard is
+            suppressed in holding because it is a nudge engine — its own copy
+            says "Gentle nudge" and rates her support level. This replaces it
+            with the one thing that belongs: a door she opens, that never
+            opens itself. No score, no streak, no suggested action. */}
+        <Link
+          to="/wellness?coach=1"
+          className="mt-6 w-full max-w-sm rounded-lg border p-4 text-center transition-colors hover:bg-muted/40"
+        >
+          <span className="text-sm font-medium">Your coach is here</span>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            Whenever you want to talk. No agenda.
+          </span>
+        </Link>
 
         {!dismissed && !showOptions && (
           <div className="mt-6 w-full max-w-sm rounded-lg border p-3 flex items-center gap-2">
