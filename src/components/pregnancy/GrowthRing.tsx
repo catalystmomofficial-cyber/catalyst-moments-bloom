@@ -52,6 +52,15 @@ export const GrowthRing = ({ progress }: GrowthRingProps) => {
   const triIndex = progress ? TRIMESTERS.findIndex((t) => week < t.toWeek) : -1;
   const activeTri = triIndex === -1 ? 2 : triIndex;
 
+  // Past 40+0 the arc is full and `fraction` is clamped, so without this week
+  // 40 and week 42 would draw identically — the screen freezes during the
+  // longest fortnight of the pregnancy. The bloom ripens instead: it holds its
+  // shape and deepens, which reads as "held" rather than "stalled". 0 at 40+0,
+  // 1 by about 42+0.
+  const ripen = progress?.isOverdue
+    ? Math.min(Math.max(-progress.daysRemaining / 14, 0), 1)
+    : 0;
+
   // Growth staging. Each element eases in over its own window so the plant
   // opens continuously rather than snapping between four fixed pictures.
   const stage = (from: number, to: number) =>
@@ -186,18 +195,26 @@ export const GrowthRing = ({ progress }: GrowthRingProps) => {
             </g>
 
             <g style={{ transition: 'transform 2s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 1.4s ease' }}
-               transform={`translate(50 26) scale(${bloom}) translate(-50 -26)`}
+               transform={`translate(50 26) scale(${bloom * (1 + ripen * 0.06)}) translate(-50 -26)`}
                opacity={bloom}>
               {[0, 60, 120, 180, 240, 300].map((deg) => (
                 <ellipse
                   key={deg}
-                  cx="50" cy="17" rx="5" ry="9.5"
+                  cx="50" cy="17" rx={5 + ripen * 0.5} ry={9.5 + ripen * 0.6}
                   fill="hsl(var(--primary))"
-                  opacity="0.72"
+                  opacity={0.72 + ripen * 0.2}
                   transform={`rotate(${deg} 50 26)`}
+                  style={{ transition: 'opacity 1.4s ease, rx 1.4s ease, ry 1.4s ease' }}
                 />
               ))}
-              <circle cx="50" cy="26" r="4.6" fill="hsl(var(--gestation))" />
+              {/* Overdue: a seed swells at the centre of the open bloom — the
+                  next chapter forming, not a countdown she has failed. */}
+              <circle
+                cx="50" cy="26"
+                r={4.6 + ripen * 1.6}
+                fill="hsl(var(--gestation))"
+                style={{ transition: 'r 1.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+              />
             </g>
           </g>
         </svg>
@@ -243,11 +260,20 @@ export const GrowthRing = ({ progress }: GrowthRingProps) => {
 
       {progress && (
         <p className="mt-3 text-center text-sm font-medium text-foreground">
-          {TRIMESTERS[activeTri].label} trimester
-          {!progress.isOverdue && (
-            <span className="text-muted-foreground font-normal">
-              {' · '}{progress.daysRemaining} days to go
-            </span>
+          {progress.isOverdue ? (
+            <>
+              Full bloom, waiting
+              <span className="text-muted-foreground font-normal">
+                {' · '}day {-progress.daysRemaining} past your date
+              </span>
+            </>
+          ) : (
+            <>
+              {TRIMESTERS[activeTri].label} trimester
+              <span className="text-muted-foreground font-normal">
+                {' · '}{progress.daysRemaining} days to go
+              </span>
+            </>
           )}
         </p>
       )}

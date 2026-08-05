@@ -238,11 +238,28 @@ const WEEK_NOTES: Record<number, WeekNote> = {
     baby: "Due date week.",
     mother: "Only about 4% arrive on the due date. You are not late yet.",
   },
+  // Past the date. Without these, week 41 fell back to week 40 and told a
+  // woman five days overdue that this was "due date week" — the screen
+  // freezing on her at the point she is checking it most often.
+  41: {
+    growth: "full bloom, holding",
+    size: "51 cm",
+    baby: "Fully ready. Waiting on their own timing.",
+    mother: "Post-dates is normal, not late. Your provider will discuss monitoring.",
+  },
+  42: {
+    growth: "full bloom, holding",
+    size: "52 cm",
+    baby: "Still growing, still safe under monitoring.",
+    mother: "This is the stretch nobody warns you about. Keep every appointment.",
+  },
 };
 
 /** Nearest even-week note at or below the given week. */
 export function weekNote(week: number): WeekNote | null {
-  for (let w = Math.min(week, 40); w >= 4; w--) {
+  // Capped at 42, not 40 — the overdue entries above only exist if this can
+  // reach them.
+  for (let w = Math.min(week, 42); w >= 4; w--) {
     if (WEEK_NOTES[w]) return WEEK_NOTES[w];
   }
   return null;
