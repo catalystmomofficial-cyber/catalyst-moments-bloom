@@ -247,12 +247,18 @@ const Register = () => {
         <Card className="w-full border-0 shadow-none bg-transparent rounded-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold">
-              {signupSuccess ? "Check Your Email" : "Create Account"}
+              {signupSuccess
+                ? "Check Your Email"
+                : fromAssessment
+                  ? `Your personalised ${motherhoodStage === "ttc" ? "fertility" : motherhoodStage === "pregnant" ? "pregnancy" : "recovery"} plan is ready.`
+                  : "Create Account"}
             </CardTitle>
             <CardDescription>
               {signupSuccess
                 ? "One last step to activate your account"
-                : "Join the Catalyst Mom community today"}
+                : fromAssessment
+                  ? "Create your free account to save it."
+                  : "Join the Catalyst Mom community today"}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -274,8 +280,8 @@ const Register = () => {
                 </p>
                 {fromAssessment && (
                   <p className="text-sm font-medium text-catalyst-copper">
-                    Your personalised plan, founding seat, and 500 welcome credits are
-                    saved to this email — they'll be waiting the moment you confirm.
+                    Your personalised plan, your Charter Founder place, and your 500 welcome
+                    credits are saved to this email — they'll be waiting the moment you confirm.
                   </p>
                 )}
                 <div className="pt-2 space-y-2">
@@ -304,12 +310,16 @@ const Register = () => {
             <>
             {fromAssessment && (
               <div className="mb-4 rounded-lg border border-catalyst-copper/30 bg-catalyst-copper/5 p-3 text-sm">
+                {/* This page has one job: create the free account. The price
+                    used to be stated right here, one click after the results
+                    page stopped mentioning it — same wall, moved later. What
+                    goes here instead is what is already hers and waiting. */}
                 <p className="font-semibold text-catalyst-copper">
-                  {name ? `${name.split(" ")[0]}, your` : "Your"} personalised plan is ready 🎉
+                  {name ? `${name.split(" ")[0]}, it's` : "It's"} built from the gaps in your assessment 🎉
                 </p>
                 <p className="mt-1 text-muted-foreground">
-                  Create your account to claim your Charter Founder seat ($29/month, locked
-                  for life) and your 🎁 500 welcome credits.
+                  Creating your account also claims your Charter Founder place for life and
+                  unlocks your 🎁 500 welcome credits.
                 </p>
               </div>
             )}
