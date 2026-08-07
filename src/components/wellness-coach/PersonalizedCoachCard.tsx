@@ -130,6 +130,15 @@ export const PersonalizedCoachCard = ({ score, gaps }: Props) => {
           </span>
           <ArrowRight className="h-4 w-4" />
         </Button>
+
+        {/* Anything the card can't answer belongs in the conversation itself. */}
+        <button
+          onClick={() => navigate('/coach')}
+          className="w-full text-center text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+        >
+          Talk to Coach Sarah
+        </button>
+
       </CardContent>
     </Card>
   );
