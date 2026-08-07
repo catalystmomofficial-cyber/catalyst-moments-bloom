@@ -259,6 +259,50 @@ export type Database = {
         }
         Relationships: []
       }
+      births: {
+        Row: {
+          archived_at: string | null
+          baby_count: number
+          birth_date: string
+          birth_type: string | null
+          created_at: string
+          id: string
+          outcome: string
+          pregnancy_journey_id: string | null
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          baby_count?: number
+          birth_date: string
+          birth_type?: string | null
+          created_at?: string
+          id?: string
+          outcome?: string
+          pregnancy_journey_id?: string | null
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          baby_count?: number
+          birth_date?: string
+          birth_type?: string | null
+          created_at?: string
+          id?: string
+          outcome?: string
+          pregnancy_journey_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "births_pregnancy_journey_id_fkey"
+            columns: ["pregnancy_journey_id"]
+            isOneToOne: false
+            referencedRelation: "pregnancy_journeys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_analytics: {
         Row: {
           blog_id: string
@@ -597,111 +641,10 @@ export type Database = {
         }
         Relationships: []
       }
-      births: {
-        Row: {
-          archived_at: string | null
-          baby_count: number
-          birth_date: string
-          birth_type: string | null
-          created_at: string
-          id: string
-          outcome: string
-          pregnancy_journey_id: string | null
-          user_id: string
-        }
-        Insert: {
-          archived_at?: string | null
-          baby_count?: number
-          birth_date: string
-          birth_type?: string | null
-          created_at?: string
-          id?: string
-          outcome?: string
-          pregnancy_journey_id?: string | null
-          user_id: string
-        }
-        Update: {
-          archived_at?: string | null
-          baby_count?: number
-          birth_date?: string
-          birth_type?: string | null
-          created_at?: string
-          id?: string
-          outcome?: string
-          pregnancy_journey_id?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      recoveries: {
-        Row: {
-          archived_at: string | null
-          birth_id: string
-          created_at: string
-          id: string
-          started_at: string
-          user_id: string
-        }
-        Insert: {
-          archived_at?: string | null
-          birth_id: string
-          created_at?: string
-          id?: string
-          started_at?: string
-          user_id: string
-        }
-        Update: {
-          archived_at?: string | null
-          birth_id?: string
-          created_at?: string
-          id?: string
-          started_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "recoveries_birth_id_fkey"
-            columns: ["birth_id"]
-            isOneToOne: false
-            referencedRelation: "births"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      recovery_checkins: {
-        Row: {
-          birth_id: string | null
-          created_at: string
-          date: string
-          id: string
-          mood: string
-          recovery_id: string | null
-          user_id: string
-        }
-        Insert: {
-          birth_id?: string | null
-          created_at?: string
-          date: string
-          id?: string
-          mood: string
-          recovery_id?: string | null
-          user_id: string
-        }
-        Update: {
-          birth_id?: string | null
-          created_at?: string
-          date?: string
-          id?: string
-          mood?: string
-          recovery_id?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       contractions: {
         Row: {
-          created_at: string
           archived_at: string | null
+          created_at: string
           duration_seconds: number | null
           ended_at: string | null
           id: string
@@ -711,8 +654,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          created_at?: string
           archived_at?: string | null
+          created_at?: string
           duration_seconds?: number | null
           ended_at?: string | null
           id?: string
@@ -722,8 +665,8 @@ export type Database = {
           user_id: string
         }
         Update: {
-          created_at?: string
           archived_at?: string | null
+          created_at?: string
           duration_seconds?: number | null
           ended_at?: string | null
           id?: string
@@ -1005,39 +948,6 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      diastasis_measurements: {
-        Row: {
-          created_at: string
-          id: string
-          measured_on: string
-          notes: string | null
-          recovery_id: string | null
-          unit: string
-          user_id: string
-          value: number
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          measured_on?: string
-          notes?: string | null
-          recovery_id?: string | null
-          unit?: string
-          user_id: string
-          value: number
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          measured_on?: string
-          notes?: string | null
-          recovery_id?: string | null
-          unit?: string
-          user_id?: string
-          value?: number
         }
         Relationships: []
       }
@@ -1329,6 +1239,42 @@ export type Database = {
         }
         Relationships: []
       }
+      milestone_bookings: {
+        Row: {
+          booked_at: string
+          created_at: string
+          event_uri: string | null
+          id: string
+          invitee_uri: string | null
+          join_url: string | null
+          stage: string | null
+          start_time: string | null
+          user_id: string
+        }
+        Insert: {
+          booked_at?: string
+          created_at?: string
+          event_uri?: string | null
+          id?: string
+          invitee_uri?: string | null
+          join_url?: string | null
+          stage?: string | null
+          start_time?: string | null
+          user_id: string
+        }
+        Update: {
+          booked_at?: string
+          created_at?: string
+          event_uri?: string | null
+          id?: string
+          invitee_uri?: string | null
+          join_url?: string | null
+          stage?: string | null
+          start_time?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       monthly_challenges: {
         Row: {
           badge_color: string | null
@@ -1434,75 +1380,6 @@ export type Database = {
           resolved?: boolean
           user_agent?: string | null
           user_id?: string | null
-        }
-        Relationships: []
-      }
-      kick_sessions: {
-        Row: {
-          created_at: string
-          duration_min: number
-          ended_at: string
-          id: string
-          kick_count: number
-          started_at: string
-          user_id: string
-          week: number | null
-        }
-        Insert: {
-          created_at?: string
-          duration_min: number
-          ended_at: string
-          id?: string
-          kick_count: number
-          started_at: string
-          user_id: string
-          week?: number | null
-        }
-        Update: {
-          created_at?: string
-          duration_min?: number
-          ended_at?: string
-          id?: string
-          kick_count?: number
-          started_at?: string
-          user_id?: string
-          week?: number | null
-        }
-        Relationships: []
-      }
-      milestone_bookings: {
-        Row: {
-          booked_at: string
-          created_at: string
-          event_uri: string | null
-          id: string
-          invitee_uri: string | null
-          join_url: string | null
-          stage: string | null
-          start_time: string | null
-          user_id: string
-        }
-        Insert: {
-          booked_at?: string
-          created_at?: string
-          event_uri?: string | null
-          id?: string
-          invitee_uri?: string | null
-          join_url?: string | null
-          stage?: string | null
-          start_time?: string | null
-          user_id: string
-        }
-        Update: {
-          booked_at?: string
-          created_at?: string
-          event_uri?: string | null
-          id?: string
-          invitee_uri?: string | null
-          join_url?: string | null
-          stage?: string | null
-          start_time?: string | null
-          user_id?: string
         }
         Relationships: []
       }
@@ -1665,39 +1542,6 @@ export type Database = {
         }
         Relationships: []
       }
-      premium_users: {
-        Row: {
-          created_at: string
-          id: string
-          is_premium: boolean
-          subscription_end: string | null
-          subscription_start: string | null
-          subscription_type: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          is_premium?: boolean
-          subscription_end?: string | null
-          subscription_start?: string | null
-          subscription_type?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          is_premium?: boolean
-          subscription_end?: string | null
-          subscription_start?: string | null
-          subscription_type?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       pregnancy_journeys: {
         Row: {
           created_at: string
@@ -1743,6 +1587,39 @@ export type Database = {
         }
         Relationships: []
       }
+      premium_users: {
+        Row: {
+          created_at: string
+          id: string
+          is_premium: boolean
+          subscription_end: string | null
+          subscription_start: string | null
+          subscription_type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_premium?: boolean
+          subscription_end?: string | null
+          subscription_start?: string | null
+          subscription_type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_premium?: boolean
+          subscription_end?: string | null
+          subscription_start?: string | null
+          subscription_type?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           affiliate_status: string
@@ -1751,17 +1628,17 @@ export type Database = {
           assessment_data: Json | null
           assessment_reflection: string | null
           avatar_url: string | null
+          backup_contact_name: string | null
+          backup_contact_phone: string | null
           bio: string | null
           created_at: string
           delivery_date: string | null
           display_name: string | null
+          hospital_name: string | null
           id: string
           last_active_at: string | null
           motherhood_stage: string | null
           paypal_email: string | null
-          backup_contact_name: string | null
-          backup_contact_phone: string | null
-          hospital_name: string | null
           pregnancy_state: string
           provider_name: string | null
           provider_triage_phone: string | null
@@ -1779,17 +1656,17 @@ export type Database = {
           assessment_data?: Json | null
           assessment_reflection?: string | null
           avatar_url?: string | null
+          backup_contact_name?: string | null
+          backup_contact_phone?: string | null
           bio?: string | null
           created_at?: string
           delivery_date?: string | null
           display_name?: string | null
+          hospital_name?: string | null
           id?: string
           last_active_at?: string | null
           motherhood_stage?: string | null
           paypal_email?: string | null
-          backup_contact_name?: string | null
-          backup_contact_phone?: string | null
-          hospital_name?: string | null
           pregnancy_state?: string
           provider_name?: string | null
           provider_triage_phone?: string | null
@@ -1807,17 +1684,17 @@ export type Database = {
           assessment_data?: Json | null
           assessment_reflection?: string | null
           avatar_url?: string | null
+          backup_contact_name?: string | null
+          backup_contact_phone?: string | null
           bio?: string | null
           created_at?: string
           delivery_date?: string | null
           display_name?: string | null
+          hospital_name?: string | null
           id?: string
           last_active_at?: string | null
           motherhood_stage?: string | null
           paypal_email?: string | null
-          backup_contact_name?: string | null
-          backup_contact_phone?: string | null
-          hospital_name?: string | null
           pregnancy_state?: string
           provider_name?: string | null
           provider_triage_phone?: string | null
@@ -1904,6 +1781,86 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      recoveries: {
+        Row: {
+          archived_at: string | null
+          birth_id: string
+          created_at: string
+          id: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          archived_at?: string | null
+          birth_id: string
+          created_at?: string
+          id?: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          archived_at?: string | null
+          birth_id?: string
+          created_at?: string
+          id?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recoveries_birth_id_fkey"
+            columns: ["birth_id"]
+            isOneToOne: false
+            referencedRelation: "births"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recovery_checkins: {
+        Row: {
+          birth_id: string | null
+          created_at: string
+          date: string
+          id: string
+          mood: string
+          recovery_id: string | null
+          user_id: string
+        }
+        Insert: {
+          birth_id?: string | null
+          created_at?: string
+          date: string
+          id?: string
+          mood: string
+          recovery_id?: string | null
+          user_id: string
+        }
+        Update: {
+          birth_id?: string | null
+          created_at?: string
+          date?: string
+          id?: string
+          mood?: string
+          recovery_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recovery_checkins_birth_id_fkey"
+            columns: ["birth_id"]
+            isOneToOne: false
+            referencedRelation: "births"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recovery_checkins_recovery_id_fkey"
+            columns: ["recovery_id"]
+            isOneToOne: false
+            referencedRelation: "recoveries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reminder_logs: {
         Row: {
@@ -2632,42 +2589,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      record_birth: {
-        Args: {
-          p_birth_date: string
-          p_birth_type?: string | null
-          p_baby_count?: number
-          p_outcome?: string
-        }
-        Returns: string
-      }
-      archive_contractions: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      end_contraction: {
-        Args: {
-          p_id: string
-          p_intensity?: number
-        }
-        Returns: undefined
-      }
-      recompute_contraction_intervals: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      record_pregnancy_outcome: {
-        Args: {
-          p_outcome: string
-          p_week?: number
-          p_day?: number
-        }
-        Returns: undefined
-      }
-      leave_pregnancy_holding: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
       add_purchased_credits: {
         Args: {
           p_amount: number
@@ -2719,6 +2640,7 @@ export type Database = {
         }[]
       }
       approve_user: { Args: { user_id_param: string }; Returns: undefined }
+      archive_contractions: { Args: never; Returns: undefined }
       attach_referral_on_signup: {
         Args: { p_ref_code: string; p_user_id: string }
         Returns: undefined
@@ -2757,6 +2679,10 @@ export type Database = {
           remaining_points: number
           success: boolean
         }[]
+      }
+      end_contraction: {
+        Args: { p_id: string; p_intensity?: number }
+        Returns: undefined
       }
       generate_unique_referral_code: {
         Args: { p_seed: string }
@@ -2868,6 +2794,7 @@ export type Database = {
       }
       is_admin: { Args: { user_id_param: string }; Returns: boolean }
       is_premium_user: { Args: never; Returns: boolean }
+      leave_pregnancy_holding: { Args: never; Returns: undefined }
       log_admin_action: {
         Args: {
           action_details?: string
@@ -2901,6 +2828,20 @@ export type Database = {
           p_product_slug: string
         }
         Returns: Json
+      }
+      recompute_contraction_intervals: { Args: never; Returns: undefined }
+      record_birth: {
+        Args: {
+          p_baby_count?: number
+          p_birth_date: string
+          p_birth_type?: string
+          p_outcome?: string
+        }
+        Returns: string
+      }
+      record_pregnancy_outcome: {
+        Args: { p_day?: number; p_outcome: string; p_week?: number }
+        Returns: undefined
       }
       redeem_points_for_discount: {
         Args: {
