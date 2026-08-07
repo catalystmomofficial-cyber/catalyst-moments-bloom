@@ -15,6 +15,8 @@ import RemoteControllerOverlay from "@/components/remote/RemoteControllerOverlay
 import { ThemeProvider } from "@/components/theme-provider";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import Coach from "./pages/Coach";
+
 import Workouts from "./pages/Workouts";
 import WorkoutDetail from "./pages/WorkoutDetail";
 import CoreRestoreFoundationsProgram from "./pages/CoreRestoreFoundationsProgram";
@@ -175,6 +177,14 @@ function AppContent() {
             </SubscriptionGuard>
           </PrivateRoute>
         } />
+        {/* The coach is the front door to every tool, so it stays reachable to
+            any signed-in mom rather than sitting behind the subscription gate. */}
+        <Route path="/coach" element={
+          <PrivateRoute>
+            <Coach />
+          </PrivateRoute>
+        } />
+
         <Route path="/workouts" element={
           <PrivateRoute>
             <SubscriptionGuard>

@@ -978,6 +978,47 @@ export type Database = {
         }
         Relationships: []
       }
+      diastasis_measurements: {
+        Row: {
+          created_at: string
+          id: string
+          measured_on: string
+          recovery_id: string | null
+          unit: string
+          updated_at: string
+          user_id: string
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          measured_on?: string
+          recovery_id?: string | null
+          unit?: string
+          updated_at?: string
+          user_id: string
+          value: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          measured_on?: string
+          recovery_id?: string | null
+          unit?: string
+          updated_at?: string
+          user_id?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "diastasis_measurements_recovery_id_fkey"
+            columns: ["recovery_id"]
+            isOneToOne: false
+            referencedRelation: "recoveries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       digital_product_purchases: {
         Row: {
           amount_paid_cents: number
@@ -1212,6 +1253,39 @@ export type Database = {
           protein?: number | null
           serving_size?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      kick_sessions: {
+        Row: {
+          created_at: string
+          duration_min: number
+          ended_at: string
+          id: string
+          kick_count: number
+          started_at: string
+          user_id: string
+          week: number | null
+        }
+        Insert: {
+          created_at?: string
+          duration_min?: number
+          ended_at: string
+          id?: string
+          kick_count?: number
+          started_at: string
+          user_id: string
+          week?: number | null
+        }
+        Update: {
+          created_at?: string
+          duration_min?: number
+          ended_at?: string
+          id?: string
+          kick_count?: number
+          started_at?: string
+          user_id?: string
+          week?: number | null
         }
         Relationships: []
       }

@@ -1,9 +1,7 @@
-
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
-import EnhancedWellnessCoachModal from './EnhancedWellnessCoachModal';
-import { useToast } from '@/hooks/use-toast';
 
 interface WellnessCoachButtonProps {
   variant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'link';
@@ -12,41 +10,28 @@ interface WellnessCoachButtonProps {
   className?: string;
 }
 
-const WellnessCoachButton = ({ 
-  variant = 'default', 
+/**
+ * Opens the coach's own screen rather than a popup. The conversation is the
+ * product, not a widget bolted onto whatever page she happened to be on.
+ */
+const WellnessCoachButton = ({
+  variant = 'default',
   size = 'default',
   showLabel = true,
-  className 
+  className,
 }: WellnessCoachButtonProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { toast } = useToast();
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-    toast({
-      title: "Wellness Coach",
-      description: "Your wellness coach is here to help!",
-      duration: 3000,
-    });
-  };
+  const navigate = useNavigate();
 
   return (
-    <>
-      <Button
-        variant={variant}
-        size={size}
-        onClick={handleOpenModal}
-        className={className}
-      >
-        <Heart className={`h-4 w-4 ${showLabel ? 'mr-2' : ''}`} />
-        {showLabel && 'Wellness Coach'}
-      </Button>
-
-      <EnhancedWellnessCoachModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
-    </>
+    <Button
+      variant={variant}
+      size={size}
+      onClick={() => navigate('/coach')}
+      className={className}
+    >
+      <Heart className={`h-4 w-4 ${showLabel ? 'mr-2' : ''}`} />
+      {showLabel && 'Wellness Coach'}
+    </Button>
   );
 };
 
