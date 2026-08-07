@@ -74,7 +74,8 @@ export const LostUserNudge = () => {
               className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90 text-white text-xs"
               onClick={() => {
                 setVisible(false);
-                setModalOpen(true);
+                dismiss();
+                navigate('/coach');
               }}
             >
               Ask your wellness coach
@@ -82,16 +83,8 @@ export const LostUserNudge = () => {
           </div>
         </div>
       )}
-
-      {/* Coach modal */}
-      <EnhancedWellnessCoachModal
-        isOpen={modalOpen}
-        onClose={() => {
-          setModalOpen(false);
-          dismiss();
-        }}
-      />
     </>
+
   );
 };
 
