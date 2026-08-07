@@ -15,6 +15,8 @@ import RemoteControllerOverlay from "@/components/remote/RemoteControllerOverlay
 import { ThemeProvider } from "@/components/theme-provider";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import Coach from "./pages/Coach";
+
 import Workouts from "./pages/Workouts";
 import WorkoutDetail from "./pages/WorkoutDetail";
 import CoreRestoreFoundationsProgram from "./pages/CoreRestoreFoundationsProgram";
