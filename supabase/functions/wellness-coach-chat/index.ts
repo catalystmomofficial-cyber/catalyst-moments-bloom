@@ -119,8 +119,9 @@ serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-    const { messages, userProfile } = parsed.data;
-    console.log('[WELLNESS_COACH] Received messages:', messages.length, 'Profile:', userProfile?.motherhood_stage);
+    const { messages, userProfile, images } = parsed.data;
+    console.log('[WELLNESS_COACH] Received messages:', messages.length, 'images:', images?.length ?? 0, 'Profile:', userProfile?.motherhood_stage);
+
 
     // Service-role client for trusted server-side reads/writes (scoped to authenticated userId)
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
