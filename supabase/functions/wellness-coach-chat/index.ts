@@ -611,14 +611,36 @@ Subscription Status: ${userProfile?.is_subscribed ? 'PREMIUM MEMBER' : 'FREE TRI
       }
     ];
 
+    // Attach any photos she sent to her CURRENT question, so "can I eat this?"
+    // with a picture of a plate actually works instead of the coach guessing.
+    const outgoing: any[] = [...messages];
+    if (images && images.length > 0) {
+      const lastUserIdx = [...outgoing].reverse().findIndex((m) => m.role === 'user');
+      if (lastUserIdx !== -1) {
+        const idx = outgoing.length - 1 - lastUserIdx;
+        const original = outgoing[idx];
+        const text = typeof original.content === 'string' && original.content.trim()
+          ? original.content
+          : 'What can you tell me about this? Is it safe for me right now?';
+        outgoing[idx] = {
+          role: 'user',
+          content: [
+            { type: 'text', text },
+            ...images.map((url) => ({ type: 'image_url', image_url: { url } })),
+          ],
+        };
+      }
+    }
+
     const requestBody = {
       messages: [
         { role: 'system', content: systemPrompt },
-        ...messages
+        ...outgoing
       ],
       tools: tools,
       tool_choice: "auto" as const,
     };
+
 
     let response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
