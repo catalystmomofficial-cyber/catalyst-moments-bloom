@@ -447,8 +447,78 @@ TTC COACHING RULES:
       }
     }
 
+    // ── What she actually did in the last few days ──
+    // This is what makes the opener land: "yesterday you finished your breathing
+    // session" only works if it is true. Nothing here is invented — if the reads
+    // come back empty the block stays empty and the coach opens plainly instead.
+    let recentActivityContext = '';
+    try {
+      const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const [ballLogs, wellness, completions] = await Promise.all([
+        supabase.from('birth_ball_exercise_logs')
+          .select('exercise_name, completed_at')
+          .eq('user_id', userId).gte('completed_at', since)
+          .order('completed_at', { ascending: false }).limit(5),
+        supabase.from('wellness_entries')
+          .select('entry_date, mood_rating, energy_level, sleep_hours')
+          .eq('user_id', userId)
+          .order('entry_date', { ascending: false }).limit(3),
+        supabase.from('user_content_completion')
+          .select('completed_at')
+          .eq('user_id', userId).gte('completed_at', since)
+          .order('completed_at', { ascending: false }).limit(5),
+      ]);
+
+      const lines: string[] = [];
+      for (const l of ballLogs.data ?? []) {
+        lines.push(`- Completed "${l.exercise_name}" on ${new Date(l.completed_at).toDateString()}`);
+      }
+      if ((completions.data?.length ?? 0) > 0) {
+        lines.push(`- Finished ${completions.data!.length} program session(s) in the last 7 days`);
+      }
+      for (const w of wellness.data ?? []) {
+        lines.push(`- Check-in ${w.entry_date}: mood ${w.mood_rating ?? '—'}/10, energy ${w.energy_level ?? '—'}/10, sleep ${w.sleep_hours ?? '—'}h`);
+      }
+
+      if (lines.length > 0) {
+        recentActivityContext = `
+
+HER LAST 7 DAYS (real logged activity — reference it naturally, never invent):
+${lines.join('\n')}`;
+      }
+    } catch (e) {
+      console.error('[WELLNESS_COACH] Recent activity context error:', e);
+    }
+
+    // ── Food, medication and supplement questions ──
+    // She should never have to leave the conversation to ask "can I eat this?".
+    const utilityRules = `
+
+FOOD, MEDICATION & SUPPLEMENT LOOKUPS (she may send a photo of a plate, package or label):
+- If she sends a photo, describe what you can actually see, then answer her question about it. If the image is unclear, say so and ask for a clearer shot — never guess a label.
+- Food photos: give a realistic portion estimate (calories and protein), then one stage-relevant note (e.g. iron in pregnancy, protein for recovery, blood-sugar steadiness for TTC).
+- Food safety: answer plainly for the well-established ones — unpasteurised dairy, high-mercury fish, deli meat, raw/undercooked egg or fish, alcohol, caffeine limits (~200mg/day in pregnancy), listeria risks. Say clearly when something is fine; most foods are.
+- Medication & supplements (including "safe while breastfeeding?"): give the general picture from established references (e.g. ibuprofen is generally considered compatible with breastfeeding; it is avoided in the third trimester), then always say her pharmacist or provider is the one to confirm for her specific dose and history.
+- NEVER give a dose, never tell her to start or stop a prescription, and never rule a medication in or out with certainty. If it is unclear, contested, or she mentions a condition, send her to her provider or pharmacist explicitly.
+- Anything urgent — bleeding, severe pain, a baby not moving, fever, thoughts of harming herself — stop the wellness answer and tell her to contact her provider or emergency services now.
+
+WHERE TO SEND HER (link the exact place; never tell her to "browse" or "check the library"):
+- "Do I have diastasis?" / core gap / ab separation → the self-check and reviews page at /diastasis-recti-recovery-program-reviews-reddit, then Core Restore Foundations at /core-restore-foundations for the actual program.
+- Postpartum core/pelvic floor rebuilding → /core-restore-foundations (Phase 1). Phase 2 (30 Days Glow Up) unlocks after Phase 1.
+- Pregnancy comfort, hip pain, labour prep, positions → /birth-ball-guide (and /birth-ball-program for the structured program).
+- Baby movement / kick counting → /dashboard?tool=kick-counter. Contractions/labour timing → the labour tools on /dashboard.
+- Meal plans → /meal-plan?stage=pregnancy | postpartum | ttc. Recipes → /recipes.
+- Workouts by stage → /workouts?stage=pregnancy | postpartum | ttc.
+- Sleep, stress, self-care → /wellness?tab=sleep or /wellness?tab=selfcare, and guides at /wellness/resources.
+- Cycle tracking, bloodwork, ovulation, doctor prep (TTC) → the TTC tools on /dashboard.
+- Digital guides (freezer meals, allergen tracking, C-section prep, village building) → /guides.
+- Community and peer support → /community. Live expert sessions → /events.
+- Subscription, billing, plan questions → /profile?tab=subscription.
+- Give at most two links per reply, and only when they answer what she actually asked.`;
+
     // Build comprehensive system prompt focused on the four pillars and conversion
-    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}${ttcContext}${appKnowledge}${eventsContext}
+    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}${ttcContext}${recentActivityContext}${appKnowledge}${eventsContext}${utilityRules}
+
 
 ## CATALYST MOM CORE OFFERING
 The four pillars of our platform:
