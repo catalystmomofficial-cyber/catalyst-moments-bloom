@@ -15,12 +15,17 @@ const MessageSchema = z.object({
 
 const BodySchema = z.object({
   messages: z.array(MessageSchema).min(1).max(50),
+  // Photos she attached to the CURRENT question ("can I eat this?"). Data URLs
+  // only, kept out of `messages` so the 2000-char content cap still applies to
+  // her text. Two is plenty — a plate and a label.
+  images: z.array(z.string().startsWith('data:image/').max(8_000_000)).max(2).optional(),
   userProfile: z.object({
     motherhood_stage: z.string().max(50).nullable().optional(),
     display_name: z.string().max(100).nullable().optional(),
     is_subscribed: z.boolean().optional(),
   }).optional(),
 });
+
 
 
 /**
