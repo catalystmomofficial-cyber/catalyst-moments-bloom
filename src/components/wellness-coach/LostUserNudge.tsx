@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { X, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import EnhancedWellnessCoachModal from './EnhancedWellnessCoachModal';
 import { useLostUserDetector } from '@/hooks/useLostUserDetector';
 
 /**
  * Slides in from the bottom-right when the user has navigated several pages
- * without finding what they're looking for. Opens the wellness coach on click.
- * No generic AI logos — uses brand color + icon only.
+ * without finding what they're looking for. Takes her to the coach's own screen
+ * on click. No generic AI logos — uses brand color + icon only.
  */
 export const LostUserNudge = () => {
   const { isLost, dismiss } = useLostUserDetector();
   const [visible, setVisible] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+
 
   // Small delay so it doesn't pop instantly — feels more natural
   useEffect(() => {
