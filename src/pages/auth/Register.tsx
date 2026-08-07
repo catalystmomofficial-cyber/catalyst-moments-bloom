@@ -126,8 +126,17 @@ const Register = () => {
       issues.push("reflection");
     }
 
+    // Her per-category scores, encoded as "Nutrition:6|Recovery:4". This is
+    // what lets the coach open with the specific thing rather than a generic
+    // hello, and it can only arrive this way — the funnel is a different
+    // Supabase project, so there is nothing to look up.
+    const categoriesParam = searchParams.get('categories');
+    if (categoriesParam && (categoriesParam.length > 400 || !/^[A-Za-z /&-]+:\d{1,2}(\|[A-Za-z /&-]+:\d{1,2})*$/.test(categoriesParam))) {
+      issues.push("categories");
+    }
+
     // Collect only valid assessment params to persist after signup
-    const assessmentKeys = ['score', 'tier', 'stage', 'primary_goal', 'biggest_obstacle', 'birth_experience', 'assessment_id', 'concern', 'reflection'];
+    const assessmentKeys = ['score', 'tier', 'stage', 'primary_goal', 'biggest_obstacle', 'birth_experience', 'assessment_id', 'concern', 'reflection', 'categories'];
     const collected: Record<string, string> = {};
     assessmentKeys.forEach((key) => {
       if (issues.includes(key)) return;

@@ -22,6 +22,52 @@ const BodySchema = z.object({
   }).optional(),
 });
 
+
+/**
+ * Maps the funnel's signup payload into the shape the assessment prompt block
+ * already reads, so there is one code path building `assessmentContext`.
+ *
+ * `categories` arrives as "Nutrition:6|Recovery:4" — it cannot be looked up,
+ * because the funnel writes to a different Supabase project, so it travels in
+ * the signup URL and lands in profiles.assessment_data.
+ */
+function fromFunnelProfile(prof: any) {
+  if (!prof) return null;
+  const a = (prof.assessment_data ?? {}) as Record<string, string>;
+  const concern = prof.assessment_concern ?? a.concern ?? null;
+  const reflection = prof.assessment_reflection ?? a.reflection ?? null;
+
+  const category_scores: Record<string, number> = {};
+  if (typeof a.categories === 'string') {
+    for (const pair of a.categories.split('|')) {
+      const i = pair.lastIndexOf(':');
+      if (i < 1) continue;
+      const label = pair.slice(0, i).trim();
+      const value = Number(pair.slice(i + 1));
+      if (label && Number.isFinite(value)) category_scores[label] = value;
+    }
+  }
+
+  // Nothing usable came across — better to hand the prompt null than an empty
+  // shell that makes it claim to know her.
+  if (!concern && !reflection && !a.score && Object.keys(category_scores).length === 0) return null;
+
+  return {
+    primary_goal: a.primary_goal ?? null,
+    biggest_obstacle: a.biggest_obstacle ?? null,
+    dietary_preferences: null,
+    activity_level: null,
+    equipment: null,
+    special_notes: {
+      overall_score: a.score ?? null,
+      tier: a.tier ?? null,
+      category_scores,
+      main_concern: concern,
+      concern_reflection: reflection,
+    },
+  };
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -74,7 +120,19 @@ serve(async (req) => {
     // Service-role client for trusted server-side reads/writes (scoped to authenticated userId)
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
-    // Fetch assessment data for the authenticated user only
+    // Fetch assessment data for the authenticated user only.
+    //
+    // `lead_responses` is written by the in-app flows (onboarding, the results
+    // page here, the voice webhook). A woman who arrived through the marketing
+    // assessment at catalystmomofficial.com has no row in it — that funnel is a
+    // different Supabase project entirely, so nothing about her was ever here.
+    //
+    // Her answers came across in the signup URL and were written to
+    // `profiles.assessment_data` / `assessment_concern` / `assessment_reflection`.
+    // Reading only `lead_responses` meant `assessmentContext` was an empty
+    // string for every one of those women, so Coach Sarah opened knowing
+    // nothing — while the results page they had just read promised the coach
+    // already knew their answers.
     let assessmentData = null;
     if (userId) {
       const { data } = await supabase
@@ -83,11 +141,20 @@ serve(async (req) => {
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
-      
+        .maybeSingle();
+
       if (data) {
         assessmentData = data;
-        console.log('[WELLNESS_COACH] Found assessment data for user');
+        console.log('[WELLNESS_COACH] Found assessment data in lead_responses');
+      } else {
+        const { data: prof } = await supabase
+          .from('profiles')
+          .select('assessment_data, assessment_concern, assessment_reflection')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+        assessmentData = fromFunnelProfile(prof);
+        if (assessmentData) console.log('[WELLNESS_COACH] Found assessment data from funnel signup');
       }
     }
 
@@ -125,22 +192,22 @@ serve(async (req) => {
         .slice(0, 3)
         .map(([category, score]) => `${category}: ${score}/10`);
 
+      const line = (label: string, value: unknown) =>
+        value === null || value === undefined || value === '' || value === 'N/A'
+          ? '' : `\n- ${label}: ${value}`;
+
+      // Only state what we actually have. A funnel signup has her score, her
+      // gaps and her own words but no equipment or activity level, and a prompt
+      // that reads "Equipment: null" makes the coach invent one.
       assessmentContext = `
 
 ## ASSESSMENT DATA
-This user completed a wellness assessment. Use this to personalize your guidance:
-- Overall Score: ${overallScore}/100 (Tier: ${tier})
-- Primary Goal: ${assessmentData.primary_goal}
-- Top 3 Priority Areas (lowest scores): ${gaps.join(', ')}
-- Dietary Preferences: ${assessmentData.dietary_preferences}
-- Activity Level: ${assessmentData.activity_level}
-- Available Equipment: ${assessmentData.equipment}
-${specialNotes.main_concern ? `- Main Concern: ${specialNotes.main_concern}` : ''}
+This user completed a wellness assessment. Use this to personalize your guidance:${line('Overall Score', overallScore === 'N/A' ? null : `${overallScore}/100`)}${line('Tier', tier === 'N/A' ? null : tier)}${line('Primary Goal', assessmentData.primary_goal)}${line('Biggest Obstacle', (assessmentData as any).biggest_obstacle)}${gaps.length ? `\n- Top Priority Areas (lowest scores): ${gaps.join(', ')}` : ''}${line('Dietary Preferences', assessmentData.dietary_preferences)}${line('Activity Level', assessmentData.activity_level)}${line('Available Equipment', assessmentData.equipment)}${line('In her own words', specialNotes.main_concern)}${line('What we already told her about it', specialNotes.concern_reflection)}
 
-When providing advice, reference their specific assessment results and focus on their priority areas. For example:
-- "I noticed from your assessment that [category] scored ${gaps[0]?.split(':')[1]}, so let's focus on..."
-- "Since your primary goal is ${assessmentData.primary_goal}, I recommend..."
-- "Given your ${assessmentData.activity_level} activity level and ${assessmentData.equipment} equipment availability..."`;
+Reference her actual results rather than speaking generally. If she told us
+something in her own words, she should never have to explain it to you a second
+time — she was promised exactly that before she signed up.${gaps.length ? `
+For example: "your assessment showed ${gaps[0]}, so let's start there."` : ''}`;
     }
 
     // Build check-in context if available
