@@ -175,6 +175,14 @@ function AppContent() {
             </SubscriptionGuard>
           </PrivateRoute>
         } />
+        {/* The coach is the front door to every tool, so it stays reachable to
+            any signed-in mom rather than sitting behind the subscription gate. */}
+        <Route path="/coach" element={
+          <PrivateRoute>
+            <Coach />
+          </PrivateRoute>
+        } />
+
         <Route path="/workouts" element={
           <PrivateRoute>
             <SubscriptionGuard>
