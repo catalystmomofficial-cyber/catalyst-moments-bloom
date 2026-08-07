@@ -25,12 +25,13 @@ export const LostUserNudge = () => {
     }
   }, [isLost]);
 
-  if (!visible && !modalOpen) return null;
+  if (!visible) return null;
 
   return (
     <>
       {/* Slide-in nudge card */}
-      {visible && !modalOpen && (
+      {visible && (
+
         <div
           className={`
             fixed bottom-20 right-4 z-50 w-72 rounded-xl shadow-xl
