@@ -132,7 +132,7 @@ const PWAInstallBanner = () => {
       >
         <div className="flex items-center gap-3 max-w-lg mx-auto">
           <img
-            src="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png"
+            src="/brand/catalyst-mom-logo.png"
             alt="Catalyst Mom"
             className="w-10 h-10 rounded-xl object-contain"
           />
