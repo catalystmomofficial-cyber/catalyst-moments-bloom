@@ -5,6 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen } from 'lucide-react';
 import professionalCover from '@/assets/ultimate-birth-ball-guide-cover.jpg';
+import { openCourseMedia } from '@/lib/courseMedia';
+import { toast } from 'sonner';
+
 
 const BIRTHBALL_GUIDE_URL = "course://Ultimate birth ball guide/The Ultimate Birth Ball Guide Safe & Effective Exercises for Every Trimester.pdf";
 
