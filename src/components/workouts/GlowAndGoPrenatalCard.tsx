@@ -9,7 +9,7 @@ import { GLOW_AND_GO_VIDEOS } from '@/data/glowAndGoVideos';
 import professionalCover from '@/assets/glow-and-go-professional-cover.jpg';
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 
-const GLOW_VIDEO_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/glow%20and%20go/Intro.mp4";
+const GLOW_VIDEO_URL = "course://glow and go/Intro.mp4";
 
 const GlowAndGoPrenatalCard = () => {
   const [isHovered, setIsHovered] = useState(false);

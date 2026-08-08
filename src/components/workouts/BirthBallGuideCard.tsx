@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { BookOpen } from 'lucide-react';
 import professionalCover from '@/assets/ultimate-birth-ball-guide-cover.jpg';
 
-const BIRTHBALL_GUIDE_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Ultimate%20birth%20ball%20guide/The%20Ultimate%20Birth%20Ball%20Guide%20Safe%20&%20Effective%20Exercises%20for%20Every%20Trimester.pdf";
+const BIRTHBALL_GUIDE_URL = "course://Ultimate birth ball guide/The Ultimate Birth Ball Guide Safe & Effective Exercises for Every Trimester.pdf";
 
 const BirthBallGuideCard = () => {
   const [isHovered, setIsHovered] = useState(false);
