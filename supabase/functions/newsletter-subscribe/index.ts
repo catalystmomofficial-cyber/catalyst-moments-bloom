@@ -101,7 +101,7 @@ const handler = async (req: Request): Promise<Response> => {
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
               <div style="text-align: center; padding: 20px 0;">
-                <img src="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/product%20covers/catalyst-mom-logo.png" alt="Catalyst Mom Logo" style="max-width: 200px; height: auto;" />
+                <img src="https://catalystmomofficial.com/brand/catalyst-mom-logo.png" alt="Catalyst Mom Logo" style="max-width: 200px; height: auto;" />
               </div>
               
               <h1 style="color: #2563eb; text-align: center; margin: 20px 0;">Welcome to Catalyst Mom! 🌟</h1>

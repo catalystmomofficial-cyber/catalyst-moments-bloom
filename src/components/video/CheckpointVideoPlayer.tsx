@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Flame, Sparkles, Heart, Battery, X, Trophy } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useSignedMedia } from '@/lib/courseMedia';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { useToast } from '@/hooks/use-toast';
@@ -46,7 +48,7 @@ const REWARD_BADGES = [
 ];
 
 export default function CheckpointVideoPlayer({
-  src,
+  src: source,
   poster,
   title,
   streakKey,
@@ -55,7 +57,10 @@ export default function CheckpointVideoPlayer({
   onRemoteAction,
   remoteMeta,
 }: CheckpointVideoPlayerProps) {
+  // Paid course videos are signed on demand; everything else passes through.
+  const { url: src } = useSignedMedia(source);
   const videoRef = useRef<HTMLVideoElement>(null);
+
   const { user } = useAuth();
   const { awardPoints } = usePoints();
   const { toast } = useToast();

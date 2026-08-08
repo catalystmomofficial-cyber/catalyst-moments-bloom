@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen } from 'lucide-react';
 import professionalCover from '@/assets/ultimate-birth-ball-guide-cover.jpg';
+import { openCourseMedia } from '@/lib/courseMedia';
+import { toast } from 'sonner';
 
-const BIRTHBALL_GUIDE_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Ultimate%20birth%20ball%20guide/The%20Ultimate%20Birth%20Ball%20Guide%20Safe%20&%20Effective%20Exercises%20for%20Every%20Trimester.pdf";
+
+const BIRTHBALL_GUIDE_URL = "course://Ultimate birth ball guide/The Ultimate Birth Ball Guide Safe & Effective Exercises for Every Trimester.pdf";
 
 const BirthBallGuideCard = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -80,11 +83,18 @@ const BirthBallGuideCard = () => {
               Start Birth Ball Program
             </Link>
           </Button>
-          <Button variant="outline" className="w-full" asChild>
-            <a href={BIRTHBALL_GUIDE_URL} target="_blank" rel="noopener noreferrer">
-              View PDF Guide
-            </a>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={async () => {
+              // The guide is paid, so the link is minted per click and expires.
+              const opened = await openCourseMedia(BIRTHBALL_GUIDE_URL);
+              if (!opened) toast.error('This guide is part of your membership — sign in or subscribe to open it.');
+            }}
+          >
+            View PDF Guide
           </Button>
+
         </div>
       </div>
     </Card>

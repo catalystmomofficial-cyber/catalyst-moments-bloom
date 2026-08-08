@@ -3,6 +3,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Minimize2, Maximize2, X, Move } from 'lucide-react';
 import { useRemoteSync } from '@/hooks/useRemoteSync';
+import { useSignedMedia } from '@/lib/courseMedia';
+
 
 interface InlineVideoPlayerProps {
   isOpen: boolean;
@@ -16,11 +18,14 @@ interface InlineVideoPlayerProps {
 const InlineVideoPlayer = ({ 
   isOpen, 
   onClose, 
-  videoUrl, 
+  videoUrl: source, 
   title, 
   isMinimized = false,
   onToggleMinimize 
 }: InlineVideoPlayerProps) => {
+  // Paid course media arrives as a `course://` marker and is signed here.
+  const { url: signedUrl } = useSignedMedia(source);
+  const videoUrl = signedUrl ?? '';
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 20, y: 20 });
@@ -30,7 +35,8 @@ const InlineVideoPlayer = ({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  const isMp4 = /\.mp4($|[?])/i.test(videoUrl);
+  const isMp4 = /\.mp4($|[?])/i.test(source);
+
 
   useRemoteSync({ videoRef, meta: { title: title ?? 'Video' }, enabled: isOpen && isMp4 });
 

@@ -10,9 +10,12 @@ import { CheckCircle2, Clock, ShieldCheck, Heart, Activity, Sparkles, BookOpen, 
 import { birthBallExercises } from "@/data/birthBallGuideData";
 import { setLastActiveProgram } from "@/lib/lastActiveProgram";
 import programCover from "@/assets/ultimate-birth-ball-guide-cover.jpg";
+import { openCourseMedia } from "@/lib/courseMedia";
+import { toast } from "sonner";
+
 
 const BIRTHBALL_PDF_URL =
-  "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Ultimate%20birth%20ball%20guide/The%20Ultimate%20Birth%20Ball%20Guide%20Safe%20&%20Effective%20Exercises%20for%20Every%20Trimester.pdf";
+  "course://Ultimate birth ball guide/The Ultimate Birth Ball Guide Safe & Effective Exercises for Every Trimester.pdf";
 
 const STORAGE_KEY = "birthBallProgramDone";
 
@@ -133,12 +136,18 @@ const BirthBallProgram = () => {
           </Card>
           <Card>
             <CardContent className="pt-6 space-y-3">
-              <Button className="w-full" asChild>
-                <a href={BIRTHBALL_PDF_URL} target="_blank" rel="noopener noreferrer">
-                  <FileText className="mr-2 h-4 w-4" />
-                  Download the PDF Guide
-                </a>
+              <Button
+                className="w-full"
+                onClick={async () => {
+                  // The guide is paid, so the link is minted per click and expires.
+                  const opened = await openCourseMedia(BIRTHBALL_PDF_URL);
+                  if (!opened) toast.error('This guide is part of your membership — sign in or subscribe to open it.');
+                }}
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                Download the PDF Guide
               </Button>
+
               <Button variant="outline" className="w-full" asChild>
                 <Link to="/birth-ball-guide">
                   <BookOpen className="mr-2 h-4 w-4" />

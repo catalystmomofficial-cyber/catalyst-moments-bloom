@@ -5,16 +5,20 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Button } from '@/components/ui/button';
 import { useRemoteSync } from '@/hooks/useRemoteSync';
 import { setLastActiveProgram } from '@/lib/lastActiveProgram';
+import { useSignedMedia } from '@/lib/courseMedia';
 
 
-export default function VideoPlayer({ videoUrl, title, thumbnail, remoteMeta, onRemoteAction }: VideoPlayerProps) {
-  console.log('VideoPlayer - URL:', videoUrl, 'Title:', title, 'Thumbnail:', thumbnail);
-  
+export default function VideoPlayer({ videoUrl: source, title, thumbnail, remoteMeta, onRemoteAction }: VideoPlayerProps) {
+  // Paid videos arrive as `course://` markers and are signed here, so the
+  // playable URL never lives in the bundle or in a shareable link.
+  const { url: videoUrl } = useSignedMedia(source);
+
   const [showIframe, setShowIframe] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const isMp4 = /\.mp4($|[?])/i.test(videoUrl || '');
-  const isYouTube = videoUrl && (/youtube\.com|youtu\.be/i.test(videoUrl));
+  const isMp4 = /\.mp4($|[?])/i.test(source || '');
+  const isYouTube = source && (/youtube\.com|youtu\.be/i.test(source));
+
 
   useRemoteSync({
     videoRef,

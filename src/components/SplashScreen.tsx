@@ -6,7 +6,7 @@ interface SplashScreenProps {
 }
 
 const LOGO_SRC =
-  'https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png';
+  '/brand/catalyst-mom-logo.png';
 
 // Soft, warm three-note chime via Web Audio (no asset needed).
 const playSplashChime = () => {
