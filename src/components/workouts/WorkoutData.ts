@@ -1,6 +1,7 @@
 import { Exercise } from './types';
 
-// Construct Supabase storage URL for videos
+// Course videos live in the private `catalystcourses` bucket, so we store a
+// marker path here and sign it at playback time (see src/lib/courseMedia.ts).
 const getVideoUrl = (week: number, day: number): string | null => {
   // Week 1 uses full day names, Week 2+ uses lowercase abbreviations
   const dayNamesFull = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -18,12 +19,11 @@ const getVideoUrl = (week: number, day: number): string | null => {
   const weekPrefix = week <= 2 ? 'Week' : 'week';
   
   // Week 4 has special folder naming (no space)
-  const folderName = week === 4 ? `week${week}` : `week%20${week}`;
+  const folderName = week === 4 ? `week${week}` : `week ${week}`;
   
-  const url = `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30%20days%20glow%20up/${folderName}/${weekPrefix}%20${week}%20-%20${dayName}.mp4`;
-  console.log('Constructed video URL:', url);
-  return url;
+  return courseMediaPath(`30 days glow up/${folderName}/${weekPrefix} ${week} - ${dayName}.mp4`);
 };
+
 
 // Generate workout data for any week and day combination
 export const getWorkoutData = (week: number, day: number): Exercise[] => {
