@@ -1,4 +1,6 @@
 import { Exercise } from './types';
+import { courseMediaPath } from '@/lib/courseMedia';
+
 
 // Course videos live in the private `catalystcourses` bucket, so we store a
 // marker path here and sign it at playback time (see src/lib/courseMedia.ts).
