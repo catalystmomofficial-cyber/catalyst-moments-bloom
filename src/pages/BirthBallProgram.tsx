@@ -10,6 +10,9 @@ import { CheckCircle2, Clock, ShieldCheck, Heart, Activity, Sparkles, BookOpen, 
 import { birthBallExercises } from "@/data/birthBallGuideData";
 import { setLastActiveProgram } from "@/lib/lastActiveProgram";
 import programCover from "@/assets/ultimate-birth-ball-guide-cover.jpg";
+import { openCourseMedia } from "@/lib/courseMedia";
+import { toast } from "sonner";
+
 
 const BIRTHBALL_PDF_URL =
   "course://Ultimate birth ball guide/The Ultimate Birth Ball Guide Safe & Effective Exercises for Every Trimester.pdf";
