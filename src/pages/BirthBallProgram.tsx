@@ -133,12 +133,18 @@ const BirthBallProgram = () => {
           </Card>
           <Card>
             <CardContent className="pt-6 space-y-3">
-              <Button className="w-full" asChild>
-                <a href={BIRTHBALL_PDF_URL} target="_blank" rel="noopener noreferrer">
-                  <FileText className="mr-2 h-4 w-4" />
-                  Download the PDF Guide
-                </a>
+              <Button
+                className="w-full"
+                onClick={async () => {
+                  // The guide is paid, so the link is minted per click and expires.
+                  const opened = await openCourseMedia(BIRTHBALL_PDF_URL);
+                  if (!opened) toast.error('This guide is part of your membership — sign in or subscribe to open it.');
+                }}
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                Download the PDF Guide
               </Button>
+
               <Button variant="outline" className="w-full" asChild>
                 <Link to="/birth-ball-guide">
                   <BookOpen className="mr-2 h-4 w-4" />
