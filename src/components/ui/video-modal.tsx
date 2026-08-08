@@ -14,8 +14,12 @@ interface VideoModalProps {
   isWelcomeVideo?: boolean;
 }
 
-const VideoModal = ({ isOpen, onClose, videoUrl, title, isWelcomeVideo = false }: VideoModalProps) => {
-  const isMp4 = /\.mp4($|[?])/i.test(videoUrl);
+const VideoModal = ({ isOpen, onClose, videoUrl: source, title, isWelcomeVideo = false }: VideoModalProps) => {
+  // Paid course media arrives as a `course://` marker and is signed here.
+  const { url: signedUrl } = useSignedMedia(source);
+  const videoUrl = signedUrl ?? '';
+  const isMp4 = /\.mp4($|[?])/i.test(source);
+
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
