@@ -88,8 +88,19 @@ export const PregnancyJournal = () => {
     if (!user) return;
     setSaving(true);
 
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic'];
+
     const uploadedPaths: string[] = [];
     for (const file of newPhotos) {
+      if (!ALLOWED_TYPES.includes(file.type.toLowerCase())) {
+        toast({ title: `Invalid file type: ${file.name}`, description: 'Only image files are allowed.', variant: 'destructive' });
+        continue;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        toast({ title: `File too large: ${file.name}`, description: 'Maximum allowed image size is 10MB.', variant: 'destructive' });
+        continue;
+      }
       const fileExt = file.name.split('.').pop();
       const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
       const { error: uploadError } = await supabase.storage.from('journal-photos').upload(path, file);

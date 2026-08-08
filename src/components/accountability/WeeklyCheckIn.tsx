@@ -83,8 +83,15 @@ export const WeeklyCheckIn = () => {
   };
   const uploadProgressImages = async (): Promise<string[]> => {
     if (!user) return [];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic'];
+
     const uploadPromises = Object.entries(progressPhotos).map(async ([type, photo]) => {
       if (!photo) return null;
+      if (!ALLOWED_TYPES.includes(photo.file.type.toLowerCase()) || photo.file.size > MAX_FILE_SIZE) {
+        console.warn(`File ${photo.file.name} rejected: invalid type or exceeds 10MB limit`);
+        return null;
+      }
       const fileExt = photo.file.name.split('.').pop();
       const fileName = `${user.id}/${type}/${Date.now()}.${fileExt}`;
       const {
