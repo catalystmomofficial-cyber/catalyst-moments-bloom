@@ -46,7 +46,7 @@ const REWARD_BADGES = [
 ];
 
 export default function CheckpointVideoPlayer({
-  src,
+  src: source,
   poster,
   title,
   streakKey,
@@ -55,7 +55,10 @@ export default function CheckpointVideoPlayer({
   onRemoteAction,
   remoteMeta,
 }: CheckpointVideoPlayerProps) {
+  // Paid course videos are signed on demand; everything else passes through.
+  const { url: src } = useSignedMedia(source);
   const videoRef = useRef<HTMLVideoElement>(null);
+
   const { user } = useAuth();
   const { awardPoints } = usePoints();
   const { toast } = useToast();
