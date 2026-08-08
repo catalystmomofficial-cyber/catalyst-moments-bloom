@@ -5,6 +5,8 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { X } from "lucide-react";
 import { Button } from "./button";
 import StaticWelcomeVideo from "@/components/video/StaticWelcomeVideo";
+import { useSignedMedia } from "@/lib/courseMedia";
+
 
 interface VideoModalProps {
   isOpen: boolean;
