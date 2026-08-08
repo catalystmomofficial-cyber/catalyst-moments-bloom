@@ -3,6 +3,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, Pause, Minimize2, Maximize2, X, Move } from 'lucide-react';
 import { useRemoteSync } from '@/hooks/useRemoteSync';
+import { useSignedMedia } from '@/lib/courseMedia';
+
 
 interface InlineVideoPlayerProps {
   isOpen: boolean;
