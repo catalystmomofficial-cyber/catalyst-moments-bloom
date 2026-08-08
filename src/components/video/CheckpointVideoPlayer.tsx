@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Flame, Sparkles, Heart, Battery, X, Trophy } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useSignedMedia } from '@/lib/courseMedia';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { usePoints } from '@/hooks/usePoints';
 import { useToast } from '@/hooks/use-toast';
