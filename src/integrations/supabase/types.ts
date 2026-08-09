@@ -2843,6 +2843,7 @@ export type Database = {
         Returns: undefined
       }
       award_challenge_badges: { Args: never; Returns: undefined }
+      can_read_paid_content: { Args: never; Returns: boolean }
       check_blog_scheduler_status: {
         Args: never
         Returns: {
