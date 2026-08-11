@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Mail, Instagram, Facebook } from 'lucide-react';
+import { Heart, Mail, Instagram, Facebook, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -77,13 +77,55 @@ const isStandalonePWA = () =>
   (window.matchMedia('(display-mode: standalone)').matches ||
     (window.navigator as any).standalone === true);
 
+// Mobile accordion section component
+const FooterSection = ({
+  title,
+  children,
+  defaultOpen = false,
+}: {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) => {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <div className="border-b border-border/20 md:border-none">
+      {/* Mobile: tappable header */}
+      <button
+        className="flex w-full items-center justify-between py-3 md:hidden"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        type="button"
+      >
+        <span className="font-semibold text-primary text-sm tracking-wide uppercase">{title}</span>
+        <ChevronDown
+          className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      {/* Desktop: always-visible heading */}
+      <h3 className="hidden md:block font-semibold text-primary mb-4">{title}</h3>
+
+      {/* Content: hidden on mobile when collapsed */}
+      <div className={`overflow-hidden transition-all duration-200 md:block ${open ? 'pb-4' : 'max-h-0 md:max-h-none'}`}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
 const Footer = () => {
   if (isStandalonePWA()) return null;
   return (
-    <footer className="bg-gradient-to-b from-background to-muted/30 pt-16 pb-8">
+    <footer className="bg-gradient-to-b from-background to-muted/30 pt-12 pb-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8">
-          <div>
+
+        {/* Brand row — always visible */}
+        <div className="flex flex-col md:grid md:grid-cols-4 md:gap-8 md:pb-8">
+
+          {/* Brand column — always shown at top on mobile */}
+          <div className="mb-6 md:mb-0">
             <Link to="/" className="flex items-center space-x-2">
               <img 
                 src="/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png" 
@@ -92,11 +134,11 @@ const Footer = () => {
               />
               <span className="font-bold text-xl text-catalyst-brown">Catalyst<span className="text-catalyst-copper">Mom</span></span>
             </Link>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
               Empowering women through every stage of motherhood with fitness, nutrition, and community support.
             </p>
             
-            <div className="mt-6 flex items-center space-x-3">
+            <div className="mt-4 flex items-center space-x-3">
               <a
                 href="https://www.instagram.com/catalyst_mom/?hl=en"
                 target="_blank"
@@ -128,59 +170,61 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          
-          <div>
-            <h3 className="font-semibold text-primary mb-4">Features</h3>
-            <ul className="space-y-3">
-              <li><Link to="/workouts" className="text-sm text-muted-foreground hover:text-primary transition-colors">Workouts</Link></li>
-              <li><Link to="/wellness" className="text-sm text-muted-foreground hover:text-primary transition-colors">Wellness</Link></li>
-              <li><Link to="/meal-plan" className="text-sm text-muted-foreground hover:text-primary transition-colors">Nutrition</Link></li>
-              <li><Link to="/community" className="text-sm text-muted-foreground hover:text-primary transition-colors">Community</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-primary mb-4">Resources</h3>
-            <ul className="space-y-3">
-              <li><Link to="/guides" className="text-sm text-muted-foreground hover:text-primary transition-colors">Free Guides</Link></li>
-              <li><Link to="/blog" className="text-sm text-muted-foreground hover:text-primary transition-colors">Blog</Link></li>
-              <li><Link to="/experts" className="text-sm text-muted-foreground hover:text-primary transition-colors">Experts</Link></li>
-              <li><Link to="/research" className="text-sm text-muted-foreground hover:text-primary transition-colors">Our Standard</Link></li>
-              <li><Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</Link></li>
-              <li><Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-primary mb-4">Subscribe</h3>
-            <p className="text-sm text-muted-foreground mb-4">Join our newsletter for tips, events, and updates.</p>
-            <NewsletterSubscription />
-            
-            <div className="mt-6 pt-4 border-t border-border/40">
-              <p className="text-sm text-muted-foreground mb-3">Want to earn while helping other moms?</p>
-              <AffiliateButton variant="outline" size="sm" className="w-full border-primary/20 text-primary hover:bg-primary/5" />
+
+          {/* Mobile accordion groups / Desktop columns */}
+          <div className="md:contents">
+
+            <FooterSection title="Features">
+              <ul className="space-y-3">
+                <li><Link to="/workouts" className="text-sm text-muted-foreground hover:text-primary transition-colors">Workouts</Link></li>
+                <li><Link to="/wellness" className="text-sm text-muted-foreground hover:text-primary transition-colors">Wellness</Link></li>
+                <li><Link to="/meal-plan" className="text-sm text-muted-foreground hover:text-primary transition-colors">Nutrition</Link></li>
+                <li><Link to="/community" className="text-sm text-muted-foreground hover:text-primary transition-colors">Community</Link></li>
+              </ul>
+            </FooterSection>
+
+            <FooterSection title="Resources">
+              <ul className="space-y-3">
+                <li><Link to="/guides" className="text-sm text-muted-foreground hover:text-primary transition-colors">Free Guides</Link></li>
+                <li><Link to="/blog" className="text-sm text-muted-foreground hover:text-primary transition-colors">Blog</Link></li>
+                <li><Link to="/experts" className="text-sm text-muted-foreground hover:text-primary transition-colors">Experts</Link></li>
+                <li><Link to="/research" className="text-sm text-muted-foreground hover:text-primary transition-colors">Our Standard</Link></li>
+                <li><Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</Link></li>
+                <li><Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</Link></li>
+              </ul>
+            </FooterSection>
+
+            <FooterSection title="Legal">
+              <ul className="space-y-3">
+                <li><Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link></li>
+                <li><Link to="/medical-disclaimer" className="text-sm text-muted-foreground hover:text-primary transition-colors">Medical Disclaimer</Link></li>
+              </ul>
+            </FooterSection>
+
+            {/* Subscribe — always open on mobile */}
+            <div className="mt-4 md:mt-0">
+              <h3 className="font-semibold text-primary mb-3 text-sm tracking-wide uppercase md:normal-case md:tracking-normal md:text-base">Subscribe</h3>
+              <p className="text-sm text-muted-foreground mb-4">Join our newsletter for tips, events, and updates.</p>
+              <NewsletterSubscription />
+              
+              <div className="mt-6 pt-4 border-t border-border/40">
+                <p className="text-sm text-muted-foreground mb-3">Want to earn while helping other moms?</p>
+                <AffiliateButton variant="outline" size="sm" className="w-full border-primary/20 text-primary hover:bg-primary/5" />
+              </div>
             </div>
+
           </div>
         </div>
         
-        <div className="mt-8 pt-6 border-t border-border/40 flex flex-col md:flex-row justify-between items-center">
+        {/* Bottom bar */}
+        <div className="mt-8 pt-6 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-3">
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} CatalystMom. All rights reserved.
           </p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link to="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              Privacy Policy
-            </Link>
-            <Link to="/terms" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              Terms of Service
-            </Link>
-            <Link to="/medical-disclaimer" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              Medical Disclaimer
-            </Link>
-            <span className="text-xs flex items-center text-muted-foreground">
-              Made with <Heart className="h-3 w-3 mx-1 text-red-500 animate-pulse-soft" /> for moms
-            </span>
-          </div>
+          <span className="text-xs flex items-center text-muted-foreground">
+            Made with <Heart className="h-3 w-3 mx-1 text-red-500 animate-pulse-soft" /> for moms
+          </span>
         </div>
       </div>
     </footer>

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
 import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Calendar, User, Clock } from 'lucide-react';
+import { Calendar, User, Clock, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { NewsletterWidget } from '@/components/blog/NewsletterWidget';
@@ -185,8 +186,12 @@ const BlogDetail = () => {
               { label: truncatedTitle, href: `/blog/${slug}` }
             ]}
           />
+          <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2 text-muted-foreground hover:text-primary">
+            <Link to="/blog"><ArrowLeft className="h-4 w-4 mr-1" />Back to Blog</Link>
+          </Button>
+
           {blog.featured_image_url && (
-            <figure className="w-full h-96 overflow-hidden rounded-lg mb-8">
+            <figure className="w-full h-48 sm:h-64 md:h-96 overflow-hidden rounded-lg mb-6 md:mb-8">
               <img
                 src={supabaseImgSrc(blog.featured_image_url, 1200)}
                 srcSet={supabaseImgSrcSet(blog.featured_image_url, [400, 800, 1200])}
@@ -211,7 +216,7 @@ const BlogDetail = () => {
               </div>
             )}
             
-            <h1 className="text-4xl md:text-5xl font-bold mb-4" itemProp="headline">{blog.title}</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4" itemProp="headline">{blog.title}</h1>
             
             <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
               <div className="flex items-center gap-2" itemProp="author" itemScope itemType="https://schema.org/Person">
@@ -235,17 +240,17 @@ const BlogDetail = () => {
             <Card>
               <CardContent className="pt-6">
               <div
-                className="prose prose-lg max-w-[72ch] dark:prose-invert
+                className="prose prose-sm sm:prose-base md:prose-lg max-w-[72ch] dark:prose-invert
                   prose-headings:font-bold prose-headings:text-foreground
-                  prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4
-                  prose-h3:text-2xl prose-h3:mt-6 prose-h3:mb-3
+                  prose-h2:text-xl sm:prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-6 md:prose-h2:mt-8 prose-h2:mb-3 md:prose-h2:mb-4
+                  prose-h3:text-lg sm:prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-5 md:prose-h3:mt-6 prose-h3:mb-2 md:prose-h3:mb-3
                   prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4
                   prose-a:text-primary prose-a:no-underline hover:prose-a:underline
                   prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
                   prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
                   prose-li:text-muted-foreground prose-li:mb-2
                   prose-strong:text-foreground prose-strong:font-semibold
-                  prose-img:rounded-lg prose-img:shadow-md prose-img:my-6
+                  prose-img:rounded-lg prose-img:shadow-md prose-img:my-4 md:prose-img:my-6
                   [&_img]:loading-lazy [&_img]:w-full [&_img]:h-auto"
                 itemProp="articleBody"
                 dangerouslySetInnerHTML={{ __html: sanitizedContent }}
