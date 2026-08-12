@@ -161,9 +161,10 @@ async function main() {
   try {
     await waitForServer(BASE_URL);
 
-    const blogRoutes = await fetchBlogSlugs();
-    console.log(`Found ${blogRoutes.length} published blog posts to prerender`);
-    const ROUTES = [...STATIC_ROUTES, ...blogRoutes];
+    const blogs = await fetchBlogSlugs();
+    console.log(`Found ${blogs.length} published blog posts to prerender`);
+    await writeSitemap(blogs);
+    const ROUTES = [...STATIC_ROUTES, ...blogs.map((b) => `/blog/${b.slug}`)];
 
     const browser = await puppeteer.launch({
       headless: 'new',
