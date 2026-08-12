@@ -53,7 +53,7 @@ async function fetchBlogSlugs() {
   if (!key) { console.warn('No Supabase key — skipping blog prerender'); return []; }
   try {
     const res = await fetch(
-      `${url}/rest/v1/blogs?select=slug,published_at,updated_at&status=eq.published`,
+      `${url}/rest/v1/blogs?select=slug,title,excerpt,author,tags,featured_image_url,published_at,updated_at&status=eq.published&order=published_at.desc`,
       { headers: { apikey: key, Authorization: `Bearer ${key}` } }
     );
     if (!res.ok) { console.warn(`Supabase returned ${res.status} — skipping blog prerender`); return []; }
