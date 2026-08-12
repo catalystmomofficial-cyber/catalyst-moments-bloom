@@ -53,16 +53,37 @@ async function fetchBlogSlugs() {
   if (!key) { console.warn('No Supabase key — skipping blog prerender'); return []; }
   try {
     const res = await fetch(
-      `${url}/rest/v1/blogs?select=slug&status=eq.published`,
+      `${url}/rest/v1/blogs?select=slug,published_at,updated_at&status=eq.published`,
       { headers: { apikey: key, Authorization: `Bearer ${key}` } }
     );
     if (!res.ok) { console.warn(`Supabase returned ${res.status} — skipping blog prerender`); return []; }
-    const rows = await res.json();
-    return rows.map(r => `/blog/${r.slug}`);
+    return await res.json();
   } catch (e) {
     console.warn('Could not fetch blog slugs:', e.message);
     return [];
   }
+}
+
+// The published sitemap is the static public/sitemap.xml (the vercel.json rewrite
+// to the generate-sitemap function is not active on this host), so it never listed
+// blog posts. Inject the published posts into dist/sitemap.xml at build time so the
+// sitemap always matches exactly what was prerendered.
+async function writeSitemap(blogs) {
+  const src = path.resolve(process.cwd(), 'public', 'sitemap.xml');
+  let xml;
+  try {
+    xml = readFileSync(src, 'utf-8');
+  } catch {
+    console.warn('No public/sitemap.xml — skipping sitemap blog injection');
+    return;
+  }
+  const entries = blogs.map((b) => {
+    const lastmod = (b.updated_at || b.published_at || new Date().toISOString()).slice(0, 10);
+    return `  <url>\n    <loc>https://catalystmomofficial.com/blog/${b.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>`;
+  }).join('\n');
+  const out = xml.replace('</urlset>', `  <!-- Published blog posts (generated at build time) -->\n${entries}\n</urlset>`);
+  await writeFile(path.join(DIST_DIR, 'sitemap.xml'), out, 'utf-8');
+  console.log(`Wrote dist/sitemap.xml with ${blogs.length} blog URLs`);
 }
 
 const STATIC_ROUTES = [
