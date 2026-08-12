@@ -53,7 +53,7 @@ async function fetchBlogSlugs() {
   if (!key) { console.warn('No Supabase key — skipping blog prerender'); return []; }
   try {
     const res = await fetch(
-      `${url}/rest/v1/blogs?select=slug,published_at,updated_at&status=eq.published`,
+      `${url}/rest/v1/blogs?select=slug,title,excerpt,author,tags,featured_image_url,published_at,updated_at&status=eq.published&order=published_at.desc`,
       { headers: { apikey: key, Authorization: `Bearer ${key}` } }
     );
     if (!res.ok) { console.warn(`Supabase returned ${res.status} — skipping blog prerender`); return []; }
@@ -84,6 +84,79 @@ async function writeSitemap(blogs) {
   const out = xml.replace('</urlset>', `  <!-- Published blog posts (generated at build time) -->\n${entries}\n</urlset>`);
   await writeFile(path.join(DIST_DIR, 'sitemap.xml'), out, 'utf-8');
   console.log(`Wrote dist/sitemap.xml with ${blogs.length} blog URLs`);
+}
+
+// Pinterest (and any other RSS-driven auto-publisher) reads https://catalystmomofficial.com/rss.xml.
+// The vercel.json rewrite to the serve-rss edge function is NOT active on this host, so that URL
+// was serving a stale single-item static file — which is why newly published posts never turned
+// into pins. Generate the feed at build time, exactly like the sitemap, so /rss.xml always matches
+// what is actually published. Each item carries <media:content> + <enclosure> because Pinterest
+// skips any feed item without an image.
+function escapeXml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+async function writeRss(blogs) {
+  const BASE = 'https://catalystmomofficial.com';
+  const now = new Date().toUTCString();
+  const withImages = blogs.filter((b) => b.featured_image_url);
+  const items = withImages.map((b) => {
+    const link = `${BASE}/blog/${b.slug}`;
+    const pubDate = new Date(b.published_at || b.updated_at || Date.now()).toUTCString();
+    const img = escapeXml(b.featured_image_url);
+    const ext = (b.featured_image_url.split('?')[0].split('.').pop() || 'jpg').toLowerCase();
+    const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
+    const categories = (b.tags || [])
+      .map((t) => `      <category>${escapeXml(t)}</category>`)
+      .join('\n');
+    return [
+      '    <item>',
+      `      <title>${escapeXml(b.title)}</title>`,
+      `      <link>${link}</link>`,
+      `      <guid isPermaLink="true">${link}</guid>`,
+      `      <description>${escapeXml(b.excerpt || b.title)}</description>`,
+      `      <pubDate>${pubDate}</pubDate>`,
+      `      <dc:creator>${escapeXml(b.author || 'Catalyst Mom')}</dc:creator>`,
+      categories,
+      `      <media:content url="${img}" medium="image" type="${mime}"/>`,
+      `      <media:thumbnail url="${img}"/>`,
+      `      <enclosure url="${img}" type="${mime}" length="0"/>`,
+      '    </item>',
+    ].filter(Boolean).join('\n');
+  }).join('\n');
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:media="http://search.yahoo.com/mrss/"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Catalyst Mom - Maternal Wellness Blog</title>
+    <link>${BASE}/blog</link>
+    <description>Evidence-based articles on pregnancy, postpartum recovery, breastfeeding, and maternal wellness - written for real moms by Catalyst Mom.</description>
+    <language>en-us</language>
+    <managingEditor>hello@catalystmomofficial.com (Catalyst Mom Team)</managingEditor>
+    <lastBuildDate>${now}</lastBuildDate>
+    <ttl>60</ttl>
+    <atom:link href="${BASE}/rss.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>${BASE}/catalyst-mom-logo.png</url>
+      <title>Catalyst Mom - Maternal Wellness Blog</title>
+      <link>${BASE}/blog</link>
+    </image>
+${items}
+  </channel>
+</rss>
+`;
+  await writeFile(path.join(DIST_DIR, 'rss.xml'), xml, 'utf-8');
+  const skipped = blogs.length - withImages.length;
+  console.log(`Wrote dist/rss.xml with ${withImages.length} items${skipped ? ` (${skipped} skipped: no featured image, Pinterest would reject them)` : ''}`);
 }
 
 const STATIC_ROUTES = [
@@ -164,6 +237,7 @@ async function main() {
     const blogs = await fetchBlogSlugs();
     console.log(`Found ${blogs.length} published blog posts to prerender`);
     await writeSitemap(blogs);
+    await writeRss(blogs);
     const ROUTES = [...STATIC_ROUTES, ...blogs.map((b) => `/blog/${b.slug}`)];
 
     const browser = await puppeteer.launch({
