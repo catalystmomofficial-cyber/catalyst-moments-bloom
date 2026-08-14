@@ -295,6 +295,10 @@ async function main() {
     console.log(`Found ${blogs.length} published blog posts to prerender`);
     await writeSitemap(blogs);
     await writeRss(blogs);
+    // Must run BEFORE the homepage is prerendered over dist/index.html,
+    // otherwise the shell would inherit the homepage's rendered content.
+    await writeFallbackShell();
+
     const ROUTES = [...STATIC_ROUTES, ...blogs.map((b) => `/blog/${b.slug}`)];
 
     const browser = await puppeteer.launch({
@@ -323,8 +327,6 @@ async function main() {
     } finally {
       await browser.close();
     }
-
-    await writeFallbackShell();
   } finally {
     cleanup();
   }
