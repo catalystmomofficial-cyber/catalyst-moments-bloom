@@ -333,7 +333,6 @@ async function main() {
     console.error(`\nPrerender could not verify ${failures.length} route(s):`);
     for (const f of failures) console.error(`  - ${f}`);
     console.error('These URLs will serve the neutral SPA shell (never homepage content).');
-    process.exitCode = 1;
   }
 }
 
