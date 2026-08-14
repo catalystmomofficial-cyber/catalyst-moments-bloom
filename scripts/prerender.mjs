@@ -221,6 +221,61 @@ async function outputPathFor(route) {
   return filePath;
 }
 
+// The SPA fallback used to point at /index.html — the *prerendered homepage*.
+// Any URL without its own static file (a post published since the last build, a
+// typo, a stale link) therefore answered 200 with the homepage's full rendered
+// content, so Google indexed homepage copy under blog URLs. Write a neutral,
+// content-free shell instead: real routes still render client-side, but
+// crawlers never see homepage content at another URL.
+async function writeFallbackShell() {
+  const shellSrc = path.join(DIST_DIR, 'index.html');
+  let html;
+  try {
+    html = readFileSync(shellSrc, 'utf-8');
+  } catch {
+    console.warn('No dist/index.html — skipping fallback shell');
+    return;
+  }
+  const shell = html
+    .replace(/<title>[\s\S]*?<\/title>/i, '<title>Catalyst Mom</title>')
+    .replace(/<meta\s+name="title"[^>]*>/i, '')
+    .replace(/<link\s+rel="canonical"[^>]*>/i, '')
+    .replace(/<meta\s+property="og:title"[^>]*>/i, '')
+    .replace(/<meta\s+property="og:url"[^>]*>/i, '');
+  for (const name of ['200.html', '404.html']) {
+    await writeFile(path.join(DIST_DIR, name), shell, 'utf-8');
+  }
+  console.log('Wrote dist/200.html + dist/404.html (neutral SPA fallback shell)');
+}
+
+const HOME_TITLE_FRAGMENT = 'TTC, Pregnancy';
+
+function extractTitle(html) {
+  const m = html.match(/<title>([\s\S]*?)<\/title>/i);
+  return m ? m[1].trim() : '';
+}
+
+// A render that silently fell back to the homepage (or produced no title) is
+// worse than no file at all, so verify each route before writing it and retry.
+async function renderRoute(browser, route, attempt) {
+  const page = await browser.newPage();
+  try {
+    await page.goto(`${BASE_URL}${route}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    // Give React time to render; avoid networkidle0 since third-party
+    // analytics/tracking scripts (Stripe, Omnisend, Turnstile) keep
+    // making background requests and never let the network go idle.
+    await new Promise((resolve) => setTimeout(resolve, 1500 + attempt * 2000));
+    const html = await page.content();
+    const title = extractTitle(html);
+    if (route !== '/' && (!title || title.includes(HOME_TITLE_FRAGMENT))) {
+      throw new Error(`rendered homepage/empty title ("${title}")`);
+    }
+    return { html, title };
+  } finally {
+    await page.close();
+  }
+}
+
 async function main() {
   const server = spawn(
     'npx',
@@ -231,6 +286,8 @@ async function main() {
   const cleanup = () => server.kill();
   process.on('exit', cleanup);
 
+  const failures = [];
+
   try {
     await waitForServer(BASE_URL);
 
@@ -238,6 +295,10 @@ async function main() {
     console.log(`Found ${blogs.length} published blog posts to prerender`);
     await writeSitemap(blogs);
     await writeRss(blogs);
+    // Must run BEFORE the homepage is prerendered over dist/index.html,
+    // otherwise the shell would inherit the homepage's rendered content.
+    await writeFallbackShell();
+
     const ROUTES = [...STATIC_ROUTES, ...blogs.map((b) => `/blog/${b.slug}`)];
 
     const browser = await puppeteer.launch({
@@ -247,25 +308,21 @@ async function main() {
 
     try {
       for (const route of ROUTES) {
-        const page = await browser.newPage();
-        try {
-          await page.goto(`${BASE_URL}${route}`, {
-            waitUntil: 'domcontentloaded',
-            timeout: 30000,
-          });
-          // Give React time to render; avoid networkidle0 since third-party
-          // analytics/tracking scripts (Stripe, Omnisend, Turnstile) keep
-          // making background requests and never let the network go idle.
-          await new Promise((resolve) => setTimeout(resolve, 1500));
-          const html = await page.content();
-          const outPath = await outputPathFor(route);
-          await writeFile(outPath, html, 'utf-8');
-          console.log(`Prerendered ${route} -> ${path.relative(process.cwd(), outPath)}`);
-        } catch (err) {
-          console.warn(`Skipped ${route}: ${err.message}`);
-        } finally {
-          await page.close();
+        let done = false;
+        let lastErr;
+        for (let attempt = 0; attempt < 3 && !done; attempt++) {
+          try {
+            const { html, title } = await renderRoute(browser, route, attempt);
+            const outPath = await outputPathFor(route);
+            await writeFile(outPath, html, 'utf-8');
+            console.log(`Prerendered ${route} -> ${path.relative(process.cwd(), outPath)} | ${title}`);
+            done = true;
+          } catch (err) {
+            lastErr = err;
+            console.warn(`Attempt ${attempt + 1} failed for ${route}: ${err.message}`);
+          }
         }
+        if (!done) failures.push(`${route} (${lastErr?.message})`);
       }
     } finally {
       await browser.close();
@@ -273,9 +330,16 @@ async function main() {
   } finally {
     cleanup();
   }
+
+  if (failures.length) {
+    console.error(`\nPrerender could not verify ${failures.length} route(s):`);
+    for (const f of failures) console.error(`  - ${f}`);
+    console.error('These URLs will serve the neutral SPA shell (never homepage content).');
+  }
 }
 
 main().catch((err) => {
   console.error('Prerender failed:', err);
   process.exit(1);
 });
+
