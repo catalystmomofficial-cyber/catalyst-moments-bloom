@@ -463,10 +463,21 @@ export default function CoreRestoreFoundationsProgram() {
                 Watching Week 2 intro — enjoy the guidance, then jump into your day.
               </p>
             ) : isViewingActiveDay ? (
-              <Button size="lg" className="w-full" onClick={markDayComplete}>
-                <Check className="h-4 w-4 mr-2" />
-                Mark Day {selectedDay} Complete (+{POINTS_PER_DAY} pts)
-              </Button>
+              <div className="space-y-3">
+                <Button size="lg" className="w-full" onClick={markDayComplete}>
+                  <Check className="h-4 w-4 mr-2" />
+                  Mark Day {selectedDay} Complete (+{POINTS_PER_DAY} pts)
+                </Button>
+                {selWeek === 1 && (
+                  <Card className="border-primary/20">
+                    <CardContent className="p-4">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        💡 <span className="font-medium text-foreground">Troubleshooting Note:</span> "Can't feel it yet? Don't force it or suck in your stomach. Focus only on making a gentle 'Sssss' sound on your exhale — your body will naturally trigger the right muscle."
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
             ) : isLocked ? (
               <Button size="lg" className="w-full" disabled>
                 <Lock className="h-4 w-4 mr-2" />
