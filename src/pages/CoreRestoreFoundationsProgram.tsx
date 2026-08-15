@@ -473,8 +473,19 @@ export default function CoreRestoreFoundationsProgram() {
                 Complete Day {unlockedDay} to unlock
               </Button>
             ) : (
-              <div className="flex items-center justify-center text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md py-2">
-                <Check className="h-4 w-4 mr-2" /> Already completed
+              <div className="space-y-3">
+                <div className="flex items-center justify-center text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md py-2">
+                  <Check className="h-4 w-4 mr-2" /> Already completed
+                </div>
+                {selWeek === 1 && (
+                  <Card className="border-primary/20">
+                    <CardContent className="p-4">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        💡 <span className="font-medium text-foreground">Troubleshooting Note:</span> "Can't feel it yet? Don't force it or suck in your stomach. Focus only on making a gentle 'Sssss' sound on your exhale — your body will naturally trigger the right muscle."
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
           </CardContent>
