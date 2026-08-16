@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { Navigate, Link, useSearchParams } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Share2, Users, Clock, CheckCircle2, DollarSign, Loader2, Sparkles } from "lucide-react";
+import { Copy, Share2, Users, Clock, CheckCircle2, DollarSign, Loader2, Sparkles, ArrowLeft } from "lucide-react";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 interface Stats {
@@ -105,6 +105,14 @@ export default function AffiliateDashboard() {
             <span className="text-sm font-medium text-catalyst-brown">Welcome to the Partner Program — your link is live below.</span>
           </div>
         )}
+
+        <Link
+          to="/dashboard"
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary mb-6 -ml-1 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Link>
 
         <h1 className="text-3xl font-bold text-catalyst-brown mb-1">Affiliate Dashboard</h1>
         <p className="text-muted-foreground mb-8">Help moms heal. Earn $29 per referral.</p>

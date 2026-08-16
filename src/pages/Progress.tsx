@@ -15,6 +15,7 @@ import {
   Crown,
   Sparkles,
   ArrowRight,
+  ArrowLeft,
   Share2,
   Trophy,
   CheckCircle2,
@@ -287,6 +288,13 @@ const Progress = () => {
   return (
     <PageLayout>
       <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <Link
+          to="/dashboard"
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary mb-6 -ml-1 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Link>
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             Your Transformation Journey

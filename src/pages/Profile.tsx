@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth, MotherhoodStage } from "@/contexts/AuthContext";
 import PageLayout from "@/components/layout/PageLayout";
-import { Loader2, Save, LogOut, Upload, Clock } from "lucide-react";
+import { Loader2, Save, LogOut, Upload, Clock, ArrowLeft } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -189,6 +189,13 @@ const Profile = () => {
   return (
     <PageLayout>
       <div className="container max-w-4xl py-10">
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary mb-6 -ml-1 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </button>
         <h1 className="text-3xl font-bold mb-6">My Profile</h1>
         
         <div className="flex flex-col md:flex-row gap-6">
