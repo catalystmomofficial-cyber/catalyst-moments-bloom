@@ -21,6 +21,14 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
   useEffect(() => {
     if (!isOpen) {
       setSelectedPriceId(null);
+    } else {
+      // Pre-warm the edge function and Stripe session the moment the modal opens
+      // (while user is still reading the plan picker) so the secret is ready to go.
+      import('@/integrations/supabase/client').then(({ supabase }) => {
+        supabase.functions.invoke('create-checkout', {
+          body: { priceId: 'price_1S546jCNwyQa1NiQYpl3OjEe' } // monthly default
+        }).catch(() => {});
+      });
     }
   }, [isOpen]);
   const handleSuccess = () => {
@@ -35,11 +43,8 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
 
   const handleSelectPlan = (priceId: string) => {
     posthog.capture('subscription_plan_selected');
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setSelectedPriceId(priceId);
-      setIsTransitioning(false);
-    }, 300);
+    // No artificial delay — switch to checkout immediately
+    setSelectedPriceId(priceId);
   };
 
   const handleBack = () => {

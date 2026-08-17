@@ -41,7 +41,17 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
 
   const MAX_RETRIES = 2;
   const BASE_DELAY = 500; // 500ms base delay
-  const INIT_TIMEOUT_MS = 3000;
+  const INIT_TIMEOUT_MS = 8000;
+
+  // Pre-warm the checkout session as soon as this component mounts (before user picks a plan)
+  // so the clientSecret is cached and ready to use instantly.
+  const prewarmDoneRef = useRef(false);
+  useEffect(() => {
+    if (prewarmDoneRef.current || !priceId) return;
+    prewarmDoneRef.current = true;
+    // Fire-and-forget — just warms Deno cold start + Stripe session creation
+    supabase.functions.invoke('create-checkout', { body: { priceId } }).catch(() => {});
+  }, [priceId]);
 
   const handleRefresh = () => {
     retryCountRef.current = 0;

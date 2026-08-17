@@ -1,90 +1,99 @@
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDevBypass } from "@/hooks/useDevBypass";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import CheckoutModal from "@/components/subscription/CheckoutModal";
 import { useSearchParams, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 interface SubscriptionGuardProps {
   children: ReactNode;
   fallback?: ReactNode;
 }
 
+// Routes that are always public — never blocked by the paywall
+const PUBLIC_ROUTES = [
+  '/', '/auth', '/login', '/register', '/signup',
+  '/forgot-password', '/reset-password',
+  '/subscription-success', '/credit-purchase-success',
+];
+
 const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
-  const { subscribed, isReturningCustomer, checkSubscription, user, isCheckingSubscription } = useAuth();
+  const { subscribed, isReturningCustomer, checkSubscription, user, isCheckingSubscription, setShowCheckoutModal } = useAuth();
   const bypass = useDevBypass();
   const { isAdmin } = useAdminAuth();
-  const [showModal, setShowModal] = useState(false);
   const [searchParams] = useSearchParams();
   const location = useLocation();
 
-  // Routes that should NOT trigger the subscription modal
-  const publicRoutes = ['/', '/auth', '/login', '/register', '/forgot-password', '/reset-password', '/subscription-success', '/credit-purchase-success'];
-
   // Returning customers (previously purchased) keep dashboard + content access even when expired.
-  // Premium tools are gated separately by PremiumToolGuard.
   const hasDashboardAccess = subscribed || isReturningCustomer;
 
-  // Check if user just completed a successful payment
+  // Refresh subscription status after a successful payment redirect
   useEffect(() => {
     if (searchParams.get('success') === 'true' || searchParams.get('session_id')) {
-      console.log('[SUBSCRIPTION_GUARD] Success/session redirect detected, refreshing subscription status');
       checkSubscription();
     }
   }, [searchParams, checkSubscription]);
 
-  // Show modal only when we KNOW the user has no access (not while checking)
-  useEffect(() => {
-    if (user && !hasDashboardAccess && !bypass && !isCheckingSubscription) {
-      const isPublicRoute = publicRoutes.includes(location.pathname);
-      setShowModal(!isPublicRoute);
-    } else {
-      setShowModal(false);
-    }
-  }, [user, hasDashboardAccess, bypass, isCheckingSubscription, location.pathname]);
-
-  console.log('[SUBSCRIPTION_GUARD] State:', { subscribed, isReturningCustomer, bypass, isAdmin, route: location.pathname });
-
-  // Admins and dev bypass get free access
+  // Admins and dev bypass get free access — render immediately
   if (isAdmin || bypass) {
     return <>{children}</>;
   }
 
-  // While verifying with the server, render content normally — never flash the paywall.
-  if (!hasDashboardAccess && isCheckingSubscription) {
-    return <>{children}</>;
-  }
-
-  if (!hasDashboardAccess) {
-    console.log('[SUBSCRIPTION_GUARD] Brand-new user (no purchase history), showing paywall:', showModal);
-
-    const isPublicRoute = publicRoutes.includes(location.pathname);
-
-    // If on public route, show content normally
-    if (isPublicRoute) {
-      return <>{children}</>;
-    }
-
-    // If on protected route, show fallback or modal only (no content access)
-    if (fallback) {
-      return <>{fallback}</>;
-    }
-
-    // Show the subscription modal with dimmed background content
+  // While verifying subscription with the server: show a neutral loading screen
+  // so the user never sees any app content flash before the paywall.
+  if (isCheckingSubscription) {
     return (
-      <>
-        <div className="opacity-50 pointer-events-none">
-          {children}
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-3 text-muted-foreground">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm">Loading your account…</p>
         </div>
-        <CheckoutModal
-          isOpen={true}
-          onClose={() => window.dispatchEvent(new CustomEvent('open-mobile-menu'))}
-        />
-      </>
+      </div>
     );
   }
 
-  return <>{children}</>;
+  // Public routes — always show content
+  const isPublicRoute = PUBLIC_ROUTES.includes(location.pathname);
+  if (isPublicRoute) {
+    return <>{children}</>;
+  }
+
+  // User has access — show content
+  if (hasDashboardAccess) {
+    return <>{children}</>;
+  }
+
+  // ── HARD PAYWALL ──
+  // No content visible, no blurred ghost, no way around it.
+  // The only action available is to complete payment.
+  if (fallback) {
+    return <>{fallback}</>;
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background px-4">
+      {/* Minimal branded header so it doesn't feel broken */}
+      <div className="mb-8 text-center">
+        <h2 className="text-2xl font-bold text-foreground">
+          Unlock Catalyst Mom
+        </h2>
+        <p className="mt-2 text-muted-foreground text-sm max-w-xs">
+          Choose your plan to get full access to workouts, meal plans, coaching, and more.
+        </p>
+      </div>
+
+      <CheckoutModal
+        isOpen={true}
+        onClose={() => {
+          // Closing the modal on the paywall just re-opens it —
+          // there is nowhere else to go without a subscription.
+          setShowCheckoutModal(true);
+        }}
+      />
+    </div>
+  );
 };
 
 export default SubscriptionGuard;
