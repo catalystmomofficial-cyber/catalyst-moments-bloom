@@ -38,7 +38,7 @@ const AssessmentGuideChat = () => {
     supabase
       .from('profiles')
       .select('assessment_data, assessment_concern')
-      .eq('id', user.id)
+      .eq('user_id', user.id)
       .maybeSingle()
       .then(({ data }) => {
         const ad = data?.assessment_data as Record<string, string> | null;

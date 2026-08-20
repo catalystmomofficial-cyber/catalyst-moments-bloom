@@ -164,7 +164,7 @@ serve(async (req) => {
     const { data: profile } = await admin
       .from('profiles')
       .select('display_name, motherhood_stage, assessment_data, assessment_concern, assessment_reflection')
-      .eq('id', user.id)
+      .eq('user_id', user.id)
       .maybeSingle();
 
     // Build context block from assessment data
