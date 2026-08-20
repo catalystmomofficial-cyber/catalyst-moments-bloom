@@ -145,7 +145,12 @@ const Register = () => {
     });
     if (Object.keys(collected).length > 0) {
       setAssessmentData(collected);
-      if (collected.score || collected.tier) setFromAssessment(true);
+      if (collected.score || collected.tier) {
+        setFromAssessment(true);
+        // Persist across navigation — CheckoutModal reads this to show the
+        // "your plan is ready" banner instead of a cold paywall.
+        sessionStorage.setItem('cm_from_assessment', '1');
+      }
     }
 
     if (issues.length > 0) {

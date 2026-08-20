@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Shield, Check } from "lucide-react";
+import { Shield, Check, Sparkles } from "lucide-react";
 import EmbeddedCheckout from "./EmbeddedCheckout";
 import PricingToggle from "./PricingToggle";
 import posthog from '@/lib/posthog';
@@ -16,12 +16,21 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
   const navigate = useNavigate();
   const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  // True when user arrived from the assessment funnel — shows warm guidance banner
+  const [fromAssessment, setFromAssessment] = useState(false);
 
   // Reset selection when modal closes to avoid stale checkout instances
   useEffect(() => {
     if (!isOpen) {
       setSelectedPriceId(null);
     } else {
+      // Detect assessment funnel arrival and clear the flag so it
+      // only shows once (on this first session, not on every re-open).
+      const flag = sessionStorage.getItem('cm_from_assessment');
+      if (flag) {
+        setFromAssessment(true);
+        sessionStorage.removeItem('cm_from_assessment');
+      }
       // Pre-warm the edge function and Stripe session the moment the modal opens
       // (while user is still reading the plan picker) so the secret is ready to go.
       import('@/integrations/supabase/client').then(({ supabase }) => {
@@ -102,6 +111,22 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Assessment funnel context banner — shows only for users who just
+              completed the assessment. Replaces "surprise paywall" with
+              "guided next step" framing. */}
+          {fromAssessment && !selectedPriceId && (
+            <div className="flex items-start gap-3 rounded-lg border border-primary/30 bg-primary/8 px-4 py-3">
+              <Sparkles className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-foreground leading-snug">
+                  ✅ Your personalized plan has been created and saved.
+                </p>
+                <p className="text-sm text-muted-foreground mt-0.5 leading-snug">
+                  Here's how to unlock your full experience.
+                </p>
+              </div>
+            </div>
+          )}
           {isTransitioning ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
