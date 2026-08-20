@@ -17,14 +17,20 @@
       }
     </style>
 
-    <!-- Favicon and Apple Touch Icons -->
-    <!-- 96x96 PNG: meets Google's requirement (multiple of 48px) -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
-    <link rel="manifest" href="/manifest.json">
+    <!-- Google Favicon Standard (Primary 48px+ PNGs) -->
+    <!-- PNGs listed first — Google takes the first valid match it finds -->
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+
+    <!-- Apple & Web App Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+
+    <!-- Legacy Fallback (.ico last so it never wins over PNGs) -->
+    <link rel="shortcut icon" href="/favicon-48.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="manifest" href="/manifest.json" />
     
     <!-- Pinterest Domain Verification -->
     <meta name="p:domain_verify" content="d3a94222e2c42a4c9aa3045bd246f18e"/>
