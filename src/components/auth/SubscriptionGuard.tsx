@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useDevBypass } from "@/hooks/useDevBypass";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import CheckoutModal from "@/components/subscription/CheckoutModal";
+import AssessmentGuideChat from "@/components/subscription/AssessmentGuideChat";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
@@ -73,7 +74,7 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background px-4">
+    <div className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-background px-4">
       {/* Minimal branded header so it doesn't feel broken */}
       <div className="mb-8 text-center">
         <h2 className="text-2xl font-bold text-foreground">
@@ -92,6 +93,10 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
           setShowCheckoutModal(true);
         }}
       />
+
+      {/* Assessment Guide Chat — floats above the paywall, only shows
+          for users who arrived from the assessment funnel. */}
+      <AssessmentGuideChat />
     </div>
   );
 };
