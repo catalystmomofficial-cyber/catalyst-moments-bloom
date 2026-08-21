@@ -99,6 +99,11 @@ import PWAInstallBanner from "./components/pwa/PWAInstallBanner";
 // Create a client
 const queryClient = new QueryClient();
 
+// Lazy-loaded so it doesn't affect initial bundle
+const AssessmentGuideChat = React.lazy(() =>
+  import('@/components/subscription/AssessmentGuideChat')
+);
+
 function AppContent() {
   const { showCheckoutModal, setShowCheckoutModal } = useAuth();
   
@@ -130,6 +135,11 @@ function AppContent() {
         <AdminGiftListener />
         <Toaster />
         <Sonner />
+        {/* Assessment guide chat — persists on homepage after "Not now",
+            also rendered as a sibling in SubscriptionGuard on the paywall */}
+        <React.Suspense fallback={null}>
+          <AssessmentGuideChat />
+        </React.Suspense>
       <Routes>
         <Route path="/" element={<Index />} />
         
@@ -217,12 +227,16 @@ function AppContent() {
         } />
         <Route path="/community" element={
           <PrivateRoute>
-            <Community />
+            <SubscriptionGuard>
+              <Community />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/community/groups/:slug" element={
           <PrivateRoute>
-            <GroupDetail />
+            <SubscriptionGuard>
+              <GroupDetail />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         <Route path="/community/birth-ball" element={

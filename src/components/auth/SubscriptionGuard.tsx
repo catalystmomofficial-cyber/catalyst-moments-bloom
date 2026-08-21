@@ -128,20 +128,24 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   }
 
   // ── HARD PAYWALL ──
-  // z-[60] beats Navbar (z-50), PWABanner (z-50), LostUserNudge (z-50) —
-  // nothing from the dashboard bleeds through.
-  // AssessmentGuideChat is z-[70] so it floats above.
+  // z-[60] beats Navbar (z-50), PWABanner (z-50), LostUserNudge (z-50).
+  // AssessmentGuideChat MUST be a sibling (not a child) of this div —
+  // a z-[80] child of a z-[60] stacking context can never appear above
+  // the Dialog portal (z-[70]) in the ROOT stacking context. As a sibling
+  // it participates in the root context directly.
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-background px-4">
-      <CheckoutModal
-        isOpen={true}
-        stage={stage}
-        firstName={firstName}
-        onClose={() => setShowCheckoutModal(true)}
-      />
-      {/* Assessment Guide AI — only renders if profile has assessment data */}
+    <>
+      <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-background px-4">
+        <CheckoutModal
+          isOpen={true}
+          stage={stage}
+          firstName={firstName}
+          onClose={() => setShowCheckoutModal(true)}
+        />
+      </div>
+      {/* Sibling — root stacking context — z-[80] wins over Dialog z-[70] */}
       <AssessmentGuideChat />
-    </div>
+    </>
   );
 };
 

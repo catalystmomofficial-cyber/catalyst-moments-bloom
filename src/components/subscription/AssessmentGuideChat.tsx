@@ -1,45 +1,59 @@
-import { useState, useEffect, useRef } from 'react';
-import { X, MessageCircle, Send, Minimize2, ChevronDown, Sparkles, Loader2 } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { X, MessageCircle, Send, Minimize2, Sparkles, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-type ChatState = 'open' | 'tab' | 'bubble';
+type ChatState = 'open' | 'bubble';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
 
+// Pages where the guide should be visible (paywall + homepage / public landing)
+const GUIDE_ALLOWED_PATHS = ['/', '/dashboard', '/community', '/wellness', '/workouts', '/meal-plan', '/profile'];
+
 /**
- * Pre-membership Assessment Guide Chat Widget
+ * Persistent Assessment Guide Chat Widget
  *
- * Only visible to users who have assessment data in their profile
- * (i.e., arrived from the catalystmom.online assessment funnel).
+ * Visible on:
+ *   - The hard paywall (SubscriptionGuard renders it as a sibling — root stacking context)
+ *   - The homepage / any public page after "Not now"
  *
  * States:
- *   open   → full chat panel (bottom-right, z-[80] above paywall + dialog)
- *   tab    → small pill tab pinned to right edge — click to re-open
- *   bubble → small floating circle at bottom-right — click to re-open
+ *   open   → full 340px chat panel, bottom-right, z-[80]
+ *   bubble → small circle, bottom-right, z-[80]
  *
- * Bugs fixed (vs previous version):
- *   1. loading never reset — early return when !session now calls setLoading(false)
- *   2. greeting re-fired on re-render — switched from useState to useRef for initialized flag
- *   3. hasAssessment starts null (not false) — avoids hiding widget before check completes
+ * Features:
+ *   - Markdown-style links in AI responses: [text](url) → clickable anchor
+ *     Links to locked pages go to /dashboard which fires the paywall
+ *   - Greeting auto-fires once per session
+ *   - Collapses to bubble on all pages; expands on click
+ *   - Any locked-page navigation goes through paywall
  */
 const AssessmentGuideChat = () => {
   const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [chatState, setChatState] = useState<ChatState>('open');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  // useRef so the greeting flag survives re-renders without triggering effects
   const initializedRef = useRef(false);
-  // null = not yet checked, true/false = checked
+  // null = checking, false = no data, true = has assessment
   const [hasAssessment, setHasAssessment] = useState<boolean | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Check if user has assessment data — only show widget if they do
+  // Only show on paywall routes and the homepage
+  const isPaywallScreen = location.pathname !== '/';
+  const isHomePage = location.pathname === '/';
+  // Show on: paywall (any non-public protected route) OR the homepage
+  const shouldShow = hasAssessment === true;
+
+  // ── Profile check ──
   useEffect(() => {
     if (!user) return;
     supabase
@@ -50,40 +64,41 @@ const AssessmentGuideChat = () => {
       .then(({ data }) => {
         const ad = data?.assessment_data as Record<string, string> | null;
         const hasFunnelData = !!(
-          data?.assessment_concern ||
-          ad?.score || ad?.tier || ad?.concern
+          data?.assessment_concern || ad?.score || ad?.tier || ad?.concern
         );
         setHasAssessment(hasFunnelData);
         if (hasFunnelData && !initializedRef.current) {
           initializedRef.current = true;
-          // Trigger the personalized greeting
           sendToApi([], true);
         }
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // Auto-scroll to newest message
+  // Auto-scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Focus input when chat opens
+  // Focus input on open
   useEffect(() => {
     if (chatState === 'open') {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [chatState]);
 
-  const sendToApi = async (history: Message[], isGreeting = false) => {
+  // Auto-expand on paywall screen; stay as bubble on homepage unless user opens it
+  useEffect(() => {
+    if (!isHomePage) {
+      setChatState('open');
+    }
+  }, [isHomePage]);
+
+  const sendToApi = useCallback(async (history: Message[], isGreeting = false) => {
     setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        // FIX: always reset loading — was previously leaking and locking the input
-        setLoading(false);
-        return;
-      }
+      if (!session) { setLoading(false); return; }
 
       const payload = isGreeting
         ? [{ role: 'user', content: '__init__' }]
@@ -97,49 +112,71 @@ const AssessmentGuideChat = () => {
       if (error) throw error;
 
       const reply = data?.reply ?? "I'm here! Ask me anything about your plan or the membership.";
-      setMessages((prev) => [
-        ...prev,
-        { role: 'assistant', content: reply },
-      ]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
     } catch (err) {
-      console.error('[AssessmentGuide] Error:', err);
+      console.error('[AssessmentGuide]', err);
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content: "Hi! I'm your Catalyst Mom Guide. I can answer questions about your assessment results or help you understand what's included. What would you like to know?",
+          content:
+            "Hi! I'm your Catalyst Mom Guide. I can answer questions about your assessment results or what's included in your plan. What would you like to know?\n\nReady to unlock everything? [Start here →](/dashboard)",
         },
       ]);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleSend = async () => {
     const text = input.trim();
     if (!text || loading) return;
     setInput('');
-
     const userMsg: Message = { role: 'user', content: text };
-    const nextHistory = [...messages, userMsg];
-    setMessages(nextHistory);
-
-    await sendToApi(nextHistory);
+    const next = [...messages, userMsg];
+    setMessages(next);
+    await sendToApi(next);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
-  // Still loading profile — don't flash or block
-  if (hasAssessment === null) return null;
-  // No assessment data — widget not shown
-  if (!hasAssessment) return null;
+  // Parse [text](url) markdown links in AI responses into clickable elements.
+  // Internal links go through navigate() so the paywall fires automatically.
+  const renderMessage = (content: string) => {
+    const parts = content.split(/(\[[^\]]+\]\([^)]+\))/g);
+    return parts.map((part, i) => {
+      const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (match) {
+        const [, label, href] = match;
+        const isInternal = href.startsWith('/');
+        return isInternal ? (
+          <button
+            key={i}
+            type="button"
+            onClick={() => navigate(href)}
+            className="underline underline-offset-2 text-primary hover:text-primary/80 font-medium"
+          >
+            {label}
+          </button>
+        ) : (
+          <a key={i} href={href} target="_blank" rel="noopener noreferrer"
+            className="underline underline-offset-2 text-primary hover:text-primary/80 font-medium">
+            {label}
+          </a>
+        );
+      }
+      // Preserve line breaks
+      return part.split('\n').map((line, j, arr) => (
+        <span key={`${i}-${j}`}>{line}{j < arr.length - 1 && <br />}</span>
+      ));
+    });
+  };
 
-  // ── BUBBLE STATE ──
+  if (!shouldShow) return null;
+
+  // ── BUBBLE ──
   if (chatState === 'bubble') {
     return (
       <button
@@ -159,27 +196,11 @@ const AssessmentGuideChat = () => {
     );
   }
 
-  // ── TAB STATE ──
-  if (chatState === 'tab') {
-    return (
-      <button
-        type="button"
-        onClick={() => setChatState('open')}
-        className="fixed bottom-24 right-0 z-[80] flex items-center gap-2 rounded-l-full bg-primary py-3 pl-4 pr-3 shadow-lg shadow-primary/30 transition-all hover:-translate-x-1 active:scale-95"
-        aria-label="Open Guide"
-      >
-        <Sparkles className="h-4 w-4 text-primary-foreground" />
-        <span className="text-xs font-semibold text-primary-foreground">Guide</span>
-        <ChevronDown className="h-4 w-4 rotate-90 text-primary-foreground/70" />
-      </button>
-    );
-  }
-
-  // ── OPEN STATE ──
+  // ── OPEN PANEL ──
   return (
     <div
       className="fixed bottom-6 right-6 z-[80] flex w-[340px] max-w-[calc(100vw-2rem)] flex-col rounded-2xl border border-border bg-card shadow-2xl shadow-black/20 overflow-hidden"
-      style={{ maxHeight: 'min(520px, calc(100vh - 120px))' }}
+      style={{ maxHeight: 'min(520px, calc(100vh - 100px))' }}
     >
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-border bg-primary/5 px-4 py-3">
@@ -191,22 +212,26 @@ const AssessmentGuideChat = () => {
           <p className="text-xs text-muted-foreground">Here to help you decide</p>
         </div>
         <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={() => setChatState('tab')}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label="Minimize to tab"
-          >
-            <Minimize2 className="h-3.5 w-3.5" />
-          </button>
+          {/* Minimize to bubble */}
           <button
             type="button"
             onClick={() => setChatState('bubble')}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label="Close to bubble"
+            aria-label="Minimize"
           >
-            <X className="h-3.5 w-3.5" />
+            <Minimize2 className="h-3.5 w-3.5" />
           </button>
+          {/* Close entirely — only on homepage; on paywall just minimize */}
+          {isHomePage && (
+            <button
+              type="button"
+              onClick={() => setHasAssessment(false)}
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label="Close"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -228,23 +253,18 @@ const AssessmentGuideChat = () => {
         )}
 
         {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex items-end gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-          >
+          <div key={i} className={`flex items-end gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
             {msg.role === 'assistant' && (
               <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15 mb-0.5">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
               </div>
             )}
-            <div
-              className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
-                msg.role === 'user'
-                  ? 'rounded-br-sm bg-primary text-primary-foreground'
-                  : 'rounded-bl-sm bg-muted text-foreground'
-              }`}
-            >
-              {msg.content}
+            <div className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
+              msg.role === 'user'
+                ? 'rounded-br-sm bg-primary text-primary-foreground'
+                : 'rounded-bl-sm bg-muted text-foreground'
+            }`}>
+              {msg.role === 'assistant' ? renderMessage(msg.content) : msg.content}
             </div>
           </div>
         ))}
