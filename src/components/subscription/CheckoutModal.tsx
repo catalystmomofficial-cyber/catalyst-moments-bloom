@@ -101,10 +101,10 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Complete Your Subscription
+                Unlock Your Full Experience
               </DialogTitle>
               <DialogDescription className="text-muted-foreground mt-1">
-                After supporting over 2,000 mamas with our digital guides, we built the Catalyst Mom App to take your recovery even deeper.
+                Join 2,000+ mamas already building stronger, healthier bodies — at every stage of motherhood.
               </DialogDescription>
             </div>
           </div>
@@ -134,23 +134,28 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
             </div>
           ) : !selectedPriceId ? (
             <>
-              {/* Charter Founder framing — matches the assessment funnel offer */}
-              <div className="p-4 rounded-lg border border-catalyst-copper/30 bg-catalyst-copper/5">
-                <p className="font-semibold text-foreground mb-1">
-                  🔒 Charter Founder Membership — only 100 seats
-                </p>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Founding members lock in the full app, community, <strong>and 2 private 1:1
-                  Progression Syncs each month with a dedicated coach</strong> at $29/month —
-                  for life. Once the first 100 seats fill, the 1:1 coaching moves to the
-                  $129/month tier. The app stays; this founding rate on coaching does not.
+              {/* Clean header — no Founder language, no scarcity */}
+              <div className="text-center space-y-1 pb-2">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Choose your plan
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Full access to everything — including 1:1 coaching — from day one.
                 </p>
               </div>
+
+              {/* Quietly exclusive — one line, no pressure, no seat count.
+                  Prevents the "wait, there was a Founder thing?" trust gap
+                  without reintroducing scarcity pressure. */}
+              <p className="text-xs text-center text-muted-foreground/70 italic">
+                Early members may be invited to our Founding Member program — additional benefits and support, by invitation.
+              </p>
 
               <PricingToggle
                 onSelectPlan={handleSelectPlan}
                 yearlyPriceId="price_1S54B1CNwyQa1NiQGKx1Ps0r"
               />
+
               
               {/* Money-Back Guarantee Badge */}
               <div className="flex items-center justify-center gap-2 p-4 bg-primary/5 border border-primary/20 rounded-lg">
