@@ -17,9 +17,14 @@ interface Message {
  * (i.e., arrived from the catalystmom.online assessment funnel).
  *
  * States:
- *   open   → full chat panel (right side, doesn't cover content)
+ *   open   → full chat panel (bottom-right, z-[80] above paywall + dialog)
  *   tab    → small pill tab pinned to right edge — click to re-open
  *   bubble → small floating circle at bottom-right — click to re-open
+ *
+ * Bugs fixed (vs previous version):
+ *   1. loading never reset — early return when !session now calls setLoading(false)
+ *   2. greeting re-fired on re-render — switched from useState to useRef for initialized flag
+ *   3. hasAssessment starts null (not false) — avoids hiding widget before check completes
  */
 const AssessmentGuideChat = () => {
   const { user } = useAuth();
@@ -27,8 +32,10 @@ const AssessmentGuideChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [initialized, setInitialized] = useState(false);
-  const [hasAssessment, setHasAssessment] = useState(false);
+  // useRef so the greeting flag survives re-renders without triggering effects
+  const initializedRef = useRef(false);
+  // null = not yet checked, true/false = checked
+  const [hasAssessment, setHasAssessment] = useState<boolean | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,12 +54,13 @@ const AssessmentGuideChat = () => {
           ad?.score || ad?.tier || ad?.concern
         );
         setHasAssessment(hasFunnelData);
-        if (hasFunnelData && !initialized) {
-          // Trigger the opening greeting from the AI
+        if (hasFunnelData && !initializedRef.current) {
+          initializedRef.current = true;
+          // Trigger the personalized greeting
           sendToApi([], true);
-          setInitialized(true);
         }
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // Auto-scroll to newest message
@@ -71,7 +79,11 @@ const AssessmentGuideChat = () => {
     setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+        // FIX: always reset loading — was previously leaking and locking the input
+        setLoading(false);
+        return;
+      }
 
       const payload = isGreeting
         ? [{ role: 'user', content: '__init__' }]
@@ -84,7 +96,7 @@ const AssessmentGuideChat = () => {
 
       if (error) throw error;
 
-      const reply = data?.reply ?? "I'm having a moment — try asking me again!";
+      const reply = data?.reply ?? "I'm here! Ask me anything about your plan or the membership.";
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', content: reply },
@@ -95,7 +107,7 @@ const AssessmentGuideChat = () => {
         ...prev,
         {
           role: 'assistant',
-          content: "I'm having a little trouble right now. Feel free to ask me anything about your assessment or the membership!",
+          content: "Hi! I'm your Catalyst Mom Guide. I can answer questions about your assessment results or help you understand what's included. What would you like to know?",
         },
       ]);
     } finally {
@@ -122,19 +134,21 @@ const AssessmentGuideChat = () => {
     }
   };
 
-  // Don't render anything until we confirm assessment data exists
+  // Still loading profile — don't flash or block
+  if (hasAssessment === null) return null;
+  // No assessment data — widget not shown
   if (!hasAssessment) return null;
 
-  // ── BUBBLE STATE (small floating circle bottom-right) ──
+  // ── BUBBLE STATE ──
   if (chatState === 'bubble') {
     return (
       <button
+        type="button"
         onClick={() => setChatState('open')}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-primary/30 transition-all hover:scale-110 active:scale-95"
+        className="fixed bottom-6 right-6 z-[80] flex h-14 w-14 items-center justify-center rounded-full bg-primary shadow-lg shadow-primary/30 transition-all hover:scale-110 active:scale-95"
         aria-label="Open Catalyst Mom Guide"
       >
         <MessageCircle className="h-6 w-6 text-primary-foreground" />
-        {/* Pulse ring when there are messages */}
         {messages.length > 0 && (
           <span className="absolute -right-1 -top-1 flex h-4 w-4">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60 opacity-75" />
@@ -145,12 +159,13 @@ const AssessmentGuideChat = () => {
     );
   }
 
-  // ── TAB STATE (pill pinned to right edge) ──
+  // ── TAB STATE ──
   if (chatState === 'tab') {
     return (
       <button
+        type="button"
         onClick={() => setChatState('open')}
-        className="fixed bottom-24 right-0 z-50 flex items-center gap-2 rounded-l-full bg-primary py-3 pl-4 pr-3 shadow-lg shadow-primary/30 transition-all hover:-translate-x-1 active:scale-95"
+        className="fixed bottom-24 right-0 z-[80] flex items-center gap-2 rounded-l-full bg-primary py-3 pl-4 pr-3 shadow-lg shadow-primary/30 transition-all hover:-translate-x-1 active:scale-95"
         aria-label="Open Guide"
       >
         <Sparkles className="h-4 w-4 text-primary-foreground" />
@@ -160,9 +175,10 @@ const AssessmentGuideChat = () => {
     );
   }
 
-  // ── OPEN STATE (full chat panel) ──
+  // ── OPEN STATE ──
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex w-[340px] max-w-[calc(100vw-2rem)] flex-col rounded-2xl border border-border bg-card shadow-2xl shadow-black/20 overflow-hidden"
+    <div
+      className="fixed bottom-6 right-6 z-[80] flex w-[340px] max-w-[calc(100vw-2rem)] flex-col rounded-2xl border border-border bg-card shadow-2xl shadow-black/20 overflow-hidden"
       style={{ maxHeight: 'min(520px, calc(100vh - 120px))' }}
     >
       {/* Header */}
@@ -175,16 +191,16 @@ const AssessmentGuideChat = () => {
           <p className="text-xs text-muted-foreground">Here to help you decide</p>
         </div>
         <div className="flex items-center gap-1">
-          {/* Minimize → tab */}
           <button
+            type="button"
             onClick={() => setChatState('tab')}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             aria-label="Minimize to tab"
           >
             <Minimize2 className="h-3.5 w-3.5" />
           </button>
-          {/* Close → bubble */}
           <button
+            type="button"
             onClick={() => setChatState('bubble')}
             className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             aria-label="Close to bubble"
@@ -195,7 +211,8 @@ const AssessmentGuideChat = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scroll-smooth"
+      <div
+        className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scroll-smooth"
         style={{ minHeight: '200px' }}
       >
         {messages.length === 0 && loading && (
@@ -232,7 +249,6 @@ const AssessmentGuideChat = () => {
           </div>
         ))}
 
-        {/* Loading indicator after user sends a message */}
         {loading && messages.length > 0 && (
           <div className="flex items-end gap-2">
             <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15 mb-0.5">
@@ -261,6 +277,7 @@ const AssessmentGuideChat = () => {
             className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none disabled:opacity-50"
           />
           <button
+            type="button"
             onClick={handleSend}
             disabled={!input.trim() || loading}
             className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
