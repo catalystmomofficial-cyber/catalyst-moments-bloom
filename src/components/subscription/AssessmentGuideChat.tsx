@@ -11,51 +11,47 @@ interface Message {
   content: string;
 }
 
-// Pages where the guide should be visible (paywall + homepage / public landing)
-const GUIDE_ALLOWED_PATHS = ['/', '/dashboard', '/community', '/wellness', '/workouts', '/meal-plan', '/profile'];
+// Never show the guide widget on auth/onboarding pages
+const HIDDEN_PATHS = [
+  '/login', '/register', '/signup', '/forgot-password',
+  '/reset-password', '/auth', '/subscription-success', '/credit-purchase-success',
+];
 
 /**
  * Persistent Assessment Guide Chat Widget
  *
- * Visible on:
- *   - The hard paywall (SubscriptionGuard renders it as a sibling — root stacking context)
- *   - The homepage / any public page after "Not now"
+ * Rendered once at app level (App.tsx). Shows on:
+ *   - Paywall screen (any protected route when not subscribed) → opens full-size, z-[80]
+ *   - Homepage + public pages → bubble at bottom-right
  *
- * States:
- *   open   → full 340px chat panel, bottom-right, z-[80]
- *   bubble → small circle, bottom-right, z-[80]
- *
- * Features:
- *   - Markdown-style links in AI responses: [text](url) → clickable anchor
- *     Links to locked pages go to /dashboard which fires the paywall
- *   - Greeting auto-fires once per session
- *   - Collapses to bubble on all pages; expands on click
- *   - Any locked-page navigation goes through paywall
+ * Stacking order:
+ *   z-[80] this widget        ← top
+ *   z-[70] Dialog/checkout    ← above paywall background
+ *   z-[60] Paywall background ← above navbar
+ *   z-[50] Navbar etc.
  */
 const AssessmentGuideChat = () => {
-  const { user } = useAuth();
+  const { user, subscribed, isReturningCustomer } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [chatState, setChatState] = useState<ChatState>('open');
+  const [chatState, setChatState] = useState<ChatState>('bubble');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const initializedRef = useRef(false);
-  // null = checking, false = no data, true = has assessment
+  // null = checking, true/false = resolved
   const [hasAssessment, setHasAssessment] = useState<boolean | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Only show on paywall routes and the homepage
-  const isPaywallScreen = location.pathname !== '/';
+  const onPaywall = !subscribed && !isReturningCustomer && user != null;
+  const isHiddenPath = HIDDEN_PATHS.some(p => location.pathname.startsWith(p));
   const isHomePage = location.pathname === '/';
-  // Show on: paywall (any non-public protected route) OR the homepage
-  const shouldShow = hasAssessment === true;
 
   // ── Profile check ──
   useEffect(() => {
-    if (!user) return;
+    if (!user) { setHasAssessment(false); return; }
     supabase
       .from('profiles')
       .select('assessment_data, assessment_concern')
@@ -80,19 +76,21 @@ const AssessmentGuideChat = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Focus input on open
+  // Focus input when opened
   useEffect(() => {
     if (chatState === 'open') {
       setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [chatState]);
 
-  // Auto-expand on paywall screen; stay as bubble on homepage unless user opens it
+  // Auto-expand when on paywall, collapse to bubble on other pages
   useEffect(() => {
-    if (!isHomePage) {
+    if (onPaywall && hasAssessment === true) {
       setChatState('open');
+    } else if (isHomePage) {
+      setChatState('bubble');
     }
-  }, [isHomePage]);
+  }, [onPaywall, hasAssessment, isHomePage]);
 
   const sendToApi = useCallback(async (history: Message[], isGreeting = false) => {
     setLoading(true);
@@ -111,16 +109,15 @@ const AssessmentGuideChat = () => {
 
       if (error) throw error;
 
-      const reply = data?.reply ?? "I'm here! Ask me anything about your plan or the membership.";
+      const reply = data?.reply ?? "I'm here! Ask me anything about your plan or membership.";
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
-    } catch (err) {
-      console.error('[AssessmentGuide]', err);
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
           content:
-            "Hi! I'm your Catalyst Mom Guide. I can answer questions about your assessment results or what's included in your plan. What would you like to know?\n\nReady to unlock everything? [Start here →](/dashboard)",
+            "Hi! I'm your Catalyst Mom Guide — I know your assessment results and I'm here to help you decide.\n\nWhat would you like to know about your plan? You can also [unlock it here →](/dashboard)",
         },
       ]);
     } finally {
@@ -142,39 +139,41 @@ const AssessmentGuideChat = () => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
-  // Parse [text](url) markdown links in AI responses into clickable elements.
-  // Internal links go through navigate() so the paywall fires automatically.
+  // Parse [text](url) markdown links → clickable elements
   const renderMessage = (content: string) => {
     const parts = content.split(/(\[[^\]]+\]\([^)]+\))/g);
     return parts.map((part, i) => {
       const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (match) {
         const [, label, href] = match;
-        const isInternal = href.startsWith('/');
-        return isInternal ? (
+        return href.startsWith('/') ? (
           <button
             key={i}
             type="button"
             onClick={() => navigate(href)}
-            className="underline underline-offset-2 text-primary hover:text-primary/80 font-medium"
+            className="underline underline-offset-2 text-primary font-medium hover:text-primary/80"
           >
             {label}
           </button>
         ) : (
           <a key={i} href={href} target="_blank" rel="noopener noreferrer"
-            className="underline underline-offset-2 text-primary hover:text-primary/80 font-medium">
+            className="underline underline-offset-2 text-primary font-medium hover:text-primary/80">
             {label}
           </a>
         );
       }
-      // Preserve line breaks
       return part.split('\n').map((line, j, arr) => (
         <span key={`${i}-${j}`}>{line}{j < arr.length - 1 && <br />}</span>
       ));
     });
   };
 
-  if (!shouldShow) return null;
+  // Don't show on auth pages or when not logged in without assessment
+  if (isHiddenPath) return null;
+  if (!user) return null;
+  if (hasAssessment === false) return null;
+  // Still loading profile — show bubble so paywall user isn't left with nothing
+  // (loading state renders a spinner inside the panel if they open it)
 
   // ── BUBBLE ──
   if (chatState === 'bubble') {
@@ -212,7 +211,6 @@ const AssessmentGuideChat = () => {
           <p className="text-xs text-muted-foreground">Here to help you decide</p>
         </div>
         <div className="flex items-center gap-1">
-          {/* Minimize to bubble */}
           <button
             type="button"
             onClick={() => setChatState('bubble')}
@@ -221,8 +219,8 @@ const AssessmentGuideChat = () => {
           >
             <Minimize2 className="h-3.5 w-3.5" />
           </button>
-          {/* Close entirely — only on homepage; on paywall just minimize */}
-          {isHomePage && (
+          {/* Full close only available on homepage — on paywall just minimize */}
+          {(isHomePage || subscribed || isReturningCustomer) && (
             <button
               type="button"
               onClick={() => setHasAssessment(false)}
@@ -236,10 +234,8 @@ const AssessmentGuideChat = () => {
       </div>
 
       {/* Messages */}
-      <div
-        className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scroll-smooth"
-        style={{ minHeight: '200px' }}
-      >
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scroll-smooth" style={{ minHeight: '200px' }}>
+        {/* Loading greeting */}
         {messages.length === 0 && loading && (
           <div className="flex items-start gap-2.5">
             <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15">
@@ -248,6 +244,19 @@ const AssessmentGuideChat = () => {
             <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm bg-muted px-3.5 py-2.5">
               <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
               <span className="text-xs text-muted-foreground">Personalizing your welcome…</span>
+            </div>
+          </div>
+        )}
+
+        {/* Waiting for assessment check */}
+        {messages.length === 0 && !loading && hasAssessment === null && (
+          <div className="flex items-start gap-2.5">
+            <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15">
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+            </div>
+            <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm bg-muted px-3.5 py-2.5">
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Loading your profile…</span>
             </div>
           </div>
         )}
@@ -269,6 +278,7 @@ const AssessmentGuideChat = () => {
           </div>
         ))}
 
+        {/* Typing indicator after user message */}
         {loading && messages.length > 0 && (
           <div className="flex items-end gap-2">
             <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15 mb-0.5">

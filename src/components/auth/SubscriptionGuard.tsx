@@ -3,7 +3,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useDevBypass } from "@/hooks/useDevBypass";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import CheckoutModal from "@/components/subscription/CheckoutModal";
-import AssessmentGuideChat from "@/components/subscription/AssessmentGuideChat";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { Loader2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +13,6 @@ interface SubscriptionGuardProps {
   fallback?: ReactNode;
 }
 
-// Routes that are always public — never blocked by the paywall
 const PUBLIC_ROUTES = [
   '/', '/auth', '/login', '/register', '/signup',
   '/forgot-password', '/reset-password',
@@ -30,22 +28,18 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
 
-  // Stage context for contextual paywall header + CTA
   const [stage, setStage] = useState<string | null>(null);
   const [firstName, setFirstName] = useState<string | null>(null);
-  // Whether the user has any assessment data at all
-  const [hasAssessment, setHasAssessment] = useState<boolean | null>(null); // null = still loading
+  const [hasAssessment, setHasAssessment] = useState<boolean | null>(null);
 
   const hasDashboardAccess = subscribed || isReturningCustomer;
 
-  // Refresh subscription status after a successful payment redirect
   useEffect(() => {
     if (searchParams.get('success') === 'true' || searchParams.get('session_id')) {
       checkSubscription();
     }
   }, [searchParams, checkSubscription]);
 
-  // Fetch stage + assessment presence for contextual paywall
   useEffect(() => {
     if (!user || hasDashboardAccess) return;
     supabase
@@ -64,10 +58,8 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
       });
   }, [user, hasDashboardAccess]);
 
-  // Admins and dev bypass get free access
   if (isAdmin || bypass) return <>{children}</>;
 
-  // While verifying subscription: blank loading screen — no content flash
   if (isCheckingSubscription) {
     return (
       <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background">
@@ -79,23 +71,11 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
     );
   }
 
-  // Public routes — always show content
   if (PUBLIC_ROUTES.includes(location.pathname)) return <>{children}</>;
-
-  // User has access — show content
   if (hasDashboardAccess) return <>{children}</>;
-
-  // Custom fallback (rare override case)
   if (fallback) return <>{fallback}</>;
 
-  // ── ASSESSMENT REDIRECT ──
-  // User has no assessment data → send them to the assessment first.
-  // Everyone who subscribes should go through the assessment so the
-  // paywall is always contextual. No generic paywall shown.
-  //
-  // While we're still fetching (hasAssessment === null) we show nothing
-  // extra — the checkout modal renders anyway, but the redirect screen
-  // replaces it once we know they have no assessment data.
+  // No assessment data → redirect to assessment first
   if (hasAssessment === false) {
     return (
       <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-background px-6 text-center">
@@ -110,14 +90,12 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
               your answers, and you'll know exactly what you're getting before you pay.
             </p>
           </div>
-          <Button
-            className="w-full"
-            onClick={() => { window.location.href = ASSESSMENT_URL; }}
-          >
+          <Button className="w-full" onClick={() => { window.location.href = ASSESSMENT_URL; }}>
             Take the Free Assessment
           </Button>
           <button
-            onClick={() => setHasAssessment(null)} // let them proceed to paywall anyway
+            type="button"
+            onClick={() => setHasAssessment(null)}
             className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
           >
             I already took it — continue to checkout
@@ -128,24 +106,19 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   }
 
   // ── HARD PAYWALL ──
-  // z-[60] beats Navbar (z-50), PWABanner (z-50), LostUserNudge (z-50).
-  // AssessmentGuideChat MUST be a sibling (not a child) of this div —
-  // a z-[80] child of a z-[60] stacking context can never appear above
-  // the Dialog portal (z-[70]) in the ROOT stacking context. As a sibling
-  // it participates in the root context directly.
+  // AssessmentGuideChat is rendered at app level in App.tsx — NOT here.
+  // Having it in both places caused two instances to fight each other.
+  // The app-level instance automatically appears above the paywall (z-[80])
+  // because it's in the root stacking context, above this div's z-[60].
   return (
-    <>
-      <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-background px-4">
-        <CheckoutModal
-          isOpen={true}
-          stage={stage}
-          firstName={firstName}
-          onClose={() => setShowCheckoutModal(true)}
-        />
-      </div>
-      {/* Sibling — root stacking context — z-[80] wins over Dialog z-[70] */}
-      <AssessmentGuideChat />
-    </>
+    <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-background px-4">
+      <CheckoutModal
+        isOpen={true}
+        stage={stage}
+        firstName={firstName}
+        onClose={() => setShowCheckoutModal(true)}
+      />
+    </div>
   );
 };
 
