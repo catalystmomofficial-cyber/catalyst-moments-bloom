@@ -3,16 +3,23 @@ import { X, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useLostUserDetector } from '@/hooks/useLostUserDetector';
+import { useAuth } from '@/contexts/AuthContext';
 
 /**
  * Slides in from the bottom-right when the user has navigated several pages
  * without finding what they're looking for. Takes her to the coach's own screen
  * on click. No generic AI logos — uses brand color + icon only.
+ *
+ * Hidden for unsubscribed users — avoids the greyed-out-coach-under-paywall
+ * ambiguous state. The AssessmentGuideChat widget handles pre-membership guidance.
  */
 export const LostUserNudge = () => {
   const { isLost, dismiss } = useLostUserDetector();
+  const { subscribed, isReturningCustomer } = useAuth();
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
+  const hasAccess = subscribed || isReturningCustomer;
+
 
 
   // Small delay so it doesn't pop instantly — feels more natural
@@ -25,6 +32,7 @@ export const LostUserNudge = () => {
     }
   }, [isLost]);
 
+  if (!hasAccess) return null;
   if (!visible) return null;
 
   return (

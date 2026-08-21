@@ -9,6 +9,7 @@ interface PricingToggleProps {
   onSelectPlan: (priceId: string) => void;
   isLoading?: boolean;
   yearlyPriceId?: string;
+  stageCta?: string; // e.g. "Start My Recovery Plan" — passed from CheckoutModal
 }
 
 const BENEFITS = [
@@ -21,7 +22,7 @@ const BENEFITS = [
   { text: '24/7 Catalyst AI Expert — instant answers to any wellness question', bold: false },
 ];
 
-const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggleProps) => {
+const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId, stageCta }: PricingToggleProps) => {
   const { trackSelection } = usePlanPopularity();
   const showYearly = !!yearlyPriceId;
 
@@ -69,7 +70,7 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
                 onClick={() => handleSelect('price_1S546jCNwyQa1NiQYpl3OjEe', 'monthly')}
                 disabled={isLoading}
               >
-                Get Started — $29/month
+                {stageCta ? `${stageCta} — $29/month` : 'Get Started — $29/month'}
               </Button>
             </CardContent>
           </Card>

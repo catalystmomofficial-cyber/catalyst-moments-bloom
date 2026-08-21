@@ -10,16 +10,50 @@ import posthog from '@/lib/posthog';
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
+  stage?: string | null;
+  firstName?: string | null;
 }
 
-const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
+// Stage-aware header copy — maps assessment stage to a contextual headline
+const STAGE_CONTEXT: Record<string, { headline: string; sub: string; cta: string }> = {
+  postpartum: {
+    headline: "Your postpartum recovery plan is ready.",
+    sub: "Unlock your personalized core healing, pelvic floor, and recovery program.",
+    cta: "Start My Recovery Plan",
+  },
+  pregnant: {
+    headline: "Your pregnancy wellness plan is ready.",
+    sub: "Unlock your personalized birth prep, movement, and nutrition program.",
+    cta: "Start My Pregnancy Plan",
+  },
+  ttc: {
+    headline: "Your fertility optimization plan is ready.",
+    sub: "Unlock your personalized cycle, nutrition, and fertility program.",
+    cta: "Start My Fertility Plan",
+  },
+  toddler: {
+    headline: "Your wellness plan is ready.",
+    sub: "Unlock your personalized workouts, nutrition, and coaching program.",
+    cta: "Start My Plan",
+  },
+};
+const DEFAULT_CONTEXT = {
+  headline: "Unlock Your Full Experience",
+  sub: "Join 2,000+ mamas already building stronger, healthier bodies — at every stage of motherhood.",
+  cta: "Get Started",
+};
+
+const CheckoutModal = ({ isOpen, onClose, stage, firstName }: CheckoutModalProps) => {
   const navigate = useNavigate();
   const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  // True when user arrived from the assessment funnel — shows warm guidance banner
   const [fromAssessment, setFromAssessment] = useState(false);
 
-  // Reset selection when modal closes to avoid stale checkout instances
+  const ctx = (stage && STAGE_CONTEXT[stage]) ?? DEFAULT_CONTEXT;
+  const headline = firstName ? `${firstName}, ${ctx.headline.charAt(0).toLowerCase()}${ctx.headline.slice(1)}` : ctx.headline;
+
+  const currentStep: 1 | 2 | 3 = isTransitioning ? 2 : selectedPriceId ? 2 : 1;
+
   useEffect(() => {
     if (!isOpen) {
       setSelectedPriceId(null);
@@ -67,8 +101,6 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
     }
   };
 
-  const currentStep: 1 | 2 | 3 = isTransitioning ? 2 : selectedPriceId ? 2 : 1;
-
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background to-secondary/20">
@@ -101,19 +133,17 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Unlock Your Full Experience
+                {headline}
               </DialogTitle>
               <DialogDescription className="text-muted-foreground mt-1">
-                Join 2,000+ mamas already building stronger, healthier bodies — at every stage of motherhood.
+                {ctx.sub}
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Assessment funnel context banner — shows only for users who just
-              completed the assessment. Replaces "surprise paywall" with
-              "guided next step" framing. */}
+          {/* Assessment funnel context banner */}
           {fromAssessment && !selectedPriceId && (
             <div className="flex items-start gap-3 rounded-lg border border-primary/30 bg-primary/8 px-4 py-3">
               <Sparkles className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
@@ -144,9 +174,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 </p>
               </div>
 
-              {/* Quietly exclusive — one line, no pressure, no seat count.
-                  Prevents the "wait, there was a Founder thing?" trust gap
-                  without reintroducing scarcity pressure. */}
+              {/* Quietly exclusive — one line, no pressure, no seat count */}
               <p className="text-xs text-center text-muted-foreground/70 italic">
                 Early members may be invited to our Founding Member program — additional benefits and support, by invitation.
               </p>
@@ -154,9 +182,9 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
               <PricingToggle
                 onSelectPlan={handleSelectPlan}
                 yearlyPriceId="price_1S54B1CNwyQa1NiQGKx1Ps0r"
+                stageCta={ctx.cta}
               />
 
-              
               {/* Money-Back Guarantee Badge */}
               <div className="flex items-center justify-center gap-2 p-4 bg-primary/5 border border-primary/20 rounded-lg">
                 <Shield className="w-5 h-5 text-primary" />
@@ -165,7 +193,6 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 </p>
               </div>
 
-              {/* Refund & cancellation policy link — published terms, visible before payment */}
               <p className="text-center text-xs text-muted-foreground">
                 By subscribing you agree to our{" "}
                 <a
@@ -179,14 +206,16 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 . Cancel anytime; billing stops at the end of your current period.
               </p>
 
+              {/* "Not now" — honest: she can't browse the locked app */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleContinueBrowsing}
-                className="w-full"
+                className="w-full text-muted-foreground"
               >
-                Continue browsing
+                Not now
               </Button>
+
             </>
           ) : (
             <>
