@@ -102,7 +102,7 @@ const CheckoutModal = ({ isOpen, onClose, stage, firstName }: CheckoutModalProps
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange} modal={false}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background to-secondary/20">
         <DialogHeader className="space-y-4 pb-4">
           {/* Progress Indicator */}

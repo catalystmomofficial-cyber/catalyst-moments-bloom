@@ -204,7 +204,7 @@ const AssessmentGuideChat = () => {
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-border bg-primary/5 px-4 py-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/15">
-          <Sparkles className="h-4 w-4 text-primary" />
+          
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-foreground leading-tight">Catalyst Mom Guide</p>
@@ -223,7 +223,7 @@ const AssessmentGuideChat = () => {
           {(isHomePage || subscribed || isReturningCustomer) && (
             <button
               type="button"
-              onClick={() => setHasAssessment(false)}
+              onClick={() => setChatState('bubble')}
               className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               aria-label="Close"
             >
@@ -239,7 +239,7 @@ const AssessmentGuideChat = () => {
         {messages.length === 0 && loading && (
           <div className="flex items-start gap-2.5">
             <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              
             </div>
             <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm bg-muted px-3.5 py-2.5">
               <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
@@ -252,7 +252,7 @@ const AssessmentGuideChat = () => {
         {messages.length === 0 && !loading && hasAssessment === null && (
           <div className="flex items-start gap-2.5">
             <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              
             </div>
             <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm bg-muted px-3.5 py-2.5">
               <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
@@ -265,7 +265,7 @@ const AssessmentGuideChat = () => {
           <div key={i} className={`flex items-end gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
             {msg.role === 'assistant' && (
               <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15 mb-0.5">
-                <Sparkles className="h-3.5 w-3.5 text-primary" />
+                
               </div>
             )}
             <div className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
@@ -282,7 +282,7 @@ const AssessmentGuideChat = () => {
         {loading && messages.length > 0 && (
           <div className="flex items-end gap-2">
             <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/15 mb-0.5">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
+              
             </div>
             <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-sm bg-muted px-3.5 py-3">
               <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60 animate-bounce [animation-delay:0ms]" />
