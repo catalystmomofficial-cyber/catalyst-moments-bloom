@@ -6,6 +6,7 @@ import { Shield, Check, Sparkles } from "lucide-react";
 import EmbeddedCheckout from "./EmbeddedCheckout";
 import PricingToggle from "./PricingToggle";
 import posthog from '@/lib/posthog';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -23,18 +24,18 @@ const STAGE_CONTEXT: Record<string, { headline: string; sub: string; cta: string
   },
   pregnant: {
     headline: "Your pregnancy wellness plan is ready.",
-    sub: "Unlock your personalized birth prep, movement, and nutrition program.",
+    sub: "Unlock your safe workouts, birth prep, and pregnancy guidance.",
     cta: "Start My Pregnancy Plan",
   },
   ttc: {
-    headline: "Your fertility optimization plan is ready.",
-    sub: "Unlock your personalized cycle, nutrition, and fertility program.",
+    headline: "Your fertility & TTC plan is ready.",
+    sub: "Unlock your cycle tracking, holistic prep, and expert guidance.",
     cta: "Start My Fertility Plan",
   },
   toddler: {
-    headline: "Your wellness plan is ready.",
-    sub: "Unlock your personalized workouts, nutrition, and coaching program.",
-    cta: "Start My Plan",
+    headline: "Your strong mama plan is ready.",
+    sub: "Unlock your progressive strength, energy, and vitality program.",
+    cta: "Start My Strength Plan",
   },
 };
 const DEFAULT_CONTEXT = {
@@ -43,24 +44,28 @@ const DEFAULT_CONTEXT = {
   cta: "Get Started",
 };
 
-const CheckoutModal = ({ isOpen, onClose, stage, firstName }: CheckoutModalProps) => {
+const CheckoutModal = ({ isOpen, onClose, stage: propStage, firstName: propFirstName }: CheckoutModalProps) => {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [fromAssessment, setFromAssessment] = useState(false);
 
+  const activeStage = propStage || profile?.motherhood_stage;
+  const activeFirstName = propFirstName || (profile?.display_name ? profile.display_name.split(' ')[0] : null);
+
   // Fuzzy match stage string (e.g. "Early Postpartum" -> postpartum)
   let ctx = DEFAULT_CONTEXT;
-  if (stage) {
-    const s = stage.toLowerCase();
+  if (activeStage) {
+    const s = activeStage.toLowerCase();
     if (s.includes('postpartum')) ctx = STAGE_CONTEXT.postpartum;
     else if (s.includes('pregnan')) ctx = STAGE_CONTEXT.pregnant;
     else if (s.includes('ttc') || s.includes('trying') || s.includes('conceive')) ctx = STAGE_CONTEXT.ttc;
     else if (s.includes('toddler') || s.includes('mother')) ctx = STAGE_CONTEXT.toddler;
-    else ctx = STAGE_CONTEXT[stage] ?? DEFAULT_CONTEXT;
+    else ctx = STAGE_CONTEXT[activeStage] ?? DEFAULT_CONTEXT;
   }
 
-  const headline = firstName ? `${firstName}, ${ctx.headline.charAt(0).toLowerCase()}${ctx.headline.slice(1)}` : ctx.headline;
+  const headline = activeFirstName ? `${activeFirstName}, ${ctx.headline.charAt(0).toLowerCase()}${ctx.headline.slice(1)}` : ctx.headline;
 
   const currentStep: 1 | 2 | 3 = isTransitioning ? 2 : selectedPriceId ? 2 : 1;
 
@@ -180,7 +185,7 @@ const CheckoutModal = ({ isOpen, onClose, stage, firstName }: CheckoutModalProps
                   Choose your plan
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Full access to everything — including 1:1 coaching — from day one.
+                  Full access — including 1:1 coaching — from day one.
                 </p>
               </div>
 
