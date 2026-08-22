@@ -1,3 +1,4 @@
+import React, { Suspense, lazy } from "react";
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -100,7 +101,7 @@ import PWAInstallBanner from "./components/pwa/PWAInstallBanner";
 const queryClient = new QueryClient();
 
 // Lazy-loaded so it doesn't affect initial bundle
-const AssessmentGuideChat = React.lazy(() =>
+const AssessmentGuideChat = lazy(() =>
   import('@/components/subscription/AssessmentGuideChat')
 );
 
@@ -137,9 +138,9 @@ function AppContent() {
         <Sonner />
         {/* Assessment guide chat — persists on homepage after "Not now",
             also rendered as a sibling in SubscriptionGuard on the paywall */}
-        <React.Suspense fallback={null}>
+        <Suspense fallback={null}>
           <AssessmentGuideChat />
-        </React.Suspense>
+        </Suspense>
       <Routes>
         <Route path="/" element={<Index />} />
         
