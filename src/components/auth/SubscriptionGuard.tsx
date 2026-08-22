@@ -116,7 +116,7 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
         isOpen={true}
         stage={stage}
         firstName={firstName}
-        onClose={() => setShowCheckoutModal(true)}
+        onClose={() => {}}
       />
     </div>
   );
