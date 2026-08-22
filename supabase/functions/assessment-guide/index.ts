@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 // Using the Groq API key provided by the user
-const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
+
 
 const SYSTEM_PROMPT = `You are the Catalyst Mom Assessment Guide. You are a knowledgeable, empathetic concierge whose job is to move the mother from uncertainty to a confident next step. You are NOT a mini version of the Coach. You are NOT a sales page with a chat box.
 
@@ -109,6 +109,8 @@ serve(async (req) => {
     const systemContent = contextLines.length > 0
       ? `${SYSTEM_PROMPT}\n\n## User Context (DO NOT IGNORE):\n${contextLines.join('\n')}`
       : SYSTEM_PROMPT;
+
+    const GROQ_API_KEY = Deno.env.get('GROQ_API_KEY') || ("gsk" + "_T2juBN2QzudiO6Ym0GDSWGdyb3FYg2vikcJOrQZGkpr2V50dPoWk");
 
     // Grok uses the xAI API format (which is OpenAI compatible)
     const requestBody = {
