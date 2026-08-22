@@ -6,8 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Hardcoded for immediate use as requested (can be moved to Deno.env later)
-const GROK_API_KEY = Deno.env.get("GROK_API_KEY");
+// Using the Groq API key provided by the user
+const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
 
 const SYSTEM_PROMPT = `You are the Catalyst Mom Assessment Guide. You are a knowledgeable, empathetic concierge whose job is to move the mother from uncertainty to a confident next step. You are NOT a mini version of the Coach. You are NOT a sales page with a chat box.
 
@@ -112,7 +112,7 @@ serve(async (req) => {
 
     // Grok uses the xAI API format (which is OpenAI compatible)
     const requestBody = {
-      model: 'grok-beta', // or grok-2-latest
+      model: 'groq/compound', // Groq's smart router
       messages: [
         { role: 'system', content: systemContent },
         ...messages.map((m) => ({ role: m.role, content: m.content === '__init__' ? 'Hello!' : m.content })),
@@ -120,19 +120,19 @@ serve(async (req) => {
       temperature: 0.7,
     };
 
-    let response = await fetch('https://api.x.ai/v1/chat/completions', {
+    let response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${GROK_API_KEY}`,
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
     });
 
-    // If Grok fails (e.g. out of credits or model not found), fallback to Gemini
+    // If Groq fails, fallback to Gemini
     if (!response.ok) {
       const errText = await response.text();
-      console.error('[ASSESSMENT_GUIDE] xAI error:', response.status, errText);
+      console.error('[ASSESSMENT_GUIDE] Groq error:', response.status, errText);
       
       const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
       if (GEMINI_API_KEY) {
