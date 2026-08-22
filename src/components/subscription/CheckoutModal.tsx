@@ -49,7 +49,17 @@ const CheckoutModal = ({ isOpen, onClose, stage, firstName }: CheckoutModalProps
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [fromAssessment, setFromAssessment] = useState(false);
 
-  const ctx = (stage && STAGE_CONTEXT[stage]) ?? DEFAULT_CONTEXT;
+  // Fuzzy match stage string (e.g. "Early Postpartum" -> postpartum)
+  let ctx = DEFAULT_CONTEXT;
+  if (stage) {
+    const s = stage.toLowerCase();
+    if (s.includes('postpartum')) ctx = STAGE_CONTEXT.postpartum;
+    else if (s.includes('pregnan')) ctx = STAGE_CONTEXT.pregnant;
+    else if (s.includes('ttc') || s.includes('trying') || s.includes('conceive')) ctx = STAGE_CONTEXT.ttc;
+    else if (s.includes('toddler') || s.includes('mother')) ctx = STAGE_CONTEXT.toddler;
+    else ctx = STAGE_CONTEXT[stage] ?? DEFAULT_CONTEXT;
+  }
+
   const headline = firstName ? `${firstName}, ${ctx.headline.charAt(0).toLowerCase()}${ctx.headline.slice(1)}` : ctx.headline;
 
   const currentStep: 1 | 2 | 3 = isTransitioning ? 2 : selectedPriceId ? 2 : 1;
