@@ -138,7 +138,7 @@ serve(async (req) => {
       if (GEMINI_API_KEY) {
         console.log('[ASSESSMENT_GUIDE] Falling back to direct Gemini API');
         const geminiBody = {
-          model: 'gemini-2.5-flash',
+          model: 'gemini-1.5-flash',
           messages: [
             { role: 'system', content: systemContent },
             ...messages.map((m) => ({ role: m.role, content: m.content === '__init__' ? 'Hello!' : m.content })),

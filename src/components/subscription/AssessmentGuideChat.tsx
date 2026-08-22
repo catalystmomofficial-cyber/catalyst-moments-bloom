@@ -116,8 +116,7 @@ const AssessmentGuideChat = () => {
         ...prev,
         {
           role: 'assistant',
-          content:
-            "Hi! I'm your Catalyst Mom Guide — I know your assessment results and I'm here to help you decide.\n\nWhat would you like to know about your plan? You can also [unlock it here →](/dashboard)",
+          content: "I've got your assessment here, and I can see where you're starting. Ask me anything about your results, what you should work on first, how the program works, or what membership would look like for you.",
         },
       ]);
     } finally {
