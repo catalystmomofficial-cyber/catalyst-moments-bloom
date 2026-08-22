@@ -97,7 +97,7 @@ serve(async (req) => {
       temperature: 0.7,
     };
 
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    let response = await fetch('https://api.x.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${GROK_API_KEY}`,
@@ -106,9 +106,36 @@ serve(async (req) => {
       body: JSON.stringify(requestBody),
     });
 
+    // If Grok fails (e.g. out of credits or model not found), fallback to Gemini
     if (!response.ok) {
       const errText = await response.text();
       console.error('[ASSESSMENT_GUIDE] xAI error:', response.status, errText);
+      
+      const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+      if (GEMINI_API_KEY) {
+        console.log('[ASSESSMENT_GUIDE] Falling back to direct Gemini API');
+        const geminiBody = {
+          model: 'gemini-2.5-flash',
+          messages: [
+            { role: 'system', content: systemContent },
+            ...messages.map((m) => ({ role: m.role, content: m.content === '__init__' ? 'Hello!' : m.content })),
+          ],
+          temperature: 0.7,
+        };
+        response = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${GEMINI_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(geminiBody),
+        });
+      }
+    }
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('[ASSESSMENT_GUIDE] API error:', response.status, errText);
       throw new Error(`API error: ${response.status}`);
     }
 
