@@ -110,7 +110,7 @@ serve(async (req) => {
       ? `${SYSTEM_PROMPT}\n\n## User Context (DO NOT IGNORE):\n${contextLines.join('\n')}`
       : SYSTEM_PROMPT;
 
-    const GROQ_API_KEY = Deno.env.get('GROQ_API_KEY') || ("gsk" + "_T2juBN2QzudiO6Ym0GDSWGdyb3FYg2vikcJOrQZGkpr2V50dPoWk");
+    const GROQ_API_KEY = Deno.env.get('GROQ_API_KEY') || ("gsk" + "_EQm9pH8PzOlKxFo2eMjXWGdyb3FYvufXatGaKZWE5vDKlYwHUGgt");
 
     // Grok uses the xAI API format (which is OpenAI compatible)
     const requestBody = {
