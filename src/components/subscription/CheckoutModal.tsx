@@ -118,7 +118,7 @@ const CheckoutModal = ({ isOpen, onClose, stage: propStage, firstName: propFirst
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange} modal={false}>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background to-secondary/20">
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background to-secondary/20 [&>button]:hidden">
         <DialogHeader className="space-y-4 pb-4">
           {/* Progress Indicator */}
           <div className="flex items-center justify-center gap-2 mb-4">
