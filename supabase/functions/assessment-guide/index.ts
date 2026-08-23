@@ -123,13 +123,20 @@ serve(async (req) => {
 
     const GROQ_API_KEY = Deno.env.get('GROQ_API_KEY') || ("gsk" + "_EQm9pH8PzOlKxFo2eMjXWGdyb3FYvufXatGaKZWE5vDKlYwHUGgt");
 
+    const mappedMessages = messages.map((m) => ({ role: m.role, content: m.content === '__init__' ? 'Hello!' : m.content }));
+    if (mappedMessages.length > 0) {
+      const lastMsg = mappedMessages[mappedMessages.length - 1];
+      if (lastMsg.role === 'user') {
+        lastMsg.content += '\n\n[SYSTEM DIRECTIVE: Your response MUST be 1 to 3 short sentences. You MUST use plain text only. NO tables, NO markdown, NO asterisks, NO bullet points. Do not give comprehensive plans.]';
+      }
+    }
+
     // Grok uses the xAI API format (which is OpenAI compatible)
     const requestBody = {
       model: 'groq/compound', // Groq's smart router
       messages: [
         { role: 'system', content: systemContent },
-        ...messages.map((m) => ({ role: m.role, content: m.content === '__init__' ? 'Hello!' : m.content })),
-        { role: 'system', content: 'CRITICAL DIRECTIVE: Your response MUST be 1 to 3 short sentences. You MUST use plain text only. NO tables, NO markdown, NO asterisks, NO bullet points. Do not give comprehensive plans.' }
+        ...mappedMessages
       ],
       temperature: 0.7,
     };
@@ -155,8 +162,7 @@ serve(async (req) => {
           model: 'gemini-1.5-flash',
           messages: [
             { role: 'system', content: systemContent },
-            ...messages.map((m) => ({ role: m.role, content: m.content === '__init__' ? 'Hello!' : m.content })),
-            { role: 'system', content: 'CRITICAL DIRECTIVE: Your response MUST be 1 to 3 short sentences. You MUST use plain text only. NO tables, NO markdown, NO asterisks, NO bullet points. Do not give comprehensive plans.' }
+            ...mappedMessages
           ],
           temperature: 0.7,
         };
