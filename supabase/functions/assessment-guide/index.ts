@@ -129,6 +129,7 @@ serve(async (req) => {
       messages: [
         { role: 'system', content: systemContent },
         ...messages.map((m) => ({ role: m.role, content: m.content === '__init__' ? 'Hello!' : m.content })),
+        { role: 'system', content: 'CRITICAL DIRECTIVE: Your response MUST be 1 to 3 short sentences. You MUST use plain text only. NO tables, NO markdown, NO asterisks, NO bullet points. Do not give comprehensive plans.' }
       ],
       temperature: 0.7,
     };
@@ -155,6 +156,7 @@ serve(async (req) => {
           messages: [
             { role: 'system', content: systemContent },
             ...messages.map((m) => ({ role: m.role, content: m.content === '__init__' ? 'Hello!' : m.content })),
+            { role: 'system', content: 'CRITICAL DIRECTIVE: Your response MUST be 1 to 3 short sentences. You MUST use plain text only. NO tables, NO markdown, NO asterisks, NO bullet points. Do not give comprehensive plans.' }
           ],
           temperature: 0.7,
         };
