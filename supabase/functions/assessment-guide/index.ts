@@ -159,7 +159,7 @@ serve(async (req) => {
       },
       body: JSON.stringify(requestBody),
     });
-
+    if (!response.ok) {
       const errText = await response.text();
       console.error('[ASSESSMENT_GUIDE] API error:', response.status, errText);
       throw new Error(`API error: ${response.status}`);
