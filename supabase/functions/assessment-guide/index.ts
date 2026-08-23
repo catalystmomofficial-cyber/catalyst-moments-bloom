@@ -142,12 +142,13 @@ serve(async (req) => {
 
     // Grok uses the xAI API format (which is OpenAI compatible)
     const requestBody = {
-      model: 'llama-3.1-70b-versatile', // Valid Groq Llama 3.1 70B model
+      model: 'groq/compound', // Groq's smart router
       messages: [
         { role: 'system', content: systemContent },
         ...mappedMessages
       ],
       temperature: 0.7,
+      max_tokens: 300,
     };
 
     let response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
