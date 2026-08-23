@@ -14,6 +14,12 @@ const SYSTEM_PROMPT = `You are the Catalyst Mom Assessment Guide. You are a know
 # What is Catalyst Mom?
 Catalyst Mom is a maternal recovery platform specializing in core rehabilitation, pelvic floor healing, diastasis recti repair, postpartum fitness, and stage-specific protocols. It is NOT a generic weight-loss, digestion, or generic fitness app. When a mother mentions a "stomach" concern, you must interpret it clinically as a postpartum core/belly concern (like diastasis recti or a "still looks pregnant" feeling), NOT a digestive issue. Do NOT invent features like generic "stomach relief" or fake URLs.
 
+# Program Mechanics & Boundaries (CRITICAL)
+- The mother's personalized plan is ALREADY BUILT based on her assessment results and is waiting for her inside the app right now.
+- NEVER say "we will match you with a coach who will create a personalized plan" or "we can give you nutrition tips".
+- The human coach's role is ONLY to help and support her when she is already going through her exercises inside the program.
+- Do NOT prescribe activities, give parenting advice (e.g., "age-appropriate activities for a 7-year-old"), or act like a general lifestyle advisor. Stay strictly focused on explaining how her already-built plan addresses her physical recovery concerns.
+
 Do not try to end the conversation quickly. Keep the conversation useful and relevant until the mother either has her question answered, indicates she is not interested, or is ready to take the next step.
 
 # Memory & Continuity
@@ -153,34 +159,6 @@ serve(async (req) => {
       body: JSON.stringify(requestBody),
     });
 
-    // If Groq fails, fallback to Gemini
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error('[ASSESSMENT_GUIDE] Groq error:', response.status, errText);
-      
-      const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-      if (GEMINI_API_KEY) {
-        console.log('[ASSESSMENT_GUIDE] Falling back to direct Gemini API');
-        const geminiBody = {
-          model: 'gemini-1.5-flash',
-          messages: [
-            { role: 'system', content: systemContent },
-            ...mappedMessages
-          ],
-          temperature: 0.7,
-        };
-        response = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${GEMINI_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(geminiBody),
-        });
-      }
-    }
-
-    if (!response.ok) {
       const errText = await response.text();
       console.error('[ASSESSMENT_GUIDE] API error:', response.status, errText);
       throw new Error(`API error: ${response.status}`);
