@@ -38,85 +38,85 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId, stageCta }: Pri
       <div className={`grid ${showYearly ? 'md:grid-cols-2' : 'grid-cols-1'} gap-5`}>
 
         {/* Monthly */}
-        <GlowingShadow radius="0.75rem">
-          <Card className="relative border-2 border-primary shadow-lg h-full flex flex-col">
-            <CardContent className="p-6 flex flex-col h-full">
+        <Card className="relative border-2 h-full flex flex-col">
+          <CardContent className="p-6 flex flex-col h-full">
 
-              {/* Price */}
-              <div className="text-center mb-5">
-                <div className="flex items-baseline justify-center gap-1.5">
-                  <span className="text-4xl font-bold">$29</span>
-                  <span className="text-muted-foreground">/month</span>
-                </div>
-                {/* "Locked when you join" — the only rate-justification copy needed */}
-                <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                  <Lock className="h-3 w-3" />
-                  Your rate is locked when you join
-                </div>
+            {/* Price */}
+            <div className="text-center mb-5">
+              <div className="flex items-baseline justify-center gap-1.5">
+                <span className="text-4xl font-bold">$29</span>
+                <span className="text-muted-foreground">/month</span>
               </div>
+              {/* "Locked when you join" — the only rate-justification copy needed */}
+              <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                <Lock className="h-3 w-3" />
+                Your rate is locked when you join
+              </div>
+            </div>
 
-              {/* Benefits */}
-              <ul className="space-y-2.5 mb-6 flex-1">
-                {BENEFITS.map((b, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span className={`text-sm ${b.bold ? 'font-semibold' : ''}`}>{b.text}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* Benefits */}
+            <ul className="space-y-2.5 mb-6 flex-1">
+              {BENEFITS.map((b, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <span className={`text-sm ${b.bold ? 'font-semibold' : ''}`}>{b.text}</span>
+                </li>
+              ))}
+            </ul>
 
-              <Button
-                className="w-full"
-                onClick={() => handleSelect('price_1S546jCNwyQa1NiQYpl3OjEe', 'monthly')}
-                disabled={isLoading}
-              >
-                {stageCta ? `${stageCta} — $29/month` : 'Get Started — $29/month'}
-              </Button>
-            </CardContent>
-          </Card>
-        </GlowingShadow>
+            <Button
+              className="w-full"
+              variant="outline"
+              onClick={() => handleSelect('price_1S546jCNwyQa1NiQYpl3OjEe', 'monthly')}
+              disabled={isLoading}
+            >
+              Get Started — $29/month
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Yearly — only if a live price ID is provided */}
         {showYearly && (
-          <Card className="relative border-2 h-full flex flex-col">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold z-10 whitespace-nowrap">
-              Save $99/year
-            </div>
-            <CardContent className="p-6 flex flex-col h-full">
-
-              {/* Price */}
-              <div className="text-center mb-5">
-                <div className="flex items-baseline justify-center gap-1.5">
-                  <span className="text-4xl font-bold text-primary">$249</span>
-                  <span className="text-muted-foreground">/year</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">$20.75/month · billed annually</p>
-                <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                  <Lock className="h-3 w-3" />
-                  Your rate is locked when you join
-                </div>
+          <GlowingShadow radius="0.75rem">
+            <Card className="relative border-2 border-primary shadow-lg h-full flex flex-col">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-catalyst-copper text-white px-4 py-1 rounded-full text-sm font-semibold z-10 whitespace-nowrap shadow-sm">
+                Save $99/year
               </div>
+              <CardContent className="p-6 flex flex-col h-full">
 
-              {/* Same benefits */}
-              <ul className="space-y-2.5 mb-6 flex-1">
-                {BENEFITS.map((b, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span className={`text-sm ${b.bold ? 'font-semibold' : ''}`}>{b.text}</span>
-                  </li>
-                ))}
-              </ul>
+                {/* Price */}
+                <div className="text-center mb-5">
+                  <div className="flex items-baseline justify-center gap-1.5">
+                    <span className="text-4xl font-bold text-primary">$249</span>
+                    <span className="text-muted-foreground">/year</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">$20.75/month · billed annually</p>
+                  <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    <Lock className="h-3 w-3" />
+                    Your rate is locked when you join
+                  </div>
+                </div>
 
-              <Button
-                className="w-full"
-                variant="outline"
-                onClick={() => handleSelect(yearlyPriceId!, 'yearly')}
-                disabled={isLoading}
-              >
-                Get Started — $249/year
-              </Button>
-            </CardContent>
-          </Card>
+                {/* Same benefits */}
+                <ul className="space-y-2.5 mb-6 flex-1">
+                  {BENEFITS.map((b, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span className={`text-sm ${b.bold ? 'font-semibold' : ''}`}>{b.text}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button
+                  className="w-full"
+                  onClick={() => handleSelect(yearlyPriceId!, 'yearly')}
+                  disabled={isLoading}
+                >
+                  {stageCta ? `${stageCta} — $249/year` : 'Get Started — $249/year'}
+                </Button>
+              </CardContent>
+            </Card>
+          </GlowingShadow>
         )}
       </div>
 
