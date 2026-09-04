@@ -15,81 +15,11 @@ import { RemoteSyncProvider } from "@/contexts/RemoteSyncContext";
 import RemoteControllerOverlay from "@/components/remote/RemoteControllerOverlay";
 import { ThemeProvider } from "@/components/theme-provider";
 import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import Coach from "./pages/Coach";
-
-import Workouts from "./pages/Workouts";
-import WorkoutDetail from "./pages/WorkoutDetail";
-import CoreRestoreFoundationsProgram from "./pages/CoreRestoreFoundationsProgram";
-import Wellness from "./pages/Wellness";
-import Community from "./pages/Community";
-import GroupDetail from "./pages/GroupDetail";
-import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import CheckoutModal from "./components/subscription/CheckoutModal";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import ResetPassword from "./pages/auth/ResetPassword";
-import Profile from "./pages/Profile";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import SubscriptionGuard from "./components/auth/SubscriptionGuard";
 import SubscriptionRefresher from "./components/auth/SubscriptionRefresher";
-import FoodCalorieChecker from "./pages/FoodCalorieChecker";
-import Questionnaire from "./pages/Questionnaire";
-import MealPlan from "./pages/MealPlan";
-import MealPlanDetail from "./pages/MealPlanDetail";
-import WorkoutPlan from "./pages/WorkoutPlan";
-import SavedWorkoutPlans from "./pages/SavedWorkoutPlans";
-import WorkoutPlanDetail from "./pages/WorkoutPlanDetail";
-import Blog from "./pages/Blog";
-import BlogDetail from "./pages/BlogDetail";
-import Experts from "./pages/Experts";
-import Research from "./pages/Research";
-import FAQ from "./pages/FAQ";
-import TermsOfService from "./pages/TermsOfService";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import Courses from "./pages/Courses";
-import CourseDetail from "./pages/CourseDetail";
-import GlowAndGo from "./pages/GlowAndGo";
-import BirthBallProgram from "./pages/BirthBallProgram";
-import Affiliate from "./pages/Affiliate";
-import AffiliateDashboard from "./pages/AffiliateDashboard";
-import Admin from "./pages/Admin";
-import BlogPreview from "./pages/BlogPreview";
-import SelfCareGuide from "./pages/wellness/SelfCareGuide";
-import WellnessResources from "./pages/wellness/WellnessResources";
-import WellnessArticle from "./pages/wellness/WellnessArticle";
-import Progress from "./pages/Progress";
-import BirthBallGuide from "./pages/BirthBallGuide";
-import BirthBallTrimester from "./pages/BirthBallTrimester";
-import BirthBallExercise from "./pages/BirthBallExercise";
-import BirthBallBuyingGuide from "./pages/BirthBallBuyingGuide";
-import BirthBallSafety from "./pages/BirthBallSafety";
-import BirthBallFAQ from "./pages/BirthBallFAQ";
-import BirthBallEducation from "./pages/BirthBallEducation";
-import BirthBallEarlyLabor from "./pages/BirthBallEarlyLabor";
-import SavedBirthBallExercises from "./pages/SavedBirthBallExercises";
-import AssessmentResults from "./pages/AssessmentResults";
-import BirthBallCommunityFeed from "./pages/BirthBallCommunityFeed";
-import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
-import CreditPurchaseSuccess from "./pages/CreditPurchaseSuccess";
-import SubscriptionSuccess from "./pages/SubscriptionSuccess";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import MedicalDisclaimer from "./pages/MedicalDisclaimer";
-import Unsubscribe from "./pages/Unsubscribe";
-import DiastasisRectiRedditReviews from "./pages/DiastasisRectiRedditReviews";
-import PostpartumBodyChangesGuide from "./pages/PostpartumBodyChangesGuide";
-import CSectionPrepChecklist from "./pages/CSectionPrepChecklist";
-import BreastfeedingWithoutGuilt from "./pages/BreastfeedingWithoutGuilt";
-import ExhaustedMomSleepGuide from "./pages/ExhaustedMomSleepGuide";
-import Guides from "./pages/Guides";
-import BabyTrackingAnxiety from "./pages/BabyTrackingAnxiety";
-import HonestPregnancyTruths from "./pages/HonestPregnancyTruths";
-import PostpartumFreezerMeals from "./pages/PostpartumFreezerMeals";
-import BuildYourVillage from "./pages/BuildYourVillage";
-import BabyAllergenTracker from "./pages/BabyAllergenTracker";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useState, useEffect } from "react";
 import SplashScreen from "./components/SplashScreen";
@@ -104,6 +34,76 @@ const queryClient = new QueryClient();
 const AssessmentGuideChat = lazy(() =>
   import('@/components/subscription/AssessmentGuideChat')
 );
+
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Coach = lazy(() => import("./pages/Coach"));
+const Workouts = lazy(() => import("./pages/Workouts"));
+const WorkoutDetail = lazy(() => import("./pages/WorkoutDetail"));
+const CoreRestoreFoundationsProgram = lazy(() => import("./pages/CoreRestoreFoundationsProgram"));
+const Wellness = lazy(() => import("./pages/Wellness"));
+const Community = lazy(() => import("./pages/Community"));
+const GroupDetail = lazy(() => import("./pages/GroupDetail"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
+const Profile = lazy(() => import("./pages/Profile"));
+const FoodCalorieChecker = lazy(() => import("./pages/FoodCalorieChecker"));
+const Questionnaire = lazy(() => import("./pages/Questionnaire"));
+const MealPlan = lazy(() => import("./pages/MealPlan"));
+const MealPlanDetail = lazy(() => import("./pages/MealPlanDetail"));
+const WorkoutPlan = lazy(() => import("./pages/WorkoutPlan"));
+const SavedWorkoutPlans = lazy(() => import("./pages/SavedWorkoutPlans"));
+const WorkoutPlanDetail = lazy(() => import("./pages/WorkoutPlanDetail"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogDetail = lazy(() => import("./pages/BlogDetail"));
+const Experts = lazy(() => import("./pages/Experts"));
+const Research = lazy(() => import("./pages/Research"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const Courses = lazy(() => import("./pages/Courses"));
+const CourseDetail = lazy(() => import("./pages/CourseDetail"));
+const GlowAndGo = lazy(() => import("./pages/GlowAndGo"));
+const BirthBallProgram = lazy(() => import("./pages/BirthBallProgram"));
+const Affiliate = lazy(() => import("./pages/Affiliate"));
+const AffiliateDashboard = lazy(() => import("./pages/AffiliateDashboard"));
+const Admin = lazy(() => import("./pages/Admin"));
+const BlogPreview = lazy(() => import("./pages/BlogPreview"));
+const SelfCareGuide = lazy(() => import("./pages/wellness/SelfCareGuide"));
+const WellnessResources = lazy(() => import("./pages/wellness/WellnessResources"));
+const WellnessArticle = lazy(() => import("./pages/wellness/WellnessArticle"));
+const Progress = lazy(() => import("./pages/Progress"));
+const BirthBallGuide = lazy(() => import("./pages/BirthBallGuide"));
+const BirthBallTrimester = lazy(() => import("./pages/BirthBallTrimester"));
+const BirthBallExercise = lazy(() => import("./pages/BirthBallExercise"));
+const BirthBallBuyingGuide = lazy(() => import("./pages/BirthBallBuyingGuide"));
+const BirthBallSafety = lazy(() => import("./pages/BirthBallSafety"));
+const BirthBallFAQ = lazy(() => import("./pages/BirthBallFAQ"));
+const BirthBallEducation = lazy(() => import("./pages/BirthBallEducation"));
+const BirthBallEarlyLabor = lazy(() => import("./pages/BirthBallEarlyLabor"));
+const SavedBirthBallExercises = lazy(() => import("./pages/SavedBirthBallExercises"));
+const AssessmentResults = lazy(() => import("./pages/AssessmentResults"));
+const BirthBallCommunityFeed = lazy(() => import("./pages/BirthBallCommunityFeed"));
+const BirthBallBreathingPractice = lazy(() => import("./pages/BirthBallBreathingPractice"));
+const CreditPurchaseSuccess = lazy(() => import("./pages/CreditPurchaseSuccess"));
+const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const MedicalDisclaimer = lazy(() => import("./pages/MedicalDisclaimer"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
+const DiastasisRectiRedditReviews = lazy(() => import("./pages/DiastasisRectiRedditReviews"));
+const PostpartumBodyChangesGuide = lazy(() => import("./pages/PostpartumBodyChangesGuide"));
+const CSectionPrepChecklist = lazy(() => import("./pages/CSectionPrepChecklist"));
+const BreastfeedingWithoutGuilt = lazy(() => import("./pages/BreastfeedingWithoutGuilt"));
+const ExhaustedMomSleepGuide = lazy(() => import("./pages/ExhaustedMomSleepGuide"));
+const Guides = lazy(() => import("./pages/Guides"));
+const BabyTrackingAnxiety = lazy(() => import("./pages/BabyTrackingAnxiety"));
+const HonestPregnancyTruths = lazy(() => import("./pages/HonestPregnancyTruths"));
+const PostpartumFreezerMeals = lazy(() => import("./pages/PostpartumFreezerMeals"));
+const BuildYourVillage = lazy(() => import("./pages/BuildYourVillage"));
+const BabyAllergenTracker = lazy(() => import("./pages/BabyAllergenTracker"));
 
 function AppContent() {
   const { showCheckoutModal, setShowCheckoutModal } = useAuth();
@@ -141,6 +141,7 @@ function AppContent() {
         <Suspense fallback={null}>
           <AssessmentGuideChat />
         </Suspense>
+      <Suspense fallback={<div className="min-h-screen bg-background" aria-busy="true" />}>
       <Routes>
         <Route path="/" element={<Index />} />
         
@@ -298,13 +299,7 @@ function AppContent() {
         } />
         
         {/* Birth Ball Guide Routes */}
-        <Route path="/birth-ball-guide" element={
-          <PrivateRoute>
-            <SubscriptionGuard>
-              <BirthBallGuide />
-            </SubscriptionGuard>
-          </PrivateRoute>
-        } />
+        <Route path="/birth-ball-guide" element={<BirthBallGuide />} />
         <Route path="/birth-ball-guide/:trimester" element={
           <PrivateRoute>
             <SubscriptionGuard>
@@ -319,34 +314,10 @@ function AppContent() {
             </SubscriptionGuard>
           </PrivateRoute>
         } />
-        <Route path="/birth-ball-guide/buying-guide" element={
-          <PrivateRoute>
-            <SubscriptionGuard>
-              <BirthBallBuyingGuide />
-            </SubscriptionGuard>
-          </PrivateRoute>
-        } />
-        <Route path="/birth-ball-guide/safety" element={
-          <PrivateRoute>
-            <SubscriptionGuard>
-              <BirthBallSafety />
-            </SubscriptionGuard>
-          </PrivateRoute>
-        } />
-        <Route path="/birth-ball-guide/faq" element={
-          <PrivateRoute>
-            <SubscriptionGuard>
-              <BirthBallFAQ />
-            </SubscriptionGuard>
-          </PrivateRoute>
-        } />
-        <Route path="/birth-ball-guide/education" element={
-          <PrivateRoute>
-            <SubscriptionGuard>
-              <BirthBallEducation />
-            </SubscriptionGuard>
-          </PrivateRoute>
-        } />
+        <Route path="/birth-ball-guide/buying-guide" element={<BirthBallBuyingGuide />} />
+        <Route path="/birth-ball-guide/safety" element={<BirthBallSafety />} />
+        <Route path="/birth-ball-guide/faq" element={<BirthBallFAQ />} />
+        <Route path="/birth-ball-guide/education" element={<BirthBallEducation />} />
         <Route path="/birth-ball-guide/early-labor" element={
           <PrivateRoute>
             <SubscriptionGuard>
@@ -450,6 +421,7 @@ function AppContent() {
         {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
       
       <CheckoutModal 
         isOpen={showCheckoutModal} 
