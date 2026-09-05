@@ -125,7 +125,7 @@ function AppContent() {
             "name": "Catalyst Mom",
             "url": "https://catalystmomofficial.com",
             "logo": "https://catalystmomofficial.com/catalyst-mom-logo.png",
-            "sameAs": ["https://catalystmom.online"],
+            "sameAs": ["https://www.instagram.com/catalyst_mom", "https://www.pinterest.com/catalystmoms/"],
             "dateModified": new Date().toISOString().split('T')[0],
           })}</script>
         </Helmet>

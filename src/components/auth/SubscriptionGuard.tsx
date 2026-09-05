@@ -19,7 +19,7 @@ const PUBLIC_ROUTES = [
   '/subscription-success', '/credit-purchase-success',
 ];
 
-const ASSESSMENT_URL = "https://catalystmom.online";
+const ASSESSMENT_URL = "https://assessment.catalystmomofficial.com";
 
 const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   const { subscribed, isReturningCustomer, checkSubscription, user, isCheckingSubscription, setShowCheckoutModal } = useAuth();

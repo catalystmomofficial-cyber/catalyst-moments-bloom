@@ -500,7 +500,7 @@ const About = () => {
               Start Your Journey
             </a>
             <a
-              href="https://catalystmom.online"
+              href="https://assessment.catalystmomofficial.com"
               target="_blank"
               rel="noopener noreferrer"
               className="cta-btn-ghost"

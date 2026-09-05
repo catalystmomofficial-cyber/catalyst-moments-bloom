@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Instagram, Facebook, HelpCircle, Handshake } from "lucide-react";
 
 const PARTNERSHIP_EMAIL = "hello@catalystmomofficial.com";
-const SUPPORT_EMAIL = "admin@catalystmom.online";
+const SUPPORT_EMAIL = "hello@catalystmomofficial.com";
 
 const Contact = () => {
   const structuredData = {

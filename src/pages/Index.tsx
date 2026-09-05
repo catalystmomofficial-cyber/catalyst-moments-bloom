@@ -13,7 +13,6 @@ import CTASection from '@/components/home/CTASection';
 import FreeGuidesSection from '@/components/home/FreeGuidesSection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
-import AssessmentPopup from '@/components/home/AssessmentPopup';
 import { useAuth } from '@/contexts/AuthContext';
 
 
@@ -107,9 +106,6 @@ const Index = () => {
 
       {/* CTA Section */}
       <CTASection onWatchDemo={(url, title) => openVideoModal(url, title)} />
-
-      {/* Assessment invite popup — native, shows once per visitor */}
-      <AssessmentPopup />
 
       {/* Video Modal */}
       <VideoModal 

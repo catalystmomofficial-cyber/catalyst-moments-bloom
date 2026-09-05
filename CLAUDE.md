@@ -44,15 +44,15 @@ fabricating it.
   Prefer uploads to the `blog-images` bucket (the app's image optimizer
   only transforms Supabase-storage and Unsplash URLs).
 
-## The real assessment lives at catalystmom.online (IMPORTANT — read before touching "assessment" anything)
+## The real assessment lives at assessment.catalystmomofficial.com (IMPORTANT — read before touching "assessment" anything)
 
-**catalystmom.online is the one real assessment / lead-magnet funnel.** It's a
+**assessment.catalystmomofficial.com is the one real assessment / lead-magnet funnel.** It's a
 separate Next.js app in a separate repo (`v0-catalyst-mom-lead`), deployed on
 Vercel, with its own stage-specific pages:
-- `https://catalystmom.online/postpartum-assessment`
-- `https://catalystmom.online/pregnancy-assessment`
-- `https://catalystmom.online/ttc-assessment`
-- `https://catalystmom.online` (root) when a piece of content spans more than
+- `https://assessment.catalystmomofficial.com/postpartum-assessment`
+- `https://assessment.catalystmomofficial.com/pregnancy-assessment`
+- `https://assessment.catalystmomofficial.com/ttc-assessment`
+- `https://assessment.catalystmomofficial.com` when a piece of content spans more than
   one stage, or the stage is unknown.
 
 **Everything that looks like an "assessment" inside *this* app is legacy and
@@ -65,14 +65,14 @@ matter** - the user has explicitly said to leave that code alone. If asked to
 remove it, that's a real, careful, staged job (it's referenced from ~15
 files including the home page) - don't attempt it in one pass.
 
-**Blog CTAs and any assessment link must point to catalystmom.online**, using
+**Blog CTAs and any assessment link must point to assessment.catalystmomofficial.com**, using
 the stage-matched path above. `supabase/functions/generate-blog-post/index.ts`
 enforces this in its system prompt (fixed after previously hardcoding a
 broken `https://catalystmomofficial.com/assessment` link into every post,
 regardless of topic - that route has never existed).
 
 Because already-published posts can't be bulk-edited, `vercel.json` has a
-redirect: `/assessment` → `https://catalystmom.online` (301). That's the
+permanent redirect: `/assessment/*` → the independently deployed assessment app. That's the
 safety net for old posts still carrying the broken link; new posts should
 never need it since the generator now writes the correct stage URL directly.
 

@@ -58,8 +58,8 @@ const HTML = `
       <p>Catalyst Mom is a maternal wellness platform designed to support women through every stage of motherhood — Trying to Conceive (TTC), Pregnancy, and Postpartum recovery.</p>
       <ul class="policy-list">
         <li><span><strong>App:</strong> catalystmomofficial.com</span></li>
-        <li><span><strong>Assessment:</strong> catalystmom.online</span></li>
-        <li><span><strong>Contact:</strong> admin@catalystmom.online</span></li>
+        <li><span><strong>Assessment:</strong> assessment.catalystmomofficial.com</span></li>
+        <li><span><strong>Contact:</strong> hello@catalystmomofficial.com</span></li>
       </ul>
     </section>
 
@@ -182,7 +182,7 @@ const HTML = `
         <li><span><strong>Objection</strong> — object to certain types of processing</span></li>
         <li><span><strong>Withdrawal of consent</strong> — withdraw consent for marketing communications at any time</span></li>
       </ul>
-      <p>To exercise any of these rights, please contact us at admin@catalystmom.online. We will respond within 30 days.</p>
+      <p>To exercise any of these rights, please contact us at hello@catalystmomofficial.com. We will respond within 30 days.</p>
     </section>
 
     <section class="policy-section">
@@ -212,9 +212,9 @@ const HTML = `
       <p>If you have any questions, concerns, or requests regarding this Privacy Policy or how we handle your data, please contact us:</p>
       <div class="contact-box">
         <p><strong>Catalyst Mom</strong></p>
-        <p>Email: <a href="mailto:admin@catalystmom.online">admin@catalystmom.online</a></p>
+        <p>Email: <a href="mailto:hello@catalystmomofficial.com">hello@catalystmomofficial.com</a></p>
         <p>App: <a href="https://catalystmomofficial.com">catalystmomofficial.com</a></p>
-        <p>Assessment: <a href="https://catalystmom.online">catalystmom.online</a></p>
+        <p>Assessment: <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a></p>
         <p style="margin-top:1rem;">We are committed to resolving any concerns you have about your privacy promptly and transparently.</p>
       </div>
     </section>

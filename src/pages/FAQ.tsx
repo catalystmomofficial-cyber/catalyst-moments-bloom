@@ -398,7 +398,7 @@ const FAQ = () => {
           <div className="rounded-3xl border border-border bg-card/60 p-8 text-center backdrop-blur-xl">
             <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
               <strong className="font-semibold text-foreground">Still have a question?</strong> We are here to
-              help. Reach out at admin@catalystmom.online and we will get back to you within 24 hours.
+              help. Reach out at hello@catalystmomofficial.com and we will get back to you within 24 hours.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link

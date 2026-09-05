@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 
-const ASSESSMENT_URL = "https://catalystmom.online?utm_source=app-site&utm_medium=hero&utm_campaign=assessment-invite";
+const ASSESSMENT_URL = "https://assessment.catalystmomofficial.com?utm_source=app-site&utm_medium=hero&utm_campaign=assessment-invite";
 
 interface HeroSectionProps {
   onWatchVideo: (url: string, title: string) => void;

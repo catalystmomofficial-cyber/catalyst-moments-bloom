@@ -60,8 +60,8 @@ const HTML = `
       <p>Catalyst Mom is a maternal wellness platform designed to support women through every stage of motherhood — Trying to Conceive (TTC), Pregnancy, and Postpartum recovery. We provide fitness programs, nutrition guidance, wellness tools, community support, and coaching services.</p>
       <ul class="policy-list">
         <li><span><strong>App:</strong> catalystmomofficial.com</span></li>
-        <li><span><strong>Assessment:</strong> catalystmom.online</span></li>
-        <li><span><strong>Contact:</strong> admin@catalystmom.online</span></li>
+        <li><span><strong>Assessment:</strong> assessment.catalystmomofficial.com</span></li>
+        <li><span><strong>Contact:</strong> hello@catalystmomofficial.com</span></li>
       </ul>
     </section>
 
@@ -96,9 +96,9 @@ const HTML = `
       <h3 class="sub-heading">4.2 Billing</h3>
       <p>Subscriptions are billed automatically at the start of each billing period. All payments are processed securely through Stripe. We do not store your payment card details.</p>
       <h3 class="sub-heading">4.3 Cancellation</h3>
-      <p>You may cancel your subscription at any time through your account settings or by contacting us at admin@catalystmom.online. Cancellation takes effect at the end of your current billing period. You will retain access to the platform until that date.</p>
+      <p>You may cancel your subscription at any time through your account settings or by contacting us at hello@catalystmomofficial.com. Cancellation takes effect at the end of your current billing period. You will retain access to the platform until that date.</p>
       <h3 class="sub-heading">4.4 Refunds</h3>
-      <p>We stand behind Catalyst Mom with a 30-day money-back guarantee. Give the program a genuine try during your first 30 days. If you have engaged with it and it is honestly not right for you, email us at admin@catalystmom.online within those 30 days and we will refund your most recent subscription payment in full. We only ask that you gave it a fair try first. We reserve the right to decline refund requests that show the guarantee is being used in bad faith, including repeated sign-up-and-refund activity or requests where the member has not meaningfully used the program. After 30 days, payments are non-refundable except where required by law.</p>
+      <p>We stand behind Catalyst Mom with a 30-day money-back guarantee. Give the program a genuine try during your first 30 days. If you have engaged with it and it is honestly not right for you, email us at hello@catalystmomofficial.com within those 30 days and we will refund your most recent subscription payment in full. We only ask that you gave it a fair try first. We reserve the right to decline refund requests that show the guarantee is being used in bad faith, including repeated sign-up-and-refund activity or requests where the member has not meaningfully used the program. After 30 days, payments are non-refundable except where required by law.</p>
       <h3 class="sub-heading">4.5 Price Changes</h3>
       <p>We reserve the right to change subscription pricing with reasonable notice. We will notify you at least 30 days before any price change takes effect on your account.</p>
     </section>
@@ -161,7 +161,7 @@ const HTML = `
     <section class="policy-section">
       <h2 class="section-heading">10. Intellectual Property</h2>
       <p>All content, branding, trademarks, logos, and intellectual property on the Catalyst Mom platform are owned by or licensed to Catalyst Mom. Nothing in these terms grants you any right to use our intellectual property without our prior written permission.</p>
-      <p>If you believe any content on our platform infringes your intellectual property rights, please contact us at admin@catalystmom.online.</p>
+      <p>If you believe any content on our platform infringes your intellectual property rights, please contact us at hello@catalystmomofficial.com.</p>
     </section>
 
     <section class="policy-section">
@@ -179,7 +179,7 @@ const HTML = `
       <h2 class="section-heading">13. Termination</h2>
       <p>We reserve the right to suspend or terminate your access to the platform at any time and for any reason — including violation of these terms — with or without notice.</p>
       <p>If we terminate your account due to a violation of these terms, you will not be entitled to a refund of any subscription fees paid.</p>
-      <p>You may terminate your account at any time by contacting us at admin@catalystmom.online.</p>
+      <p>You may terminate your account at any time by contacting us at hello@catalystmomofficial.com.</p>
     </section>
 
     <section class="policy-section">
@@ -198,9 +198,9 @@ const HTML = `
       <p>If you have any questions about these Terms of Service please contact us:</p>
       <div class="contact-box">
         <p><strong>Catalyst Mom</strong></p>
-        <p>Email: <a href="mailto:admin@catalystmom.online">admin@catalystmom.online</a></p>
+        <p>Email: <a href="mailto:hello@catalystmomofficial.com">hello@catalystmomofficial.com</a></p>
         <p>App: <a href="https://catalystmomofficial.com">catalystmomofficial.com</a></p>
-        <p>Assessment: <a href="https://catalystmom.online">catalystmom.online</a></p>
+        <p>Assessment: <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a></p>
         <p style="margin-top:1rem;">We are committed to being fair, transparent, and responsive to any concerns you have.</p>
       </div>
     </section>

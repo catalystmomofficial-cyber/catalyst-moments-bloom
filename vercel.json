@@ -8,7 +8,12 @@
     },
     {
       "source": "/assessment",
-      "destination": "https://catalystmom.online",
+      "destination": "https://assessment.catalystmomofficial.com",
+      "permanent": true
+    },
+    {
+      "source": "/assessment/:path*",
+      "destination": "https://assessment.catalystmomofficial.com/:path*",
       "permanent": true
     }
   ],

@@ -38,7 +38,7 @@ const evidenceChecklist = [
   },
   {
     item: 'Any emails with the customer',
-    where: 'Your admin@catalystmom.online inbox. A support thread showing you offered help is strong evidence.',
+    where: 'Your hello@catalystmomofficial.com inbox. A support thread showing you offered help is strong evidence.',
   },
 ];
 
@@ -72,7 +72,7 @@ Attached: proof of the agreed terms, the signup and payment record, and the cust
 
 Sincerely,
 Catalyst Mom
-admin@catalystmom.online`;
+hello@catalystmomofficial.com`;
   }, [memberName, email, plan, amount, signupDate, lastActive]);
 
   const copy = async (text: string, label: string) => {
