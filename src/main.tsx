@@ -3,6 +3,20 @@ import App from './App.tsx'
 import './lib/posthog'
 import './index.css'
 
+// Attribute clicks from the main site into the assessment funnel. The
+// assessment app also needs the same Pinterest tag to measure completions.
+document.addEventListener('click', (event) => {
+  const target = event.target as Element | null;
+  const link = target?.closest<HTMLAnchorElement>('a[href*="assessment.catalystmomofficial.com"]');
+  if (!link) return;
+
+  const pintrk = (window as Window & {
+    pintrk?: (...args: unknown[]) => void;
+  }).pintrk;
+
+  pintrk?.('track', 'lead', { lead_type: 'assessment_click' });
+});
+
 // Guard: don't register SW in iframes or preview hosts
 const isInIframe = (() => {
   try { return window.self !== window.top; } catch { return true; }
