@@ -639,6 +639,7 @@ export type Database = {
           created_at: string
           group_slug: string
           id: string
+          is_anonymous: boolean
           likes_count: number
           sub_category: string
           updated_at: string
@@ -650,6 +651,7 @@ export type Database = {
           created_at?: string
           group_slug?: string
           id?: string
+          is_anonymous?: boolean
           likes_count?: number
           sub_category?: string
           updated_at?: string
@@ -661,6 +663,7 @@ export type Database = {
           created_at?: string
           group_slug?: string
           id?: string
+          is_anonymous?: boolean
           likes_count?: number
           sub_category?: string
           updated_at?: string

@@ -16,6 +16,7 @@ export interface CommunityPostData {
   display_name: string | null;
   avatar_url: string | null;
   is_liked: boolean;
+  is_anonymous: boolean;
 }
 
 export interface PostComment {
@@ -76,9 +77,10 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
       likes_count: p.likes_count,
       comments_count: p.comments_count,
       created_at: p.created_at,
-      display_name: profileMap.get(p.user_id)?.display_name || 'Community Member',
-      avatar_url: profileMap.get(p.user_id)?.avatar_url || null,
+      display_name: p.is_anonymous ? 'Anonymous member' : (profileMap.get(p.user_id)?.display_name || 'Community Member'),
+      avatar_url: p.is_anonymous ? null : (profileMap.get(p.user_id)?.avatar_url || null),
       is_liked: likedSet.has(p.id),
+      is_anonymous: p.is_anonymous ?? false,
     }));
 
     setPosts(enriched);
@@ -104,13 +106,14 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
     return () => { supabase.removeChannel(channel); };
   }, [user, groupSlug, subCategory, fetchPosts]);
 
-  const createPost = useCallback(async (content: string) => {
+  const createPost = useCallback(async (content: string, isAnonymous = false) => {
     if (!user || !content.trim()) return;
     const { error } = await supabase.from('community_posts').insert({
       user_id: user.id,
       group_slug: groupSlug,
       sub_category: subCategory,
       content: content.trim(),
+      is_anonymous: isAnonymous,
     });
     if (!error) {
       posthog.capture('community_post_created', {

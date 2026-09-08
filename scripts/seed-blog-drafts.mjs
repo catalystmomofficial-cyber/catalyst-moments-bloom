@@ -1068,6 +1068,150 @@ ${DISCLAIMER}`,
 <p>Browse more guides for every stage of motherhood in our <a href="/wellness/resources">Wellness Resources</a> library, and follow <a href="https://www.instagram.com/catalyst_mom/?hl=en" target="_blank" rel="noopener noreferrer">@catalyst_mom on Instagram</a> or <a href="https://www.facebook.com/profile.php?id=61554306726027" target="_blank" rel="noopener noreferrer">Facebook</a> for daily bedtime-routine tips.</p>
 <p><em>This article is for general education and is not medical advice. If sleep problems are severe, sudden, or accompanied by snoring, gasping, or daytime symptoms, talk to your child's pediatrician — there are treatable causes (like sleep apnea) that a routine alone won't fix.</em></p>`,
   },
+  {
+    title: 'Pregnancy Workout Plan: Safe Exercises by Trimester',
+    slug: 'pregnancy-workout-plan-by-trimester',
+    tags: ['pregnancy', 'fitness'],
+    // TODO: upload a centered 1200x630 pregnancy-workout image in /admin.
+    featured_image_url: '',
+    excerpt: 'A realistic pregnancy workout plan with walking, strength, mobility, core and pelvic-floor exercises adapted for every trimester.',
+    content: `
+<p>A useful pregnancy workout plan should not ask you to train like your body is unchanged. It should help you maintain strength, manage everyday discomfort, and prepare for birth while giving you clear permission to adjust when symptoms, energy, or balance change.</p>
+<p>For a healthy, uncomplicated pregnancy, the general target is <strong>at least 150 minutes of moderate-intensity aerobic activity each week</strong>. That is a destination, not an entrance exam. Ten-minute sessions count, and someone beginning from zero needs a different plan from someone who was lifting or running before pregnancy.</p>
+
+<h2>Your Pregnancy Workout Plan at a Glance</h2>
+<table>
+<thead><tr><th>Day</th><th>Workout</th><th>Time</th></tr></thead>
+<tbody>
+<tr><td>Monday</td><td>Full-body strength</td><td>20–30 minutes</td></tr>
+<tr><td>Tuesday</td><td>Walking or low-impact cardio</td><td>20–30 minutes</td></tr>
+<tr><td>Wednesday</td><td>Mobility, breathing and pelvic-floor coordination</td><td>10–20 minutes</td></tr>
+<tr><td>Thursday</td><td>Full-body strength</td><td>20–30 minutes</td></tr>
+<tr><td>Friday</td><td>Walking, swimming or stationary cycling</td><td>20–30 minutes</td></tr>
+<tr><td>Saturday</td><td>Birth-ball mobility or prenatal yoga</td><td>10–20 minutes</td></tr>
+<tr><td>Sunday</td><td>Rest or an easy walk</td><td>As comfortable</td></tr>
+</tbody>
+</table>
+<p>You do not need seven perfect days. Use this as a menu. A realistic week might contain two strength sessions, three walks and one short mobility session. On difficult weeks, five or ten minutes still protects the habit.</p>
+
+<h2>The Catalyst Mom Birth-Ball Mini Routine</h2>
+<p>This is where this plan differs from a generic pregnancy-workout calendar: it uses movements already taught inside the Catalyst Mom Birth Ball Guide. Choose the version for your trimester and place it on the mobility day above—or use it as a five-to-ten-minute comfort session when a longer workout is not realistic.</p>
+<h3>First trimester: posture, mobility and calm breathing</h3>
+<ol>
+<li><strong>Pelvic tilts, 1 minute:</strong> sit upright with feet flat and hip-width apart. Slowly tilt the pelvis forward and back while keeping the movement smooth.</li>
+<li><strong>Seated posture hold, 2 minutes:</strong> sit tall, roll the shoulders back and down, and lightly engage the core as if gently hugging your baby.</li>
+<li><strong>Hip circles, 2 minutes:</strong> circle slowly for one minute in each direction while keeping the upper body relaxed.</li>
+<li><strong>4-in, 6-out breathing, 2–3 minutes:</strong> inhale through the nose for four counts and exhale through the mouth for six.</li>
+</ol>
+<h3>Second trimester: supported strength and mobility</h3>
+<ol>
+<li><strong>Supported squats, 2 minutes:</strong> place the ball between your back and a wall, keep the knees tracking over the toes, and press through the heels to stand.</li>
+<li><strong>Side-to-side rocking, 2 minutes:</strong> sit with both feet planted and shift smoothly from one hip to the other.</li>
+<li><strong>Hip circles, 2 minutes:</strong> use a comfortable range and reverse direction halfway through.</li>
+<li><strong>Breathing with arm swings, 2 minutes:</strong> inhale while opening the arms and exhale while bringing them forward.</li>
+</ol>
+<h3>Third trimester: comfort and labor-position practice</h3>
+<ol>
+<li><strong>Slow supported bounces, 1–2 minutes:</strong> stay close to a wall or chair and keep the bounce small and controlled.</li>
+<li><strong>Seated figure-8s, 2 minutes:</strong> trace a slow figure eight with the hips, then reverse direction.</li>
+<li><strong>All-fours pelvic tilts, 2 minutes:</strong> rest the hands or forearms on the ball and move the spine gently with the breath.</li>
+<li><strong>Forward lean with breathing, 2 minutes:</strong> kneel in front of the ball, rest the upper body on it, let the belly remain comfortable, and take slow breaths.</li>
+</ol>
+<p><strong>Ball setup matters:</strong> use an anti-burst ball on a non-slip surface, keep both feet grounded, and choose a size that lets your hips sit level with or slightly above your knees. These movements support comfort, mobility and position practice; they do not guarantee that labor will begin or that a particular birth outcome will occur.</p>
+
+<h2>The Intensity Rule That Works Better Than a Heart-Rate Number</h2>
+<p>Use the <strong>talk test</strong>: at moderate intensity, you can speak in complete sentences but probably could not sing comfortably. Pregnancy changes resting heart rate, blood volume and breathing, so a single universal heart-rate ceiling is less useful than symptoms and perceived effort.</p>
+<p>Aim to finish most sessions feeling as though you could have completed a little more. Pregnancy is not the season for repeatedly proving your maximum.</p>
+
+<h2>First-Trimester Pregnancy Workouts: Maintain the Habit</h2>
+<p>The first trimester may not change how you look, but fatigue, nausea and temperature sensitivity can change how you train. The goal is consistency without turning a low-energy day into a test of discipline.</p>
+<h3>What is a sample first-trimester strength workout?</h3>
+<ol>
+<li><strong>Squat to a chair:</strong> 8–12 repetitions.</li>
+<li><strong>Supported reverse lunge or split squat:</strong> 6–10 per side.</li>
+<li><strong>Incline push-up:</strong> 8–12 repetitions.</li>
+<li><strong>Resistance-band row:</strong> 10–15 repetitions.</li>
+<li><strong>Bird dog:</strong> 6–8 slow repetitions per side.</li>
+</ol>
+<p>Complete two or three rounds, resting enough to breathe normally. If nausea is worse in the morning, move the session rather than abandoning the week. Keep water nearby and avoid hot rooms.</p>
+
+<h2>Second-Trimester Pregnancy Workouts: Create More Support</h2>
+<p>As your center of gravity shifts, stability matters more. Use a wall, chair or countertop before you actually need it. Widening your stance slightly can make squats more comfortable, but forcing a very wide position is not automatically better for the pelvis.</p>
+<h3>What is a sample second-trimester strength workout?</h3>
+<ol>
+<li><strong>Supported squat:</strong> 8–12 repetitions.</li>
+<li><strong>Step-up to a low, stable step:</strong> 6–10 per side.</li>
+<li><strong>Standing band chest press:</strong> 8–12 repetitions.</li>
+<li><strong>Seated or standing band row:</strong> 10–15 repetitions.</li>
+<li><strong>Side-lying leg lift:</strong> 8–12 per side.</li>
+<li><strong>Birth-ball pelvic tilts:</strong> 60–90 seconds, using the same controlled front-to-back pattern taught in the Birth Ball Guide.</li>
+</ol>
+<p>After the first trimester, avoid spending long periods exercising flat on your back. If a position makes you dizzy, breathless, nauseated or unwell, change position immediately.</p>
+
+<h2>Third-Trimester Pregnancy Workouts: Train for Daily Life</h2>
+<p>The third trimester is not simply the second-trimester plan with fewer repetitions. Your workout should now prioritize getting up and down safely, carrying everyday loads, changing positions, and staying comfortable enough to keep moving.</p>
+<h3>What is a sample third-trimester workout?</h3>
+<ol>
+<li><strong>Sit-to-stand from a chair:</strong> 8–10 repetitions.</li>
+<li><strong>Supported lateral weight shift:</strong> 8 per side.</li>
+<li><strong>Wall push-up:</strong> 8–12 repetitions.</li>
+<li><strong>Standing band row:</strong> 10–12 repetitions.</li>
+<li><strong>Birth-ball hip circles or figure-8s:</strong> 60 seconds each direction.</li>
+<li><strong>Kneeling forward lean over the ball:</strong> let the belly stay comfortable and breathe slowly for 60–90 seconds.</li>
+</ol>
+<p>Reduce the range of motion before removing a movement entirely. A smaller squat, slower walk or more supported position can preserve the purpose of the exercise without fighting your changing body.</p>
+
+<h2>Core and Pelvic Floor: Coordinate, Do Not Constantly Clench</h2>
+<p>Your pelvic floor needs to contract <em>and</em> release. Pair movement with breath instead of holding your breath through every repetition:</p>
+<ul>
+<li>Inhale gently into the sides and back of your ribs.</li>
+<li>Exhale during the hardest part of the movement, such as standing from a squat.</li>
+<li>Let the pelvic floor soften fully between repetitions.</li>
+<li>Reduce the load if you notice pain, leaking, pelvic heaviness or abdominal doming.</li>
+</ul>
+<p>Harder squeezing is not always better. If you have pelvic pain, pain with sex, difficulty emptying your bladder or bowels, or a constant feeling of tension, individualized pelvic-floor assessment is more useful than adding more Kegels.</p>
+
+<h2>How to Modify the Plan on Real-Life Pregnancy Days</h2>
+<table>
+<thead><tr><th>What you notice</th><th>Practical adjustment</th></tr></thead>
+<tbody>
+<tr><td>Nausea or low energy</td><td>Try a 10-minute walk and mobility session later in the day.</td></tr>
+<tr><td>Pelvic or pubic-bone pain</td><td>Shorten your stride, keep movements symmetrical and replace lunges with supported sit-to-stands.</td></tr>
+<tr><td>Back discomfort</td><td>Reduce standing volume; add supported rows, pelvic tilts and gentle hip circles.</td></tr>
+<tr><td>Pelvic heaviness or leaking</td><td>Reduce impact and load, then speak with your provider or a pelvic-floor physical therapist.</td></tr>
+<tr><td>Coning or doming through the abdomen</td><td>Reduce resistance or range and exhale through the effort.</td></tr>
+</tbody>
+</table>
+
+<h2>Exercises to Avoid or Reconsider During Pregnancy</h2>
+<ul>
+<li>Contact sports and activities with a meaningful risk of falling or abdominal impact.</li>
+<li>Scuba diving, hot yoga and hot Pilates.</li>
+<li>Long, motionless periods flat on your back later in pregnancy.</li>
+<li>Any exercise that causes pain, dizziness, leaking fluid, bleeding or regular painful contractions.</li>
+</ul>
+<p>If you already ran, lifted or trained intensely before pregnancy, you may not need to stop automatically. Your prenatal provider can help you adjust your existing routine based on your pregnancy and symptoms.</p>
+
+<h2>When to Stop Exercising and Call Your Provider</h2>
+<p>Stop and contact your maternity provider for vaginal bleeding, fluid leakage, dizziness or faintness, chest pain, shortness of breath before exertion, a severe headache, calf pain or swelling, muscle weakness affecting balance, or regular painful contractions. These are not signals to “push through.”</p>
+
+<h2>Pregnancy Workout Plan FAQ</h2>
+<h3>Can I start working out if I did not exercise before pregnancy?</h3>
+<p>For many healthy pregnancies, yes—after discussing it with your prenatal provider. Begin gradually with walking and simple supported strength movements rather than jumping into strenuous classes.</p>
+<h3>How many days a week should I exercise while pregnant?</h3>
+<p>The weekly public-health target is 150 minutes of moderate aerobic activity, spread across the week. Two short strength sessions plus walking or other low-impact cardio on several days is a practical structure.</p>
+<h3>Are 10-minute pregnancy workouts worthwhile?</h3>
+<p>Yes. Short sessions count toward the weekly total and are often easier to sustain through nausea, fatigue and later-pregnancy discomfort.</p>
+<h3>Can I do squats throughout pregnancy?</h3>
+<p>Many people can continue comfortable, supported squats during a healthy pregnancy. Adjust stance, depth and support based on symptoms, and stop if the movement causes pelvic pain, pressure or instability.</p>
+<h3>What is the best pregnancy workout plan for beginners?</h3>
+<p>Start with three 10–20 minute walks and two brief strength sessions each week. Use chair squats, wall push-ups, band rows and supported balance work, adding time gradually rather than increasing everything at once.</p>
+
+<h2>Turn the Template Into Your Plan</h2>
+<p>A search result can give you a sensible structure; it cannot see your trimester, training history, pelvic-floor symptoms or medical restrictions. Catalyst Mom’s <a href="/programs/glow-and-go">Glow &amp; Go prenatal program</a> includes dedicated first-, second- and third-trimester workouts, a 12-minute Core &amp; Pelvic Booster and 10-minute prenatal yoga. The <a href="/birth-ball-guide">Birth Ball Guide</a> gives you the complete illustrated routines, breathing coordination, modifications and ball-sizing help behind the mini routine above.</p>
+<p><strong>Sources:</strong> <a href="https://www.acog.org/womens-health/faqs/exercise-during-pregnancy" target="_blank" rel="noopener noreferrer">American College of Obstetricians and Gynecologists</a>, <a href="https://www.cdc.gov/physical-activity-basics/guidelines/healthy-pregnant-or-postpartum-women.html" target="_blank" rel="noopener noreferrer">CDC physical activity guidance</a>, and <a href="https://www.nhs.uk/pregnancy/keeping-well/exercise/" target="_blank" rel="noopener noreferrer">NHS pregnancy exercise guidance</a>.</p>
+${DISCLAIMER}`,
+  },
 ];
 
 // ---------------------------------------------------------------------------

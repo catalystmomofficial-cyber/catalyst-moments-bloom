@@ -153,6 +153,11 @@ serve(async (req) => {
       }
     }
 
+    // Keep every legacy webhook consumer on the canonical production app.
+    // The assessment funnel now lives on assessment.catalystmomofficial.com,
+    // while account creation and member results live on the main domain.
+    const appUrl = Deno.env.get('PUBLIC_APP_URL') || 'https://catalystmomofficial.com';
+
     // Return success response with the assessment ID
     return new Response(
       JSON.stringify({ 
@@ -160,8 +165,8 @@ serve(async (req) => {
         assessment_id: leadResponse.id,
         message: 'Assessment data received and stored successfully',
         redirect_url: userId 
-          ? `https://lovable.app/assessment-results?id=${leadResponse.id}`
-          : `https://lovable.app/register?assessment_id=${leadResponse.id}`,
+          ? `${appUrl}/assessment-results?id=${leadResponse.id}`
+          : `${appUrl}/signup?assessment_id=${leadResponse.id}`,
       }),
       {
         status: 200,

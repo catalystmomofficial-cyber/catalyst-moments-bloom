@@ -10,7 +10,8 @@ import { Heart, MessageCircle, Share2, Send, Filter, TrendingUp } from 'lucide-r
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useRelativeTime } from '@/hooks/useRelativeTime';
 
 interface Post {
   id: string;
@@ -18,7 +19,7 @@ interface Post {
   avatar: string;
   trimester: string;
   content: string;
-  timeAgo: string;
+  createdAt: string;
   likes: number;
   comments: number;
   tags: string[];
@@ -27,6 +28,8 @@ interface Post {
 
 const BirthBallCommunityFeed = () => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [posts, setPosts] = useState<Post[]>([
     {
       id: '1',
@@ -34,7 +37,7 @@ const BirthBallCommunityFeed = () => {
       avatar: "ST",
       trimester: "2nd Tri",
       content: "Hip circles have been a lifesaver for my lower back pain! Been doing them daily for 2 weeks and the difference is amazing. 🎉",
-      timeAgo: "3 hours ago",
+      createdAt: '2026-09-08T19:00:00+08:00',
       likes: 24,
       comments: 7,
       tags: ["Hip Circles", "Back Pain Relief"]
@@ -45,7 +48,7 @@ const BirthBallCommunityFeed = () => {
       avatar: "MK",
       trimester: "3rd Tri", 
       content: "Just completed my 30-day birth ball challenge! Started in my second trimester and now at 36 weeks, I feel so much more prepared for labor.",
-      timeAgo: "Yesterday",
+      createdAt: '2026-09-07T16:00:00+08:00',
       likes: 42,
       comments: 12,
       tags: ["30-Day Challenge", "Labor Prep"]
@@ -56,7 +59,7 @@ const BirthBallCommunityFeed = () => {
       avatar: "JR",
       trimester: "1st Tri",
       content: "New to birth ball exercises - the seated posture work has helped so much with my nausea. Who knew?! 💚",
-      timeAgo: "2 days ago",
+      createdAt: '2026-09-06T11:30:00+08:00',
       likes: 18,
       comments: 5,
       tags: ["First Trimester", "Seated Posture"]
@@ -67,7 +70,7 @@ const BirthBallCommunityFeed = () => {
       avatar: "EL",
       trimester: "3rd Tri",
       content: "Figure eights are my favorite! They really help with opening the pelvis. My midwife is so impressed with my progress.",
-      timeAgo: "3 days ago",
+      createdAt: '2026-09-05T14:15:00+08:00',
       likes: 31,
       comments: 9,
       tags: ["Figure Eights", "Pelvic Opening"]
@@ -78,7 +81,7 @@ const BirthBallCommunityFeed = () => {
       avatar: "RM",
       trimester: "2nd Tri",
       content: "Started doing pelvic tilts this week and wow, what a difference! My lower back feels so much better already.",
-      timeAgo: "4 days ago",
+      createdAt: '2026-09-04T09:45:00+08:00',
       likes: 15,
       comments: 4,
       tags: ["Pelvic Tilts", "Back Relief"]
@@ -111,7 +114,15 @@ const BirthBallCommunityFeed = () => {
     };
   }, []);
 
+  const requireSignIn = (action: string) => {
+    if (user) return false;
+    toast.info(`Sign in to ${action} in the Birth Ball Community.`);
+    navigate('/login', { state: { from: location.pathname } });
+    return true;
+  };
+
   const handleLike = (postId: string) => {
+    if (requireSignIn('like posts')) return;
     setPosts(prev => prev.map(post => 
       post.id === postId 
         ? { 
@@ -124,6 +135,7 @@ const BirthBallCommunityFeed = () => {
   };
 
   const handleSubmitPost = () => {
+    if (requireSignIn('share your progress')) return;
     if (!newPost.trim()) return;
     
     const userTrimester = profile?.motherhood_stage === 'pregnant' ? '2nd Tri' : '1st Tri';
@@ -135,7 +147,7 @@ const BirthBallCommunityFeed = () => {
       avatar: userInitials,
       trimester: userTrimester,
       content: newPost,
-      timeAgo: 'Just now',
+      createdAt: new Date().toISOString(),
       likes: 0,
       comments: 0,
       tags: ['Birth Ball']
@@ -246,7 +258,7 @@ const BirthBallCommunityFeed = () => {
                         <span className="font-medium">{post.author}</span>
                         <Badge variant="secondary" className="text-xs">{post.trimester}</Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">{post.timeAgo}</p>
+                      <RelativePostTime timestamp={post.createdAt} />
                     </div>
                   </div>
                   
@@ -272,10 +284,14 @@ const BirthBallCommunityFeed = () => {
                       <Heart className={`h-4 w-4 ${post.liked ? 'fill-primary text-primary' : ''}`} />
                       <span className="text-sm">{post.likes}</span>
                     </button>
-                    <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => requireSignIn('view and write comments')}
+                      className="flex items-center gap-1 hover:text-primary transition-colors"
+                    >
                       <MessageCircle className="h-4 w-4" />
                       <span className="text-sm">{post.comments}</span>
-                    </div>
+                    </button>
                     <button className="flex items-center gap-1 hover:text-primary transition-colors">
                       <Share2 className="h-4 w-4" />
                       <span className="text-sm">Share</span>
@@ -357,5 +373,9 @@ const BirthBallCommunityFeed = () => {
     </PageLayout>
   );
 };
+
+const RelativePostTime = ({ timestamp }: { timestamp: string }) => (
+  <p className="text-sm text-muted-foreground">{useRelativeTime(timestamp)}</p>
+);
 
 export default BirthBallCommunityFeed;

@@ -5,10 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Heart, MessageCircle, Share2, Send, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunityPosts, type PostComment } from '@/hooks/useCommunityPosts';
-import { formatDistanceToNow } from 'date-fns';
+import { useRelativeTime } from '@/hooks/useRelativeTime';
 
 import mom1 from '@/assets/member-avatars/mom-1.jpg';
 import mom2 from '@/assets/member-avatars/mom-2.jpg';
@@ -47,6 +48,7 @@ export const DynamicCommunityFeed = ({ groupSlug = 'general', isTTC = false }: D
   const { user, profile, subscribed, setShowCheckoutModal } = useAuth();
   const [newPostContent, setNewPostContent] = useState('');
   const [isPosting, setIsPosting] = useState(false);
+  const [postAnonymously, setPostAnonymously] = useState(false);
 
   // Parse groupSlug-subCategory format from GroupDetail
   const parts = groupSlug.split('-');
@@ -58,8 +60,9 @@ export const DynamicCommunityFeed = ({ groupSlug = 'general', isTTC = false }: D
   const handleCreatePost = async () => {
     if (!user || !newPostContent.trim()) return;
     setIsPosting(true);
-    await createPost(newPostContent);
+    await createPost(newPostContent, postAnonymously);
     setNewPostContent('');
+    setPostAnonymously(false);
     setIsPosting(false);
   };
 
@@ -81,7 +84,11 @@ export const DynamicCommunityFeed = ({ groupSlug = 'general', isTTC = false }: D
                   onChange={(e) => setNewPostContent(e.target.value)}
                   className="min-h-[80px] resize-none"
                 />
-                <div className="flex justify-end">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground">
+                    <Checkbox checked={postAnonymously} onCheckedChange={(checked) => setPostAnonymously(checked === true)} />
+                    Post anonymously
+                  </label>
                   <Button size="sm" onClick={handleCreatePost} disabled={isPosting || !newPostContent.trim()}>
                     {isPosting ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
                     Post
@@ -163,17 +170,14 @@ const LivePost = ({ post, onToggleLike, onFetchComments, onAddComment }: LivePos
     }
   };
 
-  const timeAgo = useMemo(() => {
-    try { return formatDistanceToNow(new Date(post.created_at), { addSuffix: true }); }
-    catch { return ''; }
-  }, [post.created_at]);
+  const timeAgo = useRelativeTime(post.created_at);
 
   return (
     <Card className="transition-all duration-300 hover:shadow-md">
       <CardContent className="p-6">
         <div className="flex items-start space-x-3 mb-4">
           <Avatar>
-            <AvatarImage src={avatarSrc} alt={post.display_name || 'Member'} />
+            {!post.is_anonymous && <AvatarImage src={avatarSrc} alt={post.display_name || 'Member'} />}
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <div className="flex-1">
@@ -217,6 +221,7 @@ const LivePost = ({ post, onToggleLike, onFetchComments, onAddComment }: LivePos
                 <div className="bg-muted rounded-lg px-3 py-2 flex-1">
                   <p className="text-xs font-medium">{c.display_name || 'Member'}</p>
                   <p className="text-sm">{c.content}</p>
+                  <CommentTime timestamp={c.created_at} />
                 </div>
               </div>
             ))}
@@ -240,3 +245,7 @@ const LivePost = ({ post, onToggleLike, onFetchComments, onAddComment }: LivePos
     </Card>
   );
 };
+
+const CommentTime = ({ timestamp }: { timestamp: string }) => (
+  <p className="mt-1 text-[11px] text-muted-foreground">{useRelativeTime(timestamp)}</p>
+);
