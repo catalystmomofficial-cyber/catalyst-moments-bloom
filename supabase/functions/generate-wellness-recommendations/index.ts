@@ -99,8 +99,27 @@ const fallbackSelfCare = {
 
 const getStatusCode = (error: unknown): number | undefined => {
   if (!error || typeof error !== "object") return undefined;
-  const value = error as { statusCode?: number; status?: number; cause?: unknown };
-  return value.statusCode ?? value.status ?? getStatusCode(value.cause);
+  const value = error as {
+    statusCode?: number;
+    status?: number;
+    response?: { status?: number };
+    cause?: unknown;
+  };
+  return value.statusCode ?? value.status ?? value.response?.status ?? getStatusCode(value.cause);
+};
+
+// Some AI SDK / gateway errors only carry the status in their text payload.
+const getStatusFromText = (error: unknown): number | undefined => {
+  const text = [
+    error instanceof Error ? error.message : "",
+    typeof error === "string" ? error : "",
+    (error as { responseBody?: string })?.responseBody ?? "",
+  ].join(" ").toLowerCase();
+
+  if (!text) return undefined;
+  if (text.includes("402") || text.includes("payment required") || text.includes("add credits")) return 402;
+  if (text.includes("429") || text.includes("rate limit") || text.includes("too many requests")) return 429;
+  return undefined;
 };
 
 Deno.serve(async (req) => {
@@ -184,7 +203,7 @@ Return as JSON: {"ideas": [array of idea objects with fields: id, title, descrip
       });
       return json(result.output);
     } catch (error) {
-      const status = getStatusCode(error);
+      const status = getStatusCode(error) ?? getStatusFromText(error);
       if (status === 402 || status === 429) {
         const fallback = action === "selfcare"
           ? fallbackSelfCare
