@@ -6,16 +6,8 @@
 import { defineMcp } from "npm:@lovable.dev/mcp-js@0.22.0";
 
 // src/lib/mcp/tools/search-blog-posts.ts
-import { createClient } from "npm:@supabase/supabase-js@^2.110.0";
 import { defineTool } from "npm:@lovable.dev/mcp-js@0.22.0";
 import { z } from "npm:zod@^4.4.3";
-function anonClient() {
-  return createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY,
-    { auth: { persistSession: false, autoRefreshToken: false } }
-  );
-}
 var search_blog_posts_default = defineTool({
   name: "search_blog_posts",
   title: "Search blog posts",
@@ -46,16 +38,8 @@ var search_blog_posts_default = defineTool({
 });
 
 // src/lib/mcp/tools/get-blog-post.ts
-import { createClient as createClient2 } from "npm:@supabase/supabase-js@^2.110.0";
 import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.22.0";
 import { z as z2 } from "npm:zod@^4.4.3";
-function anonClient2() {
-  return createClient2(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY,
-    { auth: { persistSession: false, autoRefreshToken: false } }
-  );
-}
 var get_blog_post_default = defineTool2({
   name: "get_blog_post",
   title: "Get blog post",
@@ -65,7 +49,7 @@ var get_blog_post_default = defineTool2({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug }) => {
-    const supabase = anonClient2();
+    const supabase = anonClient();
     const { data, error } = await supabase.from("blogs").select("slug, title, excerpt, content, tags, author, featured_image_url, published_at").eq("status", "published").eq("slug", slug).maybeSingle();
     if (error) return { content: [{ type: "text", text: `Error: ${error.message}` }], isError: true };
     if (!data) return { content: [{ type: "text", text: `No published post found for slug "${slug}".` }], isError: true };
