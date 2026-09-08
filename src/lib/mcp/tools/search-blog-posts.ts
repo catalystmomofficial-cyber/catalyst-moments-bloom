@@ -17,7 +17,7 @@ export default defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ query, tag, limit }) => {
-    const supabase = anonClient();
+    const supabase = supabaseAnon();
     let q = supabase
       .from("blogs")
       .select("slug, title, excerpt, tags, author, published_at")

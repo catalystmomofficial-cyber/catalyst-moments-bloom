@@ -12,7 +12,7 @@ export default defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug }) => {
-    const supabase = anonClient();
+    const supabase = supabaseAnon();
     const { data, error } = await supabase
       .from("blogs")
       .select("slug, title, excerpt, content, tags, author, featured_image_url, published_at")
