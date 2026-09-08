@@ -1,14 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
-
-function anonClient() {
-  return createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY!,
-    { auth: { persistSession: false, autoRefreshToken: false } },
-  );
-}
+import { supabaseAnon } from "../supabase";
 
 export default defineTool({
   name: "search_blog_posts",
@@ -25,7 +17,7 @@ export default defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ query, tag, limit }) => {
-    const supabase = anonClient();
+    const supabase = supabaseAnon();
     let q = supabase
       .from("blogs")
       .select("slug, title, excerpt, tags, author, published_at")

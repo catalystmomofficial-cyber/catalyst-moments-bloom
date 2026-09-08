@@ -3,19 +3,59 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { defineMcp } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { defineMcp } from "npm:@lovable.dev/mcp-js@0.22.0";
 
 // src/lib/mcp/tools/search-blog-posts.ts
-import { createClient } from "npm:@supabase/supabase-js@^2.110.0";
-import { defineTool } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { defineTool } from "npm:@lovable.dev/mcp-js@0.22.0";
 import { z } from "npm:zod@^4.4.3";
-function anonClient() {
-  return createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY,
-    { auth: { persistSession: false, autoRefreshToken: false } }
-  );
+
+// src/lib/mcp/supabase.ts
+import { createClient } from "npm:@supabase/supabase-js@^2.110.0";
+function runtimeEnv(name) {
+  const runtime = globalThis;
+  return runtime.Deno?.env?.get?.(name) ?? runtime.process?.env?.[name];
 }
+function configuredEnv(names) {
+  for (const name of names) {
+    const value = runtimeEnv(name)?.trim();
+    if (value) return value;
+  }
+  return void 0;
+}
+function supabaseProjectUrl() {
+  const url = configuredEnv(["SUPABASE_URL", "VITE_SUPABASE_URL"]);
+  if (!url) throw new Error("SUPABASE_URL (or VITE_SUPABASE_URL) is required");
+  return url;
+}
+function supabasePublishableKey() {
+  const direct = configuredEnv([
+    "SUPABASE_PUBLISHABLE_KEY",
+    "VITE_SUPABASE_PUBLISHABLE_KEY"
+  ]);
+  if (direct) return direct;
+  const keyset = runtimeEnv("SUPABASE_PUBLISHABLE_KEYS");
+  if (keyset) {
+    try {
+      const parsed = JSON.parse(keyset);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        const keys = parsed;
+        const key = [keys.default, ...Object.values(keys)].find((v) => typeof v === "string" && v.trim().startsWith("sb_publishable_"))?.trim();
+        if (key) return key;
+      }
+    } catch {
+    }
+  }
+  const legacy = configuredEnv(["SUPABASE_ANON_KEY", "VITE_SUPABASE_ANON_KEY"]);
+  if (legacy) return legacy;
+  throw new Error("SUPABASE_PUBLISHABLE_KEY, SUPABASE_PUBLISHABLE_KEYS, or SUPABASE_ANON_KEY is required");
+}
+function supabaseAnon() {
+  return createClient(supabaseProjectUrl(), supabasePublishableKey(), {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+}
+
+// src/lib/mcp/tools/search-blog-posts.ts
 var search_blog_posts_default = defineTool({
   name: "search_blog_posts",
   title: "Search blog posts",
@@ -27,7 +67,7 @@ var search_blog_posts_default = defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ query, tag, limit }) => {
-    const supabase = anonClient();
+    const supabase = supabaseAnon();
     let q = supabase.from("blogs").select("slug, title, excerpt, tags, author, published_at").eq("status", "published").order("published_at", { ascending: false }).limit(limit);
     if (query) {
       const pattern = `%${query.replace(/[%_]/g, (m) => `\\${m}`)}%`;
@@ -46,16 +86,8 @@ var search_blog_posts_default = defineTool({
 });
 
 // src/lib/mcp/tools/get-blog-post.ts
-import { createClient as createClient2 } from "npm:@supabase/supabase-js@^2.110.0";
-import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.22.0";
 import { z as z2 } from "npm:zod@^4.4.3";
-function anonClient2() {
-  return createClient2(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY,
-    { auth: { persistSession: false, autoRefreshToken: false } }
-  );
-}
 var get_blog_post_default = defineTool2({
   name: "get_blog_post",
   title: "Get blog post",
@@ -65,7 +97,7 @@ var get_blog_post_default = defineTool2({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ slug }) => {
-    const supabase = anonClient2();
+    const supabase = supabaseAnon();
     const { data, error } = await supabase.from("blogs").select("slug, title, excerpt, content, tags, author, featured_image_url, published_at").eq("status", "published").eq("slug", slug).maybeSingle();
     if (error) return { content: [{ type: "text", text: `Error: ${error.message}` }], isError: true };
     if (!data) return { content: [{ type: "text", text: `No published post found for slug "${slug}".` }], isError: true };
@@ -77,7 +109,7 @@ var get_blog_post_default = defineTool2({
 });
 
 // src/lib/mcp/tools/list-blog-tags.ts
-import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.22.0";
 var TAGS = [
   { tag: "pregnancy", description: "Prenatal fitness, symptoms, birth prep." },
   { tag: "postpartum", description: "Recovery, healing, core restoration, newborn life." },
@@ -108,5 +140,5 @@ var mcp_default = defineMcp({
 });
 
 // lovable-mcp-supabase-entry.ts
-import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.22.2/stacks/supabase";
+import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.22.0/stacks/supabase";
 Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));
