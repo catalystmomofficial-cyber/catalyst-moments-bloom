@@ -203,7 +203,7 @@ Return as JSON: {"ideas": [array of idea objects with fields: id, title, descrip
       });
       return json(result.output);
     } catch (error) {
-      const status = getStatusCode(error);
+      const status = getStatusCode(error) ?? getStatusFromText(error);
       if (status === 402 || status === 429) {
         const fallback = action === "selfcare"
           ? fallbackSelfCare
