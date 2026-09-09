@@ -200,6 +200,7 @@ const BlogDetail = () => {
                 itemProp="image"
                 className="w-full h-full object-cover"
                 loading="eager"
+                decoding="async"
                 width="1200"
                 height="630"
                 fetchPriority="high"

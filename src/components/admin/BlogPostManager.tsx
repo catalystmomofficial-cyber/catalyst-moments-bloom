@@ -45,6 +45,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Edit, Trash2, Loader2, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { BlogPostPreview } from './BlogPostPreview';
+import { optimizeBlogImage } from '@/lib/imageUploadUtils';
 
 interface BlogPost {
   id: string;
@@ -66,6 +67,65 @@ interface EditorFormProps {
   post: BlogPost;
   onChange: (updated: BlogPost) => void;
 }
+
+const FeaturedImageField = ({ post, onChange }: EditorFormProps) => {
+  const [uploading, setUploading] = useState(false);
+
+  const uploadFeaturedImage = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Image must be less than 10MB');
+      return;
+    }
+
+    try {
+      setUploading(true);
+      const optimizedFile = await optimizeBlogImage(file, { maxWidth: 1200, maxHeight: 1200, quality: 0.82 });
+      const extension = optimizedFile.name.split('.').pop();
+      const fileName = `featured-${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+      const { error } = await supabase.storage.from('blog-images').upload(fileName, optimizedFile, {
+        cacheControl: '31536000',
+        contentType: optimizedFile.type,
+      });
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabase.storage.from('blog-images').getPublicUrl(fileName);
+      onChange({ ...post, featured_image_url: publicUrl });
+      toast.success('Featured image optimized and uploaded');
+    } catch (error) {
+      console.error('Error uploading featured image:', error);
+      toast.error('Failed to upload featured image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label>Featured Image</Label>
+      <Input
+        type="file"
+        accept="image/*"
+        disabled={uploading}
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (file) void uploadFeaturedImage(file);
+          event.currentTarget.value = '';
+        }}
+      />
+      {uploading && <p className="text-sm text-muted-foreground">Optimizing and uploading image…</p>}
+      <Input
+        aria-label="Featured image URL"
+        value={post.featured_image_url || ''}
+        onChange={(event) => onChange({ ...post, featured_image_url: event.target.value })}
+        placeholder="Or paste an image URL"
+      />
+    </div>
+  );
+};
 
 const EditorForm = ({ post, onChange }: EditorFormProps) => (
   <div className="space-y-4">
@@ -123,13 +183,7 @@ const EditorForm = ({ post, onChange }: EditorFormProps) => (
         placeholder="Write your blog post content here..."
       />
     </div>
-    <div>
-      <Label>Featured Image URL</Label>
-      <Input
-        value={post.featured_image_url || ''}
-        onChange={(e) => onChange({ ...post, featured_image_url: e.target.value })}
-      />
-    </div>
+    <FeaturedImageField post={post} onChange={onChange} />
     <div>
       <Label>Tags (comma-separated)</Label>
       <Input

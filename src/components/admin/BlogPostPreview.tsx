@@ -33,6 +33,10 @@ export const BlogPostPreview: React.FC<BlogPostPreviewProps> = ({
               src={featuredImageUrl} 
               alt={title}
               className="w-full h-full object-cover"
+              loading="eager"
+              decoding="async"
+              width="1200"
+              height="630"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}

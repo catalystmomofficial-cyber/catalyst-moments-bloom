@@ -165,6 +165,9 @@ const Blog = () => {
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
                         alt={blog.title}
                         loading="lazy"
+                        decoding="async"
+                        width="700"
+                        height="394"
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                     </div>

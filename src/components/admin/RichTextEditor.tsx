@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
+import { optimizeBlogImage } from '@/lib/imageUploadUtils';
 import {
   Bold,
   Italic,
@@ -92,12 +93,16 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
     try {
       setIsUploadingImage(true);
-      const fileExt = file.name.split('.').pop();
+      const optimizedFile = await optimizeBlogImage(file);
+      const fileExt = optimizedFile.name.split('.').pop();
       const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
 
       const { data, error } = await supabase.storage
         .from('blog-images')
-        .upload(fileName, file);
+        .upload(fileName, optimizedFile, {
+          cacheControl: '31536000',
+          contentType: optimizedFile.type,
+        });
 
       if (error) throw error;
 

@@ -446,9 +446,16 @@ export default function BlogPreview() {
             {blog.featured_image_url && (
               <div className="rounded-lg overflow-hidden">
                 <img 
-                  src={blog.featured_image_url} 
+                  src={supabaseImgSrc(blog.featured_image_url, 1200)}
+                  srcSet={supabaseImgSrcSet(blog.featured_image_url, [400, 800, 1200])}
+                  sizes="(max-width: 1024px) 100vw, 896px"
                   alt={blog.title}
                   className="w-full h-auto object-cover"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  width="1200"
+                  height="630"
                 />
               </div>
             )}
@@ -484,7 +491,10 @@ export default function BlogPreview() {
                   prose-li:text-muted-foreground prose-li:mb-2
                   prose-strong:text-foreground prose-strong:font-semibold
                   prose-img:rounded-lg prose-img:shadow-md"
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content, { ADD_ATTR: ['loading', 'decoding', 'id'] }) }}
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(blog.content, { ADD_ATTR: ['loading', 'decoding', 'id'] })
+                    .replace(/<img/g, '<img loading="lazy" decoding="async"'),
+                }}
               />
             )}
           </CardContent>
