@@ -70,7 +70,7 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId, stageCta }: Pri
               onClick={() => handleSelect('price_1S546jCNwyQa1NiQYpl3OjEe', 'monthly')}
               disabled={isLoading}
             >
-              Get Started — $29/month
+              {stageCta ? `${stageCta} — $29/month` : 'Get Started — $29/month'}
             </Button>
           </CardContent>
         </Card>

@@ -189,11 +189,6 @@ const CheckoutModal = ({ isOpen, onClose, stage: propStage, firstName: propFirst
                 </p>
               </div>
 
-              {/* Quietly exclusive — one line, no pressure, no seat count */}
-              <p className="text-xs text-center text-muted-foreground/70 italic">
-                Early members may be invited to our Founding Member program — additional benefits and support, by invitation.
-              </p>
-
               <PricingToggle
                 onSelectPlan={handleSelectPlan}
                 yearlyPriceId="price_1S54B1CNwyQa1NiQGKx1Ps0r"
