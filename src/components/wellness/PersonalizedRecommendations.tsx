@@ -36,10 +36,13 @@ export const PersonalizedRecommendations = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const generateRecommendations = async () => {
-    if (!user) return;
+  const generateRecommendations = async (isManualRefresh = false) => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
-    const isRefresh = recommendations.length > 0;
+    const isRefresh = isManualRefresh && recommendations.length > 0;
     if (isRefresh) {
       setRefreshing(true);
     } else {
@@ -96,9 +99,32 @@ export const PersonalizedRecommendations = () => {
     }
   };
 
+  // Use primitive values as the automatic-generation dependency. Depending on
+  // the wellness/assessment objects directly retriggered the edge function
+  // whenever either hook returned an equivalent new object or array.
+  const generationKey = [
+    user?.id,
+    currentJourney,
+    currentStage,
+    wellnessEntries[0]?.id,
+    wellnessEntries[0]?.mood_score,
+    wellnessEntries[0]?.energy_level,
+    wellnessEntries[0]?.stress_level,
+    wellnessEntries[0]?.sleep_hours,
+    wellnessEntries[0]?.hydration_glasses,
+    wellnessEntries[0]?.self_care_completed,
+    assessmentData?.primary_goal,
+    assessmentData?.biggest_obstacle,
+    assessmentData?.birth_experience,
+    assessmentData?.tier,
+    assessmentScore,
+  ].join('|');
+
   useEffect(() => {
-    generateRecommendations();
-  }, [user, wellnessEntries, currentJourney, currentStage, assessmentData]);
+    void generateRecommendations(false);
+    // generationKey intentionally captures the profile fields used above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [generationKey]);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -187,7 +213,7 @@ export const PersonalizedRecommendations = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={generateRecommendations}
+            onClick={() => void generateRecommendations(true)}
             disabled={refreshing}
             className="self-start sm:self-auto gap-2 flex-shrink-0"
           >

@@ -30,10 +30,13 @@ export const QuickSelfCareIdeas = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const generateSelfCareIdeas = async () => {
-    if (!user) return;
+  const generateSelfCareIdeas = async (isManualRefresh = false) => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
-    const isRefresh = selfCareIdeas.length > 0;
+    const isRefresh = isManualRefresh && selfCareIdeas.length > 0;
     if (isRefresh) {
       setRefreshing(true);
     } else {
@@ -76,9 +79,22 @@ export const QuickSelfCareIdeas = () => {
     }
   };
 
+  const generationKey = [
+    user?.id,
+    currentJourney,
+    currentStage,
+    wellnessEntries[0]?.id,
+    wellnessEntries[0]?.mood_score,
+    wellnessEntries[0]?.energy_level,
+    wellnessEntries[0]?.stress_level,
+    wellnessEntries[0]?.sleep_hours,
+  ].join('|');
+
   useEffect(() => {
-    generateSelfCareIdeas();
-  }, [user, wellnessEntries, currentJourney, currentStage]);
+    void generateSelfCareIdeas(false);
+    // generationKey intentionally captures the profile fields used above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [generationKey]);
 
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -133,7 +149,7 @@ export const QuickSelfCareIdeas = () => {
         <Button 
           variant="outline" 
           size="sm" 
-          onClick={generateSelfCareIdeas}
+          onClick={() => void generateSelfCareIdeas(true)}
           disabled={refreshing}
         >
           {refreshing ? (
