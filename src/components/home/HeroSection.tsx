@@ -15,10 +15,10 @@ interface HeroSectionProps {
 // Brand images (Google Stitch) — slow auto-crossfade full-bleed background.
 // Falls back to the previous stock photo if the files can't load.
 const heroSlides = [
-  { src: "/images/home/screen2.png", alt: "Mom checking her wellness score in the Catalyst Mom app" },
-  { src: "/images/home/screen1.png", alt: "Pregnant mom taking a quiet moment in a sunlit nursery" },
-  { src: "/images/home/screen3.png", alt: "Mom holding her newborn at home" },
-  { src: "/images/home/screen4.png", alt: "Pregnant mom breathing calmly in the nursery" },
+  { src: "/images/home/screen2.jpg", alt: "Mom checking her wellness score in the Catalyst Mom app" },
+  { src: "/images/home/screen1.jpg", alt: "Pregnant mom taking a quiet moment in a sunlit nursery" },
+  { src: "/images/home/screen3.jpg", alt: "Mom holding her newborn at home" },
+  { src: "/images/home/screen4.jpg", alt: "Pregnant mom breathing calmly in the nursery" },
 ];
 const FALLBACK_SRC = "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1600&q=80";
 

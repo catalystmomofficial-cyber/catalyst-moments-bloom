@@ -255,6 +255,26 @@ function extractTitle(html) {
   return m ? m[1].trim() : '';
 }
 
+function validateSeoSignals(html, route) {
+  const canonicalMatches = [...html.matchAll(/<link[^>]+rel="canonical"[^>]*href="([^"]+)"[^>]*>/gi)];
+  const descriptionMatches = html.match(/<meta[^>]+name="description"[^>]*>/gi) || [];
+  const ogUrlMatches = [...html.matchAll(/<meta[^>]+property="og:url"[^>]*content="([^"]+)"[^>]*>/gi)];
+  const expectedUrl = `https://catalystmomofficial.com${route}`;
+
+  if (canonicalMatches.length !== 1) {
+    throw new Error(`expected one canonical tag, found ${canonicalMatches.length}`);
+  }
+  if (canonicalMatches[0][1] !== expectedUrl) {
+    throw new Error(`canonical mismatch (${canonicalMatches[0][1]} instead of ${expectedUrl})`);
+  }
+  if (descriptionMatches.length !== 1) {
+    throw new Error(`expected one meta description, found ${descriptionMatches.length}`);
+  }
+  if (ogUrlMatches.length !== 1 || ogUrlMatches[0][1] !== expectedUrl) {
+    throw new Error(`Open Graph URL mismatch for ${expectedUrl}`);
+  }
+}
+
 // A render that silently fell back to the homepage (or produced no title) is
 // worse than no file at all, so verify each route before writing it and retry.
 async function renderRoute(browser, route, attempt) {
@@ -270,6 +290,7 @@ async function renderRoute(browser, route, attempt) {
     if (route !== '/' && (!title || title.includes(HOME_TITLE_FRAGMENT))) {
       throw new Error(`rendered homepage/empty title ("${title}")`);
     }
+    validateSeoSignals(html, route);
     return { html, title };
   } finally {
     await page.close();
@@ -342,4 +363,3 @@ main().catch((err) => {
   console.error('Prerender failed:', err);
   process.exit(1);
 });
-
