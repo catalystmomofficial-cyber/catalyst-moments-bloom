@@ -14,10 +14,12 @@ import FreeGuidesSection from '@/components/home/FreeGuidesSection';
 import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
 import { useAuth } from '@/contexts/AuthContext';
+import { Capacitor } from '@capacitor/core';
 
 
 
-const isStandaloneMode = () =>
+const isAppMode = () =>
+  Capacitor.isNativePlatform() ||
   window.matchMedia('(display-mode: standalone)').matches ||
   (navigator as any).standalone === true;
 
@@ -40,7 +42,7 @@ const Index = () => {
   const [videoTitle, setVideoTitle] = useState("");
   const [isWelcomeVideo, setIsWelcomeVideo] = useState(false);
 
-  const isPWA = isStandaloneMode();
+  const isPWA = isAppMode();
 
   useEffect(() => {
     if (!isPWA || isLoading) return;

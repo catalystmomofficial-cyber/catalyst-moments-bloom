@@ -21,8 +21,6 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import SubscriptionGuard from "./components/auth/SubscriptionGuard";
 import SubscriptionRefresher from "./components/auth/SubscriptionRefresher";
 import { HelmetProvider, Helmet } from "react-helmet-async";
-import { useState, useEffect } from "react";
-import SplashScreen from "./components/SplashScreen";
 import PresenceTracker from "./components/presence/PresenceTracker";
 import AdminGiftListener from "./components/notifications/AdminGiftListener";
 import PWAInstallBanner from "./components/pwa/PWAInstallBanner";
@@ -436,48 +434,7 @@ function AppContent() {
   );
 }
 
-const isStandalonePWA = () =>
-  typeof window !== 'undefined' &&
-  (window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as any).standalone === true);
-
-// Only show splash on a true app launch (cold start), not on in-app
-// navigation, soft refreshes, or back/forward restores within a session.
-const shouldShowSplashOnLaunch = () => {
-  if (typeof window === 'undefined') return false;
-  if (!isStandalonePWA()) return false;
-  try {
-    if (sessionStorage.getItem('cm_splash_shown') === '1') return false;
-    const nav = performance.getEntriesByType?.('navigation')?.[0] as
-      | PerformanceNavigationTiming
-      | undefined;
-    if (nav && (nav.type === 'reload' || nav.type === 'back_forward')) {
-      sessionStorage.setItem('cm_splash_shown', '1');
-      return false;
-    }
-  } catch {}
-  return true;
-};
-
 const App = () => {
-  const [showSplash, setShowSplash] = useState(shouldShowSplashOnLaunch);
-  const [fadeOut, setFadeOut] = useState(false);
-
-  useEffect(() => {
-    if (!showSplash) return;
-    try { sessionStorage.setItem('cm_splash_shown', '1'); } catch {}
-    const fadeTimer = setTimeout(() => setFadeOut(true), 3800);
-    const removeTimer = setTimeout(() => setShowSplash(false), 4200);
-    return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(removeTimer);
-    };
-  }, [showSplash]);
-
-  if (showSplash) {
-    return <SplashScreen fadeOut={fadeOut} />;
-  }
-
   return (
     <HelmetProvider>
       <ThemeProvider>
