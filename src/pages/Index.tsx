@@ -15,6 +15,7 @@ import FoodCalorieCheckerCard from '@/components/home/FoodCalorieCheckerCard';
 import SEO from '@/components/seo/SEO';
 import { useAuth } from '@/contexts/AuthContext';
 import { Capacitor } from '@capacitor/core';
+import BreathingLoader from '@/components/ui/breathing-loader';
 
 
 
@@ -51,17 +52,8 @@ const Index = () => {
 
   if (isPWA && isLoading) {
     return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-catalyst-copper via-catalyst-brown to-catalyst-gold gap-6">
-        <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-lg overflow-hidden">
-            <img src="/brand/catalyst-mom-logo.png" alt="Catalyst Mom" className="w-16 h-16 object-contain" />
-          </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Catalyst Mom</h1>
-        </div>
-        <p className="text-white/80 text-sm font-medium tracking-wide">Your Wellness, Your Way</p>
-        <div className="w-48 h-1.5 bg-white/20 rounded-full overflow-hidden mt-2">
-          <div className="h-full bg-white/80 rounded-full animate-[loading_1.5s_ease-in-out_infinite]" />
-        </div>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-white via-catalyst-cream to-catalyst-peach/40">
+        <BreathingLoader />
       </div>
     );
   }
