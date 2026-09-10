@@ -7,11 +7,21 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import AffiliateButton from '@/components/affiliate/AffiliateButton';
+import { useAuth } from '@/contexts/AuthContext';
+
+const newsletterInterestForStage = (stage?: string | null) => {
+  const value = (stage || '').toLowerCase();
+  if (value.includes('postpartum')) return 'postpartum';
+  if (value.includes('pregnan') || value.includes('trimester')) return 'pregnancy';
+  if (value.includes('ttc') || value.includes('conceiv') || value.includes('fertility')) return 'ttc';
+  return 'general';
+};
 
 const NewsletterSubscription = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { profile } = useAuth();
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +30,11 @@ const NewsletterSubscription = () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('newsletter-subscribe', {
-        body: { email }
+        body: {
+          email,
+          interest: newsletterInterestForStage(profile?.motherhood_stage),
+          source: 'website-footer',
+        }
       });
 
       if (error) throw error;

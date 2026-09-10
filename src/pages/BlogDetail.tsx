@@ -276,7 +276,7 @@ const BlogDetail = () => {
 
           <BlogComments blogId={blog.id} />
 
-          <NewsletterWidget />
+          <NewsletterWidget interest={primaryCategory} source="blog-article" />
 
           <RelatedPosts 
             currentPostId={blog.id} 

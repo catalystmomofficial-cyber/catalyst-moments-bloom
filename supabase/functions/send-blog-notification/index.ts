@@ -58,11 +58,19 @@ serve(async (req) => {
       throw new Error('Blog post not found');
     }
 
-    // Fetch all active newsletter subscribers
+    const stageTags = ['ttc', 'pregnancy', 'postpartum'];
+    const blogTags = Array.isArray(blog.tags)
+      ? blog.tags.map((tag: string) => tag.toLowerCase())
+      : [];
+    const stage = stageTags.find((tag) => blogTags.includes(tag));
+
+    // General readers receive the whole publication. Readers who selected a
+    // motherhood stage only receive posts for that stage (plus general posts).
     const { data: subscribers, error: subscribersError } = await supabase
       .from('newsletter_subscribers')
-      .select('email')
-      .eq('is_active', true);
+      .select('email, interest')
+      .eq('is_active', true)
+      .in('interest', stage ? ['general', stage] : ['general', 'ttc', 'pregnancy', 'postpartum', 'nutrition', 'fitness', 'wellness']);
 
     if (subscribersError) {
       throw subscribersError;
@@ -102,7 +110,7 @@ serve(async (req) => {
     for (const batch of emailBatches) {
       try {
         const { error: sendError } = await resend.emails.send({
-          from: 'Catalyst Mom <blog@catalystmom.online>',
+          from: 'Catalyst Mom <newsletter@catalystmomofficial.com>',
           to: batch.map(s => s.email),
           subject: `New from Catalyst Mom: ${blog.title}`,
           html: emailHtml,

@@ -297,6 +297,17 @@ async function renderRoute(browser, route, attempt) {
   }
 }
 
+const launchBrowser = () => puppeteer.launch({
+  headless: 'new',
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+});
+
+const isBrowserDisconnect = (error) =>
+  /connection closed|target closed|session closed|browser has disconnected/i.test(error?.message || '');
+
+const browserIsConnected = (browser) =>
+  typeof browser.connected === 'boolean' ? browser.connected : true;
+
 async function main() {
   const server = spawn(
     'npx',
@@ -322,17 +333,23 @@ async function main() {
 
     const ROUTES = [...STATIC_ROUTES, ...blogs.map((b) => `/blog/${b.slug}`)];
 
-    const browser = await puppeteer.launch({
-      headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
+    let browser = await launchBrowser();
 
     try {
-      for (const route of ROUTES) {
+      for (let routeIndex = 0; routeIndex < ROUTES.length; routeIndex++) {
+        const route = ROUTES[routeIndex];
+        // Long builds can exhaust Chromium after dozens of dynamic pages.
+        // Restart periodically so one dead browser cannot strand every route
+        // near the end of the build.
+        if (routeIndex > 0 && routeIndex % 15 === 0) {
+          await browser.close().catch(() => {});
+          browser = await launchBrowser();
+        }
         let done = false;
         let lastErr;
         for (let attempt = 0; attempt < 3 && !done; attempt++) {
           try {
+            if (!browserIsConnected(browser)) browser = await launchBrowser();
             const { html, title } = await renderRoute(browser, route, attempt);
             const outPath = await outputPathFor(route);
             await writeFile(outPath, html, 'utf-8');
@@ -341,12 +358,16 @@ async function main() {
           } catch (err) {
             lastErr = err;
             console.warn(`Attempt ${attempt + 1} failed for ${route}: ${err.message}`);
+            if (!browserIsConnected(browser) || isBrowserDisconnect(err)) {
+              await browser.close().catch(() => {});
+              browser = await launchBrowser();
+            }
           }
         }
         if (!done) failures.push(`${route} (${lastErr?.message})`);
       }
     } finally {
-      await browser.close();
+      await browser.close().catch(() => {});
     }
   } finally {
     cleanup();
@@ -356,6 +377,7 @@ async function main() {
     console.error(`\nPrerender could not verify ${failures.length} route(s):`);
     for (const f of failures) console.error(`  - ${f}`);
     console.error('These URLs will serve the neutral SPA shell (never homepage content).');
+    process.exitCode = 1;
   }
 }
 

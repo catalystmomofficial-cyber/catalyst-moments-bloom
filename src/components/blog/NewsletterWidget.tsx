@@ -6,7 +6,12 @@ import { Mail, Check, Bell } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-export const NewsletterWidget = () => {
+interface NewsletterWidgetProps {
+  interest?: string;
+  source?: string;
+}
+
+export const NewsletterWidget = ({ interest = 'general', source = 'blog' }: NewsletterWidgetProps) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
@@ -23,7 +28,7 @@ export const NewsletterWidget = () => {
 
     try {
       const { error } = await supabase.functions.invoke('newsletter-subscribe', {
-        body: { email }
+        body: { email, interest, source }
       });
 
       if (error) throw error;

@@ -115,7 +115,7 @@ const Blog = () => {
           />
 
           <div className="mb-8">
-            <NewsletterWidget />
+            <NewsletterWidget interest={selectedCategory || 'general'} source="blog-index" />
           </div>
           
           {loading ? (
