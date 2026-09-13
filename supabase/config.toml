@@ -13,7 +13,7 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.detect-food]
-verify_jwt = false
+verify_jwt = true
 
 [functions.bland-voice-agent]
 verify_jwt = false
@@ -76,7 +76,7 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.analyze-contractions]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-affiliate-email]
 verify_jwt = false

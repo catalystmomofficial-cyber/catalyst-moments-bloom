@@ -25,10 +25,7 @@ export const TableOfContents = ({ content }: TableOfContentsProps) => {
     headingElements.forEach((heading, index) => {
       const level = parseInt(heading.tagName.substring(1));
       const text = heading.textContent || '';
-      const id = `heading-${index}`;
-      
-      // Add ID to the heading in the actual content
-      heading.id = id;
+      const id = heading.id || `heading-${index}`;
       
       headingsArray.push({ id, text, level });
     });

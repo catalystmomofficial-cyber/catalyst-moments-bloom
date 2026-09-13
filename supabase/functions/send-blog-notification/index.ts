@@ -21,11 +21,10 @@ serve(async (req) => {
   // key (not service role), so a service-role/admin check would stop
   // subscriber emails from going out on publish. Gate on a shared secret.
   //
-  // Fails OPEN while BLOG_NOTIFICATION_SECRET is unset so deploying this is
-  // safe; fails closed once the trigger sends the header and the secret is
-  // set. Without this, anyone knowing the URL could blast every subscriber.
+  // Fail closed: otherwise anyone knowing the URL could blast subscribers
+  // whenever the secret was missing or misconfigured.
   const secretCheck = checkSharedSecret(req, 'BLOG_NOTIFICATION_SECRET');
-  if (secretCheck === false) {
+  if (secretCheck !== true) {
     return forbidden(corsHeaders, 403, 'Invalid or missing webhook secret');
   }
 

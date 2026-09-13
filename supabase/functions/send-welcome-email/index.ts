@@ -23,12 +23,10 @@ Deno.serve(async (req) => {
   // key (not service role), so a service-role/admin check would break signup
   // emails. Gate on a shared secret instead.
   //
-  // Deliberately fail-OPEN while WELCOME_EMAIL_SECRET is unset, so deploying
-  // this cannot break welcome emails. Once the trigger is updated to send the
-  // header AND the secret is set in Supabase, it fails closed. See
-  // docs/security/edge-function-lockdown.md for the safe rollout order.
+  // Fail closed: a missing server secret is a configuration error, never
+  // permission for an anonymous caller to trigger account email.
   const secretCheck = checkSharedSecret(req, 'WELCOME_EMAIL_SECRET')
-  if (secretCheck === false) {
+  if (secretCheck !== true) {
     return forbidden(corsHeaders, 403, 'Invalid or missing webhook secret')
   }
 

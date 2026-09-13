@@ -16,9 +16,9 @@ import { SocialShareButtons } from '@/components/blog/SocialShareButtons';
 import { InternalLinkingSuggestions } from '@/components/blog/InternalLinkingSuggestions';
 import { Breadcrumb } from '@/components/blog/Breadcrumb';
 import { TableOfContents } from '@/components/blog/TableOfContents';
-import DOMPurify from 'dompurify';
 import SEO from '@/components/seo/SEO';
 import { detectFAQSchema, generateFAQSchema } from '@/utils/faqSchemaDetector';
+import { blogPlainText, prepareBlogContent } from '@/utils/blogContent';
 
 interface BlogPost {
   id: string;
@@ -131,16 +131,16 @@ const BlogDetail = () => {
   const faqItems = detectFAQSchema(blog.content);
   const faqSchema = generateFAQSchema(faqItems);
 
-  // Sanitize content and add IDs to headings
-  const sanitizedContent = DOMPurify.sanitize(blog.content, {
-    ADD_ATTR: ['loading', 'decoding', 'id'],
-  }).replace(/<img/g, '<img loading="lazy" decoding="async"');
+  const sanitizedContent = prepareBlogContent(blog.content, blog.title);
+  const plainTextContent = blogPlainText(blog.content);
+  const seoDescription = blog.excerpt || plainTextContent.substring(0, 160);
+  const wordCount = plainTextContent.split(/\s+/).filter(Boolean).length;
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": blog.title,
-    "description": blog.excerpt || blog.content.substring(0, 160),
+    "description": seoDescription,
     "image": blog.featured_image_url || "https://catalystmomofficial.com/og-image.png",
     "datePublished": blog.published_at,
     "dateModified": blog.updated_at || blog.published_at,
@@ -161,15 +161,15 @@ const BlogDetail = () => {
       "@id": `https://catalystmomofficial.com/blog/${slug}`
     },
     "keywords": blog.tags?.join(", "),
-    "wordCount": blog.content.split(' ').length,
-    "articleBody": blog.content.replace(/<[^>]*>/g, '').substring(0, 500)
+    "wordCount": wordCount,
+    "articleBody": plainTextContent.substring(0, 500)
   };
 
   return (
     <PageLayout>
       <SEO 
-        title={`${blog.title} | Catalyst Mom Blog`}
-        description={blog.excerpt || blog.content.replace(/<[^>]*>/g, '').substring(0, 160)}
+        title={blog.title}
+        description={seoDescription}
         image={blog.featured_image_url}
         canonical={`https://catalystmomofficial.com/blog/${slug}`}
         type="article"
@@ -177,7 +177,7 @@ const BlogDetail = () => {
       />
       <article className="container mx-auto px-4 py-8" itemScope itemType="https://schema.org/BlogPosting">
         <meta itemProp="datePublished" content={blog.published_at} />
-        <meta itemProp="dateModified" content={blog.published_at} />
+        <meta itemProp="dateModified" content={blog.updated_at || blog.published_at} />
         <div className="max-w-4xl mx-auto">
           <Breadcrumb 
             items={[
@@ -232,7 +232,7 @@ const BlogDetail = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4" aria-hidden="true" />
-                <span>{Math.ceil(blog.content.split(' ').length / 200)} min read</span>
+                <span>{Math.max(1, Math.ceil(wordCount / 200))} min read</span>
               </div>
             </div>
           </div>

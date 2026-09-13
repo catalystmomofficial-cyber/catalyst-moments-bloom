@@ -9,7 +9,6 @@ import { Calendar, Clock, Users, CheckCircle, Zap, CreditCard, Loader2 } from 'l
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { usePoints } from '@/hooks/usePoints';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import type { Event } from './EnhancedEventsList';
 import posthog from '@/lib/posthog';
@@ -42,7 +41,6 @@ const EventRegistrationModal = ({
   const [gateway, setGateway] = useState<'stripe' | 'paypal' | null>(null);
   const { toast } = useToast();
   const { user, profile, subscribed } = useAuth();
-  const { awardPoints } = usePoints();
 
   const pointsCost = event?.pointsCost ?? 0;
   const memberPrice = event?.priceMember ?? 0;
@@ -75,21 +73,6 @@ const EventRegistrationModal = ({
 
   const finalizeRegistration = async () => {
     if (!user) return;
-    // Deduct points upfront if paying with points
-    if (paymentMethod === 'points') {
-      const { error: pointsErr } = await supabase.rpc('add_user_points', {
-        p_user_id: user.id,
-        p_points: -pointsCost,
-        p_source: 'event_registration',
-        p_description: `Registered for ${event.title}`,
-      } as any);
-
-      if (pointsErr) {
-        toast({ title: 'Points error', description: pointsErr.message, variant: 'destructive' });
-        return false;
-      }
-    }
-
     const displayName = profile?.display_name ?? user.email?.split('@')[0] ?? 'Member';
     const [firstName, ...rest] = displayName.split(' ');
     const lastName = rest.join(' ') || '-';
@@ -108,14 +91,6 @@ const EventRegistrationModal = ({
     });
 
     if (regErr || !result?.success) {
-      if (paymentMethod === 'points') {
-        await supabase.rpc('add_user_points', {
-          p_user_id: user.id,
-          p_points: pointsCost,
-          p_source: 'event_registration_refund',
-          p_description: `Refund for failed registration: ${event.title}`,
-        } as any);
-      }
       toast({
         title: 'Registration failed',
         description: result?.error ?? regErr?.message ?? 'Please try again.',
@@ -124,7 +99,6 @@ const EventRegistrationModal = ({
       return false;
     }
 
-    await awardPoints(50, 'event_registration', `Registered for ${event.title}`);
     posthog.capture('event_registration_completed', {
       event_id: event.id,
       payment_method: paymentMethod,

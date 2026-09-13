@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { isServiceOrAdmin, forbidden } from "../_shared/auth.ts";
+import { getUser, isServiceOrAdmin, forbidden } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -80,13 +80,16 @@ serve(async (req) => {
       });
     }
 
-    // "application_received" is the public signup confirmation (no links, no
-    // money) and stays open. Approval and payout emails carry a referral link
-    // and payout messaging — a phishing vector — so they require the service
-    // role (internal payout job) or an admin (manual approval).
+    // Approval and payout messages are internal/admin only. A receipt may be
+    // sent by the applicant, but only to the verified email on their JWT.
     if (body.type === "application_approved" || body.type === "payout_ready") {
       if (!(await isServiceOrAdmin(req))) {
         return forbidden(corsHeaders, 403, "Admin or service role required");
+      }
+    } else {
+      const user = await getUser(req);
+      if (!user?.email || user.email.toLowerCase() !== body.to.trim().toLowerCase()) {
+        return forbidden(corsHeaders, 403, "Receipt email must match the signed-in account");
       }
     }
 

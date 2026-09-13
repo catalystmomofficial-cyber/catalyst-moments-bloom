@@ -317,7 +317,7 @@ ${DISCLAIMER}`,
 
 <h2>The Rules That Protect Your Healing</h2>
 <ul>
-<li><strong>No doming, ever.</strong> If your belly cones or ridges during a movement, the load is too much. Regress and rebuild.</li>
+<li><strong>Treat doming as feedback.</strong> If your belly cones or ridges during a movement, reduce the range, load, speed, or leverage and compare your control and symptoms.</li>
 <li><strong>Exhale on effort.</strong> Holding your breath spikes intra-abdominal pressure right at the weakest point.</li>
 <li><strong>Skip crunches, sit-ups, and front planks</strong> until tension is restored — see the full <a href="/blog/exercises-to-avoid-diastasis-recti">list of exercises to avoid</a>.</li>
 <li><strong>Consistency beats intensity.</strong> 10 focused minutes daily outperforms one hard weekly session.</li>
@@ -435,7 +435,7 @@ ${DISCLAIMER}`,
     excerpt: 'Some popular ab exercises actively widen ab separation. Here are nine to skip while you heal — each with a safe swap that trains the same muscles.',
     content: `
 <h2>Why Some Exercises Make the Gap Worse</h2>
-<p>Diastasis recti heals when you build tension in the deep core <em>without</em> spiking pressure against the stretched midline. Any movement that bulges your belly outward, cones your midline, or loads your core before it can resist that load works against you. The test is simple: <strong>if you see doming, stop.</strong></p>
+<p>Diastasis recovery involves more than making a gap narrower. Strength, symptoms, function, and the way the abdominal wall manages a task all matter. If you see doming, change one variable—range, resistance, leverage, speed, or support—and compare the result rather than assuming you caused damage.</p>
 
 <h2>Skip These — Do These Instead</h2>
 <table>
@@ -463,14 +463,14 @@ ${DISCLAIMER}`,
 <h2>When Can I Go Back to Normal Workouts?</h2>
 <p>When you can do the foundational moves with zero doming and your gap shows firm tension (re-test with our <a href="/blog/how-to-check-diastasis-recti-at-home">self-check guide</a>), begin re-introducing harder exercises one at a time. The <a href="/workouts/core-restore-foundations">Core Restore Foundations program</a> sequences this return for you, from first breath work to full strength training.</p>
 <h2>The Gray Zone: It Depends on YOUR Core Today</h2>
-<p>Here is the nuance most "avoid lists" miss: these are not banned exercises, they are <strong>not-yet exercises</strong>. The same front plank that domes your midline at 6 weeks postpartum may be perfectly safe at 16 weeks. The exercise is never the problem — the mismatch between load and your current capacity is. That is why the doming check beats any list, including this one.</p>
+<p>Here is the nuance most "avoid lists" miss: these are not permanently banned exercises. The same front plank that feels poorly controlled at 6 weeks postpartum may be comfortable later. Use appearance together with pain, leaking, heaviness, breathing, and function; doming alone is not proof of injury.</p>
 
 <h2>How to Re-Test an Exercise Back In</h2>
 <ol>
 <li><strong>Pick the easiest version.</strong> Wall push-up before incline, incline before floor.</li>
 <li><strong>Do 3 slow reps while watching or feeling your midline.</strong> Hand on your belly works if you cannot see it.</li>
 <li><strong>Pass:</strong> flat midline, no bulge, you could breathe normally → keep it, add 2 reps each session.</li>
-<li><strong>Fail:</strong> any doming, pulling at the midline, or breath-holding → shelve it for two more weeks and stay with the regression.</li>
+<li><strong>Adjust:</strong> if you notice strong doming, pulling, symptoms, or breath-holding, reduce one variable and retest. Use the easier version while it feels more controlled.</li>
 <li><strong>One new exercise per week, maximum.</strong> If something flares, you will know exactly which one.</li>
 </ol>
 
@@ -486,7 +486,7 @@ ${DISCLAIMER}`,
 <h3>Will I ever be able to do crunches again?</h3>
 <p>Almost certainly yes. Once your midline holds tension under load, crunches are just another exercise to re-test in with the 5-step process above. Many moms are back to full ab training within 4–6 months of consistent rehab.</p>
 <h3>How long do I need to avoid these exercises?</h3>
-<p>It is capacity-based, not calendar-based — typically 8–16 weeks of progressive deep-core work before the most demanding moves pass the doming test. Track it with the <a href="/blog/how-to-check-diastasis-recti-at-home">self-test</a> every two weeks.</p>
+<p>It is capacity-based, not calendar-based, and research does not support a universal 8–16 week promise. Track function and symptoms over time; treat any finger-width self-check as one observation rather than a complete recovery score.</p>
 ${DISCLAIMER}`,
   },
   {
@@ -1212,11 +1212,419 @@ ${DISCLAIMER}`,
 <p><strong>Sources:</strong> <a href="https://www.acog.org/womens-health/faqs/exercise-during-pregnancy" target="_blank" rel="noopener noreferrer">American College of Obstetricians and Gynecologists</a>, <a href="https://www.cdc.gov/physical-activity-basics/guidelines/healthy-pregnant-or-postpartum-women.html" target="_blank" rel="noopener noreferrer">CDC physical activity guidance</a>, and <a href="https://www.nhs.uk/pregnancy/keeping-well/exercise/" target="_blank" rel="noopener noreferrer">NHS pregnancy exercise guidance</a>.</p>
 ${DISCLAIMER}`,
   },
+  {
+    title: 'Postpartum Leaking: What to Do Before You Run Again',
+    slug: 'postpartum-leaking-when-running',
+    tags: ['postpartum', 'fitness', 'wellness'],
+    featured_image_url: '',
+    excerpt: 'Leaking after birth is common, but it is a symptom—not a fitness test. Use this practical return-to-running check before adding impact.',
+    content: `
+<p>If you leak urine when you cough, jump, or try your first postpartum run, your body is giving you useful information: the pressure of the movement is currently greater than your pelvic floor can manage. It does not mean you are broken, and it does not mean you should simply wear a pad and push through.</p>
+<p>The most useful question is not “How many weeks postpartum am I?” It is “Can my core and pelvic floor manage impact without leaking, heaviness, pain, or abdominal doming?”</p>
+
+<h2>What Moms Actually Ask Us For</h2>
+<p>After one Catalyst Mom 20-minute workout post, a mother of three told us she was not choosing between “losing the extra postpartum weight” and “rebuilding my core”—she wanted both. That combination matters. Many postpartum plans treat weight loss and core recovery as separate goals, then make mothers feel as if they must pick one.</p>
+<p>She joined Catalyst Mom and is still working through that journey with us. Her story is included here because it reflects the starting point we repeatedly hear—not as a finished before-and-after claim. Our approach is to sequence both goals: first, choose movement the pelvic floor and abdominal wall can manage without symptoms; then build enough weekly activity and strength to support energy, fitness, and body-composition goals. A 20-minute workout can serve both goals, but only when the exercise dose matches the body doing it.</p>
+
+<h2>What Type of Leaking Is This?</h2>
+<p>Leaking with coughing, sneezing, lifting, running, or jumping is usually called <strong>stress urinary incontinence</strong>. Pregnancy and birth can affect the muscles and connective tissues that support the bladder and urethra. A pelvic-health physical therapist can assess whether you need more strength, better timing, more relaxation, or a combination.</p>
+
+<h2>The 10-Minute Pre-Run Screen</h2>
+<p>Try this after medical clearance and before a run. Stop if you develop leaking, vaginal heaviness, pelvic or incision pain, or visible abdominal doming.</p>
+<ol>
+<li>Walk briskly for 10 minutes.</li>
+<li>Balance on each leg for 10 seconds.</li>
+<li>Complete 10 controlled single-leg mini squats per side.</li>
+<li>March quickly in place for 60 seconds.</li>
+<li>Complete 10 small hops on each leg.</li>
+</ol>
+<p>Passing once is not a promise that a full run will be symptom-free. It is a lower-risk checkpoint. If symptoms appear, return to walking and strength work and arrange a pelvic-floor assessment.</p>
+
+<h2>A Two-Week Bridge Back to Impact</h2>
+<table><thead><tr><th>Session</th><th>Plan</th></tr></thead><tbody>
+<tr><td>1–2</td><td>20-minute brisk walk plus two rounds of 8 sit-to-stands, 8 supported split squats per side, and 10 calf raises.</td></tr>
+<tr><td>3–4</td><td>Walk 4 minutes, jog 30 seconds; repeat four times only if symptom-free.</td></tr>
+<tr><td>5–6</td><td>Walk 3 minutes, jog 1 minute; repeat five times.</td></tr>
+</tbody></table>
+<p>Leave at least a day between impact sessions. Repeat a level instead of progressing if you notice leakage during the session or later that day.</p>
+
+<h2>Why “Just Do More Kegels” Can Miss the Problem</h2>
+<p>A pelvic floor must contract, relax, and react at the right moment. Constant gripping can leave it poorly coordinated. Practice a gentle exhale during the hardest part of a squat or lift, then allow a full inhale and release. If you have pelvic pain, pain with penetration, constipation, or difficulty starting urine, get assessed before adding more squeezing.</p>
+
+<h2>When to Get Professional Help</h2>
+<p>Book a pelvic-health physical therapist if leaking continues after several weeks of consistent, symptom-guided training; if you feel vaginal pressure or a bulge; or if pain affects daily life. Seek urgent medical care for sudden loss of bladder control with leg weakness or numbness.</p>
+
+<h2>Postpartum Leaking FAQ</h2>
+<h3>Is leaking urine normal after having a baby?</h3><p>It is common, but it is still a treatable symptom. You do not need to accept it as the price of motherhood.</p>
+<h3>Can I run if I only leak a little?</h3><p>Leaking shows that the current impact exceeds your present capacity. Reduce the dose, rebuild strength and coordination, and progress when the same task is symptom-free.</p>
+<h3>Will a belly band stop postpartum leaking?</h3><p>A band may feel supportive, but it does not retrain pelvic-floor timing or load tolerance.</p>
+
+<p>Use Catalyst Mom’s <a href="/blog/postpartum-exercise-timeline">postpartum exercise timeline</a> with the <a href="/blog/how-to-check-diastasis-recti-at-home">60-second diastasis check</a>, or complete your personalized assessment at <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a>.</p>
+<p><strong>Sources:</strong> <a href="https://www.acog.org/womens-health/faqs/urinary-incontinence" target="_blank" rel="noopener noreferrer">ACOG urinary incontinence guidance</a> and <a href="https://www.acog.org/womens-health/faqs/exercise-after-pregnancy" target="_blank" rel="noopener noreferrer">ACOG exercise-after-pregnancy guidance</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
+    title: 'Overactive Pelvic Floor: Signs Kegels May Not Help',
+    slug: 'overactive-pelvic-floor-signs-kegels',
+    tags: ['pregnancy', 'postpartum', 'wellness'],
+    featured_image_url: '',
+    excerpt: 'A tight pelvic floor is not automatically a strong one. Learn the signs of overactivity, what to stop doing, and when to seek an assessment.',
+    content: `
+<p>“Weak pelvic floor” gets blamed for nearly every symptom after birth, so the default advice is often more Kegels. But a pelvic floor can be <strong>overactive</strong>: it stays guarded, does not lengthen well, and struggles to coordinate with breathing and movement. Adding hundreds of contractions may make that pattern more uncomfortable.</p>
+
+<h2>Six Signs Your Pelvic Floor May Be Overactive</h2>
+<ul>
+<li>Pelvic, tailbone, vaginal, or rectal aching.</li>
+<li>Pain with penetration, a tampon, or an internal exam.</li>
+<li>Difficulty starting urine or feeling unable to empty fully.</li>
+<li>Constipation, straining, or pain with bowel movements.</li>
+<li>A constant urge to urinate despite passing small amounts.</li>
+<li>Difficulty feeling the pelvic floor release after a contraction.</li>
+</ul>
+<p>These symptoms can have several causes. The list helps you ask better questions; it cannot diagnose you.</p>
+
+<h2>The Difference Between Tight, Strong, and Coordinated</h2>
+<table><thead><tr><th>Pattern</th><th>What it means</th><th>What often helps</th></tr></thead><tbody>
+<tr><td>Tight</td><td>The muscles rest in a shortened or guarded position.</td><td>Down-training, breathing, mobility, and assessment.</td></tr>
+<tr><td>Strong</td><td>The muscles can create appropriate force.</td><td>Progressive loading matched to symptoms.</td></tr>
+<tr><td>Coordinated</td><td>They contract, release, and respond at the right time.</td><td>Breath-led practice during real movements.</td></tr>
+</tbody></table>
+
+<h2>A Five-Minute Down-Training Practice</h2>
+<ol>
+<li>Lie on your side with a pillow between your knees, or sit supported.</li>
+<li>Inhale quietly into the sides and back of your ribs.</li>
+<li>Imagine the sit bones widening and the pelvic floor softening—not pushing downward.</li>
+<li>Exhale without squeezing hard. Repeat for five slow breaths.</li>
+<li>Add gentle hip circles or a supported child’s-pose position only if comfortable.</li>
+</ol>
+<p>Do not practise by repeatedly stopping urine midstream. That is not a training program and can interfere with normal emptying.</p>
+
+<h2>When Should You Pause Kegels?</h2>
+<p>Pause unsupervised Kegels and seek individualized guidance if contractions increase pain, urgency, constipation, or difficulty emptying. A pelvic-health clinician may use an internal or external assessment, but you can discuss consent and alternatives before any examination.</p>
+
+<h2>Overactive Pelvic Floor FAQ</h2>
+<h3>Can a tight pelvic floor also leak?</h3><p>Yes. A muscle that cannot relax and reset may respond poorly to sudden pressure even if it feels constantly tense.</p>
+<h3>Can pregnancy cause pelvic-floor overactivity?</h3><p>Pain, stress, posture changes, previous injury, and habitual bracing can contribute during pregnancy or postpartum.</p>
+<h3>How long does it take to relax an overactive pelvic floor?</h3><p>There is no universal timeline because causes differ. Improvement is usually measured by symptoms and function, not by completing a fixed number of exercises.</p>
+
+<p>For movement that coordinates breath, core, and pelvic floor, start with our <a href="/blog/pregnancy-workout-plan-by-trimester">pregnancy workout plan</a> or take the Catalyst Mom assessment at <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a>.</p>
+<p><strong>Source:</strong> <a href="https://www.acog.org/womens-health/faqs/urinary-incontinence" target="_blank" rel="noopener noreferrer">ACOG urinary incontinence and pelvic-health therapy guidance</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
+    title: 'Perineal Tearing: What May Reduce Your Risk',
+    slug: 'reduce-perineal-tearing-birth',
+    tags: ['pregnancy', 'wellness'],
+    featured_image_url: '',
+    excerpt: 'No method can promise a tear-free birth. These evidence-based options can help you prepare and discuss perineal protection with your birth team.',
+    content: `
+<p>You cannot guarantee a tear-free vaginal birth—and a tear is not a failure. But you can prepare your tissue, practise positions, and ask your birth team about techniques that may reduce the chance or severity of deeper tearing.</p>
+
+<h2>Start With the Risk You Can Actually Influence</h2>
+<p>RCOG reports that deeper third- or fourth-degree tears occur in about 6 of 100 first vaginal births and 2 of 100 subsequent vaginal births. Risk is higher with a first vaginal birth, a baby over 4 kg, a long pushing stage, shoulder dystocia, or an assisted birth. Some factors cannot be predicted or controlled.</p>
+
+<h2>From 35 Weeks: A Practical Perineal-Massage Routine</h2>
+<ol>
+<li>Check with your maternity provider that massage is appropriate for your pregnancy.</li>
+<li>Wash your hands, trim nails, and use a comfortable supported position.</li>
+<li>Use a suitable lubricant and gently press the lower vaginal tissue downward and outward until you feel a stretch—not sharp pain.</li>
+<li>Hold for about one minute while breathing, then use a gentle U-shaped massage for 2–3 minutes.</li>
+<li>Repeat two or three times, daily or as often as realistic.</li>
+</ol>
+<p>Stop and ask your provider if you have bleeding, signs of infection, ruptured membranes, or uncertainty about whether internal massage is safe for you.</p>
+
+<h2>Three Requests to Discuss With Your Birth Team</h2>
+<ul>
+<li><strong>A warm compress</strong> on the perineum as the baby’s head crowns.</li>
+<li><strong>Slow, controlled birth of the head</strong> with clear coaching rather than forceful, prolonged breath-holding.</li>
+<li><strong>Perineal support</strong> (“hands-on” protection) when appropriate and acceptable to you.</li>
+</ul>
+
+<h2>Positions Worth Practising Before Labor</h2>
+<p>Kneeling, all-fours, and side-lying positions may reduce the severity of tearing for some births. Practise getting into and out of them while pregnant—using a chair, partner, wall, or birth ball for support—so the movements feel familiar rather than theoretical in labor.</p>
+
+<h2>What Breathing Can and Cannot Do</h2>
+<p>Breathing cannot mechanically guarantee that tissue will not tear. Its practical job is to reduce unnecessary whole-body bracing and help you respond to your midwife or clinician as the head is born. Practise a quiet inhale followed by a long, unforced exhale; avoid turning every exhale into a hard pelvic-floor squeeze.</p>
+
+<h2>Perineal Tearing FAQ</h2>
+<h3>Does perineal massage prevent every tear?</h3><p>No. It may reduce risk, particularly for first-time mothers, but birth circumstances still matter.</p>
+<h3>Should I use a birth ball to prevent tearing?</h3><p>A birth ball helps you practise mobility and supported positions. It does not directly guarantee protection from tearing.</p>
+<h3>What if I tear despite preparing?</h3><p>Most tears heal without long-term problems. Persistent or worsening pain, wound odor or discharge, bowel or bladder problems, or emotional distress deserves prompt professional follow-up.</p>
+
+<p>Use the <a href="/birth-ball-guide">Catalyst Mom Birth Ball Guide</a> to practise supported positions and breath coordination before labor, and bring the three birth-team questions above to your next appointment.</p>
+<p><strong>Sources:</strong> <a href="https://www.rcog.org.uk/for-the-public/perineal-tears-and-episiotomies-in-childbirth/reducing-your-risk-of-perineal-tears/" target="_blank" rel="noopener noreferrer">RCOG guidance on reducing perineal tears</a> and <a href="https://www.acog.org/womens-health/faqs/postpartum-pain-management" target="_blank" rel="noopener noreferrer">ACOG postpartum pain guidance</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
+    title: 'Abdominal Coning and Doming: What It Means',
+    slug: 'abdominal-coning-doming-postpartum',
+    tags: ['postpartum', 'fitness', 'wellness'],
+    featured_image_url: '',
+    excerpt: 'See abdominal doming during exercise? Learn what it can tell you about the current load, which variables to change, and when to seek help.',
+    content: `
+<p>A ridge or cone rising along the middle of your abdomen can be unsettling, especially when social media tells you that any doming means you are damaging your core. The more useful interpretation is less frightening: <strong>doming is information about how your abdominal wall is managing this particular task today.</strong></p>
+<p>It does not diagnose diastasis recti, prove that an exercise is dangerous, or mean you have undone your recovery. It is a reason to observe the movement, your symptoms, and what changes when you adjust the demand.</p>
+
+<h2>What Is Abdominal Coning or Doming?</h2>
+<p>Coning describes a visible ridge along the midline as pressure pushes against the linea alba—the connective tissue between the two rectus-abdominis muscles. It may appear when sitting up, coughing, lifting, planking, or performing an exercise that currently asks for more tension or coordination than you can comfortably produce.</p>
+<p>The appearance alone cannot tell you how wide a separation is, how strong your core is, or whether tissue is being injured. Research also uses inconsistent definitions and measurements for diastasis recti, which is why a finger-width number should not become your entire recovery score.</p>
+
+<h2>The Four-Variable Doming Experiment</h2>
+<p>Instead of banning the movement immediately, change one variable at a time:</p>
+<ol>
+<li><strong>Range:</strong> make the movement smaller. In a heel slide, move the heel half as far.</li>
+<li><strong>Load:</strong> use less resistance or more support.</li>
+<li><strong>Leverage:</strong> bend the knees, elevate your hands, or shorten the lever.</li>
+<li><strong>Speed and breath:</strong> slow down and use a quiet exhale through the hardest portion without forcefully sucking in your stomach.</li>
+</ol>
+<p>Repeat the movement. Notice whether the ridge changes and whether you can move without pain, leaking, heaviness, breath-holding, or loss of control. The goal is not to make your abdomen look perfectly flat at all costs; it is to choose a version you can perform comfortably and progressively.</p>
+
+<h2>Symptom-to-Next-Step Guide</h2>
+<table><thead><tr><th>What you notice</th><th>What to try now</th><th>When to get assessed</th></tr></thead><tbody>
+<tr><td>A small ridge only during a demanding exercise, without symptoms</td><td>Change one variable and compare control</td><td>If it limits progression or worries you</td></tr>
+<tr><td>Doming during getting out of bed</td><td>Roll to your side and use your arms while rebuilding capacity</td><td>If accompanied by pain or major functional difficulty</td></tr>
+<tr><td>Doming plus leaking or pelvic heaviness</td><td>Reduce the load and impact</td><td>Pelvic-health assessment is appropriate</td></tr>
+<tr><td>A painful, firm, or new abdominal bulge</td><td>Stop self-testing</td><td>Prompt medical evaluation to rule out a hernia or another cause</td></tr>
+</tbody></table>
+
+<h2>Why Gap Width Is Not the Whole Story</h2>
+<p>Recent reviews agree that abdominal exercise may improve some outcomes, but they disagree about how meaningfully it changes inter-rectus distance. One 2023 review found an average reduction of about 0.43 cm yet questioned whether that change was clinically important. A 2026 update found no evidence for exercise alone as a reliable way to reduce the gap.</p>
+<p>This does not mean exercise has no value. Strength, confidence, daily function, pressure tolerance, and the ability to lift or train without symptoms may improve even when a tape measure or finger test barely changes. A better question is: <strong>What can your body do now that it could not do four weeks ago?</strong></p>
+
+<h2>Three Movements and Their Easier Versions</h2>
+<ul>
+<li><strong>Full plank → elevated plank:</strong> place hands on a wall or counter, then lower the support gradually.</li>
+<li><strong>Double-leg lowering → heel slide:</strong> keep one foot supported and shorten the range.</li>
+<li><strong>Straight sit-up → side roll:</strong> use the side-roll strategy for daily life while separately training abdominal strength at a manageable dose.</li>
+</ul>
+<p>These are progressions, not permanent restrictions. An exercise that produces an uncontrolled ridge now may become comfortable after you build capacity.</p>
+
+<h2>Abdominal Doming FAQ</h2>
+<h3>Does doming mean I damaged my diastasis recti?</h3><p>No. Its appearance does not prove injury. Review the load and symptoms, then seek assessment if it persists or affects function.</p>
+<h3>Must I stop every exercise that causes any coning?</h3><p>Not automatically. First adjust range, resistance, leverage, speed, support, or breathing. Stop and seek guidance if the movement causes pain, leaking, heaviness, or a concerning bulge.</p>
+<h3>Can I have doming without a large gap?</h3><p>Yes. Appearance under load and resting separation are related but not interchangeable measurements.</p>
+
+<p>Next, read the <a href="/blog/postpartum-leaking-when-running">postpartum leaking and impact guide</a>. If you have several symptoms or do not know which progression fits, complete the Catalyst Mom assessment at <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a>.</p>
+<p><strong>Research:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/36934466/" target="_blank" rel="noopener noreferrer">2023 systematic review</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/39694630/" target="_blank" rel="noopener noreferrer">2024 postpartum exercise review</a>, and <a href="https://pubmed.ncbi.nlm.nih.gov/41995773/" target="_blank" rel="noopener noreferrer">2026 updated review</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
+    title: 'Diaphragmatic Breathing for Core Coordination',
+    slug: 'diaphragmatic-breathing-core-pelvic-floor',
+    tags: ['pregnancy', 'postpartum', 'wellness'],
+    featured_image_url: '',
+    excerpt: 'Breathing can help you practise pressure awareness and coordination, but it is not a stand-alone cure. Here is a practical, evidence-honest routine.',
+    content: `
+<p>Breathing is often sold as the missing cure for diastasis recti, leaking, pelvic pain, and even labor. The evidence does not support those promises. A systematic review found scant evidence for breathing exercises as an addition or alternative to pelvic-floor muscle training.</p>
+<p>Breathing can still be useful. Its honest role is to help you notice pressure, reduce unnecessary breath-holding, practise a full release, and coordinate low-load movement.</p>
+
+<h2>The 60-Second Breathing Observation</h2>
+<ol>
+<li>Sit supported or lie on your side. Place one hand on your upper chest and one around the lower ribs.</li>
+<li>Take a quiet inhale. Notice whether the ribs can expand sideways and backward—not only whether the belly rises.</li>
+<li>Exhale comfortably. Do not force the stomach inward or squeeze the pelvic floor as hard as possible.</li>
+<li>Repeat for five breaths and note tension in your jaw, shoulders, abdomen, and pelvic area.</li>
+</ol>
+<p>This is observation, not a test you can pass or fail. Bodies do not all move identically, and a blog cannot diagnose your breathing pattern.</p>
+
+<h2>Pair Breath With a Real Movement</h2>
+<p>After the observation, try five supported sit-to-stands:</p>
+<ol>
+<li>Inhale comfortably while seated.</li>
+<li>Begin a gentle exhale as you stand—the harder part of the movement.</li>
+<li>Let the next inhale happen rather than holding your abdomen tight between repetitions.</li>
+<li>Reduce speed or use your hands if you notice pain, leaking, heaviness, dizziness, or strong doming.</li>
+</ol>
+<p>The purpose is not to force a perfect inhale-down/exhale-up rule onto every activity. It is to discover whether breath-holding increases symptoms and whether a quieter strategy improves control.</p>
+
+<h2>Where a Birth Ball Helps</h2>
+<p>A correctly sized ball can provide a comfortable upright or forward-supported position for practice. Try slow hip circles while breathing normally, or kneel with your upper body supported on the ball. The ball changes position and comfort; it does not mechanically induce labor or guarantee pelvic-floor relaxation.</p>
+
+<h2>When Breathing Is Not Enough</h2>
+<table><thead><tr><th>Situation</th><th>Next step</th></tr></thead><tbody>
+<tr><td>You mainly hold your breath during effort</td><td>Practise with a lighter movement, then reload gradually</td></tr>
+<tr><td>Breathing increases dizziness or panic</td><td>Stop the drill and return to normal breathing; discuss recurring symptoms with a clinician</td></tr>
+<tr><td>You have pain, urgency, difficulty emptying, or painful penetration</td><td>Seek pelvic-health assessment rather than adding more online drills</td></tr>
+<tr><td>You leak or feel heaviness during impact</td><td>Use a complete load and symptom assessment</td></tr>
+</tbody></table>
+
+<h2>Breathing and Pelvic Floor FAQ</h2>
+<h3>Does diaphragmatic breathing heal diastasis recti?</h3><p>No stand-alone breathing method has been shown to “heal” every separation. It may be one part of a broader, progressive program.</p>
+<h3>Should I contract my pelvic floor every time I exhale?</h3><p>Not necessarily. The pelvic floor must both contract and release. Your strategy should match the task and your symptoms.</p>
+<h3>Can I practise this during pregnancy?</h3><p>Many people can practise comfortable, unforced breathing during pregnancy. Stop if you feel dizzy, painful, or unwell and follow your maternity provider’s advice.</p>
+
+<p>For illustrated ball positions and practical breathing sequences, use the <a href="/birth-ball-guide">Catalyst Mom Birth Ball Guide</a>. For symptoms or uncertainty, start with the assessment at <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a>.</p>
+<p><strong>Research:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/37260116/" target="_blank" rel="noopener noreferrer">systematic review of breathing and pelvic-floor outcomes</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
+    title: 'Fourth Trimester Recovery: A 12-Week Framework',
+    slug: 'fourth-trimester-recovery-12-week-framework',
+    tags: ['postpartum', 'wellness', 'fitness'],
+    featured_image_url: '',
+    excerpt: 'Use flexible recovery checkpoints—not a rigid bounce-back calendar—to rebuild daily movement, strength, and impact tolerance after birth.',
+    content: `
+<p>The fourth trimester is often described as the first 12 weeks after birth, but recovery does not finish when week 12 ends. Birth method, sleep, feeding, pain, support, pregnancy complications, and your previous activity all change the timeline.</p>
+<p>This framework uses <strong>checkpoints rather than deadlines</strong>. You can remain at one level, move forward, or step back without failing.</p>
+
+<h2>Checkpoint 1: Comfort and Daily Function</h2>
+<p>Early priorities are rest, nourishment, symptom monitoring, and short bouts of comfortable movement when medically appropriate. Progress is being able to change position, use the bathroom, feed or hold the baby, and walk briefly without a meaningful symptom flare.</p>
+<ul>
+<li>After vaginal birth, account for perineal soreness, bleeding, tearing, or assisted delivery.</li>
+<li>After C-section, remember that you are also recovering from abdominal surgery.</li>
+<li>Contact your care team for heavy bleeding, fever, chest pain, breathing difficulty, severe or worsening pain, calf swelling, wound concerns, severe headache, or symptoms that feel urgent.</li>
+</ul>
+
+<h2>Checkpoint 2: Repeatable Low-Impact Movement</h2>
+<p>Before making a walk longer, ask how you feel during it, two hours later, and the next morning. A dose is probably too high if bleeding, pelvic heaviness, pain, exhaustion, or wound discomfort clearly increases and does not settle.</p>
+<p>A realistic progression might be several short walks rather than one long outing. Add time to only one or two sessions instead of increasing every walk at once.</p>
+
+<h2>Checkpoint 3: Foundational Strength</h2>
+<p>When daily movement is comfortable, rebuild common tasks: sit-to-stand, hip hinge, supported squat, row, calf raise, step-up, carrying, and getting from the floor. Begin with a version that allows normal breathing and does not worsen leaking, heaviness, pain, or incision symptoms.</p>
+<table><thead><tr><th>Need</th><th>Practice</th><th>Progress when</th></tr></thead><tbody>
+<tr><td>Stand while holding baby</td><td>Supported sit-to-stand</td><td>Repetitions remain controlled and symptoms settle</td></tr>
+<tr><td>Lift from crib or floor</td><td>Hip hinge with light object</td><td>You can increase range without breath-holding or pain</td></tr>
+<tr><td>Walk farther</td><td>Calf raises and low step-ups</td><td>No meaningful same-day or next-day flare</td></tr>
+</tbody></table>
+
+<h2>Checkpoint 4: Preparing for Impact</h2>
+<p>Running and jumping ask the body to accept repeated forces. A postpartum running consensus recommends considering pelvic health, strength, impact tolerance, sleep, mental health, lactation, social support, training history, and goals—not simply time since delivery.</p>
+<p>Build brisk walking and single-leg strength first. Then introduce very small doses of impact and monitor symptoms later that day and the next morning. Twelve weeks is a commonly cited earliest checkpoint in one influential guideline; it is not an automatic green light.</p>
+
+<h2>The Recovery Load Nobody Puts on the Calendar</h2>
+<p>A workout is not your only load. Broken sleep, feeding, carrying, stairs, returning to work, and caring for other children all use recovery capacity. On a difficult week, maintaining a smaller dose may be the smarter progression.</p>
+
+<h2>Fourth Trimester FAQ</h2>
+<h3>Should I be back to normal at 12 weeks postpartum?</h3><p>No. Twelve weeks describes a period, not a recovery deadline. Measure function and symptoms against your own starting point.</p>
+<h3>What if I feel worse the day after exercise?</h3><p>Reduce duration, load, or complexity and repeat a smaller dose. Persistent or concerning symptoms deserve clinical review.</p>
+<h3>Does C-section recovery always take longer?</h3><p>It adds surgical recovery considerations, but individual timelines vary. Do not compare milestones as if two births created identical demands.</p>
+
+<p>Continue with <a href="/blog/postpartum-leaking-when-running">what to do about leaking before running</a> and <a href="/blog/abdominal-coning-doming-postpartum">the abdominal doming guide</a>. For a stage-specific path, complete the assessment at <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a>.</p>
+<p><strong>Research:</strong> <a href="https://bjsm.bmj.com/content/58/4/183" target="_blank" rel="noopener noreferrer">postpartum return-to-running program consensus</a> and <a href="https://bjsm.bmj.com/content/58/6/299" target="_blank" rel="noopener noreferrer">run-readiness consensus</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
+    title: 'Return to Running Postpartum: Readiness Guide',
+    slug: 'return-to-running-postpartum-readiness',
+    tags: ['postpartum', 'fitness', 'wellness'],
+    featured_image_url: '',
+    excerpt: 'A symptom-led, three-layer return-to-running framework covering daily function, strength, impact, and the life factors ordinary checklists miss.',
+    content: `
+<p>Being cleared after birth answers an important medical question. It does not automatically answer a different question: <strong>Can your body tolerate repeated running impact at the dose you plan to use?</strong></p>
+<p>Current consensus treats postpartum return to running as an individualized decision involving pelvic health, musculoskeletal capacity, previous training, sleep, lactation, mental health, support, and goals. No single online checklist can validate readiness.</p>
+
+<h2>Layer 1: Daily-Life Readiness</h2>
+<p>Start with ordinary tasks. Can you walk briskly, use stairs, carry your baby, and complete daily activities without increasing leaking, vaginal heaviness, pain, bleeding, or incision symptoms? Check not only during the activity but later that day and the following morning.</p>
+<p>If daily life still causes a flare, running is not the next useful dose. Build comfortable walking and seek assessment for persistent symptoms.</p>
+
+<h2>Layer 2: Strength and Control</h2>
+<p>After medical clearance, use these tasks as observations—not pass/fail diagnostic tests:</p>
+<ul>
+<li>Repeated calf raises while lightly supported.</li>
+<li>Controlled sit-to-stands and step-ups.</li>
+<li>Single-leg balance and shallow single-leg squats.</li>
+<li>A brisk walk long enough to reveal symptoms.</li>
+</ul>
+<p>Watch for pain, pelvic heaviness, leaking, breath-holding, or a major loss of control. Improve the specific task before adding repeated impact.</p>
+
+<h2>Layer 3: Graded Impact</h2>
+<p>Begin with a small number of gentle impact repetitions in a supportive environment. If symptom-free, progress to a walk-run session:</p>
+<table><thead><tr><th>Stage</th><th>Example dose</th><th>Decision</th></tr></thead><tbody>
+<tr><td>1</td><td>Brisk walk 20 minutes</td><td>Repeat until comfortable during and the next morning</td></tr>
+<tr><td>2</td><td>Walk 4 minutes, easy jog 30 seconds × 4</td><td>Keep at least one recovery day</td></tr>
+<tr><td>3</td><td>Walk 3 minutes, easy jog 1 minute × 5</td><td>Increase only one variable next</td></tr>
+<tr><td>4</td><td>Gradually lengthen jogging intervals</td><td>Do not increase speed and duration together</td></tr>
+</tbody></table>
+<p>A delayed symptom counts. Repeat or regress if leaking, heaviness, pain, bleeding, or unusual fatigue appears later.</p>
+
+<h2>The Life-Load Check</h2>
+<p>Before progressing, ask:</p>
+<ul>
+<li>Did I sleep enough to recover from the last session?</li>
+<li>Am I eating and hydrating adequately, especially while lactating?</li>
+<li>Did carrying, work, or childcare already make this a high-load day?</li>
+<li>Am I returning to my own baseline, or copying somebody else’s timeline?</li>
+</ul>
+<p>This is not softness. The 2024 international consensus specifically includes biopsychosocial and lactation factors in postpartum running decisions.</p>
+
+<h2>When to Pause and Get Help</h2>
+<p>Seek pelvic-health or medical assessment for persistent urine leakage, stool or gas leakage, pelvic pressure or bulging, pain, worsening abdominal symptoms, or difficulty progressing despite a careful plan. Seek urgent care for chest pain, shortness of breath, sudden neurological symptoms, or other emergency warning signs.</p>
+
+<h2>Return-to-Running FAQ</h2>
+<h3>Can I run at six weeks postpartum if my doctor cleared me?</h3><p>Clearance does not prove impact readiness. Review daily function, symptoms, strength, recovery, and a graded impact exposure first.</p>
+<h3>Do I have to wait exactly 12 weeks?</h3><p>Twelve weeks is an influential guideline’s earliest checkpoint, not a universal guarantee. Your birth, symptoms, medical status, and capacity determine the timeline.</p>
+<h3>Should I run through a small amount of leaking?</h3><p>Leaking is useful feedback that the present dose needs attention. Reduce the impact and get individualized help if it persists.</p>
+
+<p>Read <a href="/blog/postpartum-leaking-when-running">Postpartum Leaking: What to Do Before You Run Again</a>, then use the Catalyst Mom assessment at <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a> to identify the appropriate next step.</p>
+<p><strong>Research:</strong> <a href="https://bjsm.bmj.com/content/58/6/299" target="_blank" rel="noopener noreferrer">2024 readiness consensus</a>, <a href="https://bjsm.bmj.com/content/58/4/183" target="_blank" rel="noopener noreferrer">2024 program-design consensus</a>, and <a href="https://pubmed.ncbi.nlm.nih.gov/38864285/" target="_blank" rel="noopener noreferrer">postpartum runner clinical review</a>.</p>
+${DISCLAIMER}`,
+  },
+  {
+    title: 'Pelvic Floor and Core Recovery After Birth',
+    slug: 'postpartum-pelvic-floor-core-recovery-guide',
+    tags: ['postpartum', 'fitness', 'wellness'],
+    featured_image_url: '',
+    excerpt: 'Start with the symptom you notice—leaking, heaviness, pain, or doming—and use this evidence-led guide to choose a safer next step.',
+    content: `
+<p>Postpartum recovery advice often begins with an exercise list. A safer starting point is the symptom or task that brought you here. Leaking during a run, pelvic pain, vaginal heaviness, and a visible abdominal ridge can overlap, but they do not automatically have the same cause or solution.</p>
+<p>This guide helps you sort the signal, choose a low-risk next step, and recognize when individualized care matters. It does not replace diagnosis or medical clearance.</p>
+
+<h2>Start With the Symptom You Notice</h2>
+<table><thead><tr><th>You notice</th><th>Useful first question</th><th>Read next</th></tr></thead><tbody>
+<tr><td>Urine leakage</td><td>Is it linked to coughing/impact, urgency, or both?</td><td><a href="/blog/postpartum-leaking-when-running">Leaking before running</a></td></tr>
+<tr><td>Pelvic pain, urgency, or difficulty emptying</td><td>Could more contractions be increasing tension?</td><td><a href="/blog/overactive-pelvic-floor-signs-kegels">Overactive pelvic floor</a></td></tr>
+<tr><td>A ridge along the abdomen</td><td>Does it change with range, load, leverage, or speed?</td><td><a href="/blog/abdominal-coning-doming-postpartum">Coning and doming</a></td></tr>
+<tr><td>Uncertainty about exercise timing</td><td>How does daily movement feel later and the next morning?</td><td><a href="/blog/fourth-trimester-recovery-12-week-framework">Fourth-trimester framework</a></td></tr>
+<tr><td>Wanting to run again</td><td>Can daily life, strength, and graded impact remain symptom-managed?</td><td><a href="/blog/return-to-running-postpartum-readiness">Running readiness</a></td></tr>
+</tbody></table>
+
+<h2>Three Myths That Slow Down Recovery</h2>
+<h3>Myth 1: More Kegels are always better</h3>
+<p>Pelvic-floor muscles must create force, release, and respond at the right time. Pain, urgency, constipation, and difficulty emptying may require a different assessment than uncomplicated weakness.</p>
+<h3>Myth 2: The abdominal gap must completely close</h3>
+<p>Reviews disagree about how much exercise changes inter-rectus distance. Function, symptoms, tissue behavior under load, and confidence matter alongside width.</p>
+<h3>Myth 3: Six-week clearance means you can resume everything</h3>
+<p>Medical clearance and readiness for repeated impact answer different questions. Modern running consensus includes load tolerance, pelvic health, sleep, lactation, mental health, support, and previous training.</p>
+
+<h2>Your Symptom-to-Next-Step Matrix</h2>
+<table><thead><tr><th>Pattern</th><th>Lower-risk action today</th><th>Professional support</th></tr></thead><tbody>
+<tr><td>Leaking only at a high exercise dose</td><td>Reduce impact, duration, or speed and track the response</td><td>Pelvic-health PT if persistent</td></tr>
+<tr><td>Heaviness, pressure, or a vaginal bulge</td><td>Reduce load and avoid pushing through</td><td>Pelvic-health or medical assessment</td></tr>
+<tr><td>Pelvic pain, painful penetration, or emptying difficulty</td><td>Pause unsupervised squeezing drills</td><td>Individual assessment</td></tr>
+<tr><td>Doming without pain</td><td>Change range, load, leverage, or speed</td><td>Assessment if persistent or limiting</td></tr>
+<tr><td>Stool leakage or loss of bowel control</td><td>Do not rely on a generic exercise article</td><td>Prompt clinical assessment</td></tr>
+</tbody></table>
+
+<h2>A Simple Progression Rule</h2>
+<p>Change one variable at a time: duration, frequency, resistance, impact, speed, or complexity. Then observe the session, the hours afterward, and the next morning. This makes it easier to identify the dose your body did or did not tolerate.</p>
+
+<h2>Where Breathing Fits</h2>
+<p>Breathing practice can help you notice pressure and breath-holding, but evidence does not support it as a stand-alone cure. Use the <a href="/blog/diaphragmatic-breathing-core-pelvic-floor">breathing and coordination guide</a> as a practice tool within a broader progression.</p>
+
+<h2>When to Contact a Professional</h2>
+<p>Arrange assessment when symptoms persist, worsen, restrict daily life, or involve pain, heaviness, bowel control, difficulty emptying, or uncertainty after a significant tear or surgery. Seek urgent medical care for heavy bleeding, chest pain, breathing difficulty, sudden leg weakness or numbness, severe headache, fever, or other emergency symptoms.</p>
+
+<h2>Pelvic Floor and Core Recovery FAQ</h2>
+<h3>What is the best first postpartum core exercise?</h3><p>There is no universal best exercise. The correct starting point depends on healing, symptoms, daily capacity, and the task you want to regain.</p>
+<h3>How long does pelvic-floor recovery take after birth?</h3><p>There is no single deadline. Recovery can continue well beyond 12 weeks and should be measured by symptoms and function.</p>
+<h3>Can an assessment tell me whether I need a guide or the app?</h3><p>That is its purpose: clarify your stage, concerns, goals, and the level of structure or support that fits.</p>
+
+<h2>Choose Your Catalyst Mom Path</h2>
+<p>If you want a focused practice you can follow independently, the relevant digital guide may be enough. If you have multiple symptoms, uncertainty about safety, or want progressive workouts and accountability, the app provides a more personalized path. Complete the assessment at <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a> so the recommendation begins with your needs rather than a product menu.</p>
+<p><strong>Research:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/39694630/" target="_blank" rel="noopener noreferrer">postpartum exercise systematic review</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/34127429/" target="_blank" rel="noopener noreferrer">pelvic-floor hypertonicity review</a>, and <a href="https://bjsm.bmj.com/content/58/6/299" target="_blank" rel="noopener noreferrer">postpartum running readiness consensus</a>.</p>
+${DISCLAIMER}`,
+  },
 ];
 
 // ---------------------------------------------------------------------------
 
-const rows = DRAFTS.map((d) => ({
+const onlyArg = process.argv.find((arg) => arg.startsWith('--only='));
+const onlySlugs = onlyArg
+  ? new Set(onlyArg.slice('--only='.length).split(',').filter(Boolean))
+  : null;
+
+const rows = DRAFTS.filter((d) => !onlySlugs || onlySlugs.has(d.slug)).map((d) => ({
   title: d.title,
   slug: d.slug,
   excerpt: d.excerpt,
