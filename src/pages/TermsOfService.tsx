@@ -46,7 +46,7 @@ const HTML = `
     <div class="policy-hero-inner">
       <div class="policy-eyebrow">Legal</div>
       <h1 class="policy-title">Terms of <em>Service</em></h1>
-      <div class="policy-dates">Effective Date: April 22, 2026  ·  Last Updated: April 22, 2026</div>
+      <div class="policy-dates">Effective Date: September 15, 2026  ·  Last Updated: September 15, 2026</div>
     </div>
   </section>
 
@@ -98,7 +98,7 @@ const HTML = `
       <h3 class="sub-heading">4.3 Cancellation</h3>
       <p>You may cancel your subscription at any time through your account settings or by contacting us at hello@catalystmomofficial.com. Cancellation takes effect at the end of your current billing period. You will retain access to the platform until that date.</p>
       <h3 class="sub-heading">4.4 Refunds</h3>
-      <p>We stand behind Catalyst Mom with a 30-day money-back guarantee. Give the program a genuine try during your first 30 days. If you have engaged with it and it is honestly not right for you, email us at hello@catalystmomofficial.com within those 30 days and we will refund your most recent subscription payment in full. We only ask that you gave it a fair try first. We reserve the right to decline refund requests that show the guarantee is being used in bad faith, including repeated sign-up-and-refund activity or requests where the member has not meaningfully used the program. After 30 days, payments are non-refundable except where required by law.</p>
+      <p>Your first paid Catalyst Mom subscription is covered by a 30-calendar-day money-back guarantee. To use it, email hello@catalystmomofficial.com within 30 calendar days after the initial charge and identify the account used for purchase. We will refund that initial subscription charge to the original payment method. The guarantee does not apply to later renewals, separate products or sessions, or repeated purchases made through duplicate accounts after a previous refund. Nothing in this section limits refund rights that cannot legally be excluded.</p>
       <h3 class="sub-heading">4.5 Price Changes</h3>
       <p>We reserve the right to change subscription pricing with reasonable notice. We will notify you at least 30 days before any price change takes effect on your account.</p>
     </section>
@@ -143,7 +143,9 @@ const HTML = `
       <h3 class="sub-heading">8.1 Human Coach Check-ins</h3>
       <p>Bi-weekly progress reviews are provided by wellness professionals aligned with Catalyst Mom. These check-ins are for motivational and accountability purposes and do not constitute medical advice or clinical treatment.</p>
       <h3 class="sub-heading">8.2 Catalyst AI</h3>
-      <p>Our AI-powered wellness assistant provides general information and guidance based on the Catalyst Mom knowledge base. Catalyst AI responses are not a substitute for professional medical advice. Always consult your healthcare provider for medical concerns.</p>
+      <p>Our AI-powered features provide general wellness information based on the Catalyst Mom knowledge base and information you choose to provide. The output is probabilistic: it may misunderstand context, omit important facts, or produce inaccurate or outdated information.</p>
+      <p>You are responsible for checking AI-generated recommendations before acting on them. Do not use an AI response to diagnose a condition, handle an emergency, interpret a medical test as a final result, or begin, stop, or change treatment or medication. Contact a qualified healthcare professional for medical concerns and emergency services for urgent symptoms.</p>
+      <p>AI features may be processed by third-party model, voice, or transcription providers as explained in our Privacy Policy. Your use of those features does not transfer ownership of your original content to Catalyst Mom; you grant us a limited licence to process it only as needed to provide, secure, and improve the requested service.</p>
     </section>
 
     <section class="policy-section">
@@ -168,6 +170,7 @@ const HTML = `
       <h2 class="section-heading">11. Limitation of Liability</h2>
       <p>To the fullest extent permitted by law, Catalyst Mom shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the platform — including but not limited to health outcomes, loss of data, or interruption of service.</p>
       <p>Our total liability to you for any claim arising from your use of the platform shall not exceed the amount you paid to us in the 3 months preceding the claim.</p>
+      <p>Some jurisdictions do not allow certain warranty exclusions or limitations of liability. In those jurisdictions, these limitations apply only to the maximum extent permitted by law and do not limit rights that cannot legally be waived.</p>
     </section>
 
     <section class="policy-section">
@@ -190,7 +193,7 @@ const HTML = `
 
     <section class="policy-section">
       <h2 class="section-heading">15. Governing Law</h2>
-      <p>These Terms of Service are governed by and construed in accordance with applicable law. Any disputes arising from these terms or your use of the platform shall be resolved through good faith negotiation first. If resolution cannot be reached, disputes shall be submitted to binding arbitration.</p>
+      <p>These Terms are governed by the law that applies to Catalyst Mom's operating entity, without overriding consumer protections that apply where you live. Before starting formal proceedings, each party agrees to make a reasonable attempt to resolve the dispute by contacting the other. The specific governing jurisdiction and forum will be added after the operating entity's legal location is confirmed; until then, we do not impose mandatory arbitration through this clause.</p>
     </section>
 
     <section class="policy-section">
@@ -201,6 +204,7 @@ const HTML = `
         <p>Email: <a href="mailto:hello@catalystmomofficial.com">hello@catalystmomofficial.com</a></p>
         <p>App: <a href="https://catalystmomofficial.com">catalystmomofficial.com</a></p>
         <p>Assessment: <a href="https://assessment.catalystmomofficial.com">assessment.catalystmomofficial.com</a></p>
+        <p>Copyright or takedown notices: <a href="mailto:hello@catalystmomofficial.com">hello@catalystmomofficial.com</a></p>
         <p style="margin-top:1rem;">We are committed to being fair, transparent, and responsive to any concerns you have.</p>
       </div>
     </section>

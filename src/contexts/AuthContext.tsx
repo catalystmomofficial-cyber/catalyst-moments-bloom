@@ -68,12 +68,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       posthog.reset();
     }
 
-    const metadata = authenticatedUser.user_metadata as { full_name?: string; name?: string; motherhood_stage?: string };
-    posthog.identify(authenticatedUser.id, {
-      ...(authenticatedUser.email && { email: authenticatedUser.email }),
-      ...(metadata.full_name && { name: metadata.full_name }),
-      ...(metadata.motherhood_stage && { motherhood_stage: metadata.motherhood_stage }),
-    });
+    // Use only the internal account ID for consented analytics. Names, email
+    // addresses and motherhood-stage data are deliberately excluded.
+    posthog.identify(authenticatedUser.id);
     identifiedUserId.current = authenticatedUser.id;
   };
 

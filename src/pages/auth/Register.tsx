@@ -32,6 +32,7 @@ const Register = () => {
   // True when she arrived from an assessment results page — keeps the offer
   // she just clicked visible through the signup friction.
   const [fromAssessment, setFromAssessment] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   // Read & validate URL parameters on mount
   useEffect(() => {
@@ -224,6 +225,10 @@ const Register = () => {
   };
 
   const handleGoogleSignup = async () => {
+    if (!acceptedTerms) {
+      setError("Please agree to the Terms of Service and acknowledge the Privacy Policy.");
+      return;
+    }
     setGoogleLoading(true);
     setError("");
     
@@ -433,6 +438,17 @@ const Register = () => {
                   )}
                 </Button>
 
+                <label className="flex items-start gap-3 text-sm text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(event) => setAcceptedTerms(event.target.checked)}
+                    required
+                    className="mt-1 h-4 w-4"
+                  />
+                  <span>I agree to the <Link to="/terms" target="_blank" className="text-primary underline">Terms of Service</Link> and acknowledge the <Link to="/privacy" target="_blank" className="text-primary underline">Privacy Policy</Link>.</span>
+                </label>
+
                 <div className="relative my-4">
                   <Separator />
                   <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
@@ -445,7 +461,7 @@ const Register = () => {
                   variant="outline"
                   className="w-full"
                   onClick={handleGoogleSignup}
-                  disabled={isLoading || googleLoading}
+                  disabled={isLoading || googleLoading || !acceptedTerms}
                 >
                   {googleLoading ? (
                     <>

@@ -1,31 +1,51 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-
-const STORAGE_KEY = "cookie-consent";
+import { COOKIE_SETTINGS_EVENT, readCookieConsent, saveCookieConsent } from "@/lib/cookieConsent";
 
 const CookieConsentBanner = () => {
-  const { isAuthenticated, isLoading } = useAuth();
   const [visible, setVisible] = useState(false);
+  const [customizing, setCustomizing] = useState(false);
+  const [analytics, setAnalytics] = useState(false);
+  const [marketing, setMarketing] = useState(false);
 
   useEffect(() => {
-    if (isLoading) return;
-    if (isAuthenticated) return;
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (!stored) setVisible(true);
-    } catch {
-      setVisible(true);
+    const saved = readCookieConsent();
+    if (!saved) setVisible(true);
+    else {
+      setAnalytics(saved.analytics);
+      setMarketing(saved.marketing);
     }
-  }, [isAuthenticated, isLoading]);
+    const open = () => {
+      const current = readCookieConsent();
+      setAnalytics(current?.analytics ?? false);
+      setMarketing(current?.marketing ?? false);
+      setCustomizing(true);
+      setVisible(true);
+    };
+    window.addEventListener(COOKIE_SETTINGS_EVENT, open);
+    return () => window.removeEventListener(COOKIE_SETTINGS_EVENT, open);
+  }, []);
 
-  const handleChoice = (choice: "accepted" | "declined") => {
+  const handleChoice = (choice: "accepted" | "declined" | "custom") => {
+    const previous = readCookieConsent();
+    let next = previous;
     try {
-      localStorage.setItem(STORAGE_KEY, choice);
+      next = saveCookieConsent(
+        choice === "accepted"
+          ? { analytics: true, marketing: true }
+          : choice === "declined"
+            ? { analytics: false, marketing: false }
+            : { analytics, marketing },
+      );
     } catch {
       // ignore
     }
     setVisible(false);
+    // A reload removes already-loaded third-party scripts when consent is
+    // withdrawn. On the new page load, only the allowed categories start.
+    if (previous && next && ((previous.analytics && !next.analytics) || (previous.marketing && !next.marketing))) {
+      window.location.reload();
+    }
   };
 
   if (!visible) return null;
@@ -39,27 +59,35 @@ const CookieConsentBanner = () => {
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <p className="text-sm leading-relaxed text-[#2C2218]">
-          We use cookies to personalise your experience and improve our platform. By continuing you accept our{" "}
+          We use essential storage to run Catalyst Mom. With your permission, we also use analytics and marketing technologies. See our{" "}
           <Link to="/privacy" className="font-medium underline" style={{ color: "#B5651D" }}>
             Privacy Policy
           </Link>
-          .
+          {" and "}<Link to="/cookies" className="font-medium underline" style={{ color: "#B5651D" }}>Cookie Policy</Link>.
         </p>
-        <div className="flex items-center gap-4 sm:shrink-0">
+        {customizing && (
+          <div className="grid gap-2 text-sm sm:min-w-64">
+            <label className="flex items-center justify-between gap-4"><span>Essential</span><input type="checkbox" checked disabled aria-label="Essential cookies are always active" /></label>
+            <label className="flex items-center justify-between gap-4"><span>Analytics</span><input type="checkbox" checked={analytics} onChange={(event) => setAnalytics(event.target.checked)} /></label>
+            <label className="flex items-center justify-between gap-4"><span>Marketing</span><input type="checkbox" checked={marketing} onChange={(event) => setMarketing(event.target.checked)} /></label>
+          </div>
+        )}
+        <div className="flex flex-wrap items-center gap-3 sm:shrink-0">
           <button
             type="button"
             onClick={() => handleChoice("declined")}
             className="text-sm text-[#8A7060] underline-offset-2 hover:underline"
           >
-            Decline
+            Reject non-essential
           </button>
+          {!customizing && <button type="button" onClick={() => setCustomizing(true)} className="text-sm text-[#8A7060] underline-offset-2 hover:underline">Manage choices</button>}
           <button
             type="button"
-            onClick={() => handleChoice("accepted")}
+            onClick={() => handleChoice(customizing ? "custom" : "accepted")}
             className="rounded-md px-5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#B5651D" }}
           >
-            Accept
+            {customizing ? "Save choices" : "Accept all"}
           </button>
         </div>
       </div>

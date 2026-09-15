@@ -43,14 +43,14 @@ const HTML = `
     <div class="policy-hero-inner">
       <div class="policy-eyebrow">Legal</div>
       <h1 class="policy-title">Privacy <em>Policy</em></h1>
-      <div class="policy-dates">Effective Date: April 22, 2026  ·  Last Updated: April 22, 2026</div>
+      <div class="policy-dates">Effective Date: September 15, 2026  ·  Last Updated: September 15, 2026</div>
     </div>
   </section>
 
   <div class="policy-content">
     <div class="policy-intro">
       <p>Welcome to Catalyst Mom. We are committed to protecting your privacy and handling your personal information with care, transparency, and respect. This Privacy Policy explains how we collect, use, store, and protect your information when you use the Catalyst Mom app and assessment website (collectively, the "Platform").</p>
-      <p>By using our Platform, you agree to the terms of this Privacy Policy. If you do not agree, please do not use our services.</p>
+      <p>This notice describes our practices; it is not a request for blanket consent. Where consent is required, we ask for it at the relevant point.</p>
     </div>
 
     <section class="policy-section">
@@ -111,8 +111,9 @@ const HTML = `
     <section class="policy-section">
       <h2 class="section-heading">4. Sensitive Health Information</h2>
       <p>Catalyst Mom is a wellness platform. Some information you share with us — such as postpartum symptoms, cycle data, pregnancy details, and physical measurements — is sensitive in nature.</p>
-      <p>We treat all health-related information with the highest level of care. We do not sell this information. We do not share it with third parties for advertising purposes. We use it solely to personalise your experience on the Platform.</p>
-      <p>If you choose to upload a document — such as bloodwork or lab results — so we can automatically fill in your results, that document is sent securely to our AI processing partner (see Section 5.1) solely to extract the values into your dashboard. The document itself is not stored by Catalyst Mom once processing is complete, and it is never sold or used for advertising, marketing, or any purpose other than filling in your results.</p>
+      <p>We do not sell health-related information or disclose it to advertising networks for targeted advertising. We use it to provide the features you request, personalise your experience, maintain safety and security, and meet legal obligations. If you allow analytics, an analytics provider may receive limited information about feature usage; we do not intentionally send it the contents of assessments, symptoms, laboratory values, private messages, or uploaded documents.</p>
+      <p>If you choose to upload a document — such as bloodwork or lab results — the document is sent to an AI processing service solely to extract the requested values. Catalyst Mom does not intentionally use that document to train its own AI models. Do not upload information about another person unless you have authority to do so.</p>
+      <p>AI-generated recommendations are produced from patterns in the information you provide. They can be incomplete, inaccurate, or inappropriate for your circumstances and are not diagnoses, emergency services, or instructions to begin, stop, or change medical treatment. Review recommendations critically and consult a qualified healthcare professional about symptoms, pregnancy concerns, medications, test results, or treatment decisions.</p>
       <p>Catalyst Mom provides wellness information for educational purposes only and is not a substitute for professional medical advice.</p>
     </section>
 
@@ -120,15 +121,19 @@ const HTML = `
       <h2 class="section-heading">5. How We Share Your Information</h2>
       <p>We do not sell your personal data. We may share your information only in the following circumstances:</p>
       <h3 class="sub-heading">5.1 Service Providers</h3>
-      <p>We work with trusted third-party providers who help us operate the Platform:</p>
+      <p>We use service providers for infrastructure, payments, communications, analytics, security, scheduling, notifications, and optional AI-assisted features. Naming them is a transparency measure, not an endorsement. A provider receives only the information needed for the relevant function.</p>
       <ul class="policy-list">
-        <li><span><strong>Supabase</strong> — database, authentication, and backend infrastructure</span></li>
-        <li><span><strong>Stripe</strong> — payment processing</span></li>
-        <li><span><strong>Omnisend / Resend</strong> — email communication</span></li>
-        <li><span><strong>Firebase</strong> — push notifications</span></li>
-        <li><span><strong>Lovable AI Gateway</strong> — used only when you choose to upload a document, such as bloodwork or lab results, to automatically extract values into your dashboard; the document itself is not retained after processing</span></li>
+        <li><span><strong>Supabase and Vercel</strong> — hosting, database, authentication, server functions, delivery, and operational logs</span></li>
+        <li><span><strong>Stripe and PayPal</strong> — payment processing, transaction confirmation, fraud prevention, and billing support</span></li>
+        <li><span><strong>Omnisend and Resend</strong> — newsletters, transactional email, delivery status, and suppression management</span></li>
+        <li><span><strong>Firebase</strong> — push notification delivery to devices that grant permission</span></li>
+        <li><span><strong>PostHog and Microsoft Clarity</strong> — optional product analytics and experience improvement after consent</span></li>
+        <li><span><strong>Pinterest</strong> — optional campaign and conversion measurement after marketing consent</span></li>
+        <li><span><strong>Google, OpenAI, Groq, Lovable AI Gateway, ElevenLabs, and Bland AI</strong> — optional AI, voice, transcription, and automated communication features when requested</span></li>
+        <li><span><strong>Google, Cloudflare, and hCaptcha</strong> — sign-in, bot detection, and platform security</span></li>
+        <li><span><strong>Calendly</strong> — appointment scheduling when you choose to book</span></li>
       </ul>
-      <p>All service providers are contractually required to protect your data and use it only for the purposes we specify.</p>
+      <p>These providers process information under their own privacy terms and, where applicable, service agreements with us. The provider used can depend on the feature, availability, and payment method you choose.</p>
       <h3 class="sub-heading">5.2 Community Content</h3>
       <p>Content you post in community groups is visible to other members of that group. Please do not share sensitive personal information in public community spaces.</p>
       <h3 class="sub-heading">5.3 Legal Requirements</h3>
@@ -137,14 +142,14 @@ const HTML = `
 
     <section class="policy-section">
       <h2 class="section-heading">6. Cookies and Tracking</h2>
-      <p>We use cookies and similar technologies to:</p>
+      <p>We use essential browser storage to operate accounts and requested features. Analytics and marketing technologies remain disabled until you allow them through Cookie Settings. We use them to:</p>
       <ul class="policy-list">
         <li>Keep you logged in to your account</li>
         <li>Remember your preferences</li>
         <li>Analyse how the Platform is used</li>
         <li>Improve performance and user experience</li>
       </ul>
-      <p>You can control cookie settings through your browser. Note that disabling cookies may affect some features of the Platform.</p>
+      <p>You can accept, reject, or change optional categories at any time through <a href="/cookies">Cookie Settings and our Cookie Policy</a>. Disabling essential storage may affect account, security, or checkout features.</p>
     </section>
 
     <section class="policy-section">
@@ -155,8 +160,8 @@ const HTML = `
 
     <section class="policy-section">
       <h2 class="section-heading">8. Data Retention</h2>
-      <p>We retain your personal information for as long as your account is active or as needed to provide our services. If you delete your account, we will delete your personal data within 30 days, except where we are required to retain it by law.</p>
-      <p>Anonymous and aggregated data that cannot identify you may be retained indefinitely for analytics purposes.</p>
+      <p>Account and wellness information is kept while your account is active and for the time reasonably needed to provide the service, resolve disputes, prevent fraud, and meet legal obligations. Payment processors retain transaction records under their own legal and operational requirements. Marketing information is retained until you unsubscribe or request deletion, subject to a minimal suppression record that prevents further messages.</p>
+      <p>When you request account deletion, we will begin deleting or anonymising associated information unless it must be retained by law or is necessary to establish, exercise, or defend legal claims. Backups and provider logs may take additional time to cycle out. Anonymous or aggregated information that can no longer reasonably identify you may be retained for analysis.</p>
     </section>
 
     <section class="policy-section">
@@ -164,7 +169,7 @@ const HTML = `
       <p>We take the security of your data seriously. We implement industry-standard measures including:</p>
       <ul class="policy-list">
         <li>Encrypted data transmission (HTTPS/TLS)</li>
-        <li>Secure authentication through Supabase</li>
+        <li>Secure authentication and role-based access controls</li>
         <li>Access controls limiting who can view your data</li>
         <li>Regular security reviews</li>
       </ul>
@@ -182,7 +187,7 @@ const HTML = `
         <li><span><strong>Objection</strong> — object to certain types of processing</span></li>
         <li><span><strong>Withdrawal of consent</strong> — withdraw consent for marketing communications at any time</span></li>
       </ul>
-      <p>To exercise any of these rights, please contact us at hello@catalystmomofficial.com. We will respond within 30 days.</p>
+      <p>To exercise any of these rights, contact us at hello@catalystmomofficial.com. We may need to verify your identity. We aim to respond within 30 days, or within another period required by applicable law. You may also have the right to restrict processing, correct information, opt out of certain sale or sharing, limit certain uses of sensitive information, and complain to your local data-protection authority.</p>
     </section>
 
     <section class="policy-section">
@@ -192,8 +197,8 @@ const HTML = `
 
     <section class="policy-section">
       <h2 class="section-heading">12. International Users</h2>
-      <p>Catalyst Mom is operated globally. If you are accessing our Platform from outside the country where our servers are located, please be aware that your information may be transferred to and processed in different countries. By using our Platform, you consent to this transfer.</p>
-      <p>If you are located in the European Economic Area (EEA) or the United Kingdom, we process your data in accordance with the General Data Protection Regulation (GDPR). If you are located in California, we comply with the California Consumer Privacy Act (CCPA).</p>
+      <p>Our providers may process information in the United States and other countries. Privacy protections may differ from those in your country. Where applicable, transfers are supported by recognized legal mechanisms used by our providers, such as adequacy decisions or standard contractual clauses.</p>
+      <p>Depending on the activity and applicable law, we rely on performance of our contract, your consent, compliance with legal obligations, or legitimate interests such as security and service improvement. California residents may request information about collection and disclosure and exercise applicable rights by contacting us. Catalyst Mom does not sell personal information. Optional advertising measurement can be rejected through Cookie Settings.</p>
     </section>
 
     <section class="policy-section">

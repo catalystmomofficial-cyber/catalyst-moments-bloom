@@ -1,3 +1,5 @@
+import { COOKIE_CONSENT_EVENT, readCookieConsent, type CookieConsent } from '@/lib/cookieConsent'
+
 const posthogKey = import.meta.env.VITE_POSTHOG_KEY
 const posthogHost = import.meta.env.VITE_POSTHOG_HOST
 
@@ -10,6 +12,7 @@ const loadPostHog = () => {
   if (client) return Promise.resolve(client)
   if (loading) return loading
   if (!posthogKey || !posthogHost) return Promise.resolve(null)
+  if (!readCookieConsent()?.analytics) return Promise.resolve(null)
 
   loading = import('posthog-js').then(({ default: posthog }) => {
     posthog.init(posthogKey, {
@@ -34,13 +37,23 @@ if (!posthogKey || !posthogHost) {
       `${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured`,
     )
   }
-} else if ('requestIdleCallback' in window) {
+} else if (readCookieConsent()?.analytics && 'requestIdleCallback' in window) {
   window.requestIdleCallback(() => void loadPostHog(), { timeout: 3000 })
-} else {
+} else if (readCookieConsent()?.analytics) {
   window.setTimeout(() => void loadPostHog(), 2500)
 }
 
+if (typeof window !== 'undefined') {
+  window.addEventListener(COOKIE_CONSENT_EVENT, (event) => {
+    const consent = (event as CustomEvent<CookieConsent>).detail
+    if (consent.analytics && client) client.opt_in_capturing()
+    else if (consent.analytics) void loadPostHog()
+    else client?.opt_out_capturing()
+  })
+}
+
 const call = (method: 'capture' | 'captureException' | 'identify' | 'reset', args: unknown[]) => {
+  if (!readCookieConsent()?.analytics) return
   if (client) {
     ;(client[method] as (...values: unknown[]) => unknown)(...args)
     return

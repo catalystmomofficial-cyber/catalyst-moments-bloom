@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import AffiliateButton from '@/components/affiliate/AffiliateButton';
 import { useAuth } from '@/contexts/AuthContext';
+import { openCookieSettings } from '@/lib/cookieConsent';
 
 const newsletterInterestForStage = (stage?: string | null) => {
   const value = (stage || '').toLowerCase();
@@ -82,6 +83,9 @@ const NewsletterSubscription = () => {
       {isLoading && (
         <p className="text-xs text-gray-300">Subscribing...</p>
       )}
+      <p className="text-xs text-muted-foreground">
+        By subscribing, you agree to receive marketing emails. Unsubscribe anytime. See our <Link to="/privacy" className="underline">Privacy Policy</Link>.
+      </p>
     </form>
   );
 };
@@ -211,8 +215,10 @@ const Footer = () => {
             <FooterSection title="Legal">
               <ul className="space-y-3">
                 <li><Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/cookies" className="text-sm text-muted-foreground hover:text-primary transition-colors">Cookie Policy</Link></li>
                 <li><Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link></li>
                 <li><Link to="/medical-disclaimer" className="text-sm text-muted-foreground hover:text-primary transition-colors">Medical Disclaimer</Link></li>
+                <li><button type="button" onClick={openCookieSettings} className="text-sm text-muted-foreground hover:text-primary transition-colors">Cookie Settings</button></li>
               </ul>
             </FooterSection>
 

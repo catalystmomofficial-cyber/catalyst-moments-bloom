@@ -22,6 +22,28 @@ declare global {
   }
 }
 
+let stripeScriptPromise: Promise<void> | null = null;
+const loadStripeScript = () => {
+  if (window.Stripe) return Promise.resolve();
+  if (stripeScriptPromise) return stripeScriptPromise;
+  stripeScriptPromise = new Promise((resolve, reject) => {
+    const existing = document.getElementById('stripe-js');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(), { once: true });
+      existing.addEventListener('error', () => reject(new Error('Stripe.js failed to load')), { once: true });
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'stripe-js';
+    script.src = 'https://js.stripe.com/v3/';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Stripe.js failed to load'));
+    document.head.appendChild(script);
+  });
+  return stripeScriptPromise;
+};
+
 const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const checkoutRef = useRef<HTMLDivElement>(null);
   const stripeCheckoutRef = useRef<any>(null);
@@ -205,6 +227,9 @@ try {
           }
         }, INIT_TIMEOUT_MS);
 
+        // Stripe is essential to a checkout the user requested, but it does
+        // not need to load while she is simply browsing the site.
+        await loadStripeScript();
         // Initialize Stripe (singleton)
         if (!window.Stripe) {
           console.error('[CHECKOUT] Stripe.js not loaded');

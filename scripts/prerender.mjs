@@ -169,6 +169,7 @@ const STATIC_ROUTES = [
   '/blog',
   '/terms',
   '/privacy',
+  '/cookies',
   '/affiliate',
   '/contact',
   '/medical-disclaimer',

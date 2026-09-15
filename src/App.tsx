@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/common/ScrollToTop";
 import CookieConsentBanner from "./components/common/CookieConsentBanner";
+import ConsentScripts from "./components/common/ConsentScripts";
 import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
 import { GoogleAuthOnboarding } from "./components/onboarding/GoogleAuthOnboarding";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -77,6 +78,7 @@ const Research = lazy(() => import("./pages/Research"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const Courses = lazy(() => import("./pages/Courses"));
 const CourseDetail = lazy(() => import("./pages/CourseDetail"));
 const GlowAndGo = lazy(() => import("./pages/GlowAndGo"));
@@ -174,6 +176,7 @@ function AppContent() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/cookies" element={<CookiePolicy />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
@@ -443,6 +446,7 @@ function AppContent() {
       />
       <GlobalVideoPlayer />
       <RemoteControllerOverlay />
+      <ConsentScripts />
       <CookieConsentBanner />
       <PWAInstallBanner />
       <NetworkStatusBanner />
