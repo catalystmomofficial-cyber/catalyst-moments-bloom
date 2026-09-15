@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Heart, MessageCircle, Share2, Send, Loader2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunityPosts, type PostComment } from '@/hooks/useCommunityPosts';
 import { useRelativeTime } from '@/hooks/useRelativeTime';
@@ -101,8 +102,26 @@ export const DynamicCommunityFeed = ({ groupSlug = 'general', isTTC = false }: D
       )}
 
       {isLoading && (
-        <div className="flex justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        <div className="space-y-4" aria-busy="true" aria-label="Loading community posts">
+          {[0, 1, 2].map((item) => (
+            <Card key={item}>
+              <CardContent className="space-y-4 p-5">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                </div>
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-4/5" />
+                <div className="flex gap-4 pt-2">
+                  <Skeleton className="h-8 w-20" />
+                  <Skeleton className="h-8 w-24" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       )}
 

@@ -129,29 +129,53 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
   const toggleLike = useCallback(async (postId: string, currentlyLiked: boolean) => {
     if (!user) return;
 
-    // Optimistic update
+    const previousPost = posts.find(p => p.id === postId);
+    if (!previousPost) return;
+
+    // Optimistic update: respond immediately, then restore the confirmed state
+    // if either server write fails.
     setPosts(prev => prev.map(p => p.id === postId ? {
       ...p,
       is_liked: !currentlyLiked,
-      likes_count: currentlyLiked ? p.likes_count - 1 : p.likes_count + 1,
+      likes_count: currentlyLiked ? Math.max(0, p.likes_count - 1) : p.likes_count + 1,
     } : p));
 
+    let failed = false;
     if (currentlyLiked) {
       const { error } = await supabase.from('community_post_likes').delete().eq('post_id', postId).eq('user_id', user.id);
       if (!error) {
-        await supabase.from('community_posts').update({ likes_count: Math.max(0, (posts.find(p => p.id === postId)?.likes_count ?? 1) - 1) }).eq('id', postId);
+        const { error: countError } = await supabase
+          .from('community_posts')
+          .update({ likes_count: Math.max(0, previousPost.likes_count - 1) })
+          .eq('id', postId);
+        failed = Boolean(countError);
+      } else {
+        failed = true;
       }
     } else {
       const { error } = await supabase.from('community_post_likes').insert({ post_id: postId, user_id: user.id });
       if (!error) {
-        await supabase.from('community_posts').update({ likes_count: (posts.find(p => p.id === postId)?.likes_count ?? 0) + 1 }).eq('id', postId);
-        posthog.capture('community_post_liked', {
-          group_slug: groupSlug,
-          sub_category: subCategory,
-        });
+        const { error: countError } = await supabase
+          .from('community_posts')
+          .update({ likes_count: previousPost.likes_count + 1 })
+          .eq('id', postId);
+        failed = Boolean(countError);
+        if (!failed) {
+          posthog.capture('community_post_liked', {
+            group_slug: groupSlug,
+            sub_category: subCategory,
+          });
+        }
+      } else {
+        failed = true;
       }
     }
-  }, [user, posts]);
+
+    if (failed) {
+      setPosts(prev => prev.map(p => p.id === postId ? previousPost : p));
+      await fetchPosts();
+    }
+  }, [user, posts, fetchPosts]);
 
   const fetchComments = useCallback(async (postId: string): Promise<PostComment[]> => {
     const { data, error } = await supabase

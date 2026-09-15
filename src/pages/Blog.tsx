@@ -15,7 +15,6 @@ import SEO from '@/components/seo/SEO';
 interface BlogPost {
   id: string;
   title: string;
-  content: string;
   excerpt: string;
   author: string;
   published_at: string;
@@ -24,11 +23,22 @@ interface BlogPost {
   tags?: string[];
 }
 
+const BLOG_CACHE_KEY = 'catalyst-mom:published-blogs:v1';
+
+const readCachedBlogs = (): BlogPost[] => {
+  try {
+    const value = localStorage.getItem(BLOG_CACHE_KEY);
+    return value ? JSON.parse(value) : [];
+  } catch {
+    return [];
+  }
+};
+
 const Blog = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
-  const [filteredBlogs, setFilteredBlogs] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<BlogPost[]>(readCachedBlogs);
+  const [filteredBlogs, setFilteredBlogs] = useState<BlogPost[]>(readCachedBlogs);
+  const [loading, setLoading] = useState(() => readCachedBlogs().length === 0);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,13 +46,15 @@ const Blog = () => {
       try {
         const { data, error } = await supabase
           .from('blogs')
-          .select('*')
+          .select('id, title, excerpt, author, published_at, slug, featured_image_url, tags')
           .eq('status', 'published')
           .order('published_at', { ascending: false });
 
         if (error) throw error;
-        setBlogs(data || []);
-        setFilteredBlogs(data || []);
+        const publishedBlogs = (data || []) as BlogPost[];
+        setBlogs(publishedBlogs);
+        setFilteredBlogs(publishedBlogs);
+        localStorage.setItem(BLOG_CACHE_KEY, JSON.stringify(publishedBlogs));
       } catch (error) {
         console.error('Error fetching blogs:', error);
       } finally {

@@ -24,9 +24,25 @@ import { HelmetProvider, Helmet } from "react-helmet-async";
 import PresenceTracker from "./components/presence/PresenceTracker";
 import AdminGiftListener from "./components/notifications/AdminGiftListener";
 import PWAInstallBanner from "./components/pwa/PWAInstallBanner";
+import AppLoadingSkeleton from "./components/common/AppLoadingSkeleton";
+import NetworkStatusBanner from "./components/common/NetworkStatusBanner";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Keep the last successful screen visible while quietly refreshing it.
+      staleTime: 60_000,
+      gcTime: 30 * 60_000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+    },
+    mutations: {
+      retry: 0,
+    },
+  },
+});
 
 // Lazy-loaded so it doesn't affect initial bundle
 const AssessmentGuideChat = lazy(() =>
@@ -139,7 +155,7 @@ function AppContent() {
         <Suspense fallback={null}>
           <AssessmentGuideChat />
         </Suspense>
-      <Suspense fallback={<div className="min-h-screen bg-background" aria-busy="true" />}>
+      <Suspense fallback={<AppLoadingSkeleton />}>
       <Routes>
         <Route path="/" element={<Index />} />
         
@@ -429,6 +445,7 @@ function AppContent() {
       <RemoteControllerOverlay />
       <CookieConsentBanner />
       <PWAInstallBanner />
+      <NetworkStatusBanner />
     </BrowserRouter>
     </ErrorBoundary>
   );

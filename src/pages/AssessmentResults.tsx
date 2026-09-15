@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { 
+import {
   Target, 
   TrendingUp, 
   Activity, 
@@ -16,11 +16,11 @@ import {
   Apple,
   Dumbbell,
   Moon,
-  Loader2,
   Download,
   Mail,
   Share2
 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
@@ -165,8 +165,17 @@ const AssessmentResults = () => {
   if (loading) {
     return (
       <PageLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="mx-auto max-w-6xl space-y-8 px-4 py-8" aria-busy="true" aria-label="Loading assessment results">
+          <div className="space-y-3">
+            <Skeleton className="h-10 w-3/4 max-w-xl" />
+            <Skeleton className="h-5 w-56" />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[0, 1, 2, 3].map((item) => (
+              <Skeleton key={item} className="h-32 rounded-2xl" />
+            ))}
+          </div>
+          <Skeleton className="h-72 w-full rounded-2xl" />
         </div>
       </PageLayout>
     );
