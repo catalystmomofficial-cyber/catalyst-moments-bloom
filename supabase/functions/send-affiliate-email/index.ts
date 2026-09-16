@@ -117,7 +117,8 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Catalyst Mom Partners <onboarding@resend.dev>",
+        from: "Catalyst Mom Partners <noreply@catalystmomofficial.com>",
+        replyTo: "hello@catalystmomofficial.com",
         to: [body.to],
         subject,
         html,

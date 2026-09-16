@@ -66,10 +66,14 @@ async function syncToOmnisend(email: string, firstName: string, lastName: string
   const OMNISEND_API_KEY = Deno.env.get("OMNISEND_API_KEY");
   if (!OMNISEND_API_KEY) throw new Error("OMNISEND_API_KEY not set");
 
-  const res = await fetch("https://api.omnisend.com/v3/contacts", {
+  // Record lifecycle information without changing marketing consent. Payment
+  // is not consent to newsletters; existing subscribed/unsubscribed status
+  // must remain untouched.
+  const res = await fetch("https://api.omnisend.com/api/contacts", {
     method: "POST",
     headers: {
-      "X-API-KEY": OMNISEND_API_KEY,
+      "Authorization": `Omnisend-API-Key ${OMNISEND_API_KEY}`,
+      "Omnisend-Version": "2026-03-15",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -77,14 +81,15 @@ async function syncToOmnisend(email: string, firstName: string, lastName: string
         {
           type: "email",
           id: email,
-          channels: {
-            email: { status: "subscribed", statusDate: new Date().toISOString() },
-          },
         },
       ],
       firstName,
       lastName,
-      tags: ["source: stripe_payment", "status: paid_subscriber"],
+      tags: ["source-stripe-payment", "lifecycle-paid-subscriber"],
+      customProperties: {
+        lifecycle_status: "paid_subscriber",
+        customer_source: "stripe_payment",
+      },
     }),
   });
 

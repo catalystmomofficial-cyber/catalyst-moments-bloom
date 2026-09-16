@@ -11,6 +11,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-webhook-secret',
 };
 
+const generateToken = () => {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -83,53 +89,83 @@ serve(async (req) => {
       );
     }
 
-    // Render email template
-    const emailHtml = await renderAsync(
-      React.createElement(BlogNotificationEmail, {
-        title: blog.title,
-        excerpt: blog.excerpt || '',
-        featured_image_url: blog.featured_image_url || undefined,
-        slug: blog.slug || blog.id,
-        site_url: siteUrl,
-      })
-    );
-
-    // Send emails in batches to avoid rate limits
-    const batchSize = 50;
-    const emailBatches = [];
-    
-    for (let i = 0; i < subscribers.length; i += batchSize) {
-      const batch = subscribers.slice(i, i + batchSize);
-      emailBatches.push(batch);
-    }
-
     let sentCount = 0;
     let failedCount = 0;
 
-    for (const batch of emailBatches) {
+    // Each subscriber receives an individual email. This keeps addresses
+    // private and lets every message carry its own unsubscribe token.
+    for (const subscriber of subscribers) {
       try {
+        const normalizedEmail = subscriber.email.trim().toLowerCase();
+        const { data: suppressed, error: suppressionError } = await supabase
+          .from('suppressed_emails')
+          .select('id')
+          .eq('email', normalizedEmail)
+          .maybeSingle();
+
+        if (suppressionError) throw suppressionError;
+        if (suppressed) {
+          console.log('Skipping suppressed newsletter subscriber', { email: normalizedEmail });
+          continue;
+        }
+
+        const { data: existingToken, error: tokenLookupError } = await supabase
+          .from('email_unsubscribe_tokens')
+          .select('token, used_at')
+          .eq('email', normalizedEmail)
+          .maybeSingle();
+
+        if (tokenLookupError) throw tokenLookupError;
+
+        let unsubscribeToken = existingToken?.token;
+        if (!unsubscribeToken || existingToken?.used_at) {
+          unsubscribeToken = generateToken();
+          const { error: tokenError } = await supabase
+            .from('email_unsubscribe_tokens')
+            .upsert(
+              { email: normalizedEmail, token: unsubscribeToken, used_at: null },
+              { onConflict: 'email' },
+            );
+          if (tokenError) throw tokenError;
+        }
+
+        const unsubscribeUrl = `${siteUrl}/unsubscribe?token=${encodeURIComponent(unsubscribeToken)}`;
+        const emailHtml = await renderAsync(
+          React.createElement(BlogNotificationEmail, {
+            title: blog.title,
+            excerpt: blog.excerpt || '',
+            featured_image_url: blog.featured_image_url || undefined,
+            slug: blog.slug || blog.id,
+            site_url: siteUrl,
+            unsubscribe_url: unsubscribeUrl,
+          })
+        );
+
         const { error: sendError } = await resend.emails.send({
           from: 'Catalyst Mom <newsletter@catalystmomofficial.com>',
-          to: batch.map(s => s.email),
+          replyTo: 'hello@catalystmomofficial.com',
+          to: normalizedEmail,
           subject: `New from Catalyst Mom: ${blog.title}`,
           html: emailHtml,
+          headers: {
+            'List-Unsubscribe': `<${unsubscribeUrl}>`,
+            'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+          },
         });
 
         if (sendError) {
-          console.error('Batch send error:', sendError);
-          failedCount += batch.length;
+          console.error('Newsletter send error:', sendError);
+          failedCount += 1;
         } else {
-          sentCount += batch.length;
+          sentCount += 1;
         }
       } catch (error) {
-        console.error('Batch error:', error);
-        failedCount += batch.length;
+        console.error('Newsletter recipient error:', error);
+        failedCount += 1;
       }
 
-      // Small delay between batches
-      if (emailBatches.indexOf(batch) < emailBatches.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+      // Resend's default API limit is two requests per second.
+      await new Promise(resolve => setTimeout(resolve, 550));
     }
 
     console.log(`Email notification sent to ${sentCount} subscribers, ${failedCount} failed`);

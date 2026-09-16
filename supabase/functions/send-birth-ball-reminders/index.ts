@@ -66,7 +66,8 @@ const handler = async (req: Request): Promise<Response> => {
     for (const reminder of reminders) {
       try {
         const emailResponse = await resend.emails.send({
-          from: "Catalyst Mom <noreply@catalystmom.com>",
+          from: "Catalyst Mom <noreply@catalystmomofficial.com>",
+          replyTo: "hello@catalystmomofficial.com",
           to: [reminder.email],
           subject: "🌟 Time for Your Daily Birth Ball Practice!",
           html: `
@@ -101,7 +102,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <p style="font-size: 16px;">Remember: Consistency is key! Even a short session counts toward building your birth ball practice habit.</p>
                   
                   <div style="text-align: center; margin: 30px 0;">
-                    <a href="https://catalystmom.com/birth-ball-guide" 
+                    <a href="https://catalystmomofficial.com/birth-ball-guide"
                        style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
                       Log Today's Practice
                     </a>

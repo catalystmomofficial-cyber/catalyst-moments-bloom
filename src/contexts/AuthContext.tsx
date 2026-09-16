@@ -74,6 +74,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     identifiedUserId.current = authenticatedUser.id;
   };
 
+  const completePendingNewsletterOptIn = async (authenticatedUser: User) => {
+    if (!authenticatedUser.email) return;
+    const storageKey = 'cm_pending_newsletter_opt_in';
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return;
+      // Remove before the network request so duplicate auth events cannot
+      // subscribe the same contact twice. Omnisend remains idempotent anyway.
+      localStorage.removeItem(storageKey);
+      const pending = JSON.parse(raw) as { interest?: string; source?: string };
+      const { error } = await supabase.functions.invoke('newsletter-subscribe', {
+        body: {
+          email: authenticatedUser.email,
+          interest: pending.interest || 'general',
+          source: pending.source || 'google-registration',
+        },
+      });
+      if (error) console.error('Newsletter opt-in sync failed', error);
+    } catch (error) {
+      console.error('Could not complete newsletter opt-in', error);
+    }
+  };
+
   // Fetch user profile from the profiles table
   const fetchProfile = async (userId: string) => {
     try {
@@ -172,6 +195,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         if (session?.user) {
           identifyUser(session.user);
+          void completePendingNewsletterOptIn(session.user);
 
           // Defer profile fetching to avoid potential deadlocks
           setTimeout(() => {
@@ -205,6 +229,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (session?.user) {
         identifyUser(session.user);
+        void completePendingNewsletterOptIn(session.user);
 
         // Use setTimeout for consistency and to avoid race conditions
         setTimeout(() => {

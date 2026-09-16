@@ -33,6 +33,7 @@ const Register = () => {
   // she just clicked visible through the signup friction.
   const [fromAssessment, setFromAssessment] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false);
 
   // Read & validate URL parameters on mount
   useEffect(() => {
@@ -174,6 +175,15 @@ const Register = () => {
     try {
       await register(name, email, password, motherhoodStage, referralCode);
 
+      if (newsletterOptIn) {
+        const interest = motherhoodStage === 'pregnant' ? 'pregnancy' : motherhoodStage === 'none' ? 'general' : motherhoodStage;
+        const { error: newsletterError } = await supabase.functions.invoke('newsletter-subscribe', {
+          body: { email, interest, source: fromAssessment ? 'assessment-registration' : 'app-registration' },
+        });
+        // Newsletter enrollment must never block creation of her account.
+        if (newsletterError) console.error('Newsletter opt-in sync failed', newsletterError);
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         if (assessmentData) {
@@ -233,6 +243,15 @@ const Register = () => {
     setError("");
     
     try {
+      if (newsletterOptIn) {
+        const interest = motherhoodStage === 'pregnant' ? 'pregnancy' : motherhoodStage === 'none' ? 'general' : motherhoodStage;
+        localStorage.setItem('cm_pending_newsletter_opt_in', JSON.stringify({
+          interest,
+          source: fromAssessment ? 'assessment-google-registration' : 'google-registration',
+        }));
+      } else {
+        localStorage.removeItem('cm_pending_newsletter_opt_in');
+      }
       // Include referral code in redirect URL if present
       const redirectUrl = referralCode 
         ? `${window.location.origin}/?ref=${referralCode}`
@@ -447,6 +466,16 @@ const Register = () => {
                     className="mt-1 h-4 w-4"
                   />
                   <span>I agree to the <Link to="/terms" target="_blank" className="text-primary underline">Terms of Service</Link> and acknowledge the <Link to="/privacy" target="_blank" className="text-primary underline">Privacy Policy</Link>.</span>
+                </label>
+
+                <label className="flex items-start gap-3 text-sm text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={newsletterOptIn}
+                    onChange={(event) => setNewsletterOptIn(event.target.checked)}
+                    className="mt-1 h-4 w-4"
+                  />
+                  <span>Send me stage-specific maternal wellness tips and new Catalyst Mom articles. I can unsubscribe anytime.</span>
                 </label>
 
                 <div className="relative my-4">

@@ -18,6 +18,7 @@ interface BlogNotificationEmailProps {
   featured_image_url?: string;
   slug: string;
   site_url: string;
+  unsubscribe_url: string;
 }
 
 export const BlogNotificationEmail = ({
@@ -26,6 +27,7 @@ export const BlogNotificationEmail = ({
   featured_image_url,
   slug,
   site_url,
+  unsubscribe_url,
 }: BlogNotificationEmailProps) => (
   <Html>
     <Head />
@@ -65,6 +67,14 @@ export const BlogNotificationEmail = ({
             style={{ ...link, color: '#898989' }}
           >
             Visit Catalyst Mom
+          </Link>
+          {' · '}
+          <Link
+            href={unsubscribe_url}
+            target="_blank"
+            style={{ ...link, color: '#898989' }}
+          >
+            Unsubscribe
           </Link>
         </Text>
       </Container>

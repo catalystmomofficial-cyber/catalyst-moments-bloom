@@ -145,6 +145,27 @@ const handler = async (req: Request): Promise<Response> => {
       }
     }
 
+    // An explicit newsletter opt-in is fresh consent. Restore delivery if
+    // this address had previously unsubscribed, and reactivate its token.
+    const { error: unsuppressError } = await supabase
+      .from('suppressed_emails')
+      .delete()
+      .eq('email', normalizedEmail)
+      .eq('reason', 'unsubscribe');
+
+    if (unsuppressError) {
+      console.error('Failed to restore newsletter delivery:', unsuppressError);
+      return new Response(
+        JSON.stringify({ error: "Failed to subscribe. Please try again." }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } },
+      );
+    }
+
+    await supabase
+      .from('email_unsubscribe_tokens')
+      .update({ used_at: null })
+      .eq('email', normalizedEmail);
+
     // Omnisend is the newsletter source of truth. Its workflow handles the
     // welcome email and future stage-specific sends; Resend remains reserved
     // for transactional product/account messages.

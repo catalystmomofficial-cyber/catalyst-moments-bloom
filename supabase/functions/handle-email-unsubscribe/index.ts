@@ -124,7 +124,52 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: 'Failed to process unsubscribe' }, 500)
   }
 
-  console.log('Email unsubscribed', { email: tokenRecord.email })
+  const normalizedEmail = tokenRecord.email.toLowerCase()
+
+  // Stop the site's publication sender immediately as well.
+  const { error: newsletterError } = await supabase
+    .from('newsletter_subscribers')
+    .update({ is_active: false })
+    .eq('email', normalizedEmail)
+
+  if (newsletterError) {
+    console.error('Failed to deactivate newsletter subscription', {
+      error: newsletterError,
+      email: normalizedEmail,
+    })
+    return jsonResponse({ error: 'Failed to process unsubscribe' }, 500)
+  }
+
+  // Keep Omnisend aligned with the same consent decision. The local
+  // suppression remains authoritative even if this best-effort sync fails.
+  const omnisendApiKey = Deno.env.get('OMNISEND_API_KEY')
+  if (omnisendApiKey) {
+    try {
+      const response = await fetch('https://api.omnisend.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'X-API-KEY': omnisendApiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifiers: [{
+            type: 'email',
+            id: normalizedEmail,
+            channels: {
+              email: { status: 'unsubscribed', statusDate: new Date().toISOString() },
+            },
+          }],
+        }),
+      })
+      if (!response.ok) {
+        console.error('Omnisend unsubscribe sync failed', { status: response.status })
+      }
+    } catch (error) {
+      console.error('Omnisend unsubscribe sync failed', { error })
+    }
+  }
+
+  console.log('Email unsubscribed', { email: normalizedEmail })
 
   return jsonResponse({ success: true })
 })
