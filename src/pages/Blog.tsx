@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { newsletterInterest } from '@/lib/newsletterInterest';
 import PageLayout from '@/components/layout/PageLayout';
 import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -39,7 +40,15 @@ const Blog = () => {
   const [blogs, setBlogs] = useState<BlogPost[]>(readCachedBlogs);
   const [filteredBlogs, setFilteredBlogs] = useState<BlogPost[]>(readCachedBlogs);
   const [loading, setLoading] = useState(() => readCachedBlogs().length === 0);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = newsletterInterest([searchParams.get('category') ?? '']);
+  const selectedCategory = category === 'general' ? null : category;
+  const setSelectedCategory = (value: string | null) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set('category', value);
+    else next.delete('category');
+    setSearchParams(next, { replace: true });
+  };
 
   useEffect(() => {
     const fetchBlogs = async () => {

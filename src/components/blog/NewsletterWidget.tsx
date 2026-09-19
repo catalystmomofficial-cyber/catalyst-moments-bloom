@@ -5,13 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Mail, Check, Bell } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 interface NewsletterWidgetProps {
   interest?: string;
   source?: string;
+  articleSlug?: string;
 }
 
-export const NewsletterWidget = ({ interest = 'general', source = 'blog' }: NewsletterWidgetProps) => {
+export const NewsletterWidget = ({ interest = 'general', source = 'blog', articleSlug }: NewsletterWidgetProps) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
@@ -27,15 +29,16 @@ export const NewsletterWidget = ({ interest = 'general', source = 'blog' }: News
     setLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke('newsletter-subscribe', {
-        body: { email, interest, source }
+      const { data, error } = await supabase.functions.invoke('newsletter-subscribe', {
+        body: { email: email.trim(), interest, source, articleSlug }
       });
 
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
       setSubscribed(true);
       setEmail('');
-      toast.success('Successfully subscribed! Check your email for confirmation.');
+      toast.success('You’re subscribed. Welcome to Catalyst Mom!');
     } catch (error) {
       console.error('Newsletter subscription error:', error);
       toast.error('Failed to subscribe. Please try again.');
@@ -60,7 +63,7 @@ export const NewsletterWidget = ({ interest = 'general', source = 'blog' }: News
           <div className="mt-4 p-3 rounded-lg bg-background/50 flex items-start gap-2">
             <Bell className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
             <p className="text-xs text-muted-foreground">
-              You'll receive email notifications when new blogs are published
+              Look out for articles, practical guides and updates matched to your interests.
             </p>
           </div>
         </CardContent>
@@ -76,13 +79,15 @@ export const NewsletterWidget = ({ interest = 'general', source = 'blog' }: News
           <CardTitle className="text-lg">Stay Updated</CardTitle>
         </div>
         <CardDescription>
-          Get our latest articles and instant email notifications when new content is published.
+          Get new articles, practical guides and occasional Catalyst Mom offers in your inbox.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex flex-wrap gap-2">
           <Input
             type="email"
+            aria-label="Email address"
+            required
             placeholder="your.email@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -93,6 +98,9 @@ export const NewsletterWidget = ({ interest = 'general', source = 'blog' }: News
             {loading ? 'Subscribing...' : 'Subscribe'}
           </Button>
         </form>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {interest === 'general' ? 'Updates across all topics.' : `Updates about ${interest === 'ttc' ? 'TTC' : interest}.`} Unsubscribe anytime. <Link to="/privacy" className="underline">Privacy Policy</Link>
+        </p>
       </CardContent>
     </Card>
   );

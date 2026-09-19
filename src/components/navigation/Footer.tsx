@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { newsletterInterest } from '@/lib/newsletterInterest';
 import { Heart, Mail, Instagram, Facebook, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +20,7 @@ const newsletterInterestForStage = (stage?: string | null) => {
 };
 
 const NewsletterSubscription = () => {
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -33,16 +35,20 @@ const NewsletterSubscription = () => {
       const { data, error } = await supabase.functions.invoke('newsletter-subscribe', {
         body: {
           email,
-          interest: newsletterInterestForStage(profile?.motherhood_stage),
-          source: 'website-footer',
+          interest: location.pathname === '/blog'
+            ? newsletterInterest([new URLSearchParams(location.search).get('category') ?? ''])
+            : newsletterInterestForStage(profile?.motherhood_stage),
+          source: location.pathname.startsWith('/blog/') ? 'blog-article-footer' : 'website-footer',
+          articleSlug: location.pathname.startsWith('/blog/') ? decodeURIComponent(location.pathname.slice(6)) : undefined,
         }
       });
 
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
       toast({
         title: "Successfully subscribed! ✨",
-        description: "Check your email for a welcome message.",
+        description: "Welcome to Catalyst Mom. Look out for articles and guides in your inbox.",
         duration: 5000,
       });
       setEmail('');

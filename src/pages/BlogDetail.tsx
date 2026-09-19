@@ -11,6 +11,7 @@ import { Calendar, User, Clock, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { NewsletterWidget } from '@/components/blog/NewsletterWidget';
+import { newsletterInterest } from '@/lib/newsletterInterest';
 import { BlogComments } from '@/components/blog/BlogComments';
 import { SocialShareButtons } from '@/components/blog/SocialShareButtons';
 import { InternalLinkingSuggestions } from '@/components/blog/InternalLinkingSuggestions';
@@ -276,7 +277,7 @@ const BlogDetail = () => {
 
           <BlogComments blogId={blog.id} />
 
-          <NewsletterWidget interest={primaryCategory} source="blog-article" />
+          <NewsletterWidget interest={newsletterInterest(blog.tags ?? [])} source="blog-article" articleSlug={blog.slug || blog.id} />
 
           <RelatedPosts 
             currentPostId={blog.id} 
