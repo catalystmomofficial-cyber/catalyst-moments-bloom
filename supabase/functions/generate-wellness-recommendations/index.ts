@@ -23,28 +23,30 @@ const BodySchema = z.object({
   profile: ProfileSchema,
 });
 
+// Keep these permissive: strict enums / exact array lengths make the model's
+// output fail validation and surface as a 500 ("response did not match schema").
 const RecommendationSchema = z.object({
-  id: z.string(),
-  type: z.enum(["nutrition", "exercise", "mindfulness", "self-care", "sleep"]),
+  id: z.string().optional().default(""),
+  type: z.string(),
   title: z.string(),
   description: z.string(),
   action: z.string(),
-  priority: z.enum(["high", "medium", "low"]),
+  priority: z.string(),
   reasoning: z.string(),
   timeframe: z.string(),
   category: z.string(),
-  icon: z.string(),
+  icon: z.string().optional().default("✨"),
 });
 
 const SelfCareIdeaSchema = z.object({
-  id: z.string(),
+  id: z.string().optional().default(""),
   title: z.string(),
   description: z.string(),
   duration: z.string(),
-  category: z.enum(["breathing", "movement", "mindfulness", "relaxation", "energy"]),
+  category: z.string(),
   instructions: z.array(z.string()),
   benefits: z.string(),
-  icon: z.string(),
+  icon: z.string().optional().default("✨"),
 });
 
 type Profile = z.infer<typeof ProfileSchema>;
@@ -176,7 +178,7 @@ Generate 3-4 personalized self-care ideas for quick wellness boosts. Each should
 Consider their current mood, energy, stress levels, and journey stage. Focus on activities that can be done anywhere, anytime.
 
 Return as JSON: {"ideas": [array of idea objects with fields: id, title, description, duration, category, instructions, benefits, icon]}`;
-      output = Output.object({ schema: z.object({ ideas: z.array(SelfCareIdeaSchema).min(3).max(4) }) });
+      output = Output.object({ schema: z.object({ ideas: z.array(SelfCareIdeaSchema).min(1).max(8) }) });
     } else {
       systemPrompt = `You are a specialized wellness AI coach for mothers and women on their motherhood journey. 
       Generate personalized, actionable wellness recommendations based on the user's current state and journey stage.
@@ -190,8 +192,14 @@ Return as JSON: {"ideas": [array of idea objects with fields: id, title, descrip
       Return a JSON object with a "recommendations" array containing exactly 5 recommendations.
       Each recommendation should have: type, title, description, action, priority, reasoning, timeframe, category, icon.`;
       userPrompt = parsed.data.prompt || `Wellness profile: ${JSON.stringify(profile)}`;
-      output = Output.object({ schema: z.object({ recommendations: z.array(RecommendationSchema).length(5) }) });
+      output = Output.object({ schema: z.object({ recommendations: z.array(RecommendationSchema).min(1).max(8) }) });
     }
+
+    const fallbackFor = () => action === "selfcare"
+      ? fallbackSelfCare
+      : action === "insights"
+        ? { insights: [] }
+        : fallbackRecommendations(profile);
 
     try {
       const gateway = createLovableAiGatewayProvider(lovableApiKey);
@@ -201,18 +209,21 @@ Return as JSON: {"ideas": [array of idea objects with fields: id, title, descrip
         system: systemPrompt,
         prompt: userPrompt,
       });
-      return json(result.output);
+      const out = result.output as Record<string, unknown> | undefined;
+      const items = out && (out.recommendations ?? out.ideas ?? out.insights);
+      if (!Array.isArray(items) || items.length === 0) {
+        return json({ ...fallbackFor(), degraded: true, reason: "empty_model_output" });
+      }
+      return json(out);
     } catch (error) {
       const status = getStatusCode(error) ?? getStatusFromText(error);
       if (status === 402 || status === 429) {
-        const fallback = action === "selfcare"
-          ? fallbackSelfCare
-          : action === "insights"
-            ? { insights: [] }
-            : fallbackRecommendations(profile);
-        return json({ ...fallback, degraded: true, reason: status === 402 ? "credits_unavailable" : "rate_limited" });
+        return json({ ...fallbackFor(), degraded: true, reason: status === 402 ? "credits_unavailable" : "rate_limited" });
       }
-      throw error;
+      // Schema/parse failures from the model must never break the page.
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("Wellness AI generation failed, serving fallback:", message);
+      return json({ ...fallbackFor(), degraded: true, reason: "generation_failed" });
     }
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unable to generate wellness recommendations";

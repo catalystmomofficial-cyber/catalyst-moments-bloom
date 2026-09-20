@@ -31,6 +31,7 @@ interface BlogPost {
   updated_at?: string;
   featured_image_url?: string;
   tags?: string[];
+  slug?: string;
 }
 
 const BlogDetail = () => {

@@ -16,6 +16,7 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import DOMPurify from 'dompurify';
 import { RichTextEditor } from '@/components/admin/RichTextEditor';
+import { supabaseImgSrc, supabaseImgSrcSet } from '@/lib/imageUtils';
 
 interface BlogPost {
   id: string;

@@ -68,7 +68,7 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
 
     const likedSet = new Set(likes?.map(l => l.post_id) || []);
 
-    const enriched: CommunityPostData[] = postsData.map(p => ({
+    const enriched: CommunityPostData[] = (postsData as Array<typeof postsData[number] & { is_anonymous?: boolean }>).map(p => ({
       id: p.id,
       user_id: p.user_id,
       group_slug: p.group_slug,
@@ -114,7 +114,7 @@ export function useCommunityPosts(groupSlug: string = 'general', subCategory: st
       sub_category: subCategory,
       content: content.trim(),
       is_anonymous: isAnonymous,
-    });
+    } as never);
     if (!error) {
       posthog.capture('community_post_created', {
         group_slug: groupSlug,
