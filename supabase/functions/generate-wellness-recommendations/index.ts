@@ -23,28 +23,30 @@ const BodySchema = z.object({
   profile: ProfileSchema,
 });
 
+// Keep these permissive: strict enums / exact array lengths make the model's
+// output fail validation and surface as a 500 ("response did not match schema").
 const RecommendationSchema = z.object({
-  id: z.string(),
-  type: z.enum(["nutrition", "exercise", "mindfulness", "self-care", "sleep"]),
+  id: z.string().optional().default(""),
+  type: z.string(),
   title: z.string(),
   description: z.string(),
   action: z.string(),
-  priority: z.enum(["high", "medium", "low"]),
+  priority: z.string(),
   reasoning: z.string(),
   timeframe: z.string(),
   category: z.string(),
-  icon: z.string(),
+  icon: z.string().optional().default("✨"),
 });
 
 const SelfCareIdeaSchema = z.object({
-  id: z.string(),
+  id: z.string().optional().default(""),
   title: z.string(),
   description: z.string(),
   duration: z.string(),
-  category: z.enum(["breathing", "movement", "mindfulness", "relaxation", "energy"]),
+  category: z.string(),
   instructions: z.array(z.string()),
   benefits: z.string(),
-  icon: z.string(),
+  icon: z.string().optional().default("✨"),
 });
 
 type Profile = z.infer<typeof ProfileSchema>;
