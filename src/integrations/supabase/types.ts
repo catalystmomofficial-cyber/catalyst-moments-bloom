@@ -639,7 +639,6 @@ export type Database = {
           created_at: string
           group_slug: string
           id: string
-          is_anonymous: boolean
           likes_count: number
           sub_category: string
           updated_at: string
@@ -651,7 +650,6 @@ export type Database = {
           created_at?: string
           group_slug?: string
           id?: string
-          is_anonymous?: boolean
           likes_count?: number
           sub_category?: string
           updated_at?: string
@@ -663,7 +661,6 @@ export type Database = {
           created_at?: string
           group_slug?: string
           id?: string
-          is_anonymous?: boolean
           likes_count?: number
           sub_category?: string
           updated_at?: string
@@ -1049,6 +1046,30 @@ export type Database = {
           points_used?: number
           product_slug?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      email_unsubscribe_tokens: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          token: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          token: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          token?: string
+          used_at?: string | null
         }
         Relationships: []
       }
@@ -2136,6 +2157,30 @@ export type Database = {
           subscription_tier?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      suppressed_emails: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          metadata: Json | null
+          reason: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          metadata?: Json | null
+          reason: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          metadata?: Json | null
+          reason?: string
         }
         Relationships: []
       }
