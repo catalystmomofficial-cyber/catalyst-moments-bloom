@@ -36,7 +36,7 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     const paid =
-      session.payment_status === "paid" || session.status === "complete";
+      session.mode === 'payment' && session.payment_status === 'paid' && session.currency === 'usd';
 
     if (!paid) {
       return new Response(
@@ -62,16 +62,18 @@ serve(async (req) => {
     );
 
     const { data, error } = await serviceClient.rpc(
-      "purchase_digital_product",
+      "fulfill_verified_product_payment",
       {
         p_product_slug: meta.product_slug,
-        p_payment_method: "stripe",
+        p_user_id: user.id,
+        p_session_id: session.id,
         p_points_used: Number(meta.points_used ?? 0),
-        p_amount_paid_cents: Number(meta.amount_paid_cents ?? 0),
+        p_amount_paid_cents: session.amount_total,
       } as any,
     );
 
     if (error) throw error;
+    if (!data?.success) throw new Error(data?.error ?? 'Purchase could not be fulfilled');
 
     return new Response(
       JSON.stringify({

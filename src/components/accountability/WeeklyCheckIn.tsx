@@ -1,3 +1,4 @@
+import { validateImageUpload } from '@/lib/uploadValidation';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -92,6 +93,7 @@ export const WeeklyCheckIn = () => {
         console.warn(`File ${photo.file.name} rejected: invalid type or exceeds 10MB limit`);
         return null;
       }
+      validateImageUpload(photo.file);
       const fileExt = photo.file.name.split('.').pop();
       const fileName = `${user.id}/${type}/${Date.now()}.${fileExt}`;
       const {

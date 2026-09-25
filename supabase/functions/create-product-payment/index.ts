@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { productQuote } from '../_shared/productCatalog.ts';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -26,16 +27,11 @@ serve(async (req) => {
   try {
     const {
       productSlug,
-      productTitle,
-      amountCents,
       pointsUsed = 0,
     } = await req.json();
 
     if (
-      !productSlug ||
-      !productTitle ||
-      typeof amountCents !== "number" ||
-      amountCents < 50
+      typeof productSlug !== 'string'
     ) {
       throw new Error(
         "Missing/invalid fields: productSlug, productTitle, amountCents (min 50)",
@@ -49,6 +45,13 @@ serve(async (req) => {
     const user = userData.user;
     if (!user?.email) throw new Error("User not authenticated");
 
+    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const { data: balance, error: balanceError } = await admin.from('user_points').select('total_points').eq('user_id', user.id).maybeSingle();
+    if (balanceError) throw balanceError;
+    const quote = productQuote(productSlug, pointsUsed, balance?.total_points ?? 0);
+    const amountCents = quote.amount;
+    const productTitle = quote.title;
+
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not configured");
 
@@ -60,7 +63,7 @@ serve(async (req) => {
     });
     const customerId = customers.data[0]?.id;
 
-    const origin = req.headers.get("origin") ?? "";
+    const origin = 'https://catalystmomofficial.com';
 
     // Dynamic price using price_data - no pre-configured Stripe product needed
     const session = await stripe.checkout.sessions.create({

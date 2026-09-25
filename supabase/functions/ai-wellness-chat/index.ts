@@ -13,6 +13,22 @@ serve(async (req) => {
 
   try {
     const { message, userContext, conversationHistory, images } = await req.json();
+    if (typeof message !== 'string' || message.length > 4_000) {
+      return new Response(JSON.stringify({ error: 'Invalid message' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    if (images !== undefined && (
+      !Array.isArray(images) ||
+      images.length > 2 ||
+      images.some((image) => typeof image !== 'string' || image.length > 8_000_000 || !/^data:image\/(?:png|jpe?g|webp);base64,/i.test(image))
+    )) {
+      return new Response(JSON.stringify({ error: 'Images must be PNG, JPEG, or WebP uploads' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
     if (!OPENAI_API_KEY) {

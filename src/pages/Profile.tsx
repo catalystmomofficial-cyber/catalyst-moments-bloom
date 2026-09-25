@@ -1,3 +1,4 @@
+import { validateImageUpload } from '@/lib/uploadValidation';
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -94,6 +95,7 @@ const Profile = () => {
 
     setUploadingAvatar(true);
     try {
+      validateImageUpload(file, 5 * 1024 * 1024);
       const ext = file.name.split(".").pop();
       const filePath = `${user.id}/avatar-${Date.now()}.${ext}`;
 

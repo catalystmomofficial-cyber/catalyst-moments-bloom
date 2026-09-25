@@ -31,13 +31,15 @@ interface ServiceAccount {
   token_uri?: string;
 }
 
+const GOOGLE_OAUTH_TOKEN_URL = 'https://oauth2.googleapis.com/token';
+
 async function getAccessToken(sa: ServiceAccount): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
   const header = { alg: 'RS256', typ: 'JWT' };
   const payload = {
     iss: sa.client_email,
     scope: 'https://www.googleapis.com/auth/firebase.messaging',
-    aud: sa.token_uri || 'https://oauth2.googleapis.com/token',
+    aud: GOOGLE_OAUTH_TOKEN_URL,
     iat: now,
     exp: now + 3600,
   };
@@ -57,7 +59,7 @@ async function getAccessToken(sa: ServiceAccount): Promise<string> {
   const sigBuf = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', cryptoKey, new TextEncoder().encode(signingInput));
   const jwt = `${signingInput}.${base64UrlEncode(new Uint8Array(sigBuf))}`;
 
-  const res = await fetch(sa.token_uri || 'https://oauth2.googleapis.com/token', {
+  const res = await fetch(GOOGLE_OAUTH_TOKEN_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${jwt}`,

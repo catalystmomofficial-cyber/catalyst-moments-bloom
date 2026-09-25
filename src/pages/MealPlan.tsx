@@ -790,6 +790,13 @@ const MealPlan = () => {
   const isValid    = rawParam ? VALID_KEYS.has(rawParam) : true;
   const stageParam = isValid ? rawParam : '';
   const journeyKey = STAGE_TO_JOURNEY[stageParam];
+  const stageLabel = stageParam === 'ttc'
+    ? 'TTC'
+    : stageParam === 'pregnant'
+      ? 'Pregnancy'
+      : stageParam
+        ? stageParam.charAt(0).toUpperCase() + stageParam.slice(1)
+        : '';
 
   const recommendedRef = useRef<HTMLElement>(null);
 
@@ -860,12 +867,12 @@ const MealPlan = () => {
         <header className="mb-6">
           <h1 className="text-3xl font-bold mb-2">
             {stageParam
-              ? `${stageParam.charAt(0).toUpperCase() + stageParam.slice(1)} Meal Plans`
+              ? `${stageLabel} Meal Plans`
               : 'All Meal Plans'}
           </h1>
           <p className="text-muted-foreground">
             {stageParam
-              ? `Nutrition plans tailored for your ${stageParam} journey.`
+              ? `Nutrition plans tailored for your ${stageLabel} journey.`
               : 'Browse plans across journeys. Select one to get started.'}
           </p>
         </header>
@@ -882,7 +889,7 @@ const MealPlan = () => {
                 <h2 id="recommended-plans-heading" className="text-2xl font-bold">
                   Recommended for you
                 </h2>
-                <Badge variant="secondary" className="capitalize">{stageParam}</Badge>
+                <Badge variant="secondary">{stageLabel}</Badge>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {recommended.map((plan: any) => (
@@ -895,7 +902,7 @@ const MealPlan = () => {
           {stageFilteredPlans.length > 0 && (
             <section aria-labelledby="all-plans">
               <h2 id="all-plans" className="text-2xl font-bold mb-4">
-                {stageParam ? `More ${stageParam} plans` : 'All plans'}
+                {stageParam ? `More ${stageLabel} plans` : 'All plans'}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {stageFilteredPlans.map((plan) => (
@@ -910,7 +917,7 @@ const MealPlan = () => {
               <p className="text-3xl mb-3">🌱</p>
               <p className="font-semibold text-foreground mb-1">Coming Soon</p>
               <p className="text-muted-foreground text-sm">
-                Meal plans tailored for your {stageParam || 'current'} journey are on the way!
+                Meal plans tailored for your {stageLabel || 'current'} journey are on the way!
               </p>
             </div>
           )}

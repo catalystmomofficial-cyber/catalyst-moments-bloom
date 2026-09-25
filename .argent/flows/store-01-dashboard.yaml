@@ -1,0 +1,7 @@
+steps:
+  - launch: com.catalystmomofficial.app
+  - await:
+      visible:
+        text: Welcome back
+  - await:
+      idle: true

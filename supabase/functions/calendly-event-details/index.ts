@@ -2,6 +2,30 @@
 // Called from the frontend after `calendly.event_scheduled` fires, using the event URI.
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 
+const CALENDLY_HOST = 'api.calendly.com';
+const CALENDLY_EVENT_PATH = /^\/scheduled_events\/[A-Za-z0-9_-]+\/?$/;
+const MAX_RESPONSE_BYTES = 1_000_000;
+
+function parseCalendlyEventUrl(value: unknown): URL | null {
+  if (typeof value !== 'string' || value.length > 500) return null;
+  try {
+    const url = new URL(value);
+    if (
+      url.protocol !== 'https:' ||
+      url.hostname !== CALENDLY_HOST ||
+      (url.port && url.port !== '443') ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash ||
+      !CALENDLY_EVENT_PATH.test(url.pathname)
+    ) return null;
+    return url;
+  } catch {
+    return null;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -9,7 +33,8 @@ Deno.serve(async (req) => {
 
   try {
     const { eventUri } = await req.json().catch(() => ({}));
-    if (!eventUri || typeof eventUri !== 'string' || !eventUri.startsWith('https://api.calendly.com/scheduled_events/')) {
+    const calendlyUrl = parseCalendlyEventUrl(eventUri);
+    if (!calendlyUrl) {
       return new Response(JSON.stringify({ error: 'Invalid eventUri' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -24,17 +49,27 @@ Deno.serve(async (req) => {
       });
     }
 
-    const res = await fetch(eventUri, {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8_000);
+    const res = await fetch(calendlyUrl, {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      redirect: 'error',
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
     if (!res.ok) {
-      const text = await res.text();
-      return new Response(JSON.stringify({ error: 'Calendly fetch failed', detail: text }), {
-        status: res.status,
+      return new Response(JSON.stringify({ error: 'Calendly fetch failed' }), {
+        status: 502,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-    const data = await res.json();
+    const declaredLength = Number(res.headers.get('content-length') ?? 0);
+    if (declaredLength > MAX_RESPONSE_BYTES) throw new Error('Calendly response too large');
+    const responseText = await res.text();
+    if (new TextEncoder().encode(responseText).byteLength > MAX_RESPONSE_BYTES) {
+      throw new Error('Calendly response too large');
+    }
+    const data = JSON.parse(responseText);
     const ev = data?.resource ?? {};
     const loc = ev?.location ?? {};
     // Calendly Zoom integration exposes `location.join_url` (and sometimes `location.data.url`)

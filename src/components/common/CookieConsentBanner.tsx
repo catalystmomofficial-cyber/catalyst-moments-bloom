@@ -58,12 +58,12 @@ const CookieConsentBanner = () => {
       className="fixed bottom-0 left-0 right-0 z-[9999] border-t border-black/10 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-        <p className="text-sm leading-relaxed text-[#2C2218]">
-          We use essential storage to run Catalyst Mom. With your permission, we also use analytics and marketing technologies. See our{" "}
+        <p className="max-w-2xl text-sm leading-relaxed text-[#2C2218]">
+          We use cookies to personalise your experience and improve Catalyst Mom. See our{" "}
           <Link to="/privacy" className="font-medium underline" style={{ color: "#B5651D" }}>
             Privacy Policy
           </Link>
-          {" and "}<Link to="/cookies" className="font-medium underline" style={{ color: "#B5651D" }}>Cookie Policy</Link>.
+          .
         </p>
         {customizing && (
           <div className="grid gap-2 text-sm sm:min-w-64">
@@ -72,22 +72,21 @@ const CookieConsentBanner = () => {
             <label className="flex items-center justify-between gap-4"><span>Marketing</span><input type="checkbox" checked={marketing} onChange={(event) => setMarketing(event.target.checked)} /></label>
           </div>
         )}
-        <div className="flex flex-wrap items-center gap-3 sm:shrink-0">
+        <div className="flex flex-wrap items-center gap-4 sm:shrink-0">
           <button
             type="button"
             onClick={() => handleChoice("declined")}
             className="text-sm text-[#8A7060] underline-offset-2 hover:underline"
           >
-            Reject non-essential
+            Decline
           </button>
-          {!customizing && <button type="button" onClick={() => setCustomizing(true)} className="text-sm text-[#8A7060] underline-offset-2 hover:underline">Manage choices</button>}
           <button
             type="button"
             onClick={() => handleChoice(customizing ? "custom" : "accepted")}
             className="rounded-md px-5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#B5651D" }}
           >
-            {customizing ? "Save choices" : "Accept all"}
+            {customizing ? "Save choices" : "Accept"}
           </button>
         </div>
       </div>

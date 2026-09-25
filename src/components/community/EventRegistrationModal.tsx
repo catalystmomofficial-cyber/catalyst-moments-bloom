@@ -9,13 +9,8 @@ import { Calendar, Clock, Users, CheckCircle, Zap, CreditCard, Loader2 } from 'l
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import type { Event } from './EnhancedEventsList';
 import posthog from '@/lib/posthog';
-
-const PAYPAL_CLIENT_ID =
-  (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) ||
-  'AVx-CDjcjaMtNsqlKBIm-edzwezhGiMtti86hVwfMbc967nLU2QlJXTAn62Vsk6HCPB6nB8sfOz8khKB';
 
 interface EventRegistrationModalProps {
   isOpen: boolean;
@@ -371,79 +366,7 @@ const EventRegistrationModal = ({
                 Pay with Credit Card
               </Button>
 
-              <div className="relative">
-                {gateway === 'paypal' && (
-                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-sm rounded">
-                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                  </div>
-                )}
-                <PayPalScriptProvider
-                  options={{ clientId: PAYPAL_CLIENT_ID, currency: 'USD', intent: 'capture' }}
-                >
-                  <PayPalButtons
-                    style={{
-                      layout: 'horizontal',
-                      color: 'gold',
-                      shape: 'rect',
-                      label: 'paypal',
-                      tagline: false,
-                      height: 45,
-                    }}
-                    disabled={isSubmitting || amountDueCents <= 0}
-                    forceReRender={[amountDueCents, event.id]}
-                    createOrder={(_data, actions) =>
-                      actions.order.create({
-                        intent: 'CAPTURE',
-                        purchase_units: [
-                          {
-                            description: event.title,
-                            amount: {
-                              currency_code: 'USD',
-                              value: (amountDueCents / 100).toFixed(2),
-                            },
-                          },
-                        ],
-                      })
-                    }
-                    onApprove={async (_data, actions) => {
-                      setGateway('paypal');
-                      try {
-                        const details = await actions.order?.capture();
-                        if (details?.status !== 'COMPLETED') {
-                          throw new Error(
-                            `PayPal payment not completed (status: ${details?.status ?? 'unknown'})`,
-                          );
-                        }
-                        toast({
-                          title: 'Payment successful',
-                          description: `Charged $${(amountDueCents / 100).toFixed(2)} via PayPal.`,
-                        });
-                        setIsSubmitting(true);
-                        await finalizeRegistration();
-                      } catch (e: any) {
-                        toast({
-                          title: 'PayPal payment failed',
-                          description: e?.message ?? 'Please try again.',
-                          variant: 'destructive',
-                        });
-                      } finally {
-                        setIsSubmitting(false);
-                        setGateway(null);
-                      }
-                    }}
-                    onError={(err) => {
-                      console.error('PayPal error', err);
-                      toast({
-                        title: 'PayPal error',
-                        description: 'Something went wrong with PayPal. Please try again.',
-                        variant: 'destructive',
-                      });
-                      setGateway(null);
-                    }}
-                    onCancel={() => setGateway(null)}
-                  />
-                </PayPalScriptProvider>
-              </div>
+              {/* PayPal disabled until server-side capture verification is implemented. */}
 
               <p className="text-[11px] text-center text-muted-foreground pt-1">
                 Encrypted & secure · You won't be registered until payment confirms

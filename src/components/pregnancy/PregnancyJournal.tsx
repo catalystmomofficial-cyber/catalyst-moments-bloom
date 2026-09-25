@@ -1,3 +1,4 @@
+import { validateImageUpload } from '@/lib/uploadValidation';
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -99,6 +100,10 @@ export const PregnancyJournal = () => {
       }
       if (file.size > MAX_FILE_SIZE) {
         toast({ title: `File too large: ${file.name}`, description: 'Maximum allowed image size is 10MB.', variant: 'destructive' });
+        continue;
+      }
+      try { validateImageUpload(file); } catch (error) {
+        toast({ title: error instanceof Error ? error.message : 'Invalid image', variant: 'destructive' });
         continue;
       }
       const fileExt = file.name.split('.').pop();

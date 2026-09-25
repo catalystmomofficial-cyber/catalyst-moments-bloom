@@ -201,6 +201,7 @@ export const MilestoneCheckInModal = ({
   useEffect(() => {
     if (view !== 'book') return;
     const handler = (e: MessageEvent) => {
+      if (e.origin !== 'https://calendly.com') return;
       if (typeof e.data !== 'object' || !e.data?.event) return;
       if (e.data.event === 'calendly.event_scheduled') {
         const payload = e.data?.payload ?? {};

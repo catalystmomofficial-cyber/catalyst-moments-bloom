@@ -3,6 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import posthog from '@/lib/posthog';
 import { toast } from 'sonner';
+import { isStorePreview } from '@/lib/storePreview';
 
 export type MotherhoodStage = "ttc" | "pregnant" | "postpartum" | "toddler" | "none";
 
@@ -40,11 +41,40 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const storePreviewUser = {
+  id: '00000000-0000-4000-8000-000000000001',
+  aud: 'authenticated',
+  role: 'authenticated',
+  email: 'ashley@example.invalid',
+  app_metadata: {},
+  user_metadata: { full_name: 'Ashley', motherhood_stage: 'postpartum-3-6m' },
+  created_at: '2026-01-01T00:00:00.000Z',
+} as User;
+
+const storePreviewSession = {
+  access_token: 'store-preview-only',
+  refresh_token: 'store-preview-only',
+  expires_in: 3600,
+  token_type: 'bearer',
+  user: storePreviewUser,
+} as Session;
+
+const storePreviewProfile: UserProfile = {
+  id: '00000000-0000-4000-8000-000000000002',
+  user_id: storePreviewUser.id,
+  display_name: 'Ashley',
+  motherhood_stage: 'postpartum-3-6m',
+  bio: null,
+  avatar_url: null,
+  created_at: '2026-01-01T00:00:00.000Z',
+  updated_at: '2026-09-17T00:00:00.000Z',
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<User | null>(isStorePreview ? storePreviewUser : null);
+  const [session, setSession] = useState<Session | null>(isStorePreview ? storePreviewSession : null);
+  const [profile, setProfile] = useState<UserProfile | null>(isStorePreview ? storePreviewProfile : null);
+  const [isLoading, setIsLoading] = useState<boolean>(!isStorePreview);
   // Hydrate subscription state from localStorage to prevent paywall flash on reload
   const cachedSub = (() => {
     try {
@@ -52,12 +82,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return raw ? JSON.parse(raw) : null;
     } catch { return null; }
   })();
-  const [subscribed, setSubscribed] = useState<boolean>(cachedSub?.subscribed ?? false);
-  const [subscriptionTier, setSubscriptionTier] = useState<string | null>(cachedSub?.subscription_tier ?? null);
+  const [subscribed, setSubscribed] = useState<boolean>(isStorePreview || (cachedSub?.subscribed ?? false));
+  const [subscriptionTier, setSubscriptionTier] = useState<string | null>(isStorePreview ? 'monthly' : (cachedSub?.subscription_tier ?? null));
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(cachedSub?.subscription_end ?? null);
   const [subscriptionStart, setSubscriptionStart] = useState<string | null>(cachedSub?.subscription_start ?? null);
   const [isReturningCustomer, setIsReturningCustomer] = useState<boolean>(cachedSub?.is_returning_customer ?? false);
-  const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(true);
+  const [isCheckingSubscription, setIsCheckingSubscription] = useState<boolean>(!isStorePreview);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const identifiedUserId = useRef<string | null>(null);
 
@@ -187,6 +217,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Set up auth state listener and check for existing session
   useEffect(() => {
+    if (isStorePreview) {
+      return;
+    }
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -366,6 +399,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const checkSubscription = async () => {
+    if (isStorePreview) {
+      setSubscribed(true);
+      setSubscriptionTier('monthly');
+      setIsCheckingSubscription(false);
+      return;
+    }
     // Use the freshest session (avoid stale closure right after sign-in)
     const { data: { session: freshSession } } = await supabase.auth.getSession();
     if (!freshSession) {

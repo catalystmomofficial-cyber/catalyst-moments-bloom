@@ -1,5 +1,6 @@
 import { ContentItem } from '@/hooks/useContentFilter';
 import postpartumGlowUpCover from '@/assets/30-days-glow-up-professional-cover.jpg';
+import ttcNutritionCover from '@/assets/welcome-video/scene-3-nutrition.jpg';
 // Bundled fallbacks for recipes whose external Unsplash photo IDs went dead
 // (they 404'd in production, leaving blank image boxes). Local assets ship
 // with the build and can never break.
@@ -81,7 +82,7 @@ export const recipes: Recipe[] = [
     title: 'Zinc-Rich Quinoa Power Bowl',
     description: 'Complete protein bowl with zinc-rich pumpkin seeds and colorful vegetables',
     prepTime: '25 min',
-    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
+    image: ttcNutritionCover,
     category: 'Lunch',
     tags: ['Zinc Rich', 'Complete Protein', 'Anti-inflammatory'],
     journey: ['ttc'],
@@ -3364,9 +3365,9 @@ export const mealPlans: MealPlan[] = [
   // TTC MEAL PLANS - Complete 30-day program
   {
     id: 'ttc-complete-30-day-fertility-plan',
-    title: 'Complete 30-Day Preconception Meal Plan',
-    description: 'Comprehensive month-long preconception meal plan built around nutrient-dense whole foods',
-    duration: '30 Day Complete Plan',
+    title: '30-Day TTC Fertility Nutrition Plan',
+    description: '30 fertility-focused recipes featuring folate-rich foods, iron, omega-3s, choline, and practical 15–30 minute prep',
+    duration: '30 Days · TTC',
     recipeCount: 30,
     avgPrepTime: '15-30 min/meal',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',

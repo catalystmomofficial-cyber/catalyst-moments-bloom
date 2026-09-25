@@ -30,10 +30,6 @@ const Experts = () => {
         title="Our Experts | Catalyst Mom"
         description="Meet the certified fitness trainers, registered dietitians, and maternal health specialists behind Catalyst Mom's pregnancy and postpartum programs."
       />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
-        rel="stylesheet"
-      />
       <style>{`
         .standards-scope { --copper:#B5651D; --copper-light:#C8782A; --peach:#F4C5A0; --cream:#FDF6EE; --charcoal:#2C2218; --warm-gray:#8A7060; background:var(--cream); font-family:'Jost',sans-serif; font-weight:300; color:var(--charcoal); }
         .standards-section { padding: 7rem 2rem; }

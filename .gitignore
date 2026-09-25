@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+out/
 *.local
 
 # Environment files (never commit real secrets; .env holds only public VITE_ vars today)
@@ -34,3 +35,6 @@ dist-ssr
 .hyperresearch/hyperresearch.db-wal
 .hyperresearch/hyperresearch.db-shm
 research/runs/
+
+# Local Supabase CLI state
+supabase/.temp/

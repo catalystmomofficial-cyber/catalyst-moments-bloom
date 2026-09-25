@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 interface FAQItem {
   question: string;
   answer: string;
@@ -9,7 +11,7 @@ interface FAQItem {
 export const detectFAQSchema = (content: string): FAQItem[] => {
   const faqItems: FAQItem[] = [];
   const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = content;
+  tempDiv.innerHTML = DOMPurify.sanitize(content, { USE_PROFILES: { html: true } });
 
   // Pattern 1: Headings followed by paragraphs (common FAQ structure)
   const headings = tempDiv.querySelectorAll('h2, h3, h4');

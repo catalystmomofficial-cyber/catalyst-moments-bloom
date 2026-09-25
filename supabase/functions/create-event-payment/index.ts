@@ -19,9 +19,9 @@ serve(async (req) => {
   );
 
   try {
-    const { eventId, eventTitle, amountCents, pointsUsed = 0 } = await req.json();
+    const { eventId } = await req.json();
 
-    if (!eventId || !eventTitle || typeof amountCents !== "number" || amountCents < 50) {
+    if (typeof eventId !== 'string') {
       throw new Error("Missing/invalid fields: eventId, eventTitle, amountCents (min 50)");
     }
 
@@ -32,6 +32,17 @@ serve(async (req) => {
     const user = userData.user;
     if (!user?.email) throw new Error("User not authenticated");
 
+    const scoped = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authHeader } } });
+    const { data: event, error: eventError } = await scoped.from('events').select('*').eq('id', eventId).single();
+    if (eventError || !event || event.status !== 'upcoming') throw new Error('Event is not available');
+    if (event.current_attendees >= event.max_capacity) throw new Error('Event is fully booked');
+    const { data: member, error: memberError } = await scoped.rpc('is_premium_user');
+    if (memberError) throw memberError;
+    const amountCents = member ? (event.is_free_for_members ? 0 : event.price_member) : event.price_non_member;
+    if (!Number.isSafeInteger(amountCents) || amountCents < 50) throw new Error('Use the free or points registration option');
+    const eventTitle = event.title;
+    const pointsUsed = 0;
+
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not configured");
 
@@ -40,7 +51,7 @@ serve(async (req) => {
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     const customerId = customers.data[0]?.id;
 
-    const origin = req.headers.get("origin") ?? "";
+    const origin = 'https://catalystmomofficial.com';
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,

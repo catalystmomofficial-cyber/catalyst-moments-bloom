@@ -1,10 +1,12 @@
+import { validateImageUpload } from './uploadValidation';
+
 interface OptimizeImageOptions {
   maxWidth?: number;
   maxHeight?: number;
   quality?: number;
 }
 
-const passthroughTypes = new Set(['image/gif', 'image/svg+xml']);
+const passthroughTypes = new Set(['image/gif']);
 
 /**
  * Shrink a raster image before it is uploaded. Animated GIFs and SVGs are
@@ -15,7 +17,8 @@ export async function optimizeBlogImage(
   file: File,
   { maxWidth = 1600, maxHeight = 1600, quality = 0.82 }: OptimizeImageOptions = {},
 ): Promise<File> {
-  if (!file.type.startsWith('image/') || passthroughTypes.has(file.type)) return file;
+  validateImageUpload(file);
+  if (passthroughTypes.has(file.type)) return file;
 
   const objectUrl = URL.createObjectURL(file);
 
@@ -49,4 +52,3 @@ export async function optimizeBlogImage(
     URL.revokeObjectURL(objectUrl);
   }
 }
-

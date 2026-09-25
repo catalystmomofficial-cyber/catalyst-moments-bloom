@@ -9,10 +9,6 @@ const Research = () => {
         title="Evidence-Based Mom Resources | Catalyst Mom"
         description="ACOG- and NASM-aligned protocols for TTC, pregnancy, and postpartum recovery. Science-backed wellness resources built with real mamas — not guesswork."
       />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap"
-        rel="stylesheet"
-      />
       <style>{`
         .cs-scope {
           --copper:#B5651D; --peach:#F4C5A0; --peach-light:#FAE0CC;

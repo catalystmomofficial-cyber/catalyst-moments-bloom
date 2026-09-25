@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import SEO from '@/components/seo/SEO';
 
@@ -213,16 +212,6 @@ const HTML = `
 `;
 
 const TermsOfService = () => {
-  useEffect(() => {
-    const id = 'pp-fonts-link';
-    if (!document.getElementById(id)) {
-      const link = document.createElement('link');
-      link.id = id;
-      link.rel = 'stylesheet';
-      link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap';
-      document.head.appendChild(link);
-    }
-  }, []);
 
   return (
     <PageLayout withPadding={false}>

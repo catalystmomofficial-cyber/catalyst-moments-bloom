@@ -18,10 +18,10 @@ const PageLayout = ({
   className = ""
 }: PageLayoutProps) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-[100dvh] flex-col">
       <Navbar />
       <main
-        className={`flex-1 ${withPadding ? 'pt-16 md:pt-20' : 'pt-14'} ${fullWidth ? 'w-full' : ''} ${className}`}
+        className={`flex-1 ${withPadding ? 'pt-[calc(4rem+env(safe-area-inset-top,0px))] md:pt-[calc(5rem+env(safe-area-inset-top,0px))]' : 'pt-[calc(3.5rem+env(safe-area-inset-top,0px))]'} ${fullWidth ? 'w-full' : ''} ${className}`}
       >
         {children}
       </main>

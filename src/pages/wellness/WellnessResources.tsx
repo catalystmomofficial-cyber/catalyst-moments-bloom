@@ -29,20 +29,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import {
-  PayPalScriptProvider,
-  PayPalButtons,
-} from '@paypal/react-paypal-js';
-import {
   DIGITAL_PRODUCTS,
   PRODUCT_CATEGORIES,
   isAvailable,
   type DigitalProduct,
 } from '@/data/digitalProducts';
 import { CoverImage } from '@/components/wellness/ProductCoverArt';
-
-const PAYPAL_CLIENT_ID =
-  (import.meta.env.VITE_PAYPAL_CLIENT_ID as string | undefined) ||
-  'AVx-CDjcjaMtNsqlKBIm-edzwezhGiMtti86hVwfMbc967nLU2QlJXTAn62Vsk6HCPB6nB8sfOz8khKB';
 
 const CATEGORIES = [...PRODUCT_CATEGORIES];
 const PRODUCTS = DIGITAL_PRODUCTS;
@@ -324,85 +316,7 @@ const PurchaseModal = ({
                 Pay with Credit Card
               </Button>
 
-              <div className="relative">
-                {gateway === 'paypal' && (
-                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-sm rounded">
-                    <Loader2 className="w-5 h-5 animate-spin text-primary" />
-                  </div>
-                )}
-                <PayPalScriptProvider
-                  options={{
-                    clientId: PAYPAL_CLIENT_ID,
-                    currency: 'USD',
-                    intent: 'capture',
-                  }}
-                >
-                  <PayPalButtons
-                    style={{
-                      layout: 'horizontal',
-                      color: 'gold',
-                      shape: 'rect',
-                      label: 'paypal',
-                      tagline: false,
-                      height: 45,
-                    }}
-                    disabled={submitting || amountPaidCents <= 0}
-                    forceReRender={[amountPaidCents, product.slug]}
-                    createOrder={(_data, actions) =>
-                      actions.order.create({
-                        intent: 'CAPTURE',
-                        purchase_units: [
-                          {
-                            description: product.title,
-                            amount: {
-                              currency_code: 'USD',
-                              value: (amountPaidCents / 100).toFixed(2),
-                            },
-                          },
-                        ],
-                      })
-                    }
-                    onApprove={async (_data, actions) => {
-                      setGateway('paypal');
-                      try {
-                        // Capture the payment in the browser.
-                        const details = await actions.order?.capture();
-                        const status = details?.status;
-                        if (status !== 'COMPLETED') {
-                          throw new Error(
-                            `PayPal payment not completed (status: ${status ?? 'unknown'})`,
-                          );
-                        }
-                        toast({
-                          title: 'Payment successful',
-                          description: `Charged $${(amountPaidCents / 100).toFixed(2)} via PayPal.`,
-                        });
-                        // Call the existing RPC directly — deducts points,
-                        // logs the purchase, unlocks the download.
-                        await finalizePurchase();
-                      } catch (e: any) {
-                        toast({
-                          title: 'PayPal payment failed',
-                          description: e?.message ?? 'Please try again.',
-                          variant: 'destructive',
-                        });
-                      } finally {
-                        setGateway(null);
-                      }
-                    }}
-                    onError={(err) => {
-                      console.error('PayPal error', err);
-                      toast({
-                        title: 'PayPal error',
-                        description: 'Something went wrong with PayPal. Please try again.',
-                        variant: 'destructive',
-                      });
-                      setGateway(null);
-                    }}
-                    onCancel={() => setGateway(null)}
-                  />
-                </PayPalScriptProvider>
-              </div>
+              {/* PayPal disabled until server-side capture verification is implemented. */}
 
               <p className="text-[11px] text-center text-muted-foreground pt-1">
                 Encrypted & secure · You will not be charged until confirmation

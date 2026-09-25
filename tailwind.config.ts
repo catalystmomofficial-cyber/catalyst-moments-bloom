@@ -225,7 +225,8 @@ export default {
 				'breathe-label-out': 'breathe-label-out 10s linear infinite'
 			},
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
+				sans: ['Inter', 'ui-sans-serif', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'Segoe UI', 'sans-serif'],
+				display: ['Playfair Display', 'ui-serif', 'Georgia', 'serif'],
 			}
 		}
 	},

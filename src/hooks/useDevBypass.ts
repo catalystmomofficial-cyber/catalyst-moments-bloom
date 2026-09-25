@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { isStorePreview } from "@/lib/storePreview";
 
 /**
  * Development-only bypass for auth/subscription guards.
@@ -9,6 +10,9 @@ import { useEffect, useState } from "react";
 export function useDevBypass() {
   const [bypass, setBypass] = useState<boolean>(() => {
     try {
+      if (isStorePreview) {
+        return true;
+      }
       // Only allow bypass in development environments
       if (!isDevelopment()) {
         return false;
@@ -21,6 +25,10 @@ export function useDevBypass() {
 
   useEffect(() => {
     try {
+      if (isStorePreview) {
+        setBypass(true);
+        return;
+      }
       // Security check: Only allow bypass in development
       if (!isDevelopment()) {
         // Clear any existing bypass in production

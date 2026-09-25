@@ -23,7 +23,7 @@ const journeyOptions: JourneyOption[] = [
     title: 'Trying to Conceive',
     description: 'Supporting your fertility journey with personalized nutrition, workouts, and tracking tools',
     icon: <Heart className="h-6 w-6" />,
-    color: 'bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400',
+    color: 'bg-catalyst-peach/70 text-catalyst-brown dark:bg-catalyst-copper/15 dark:text-catalyst-gold',
     stages: [
       { value: 'ttc_1-3', label: '1-3 months trying', description: 'Just started your TTC journey' },
       { value: 'ttc_4-6', label: '4-6 months trying', description: 'Building healthy habits' },
@@ -36,7 +36,7 @@ const journeyOptions: JourneyOption[] = [
     title: 'Pregnant',
     description: 'Your personalized pregnancy companion with safe workouts, nutrition, and weekly insights',
     icon: <Baby className="h-6 w-6" />,
-    color: 'bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400',
+    color: 'bg-[hsl(var(--gestation-soft))] text-[hsl(var(--gestation))]',
     stages: [
       { value: 'trimester_1', label: 'First Trimester (1-12 weeks)', description: 'Early pregnancy support' },
       { value: 'trimester_2', label: 'Second Trimester (13-26 weeks)', description: 'Growth and energy phase' },
@@ -48,7 +48,7 @@ const journeyOptions: JourneyOption[] = [
     title: 'Postpartum',
     description: 'Recovery-focused workouts, healing nutrition, and mental wellness support for new moms',
     icon: <Sparkles className="h-6 w-6" />,
-    color: 'bg-purple-100 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400',
+    color: 'bg-recovery-soft text-recovery',
     stages: [
       { value: 'postpartum_0-6', label: '0-6 weeks postpartum', description: 'Initial recovery phase' },
       { value: 'postpartum_6-12', label: '6-12 weeks postpartum', description: 'Gentle movement return' },
@@ -62,7 +62,7 @@ const journeyOptions: JourneyOption[] = [
     title: 'Toddler Mom',
     description: 'Staying healthy while chasing little ones - quick workouts and practical wellness tips',
     icon: <Users className="h-6 w-6" />,
-    color: 'bg-green-100 dark:bg-green-950/40 text-green-600 dark:text-green-400',
+    color: 'bg-catalyst-beige text-catalyst-brown dark:bg-catalyst-gold/10 dark:text-catalyst-gold',
     stages: [
       { value: 'toddler_1-2', label: '1-2 year old', description: 'High energy phase' },
       { value: 'toddler_2-3', label: '2-3 years old', description: 'Growing independence' },
@@ -113,10 +113,10 @@ export const JourneySelector = ({ onComplete, isOnboarding = false }: JourneySel
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="mx-auto max-w-4xl px-4 py-6 sm:p-6">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold mb-2">
-          {isOnboarding ? 'Welcome to CatalystMOM!' : 'Update Your Journey'}
+          {isOnboarding ? 'Welcome to Catalyst Mom!' : 'Update Your Journey'}
         </h1>
         <p className="text-muted-foreground">
           {isOnboarding 
@@ -129,7 +129,13 @@ export const JourneySelector = ({ onComplete, isOnboarding = false }: JourneySel
       {!selectedJourney ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {journeyOptions.map((journey) => (
-            <div key={journey.id} className="relative h-full rounded-lg">
+            <button
+              key={journey.id}
+              type="button"
+              className="relative h-full rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              onClick={() => setSelectedJourney(journey.id)}
+              aria-label={`Choose ${journey.title}`}
+            >
               <GlowingEffect
                 disabled={false}
                 proximity={80}
@@ -138,8 +144,7 @@ export const JourneySelector = ({ onComplete, isOnboarding = false }: JourneySel
                 inactiveZone={0.4}
               />
               <Card
-                className="relative cursor-pointer hover:shadow-lg transition-all border-2 hover:border-primary/50 h-full"
-                onClick={() => setSelectedJourney(journey.id)}
+                className="pointer-events-none relative h-full border-2 transition-all hover:border-primary/50 hover:shadow-lg"
               >
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -155,7 +160,7 @@ export const JourneySelector = ({ onComplete, isOnboarding = false }: JourneySel
                   </CardDescription>
                 </CardHeader>
               </Card>
-            </div>
+            </button>
           ))}
         </div>
       ) : (
@@ -188,34 +193,41 @@ export const JourneySelector = ({ onComplete, isOnboarding = false }: JourneySel
 
           {selectedJourneyData?.stages && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">Select your current stage:</h3>
-              <div className="grid grid-cols-1 gap-3">
+              <h3 id="journey-stage-heading" className="text-lg font-semibold mb-4">Select your current stage:</h3>
+              <div className="grid grid-cols-1 gap-3" role="radiogroup" aria-labelledby="journey-stage-heading">
                 {selectedJourneyData.stages.map((stage) => (
-                  <Card
+                  <button
                     key={stage.value}
-                    className={`cursor-pointer transition-all border-2 ${
-                      selectedStage === stage.value 
-                        ? 'border-primary bg-primary/5' 
-                        : 'border-border hover:border-primary/50'
-                    }`}
+                    type="button"
+                    role="radio"
+                    aria-checked={selectedStage === stage.value}
+                    className="rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     onClick={() => setSelectedStage(stage.value)}
                   >
-                    <CardContent className="pt-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-medium">{stage.label}</h4>
-                          {stage.description && (
-                            <p className="text-sm text-muted-foreground mt-1">
-                              {stage.description}
-                            </p>
+                    <Card
+                      className={`pointer-events-none min-h-11 transition-all border-2 ${
+                        selectedStage === stage.value
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                    >
+                      <CardContent className="pt-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-medium">{stage.label}</h4>
+                            {stage.description && (
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {stage.description}
+                              </p>
+                            )}
+                          </div>
+                          {selectedStage === stage.value && (
+                            <Badge variant="default">Selected</Badge>
                           )}
                         </div>
-                        {selectedStage === stage.value && (
-                          <Badge variant="default">Selected</Badge>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </button>
                 ))}
               </div>
             </div>

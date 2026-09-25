@@ -42,10 +42,6 @@ const About = () => {
           content="Catalyst Mom was born from love — built by a couple who refused to let any mama walk the TTC, pregnancy, or postpartum journey alone."
         />
         <link rel="canonical" href="https://catalystmomofficial.com/about" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Jost:wght@300;400;500&display=swap"
-        />
       </Helmet>
 
       <style>{`

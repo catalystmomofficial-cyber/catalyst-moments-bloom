@@ -1,0 +1,17 @@
+steps:
+  - launch: com.catalystmomofficial.app
+  - await:
+      visible:
+        text: Welcome back
+  - tap:
+      text: Menu
+  - await:
+      visible:
+        text: Meal Plan
+  - tap:
+      text: Meal Plan
+  - await:
+      visible:
+        text: All Meal Plans
+  - await:
+      idle: true
