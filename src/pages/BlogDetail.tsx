@@ -272,7 +272,7 @@ const BlogDetail = () => {
 
           <SocialShareButtons 
             title={blog.title}
-            url={`${window.location.origin}/blog/${slug}`}
+            url={`https://catalystmomofficial.com/blog/${slug}`}
             description={blog.excerpt}
           />
 

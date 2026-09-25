@@ -8,21 +8,44 @@ interface SocialShareButtonsProps {
   description?: string;
 }
 
-export const SocialShareButtons = ({ title, url, description }: SocialShareButtonsProps) => {
+export const getSocialShareLinks = (title: string, url: string) => {
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
-  const encodedDescription = encodeURIComponent(description || '');
 
-  const shareLinks = {
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  return {
+    // Facebook gets the public article URL for its Open Graph preview. The
+    // quote is a best-effort title hint; Facebook still lets the member write
+    // or edit their own caption before posting.
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`,
     twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+    // LinkedIn's supported web share composer reads title, description, and
+    // image from the article's Open Graph metadata.
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-    pinterest: `https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${encodedTitle}`,
   };
+};
+
+export const SocialShareButtons = ({ title, url }: SocialShareButtonsProps) => {
+  const shareLinks = getSocialShareLinks(title, url);
 
   const handleShare = (platform: string, link: string) => {
-    window.open(link, '_blank', 'width=600,height=400');
-    toast.success(`Sharing on ${platform}!`);
+    const width = 640;
+    const height = 640;
+    const left = Math.max(0, window.screenX + (window.outerWidth - width) / 2);
+    const top = Math.max(0, window.screenY + (window.outerHeight - height) / 2);
+    const popup = window.open(
+      link,
+      `${platform.toLowerCase()}-share`,
+      `popup=yes,width=${width},height=${height},left=${left},top=${top}`,
+    );
+
+    if (!popup) {
+      toast.error(`Please allow pop-ups to share on ${platform}.`);
+      return;
+    }
+
+    popup.opener = null;
+    popup.focus();
+    toast.success(`${platform} share is ready.`);
   };
 
   const handleCopyLink = () => {
