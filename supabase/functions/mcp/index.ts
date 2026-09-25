@@ -3,10 +3,10 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { defineMcp } from "npm:@lovable.dev/mcp-js@0.22.0";
+import { defineMcp } from "npm:@lovable.dev/mcp-js@0.22.2";
 
 // src/lib/mcp/tools/search-blog-posts.ts
-import { defineTool } from "npm:@lovable.dev/mcp-js@0.22.0";
+import { defineTool } from "npm:@lovable.dev/mcp-js@0.22.2";
 import { z } from "npm:zod@^4.4.3";
 
 // src/lib/mcp/supabase.ts
@@ -86,7 +86,7 @@ var search_blog_posts_default = defineTool({
 });
 
 // src/lib/mcp/tools/get-blog-post.ts
-import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.22.0";
+import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.22.2";
 import { z as z2 } from "npm:zod@^4.4.3";
 var get_blog_post_default = defineTool2({
   name: "get_blog_post",
@@ -109,7 +109,7 @@ var get_blog_post_default = defineTool2({
 });
 
 // src/lib/mcp/tools/list-blog-tags.ts
-import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.22.0";
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.22.2";
 var TAGS = [
   { tag: "pregnancy", description: "Prenatal fitness, symptoms, birth prep." },
   { tag: "postpartum", description: "Recovery, healing, core restoration, newborn life." },
@@ -140,5 +140,5 @@ var mcp_default = defineMcp({
 });
 
 // lovable-mcp-supabase-entry.ts
-import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.22.0/stacks/supabase";
+import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@0.22.2/stacks/supabase";
 Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));
